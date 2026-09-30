@@ -1,0 +1,246 @@
+/**
+ * Tourivo Admin MetaBox Styles (Polished Tabbed UI Framework)
+ */
+
+.tourivo-metabox-wrapper {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    font-size: 13px;
+    margin: -6px -12px -12px -12px;
+    min-height: 320px;
+}
+
+.tourivo-tabs-nav {
+    width: 230px;
+    background: #f8fafc;
+    border-right: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+.tourivo-tabs-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tourivo-tabs-nav li {
+    margin: 0;
+    border-bottom: 1px solid #f1f5f9;
+}
+
+.tourivo-tabs-nav li a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 18px;
+    color: #475569;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 600;
+    border-left: 4px solid transparent;
+    transition: all 0.15s ease;
+}
+
+.tourivo-tabs-nav li a .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+    color: #64748b;
+    transition: color 0.15s ease;
+}
+
+.tourivo-tabs-nav li.active a,
+.tourivo-tabs-nav li a:hover {
+    background: #ffffff;
+    color: #0284c7;
+    border-left-color: #0284c7;
+}
+
+.tourivo-tabs-nav li.active a .dashicons,
+.tourivo-tabs-nav li a:hover .dashicons {
+    color: #0284c7;
+}
+
+.tourivo-tabs-content {
+    flex: 1;
+    padding: 24px 30px;
+    min-width: 0;
+    background: #ffffff;
+}
+
+.tourivo-tab-pane {
+    display: none;
+    animation: tourivoFadeIn 0.2s ease-in-out;
+}
+
+.tourivo-tab-pane.active {
+    display: block;
+}
+
+@keyframes tourivoFadeIn {
+    from { opacity: 0.7; transform: translateY(2px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.tourivo-row {
+    display: flex;
+    gap: 18px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+}
+
+.tourivo-col {
+    flex: 1;
+    min-width: 180px;
+}
+
+.tourivo-form-group {
+    margin-bottom: 18px;
+}
+
+.tourivo-form-group:last-child {
+    margin-bottom: 0;
+}
+
+.tourivo-form-group label,
+.tourivo-col label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.tourivo-form-group .description,
+.tourivo-col .description {
+    margin: 5px 0 0 0;
+    font-size: 12px;
+    color: #64748b;
+    font-style: italic;
+    line-height: 1.4;
+}
+
+.tourivo-form-group input[type="text"],
+.tourivo-form-group input[type="number"],
+.tourivo-form-group input[type="email"],
+.tourivo-form-group select,
+.tourivo-form-group textarea,
+.tourivo-col input[type="text"],
+.tourivo-col input[type="number"],
+.tourivo-col input[type="email"],
+.tourivo-col select,
+.tourivo-col textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13.5px;
+    background: #ffffff;
+    color: #0f172a;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    transition: all 0.15s ease;
+}
+
+.tourivo-form-group input:focus,
+.tourivo-col input:focus,
+.tourivo-form-group select:focus,
+.tourivo-col select:focus,
+.tourivo-form-group textarea:focus,
+.tourivo-col textarea:focus {
+    border-color: #0284c7;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+
+/* Repeaters (Itinerary, Inclusions, FAQs) */
+.tourivo-repeater-container {
+    margin-bottom: 16px;
+}
+
+.tourivo-repeater-row {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    margin-bottom: 14px;
+    padding: 14px 18px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+}
+
+.tourivo-repeater-row .row-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #e2e8f0;
+    padding-bottom: 8px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.tourivo-list-repeater {
+    margin-bottom: 14px;
+}
+
+.tourivo-list-repeater .list-item-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.remove-row-btn,
+.remove-list-item {
+    color: #ef4444 !important;
+    border-color: #fca5a5 !important;
+    background: #fef2f2 !important;
+    line-height: 1 !important;
+    font-size: 16px !important;
+    padding: 4px 10px !important;
+    border-radius: 6px !important;
+    cursor: pointer;
+    transition: all 0.15s ease !important;
+}
+
+.remove-row-btn:hover,
+.remove-list-item:hover {
+    background: #fee2e2 !important;
+    color: #b91c1c !important;
+}
+
+/* Responsive collapse on narrow viewports */
+@media (max-width: 860px) {
+    .tourivo-metabox-wrapper {
+        flex-direction: column;
+    }
+    .tourivo-tabs-nav {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .tourivo-tabs-nav ul {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .tourivo-tabs-nav li {
+        border-bottom: none;
+        border-right: 1px solid #f1f5f9;
+    }
+    .tourivo-tabs-nav li a {
+        border-left: none;
+        border-bottom: 3px solid transparent;
+        padding: 10px 14px;
+    }
+    .tourivo-tabs-nav li.active a {
+        border-left-color: transparent;
+        border-bottom-color: #0284c7;
+    }
+    .tourivo-tabs-content {
+        padding: 18px 16px;
+    }
+}

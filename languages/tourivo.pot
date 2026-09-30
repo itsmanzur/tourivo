@@ -1,0 +1,87 @@
+# Copyright (C) 2026 Tourivo Team
+# This file is distributed under the GPL v2 or later.
+msgid ""
+msgstr ""
+"Project-Id-Version: Tourivo 1.0.0\n"
+"Report-Msgid-Bugs-To: https://tourivo.com/support\n"
+"POT-Creation-Date: 2026-09-29 14:00+0000\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Tourivo Team <support@tourivo.com>\n"
+"Language-Team: English <support@tourivo.com>\n"
+"X-Generator: Tourivo i18n\n"
+"X-Domain: tourivo\n"
+
+#: tourivo.php:40
+msgid "Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
+msgstr ""
+
+#: app/PostTypes/TourPostType.php:40
+msgid "Tours & Packages"
+msgstr ""
+
+#: app/PostTypes/TourPostType.php:41
+msgid "Tour"
+msgstr ""
+
+#: app/PostTypes/TourPostType.php:42
+msgid "Tours"
+msgstr ""
+
+#: app/PostTypes/HotelPostType.php:40
+msgid "Hotels & Stays"
+msgstr ""
+
+#: app/PostTypes/HotelPostType.php:41
+msgid "Hotel"
+msgstr ""
+
+#: app/PostTypes/RoomPostType.php:40
+msgid "Rooms & Units"
+msgstr ""
+
+#: app/PostTypes/RoomPostType.php:41
+msgid "Room"
+msgstr ""
+
+#: app/Services/BookingService.php:165
+msgid "Booking created successfully! Your booking code is #%s."
+msgstr ""
+
+#: templates/booking-panel.php:38
+msgid "Instant Confirmation"
+msgstr ""
+
+#: templates/booking-panel.php:44
+msgid "Select Tour Date *"
+msgstr ""
+
+#: templates/booking-panel.php:44
+msgid "Check-in Date *"
+msgstr ""
+
+#: templates/booking-panel.php:53
+msgid "Check-out Date *"
+msgstr ""
+
+#: templates/booking-panel.php:63
+msgid "Guests / Travelers"
+msgstr ""
+
+#: templates/booking-panel.php:67
+msgid "Adults"
+msgstr ""
+
+#: templates/booking-panel.php:78
+msgid "Children"
+msgstr ""
+
+#: templates/booking-panel.php:97
+msgid "Total Amount"
+msgstr ""
+
+#: templates/booking-panel.php:121
+msgid "Book Now (Pay Offline)"
+msgstr ""

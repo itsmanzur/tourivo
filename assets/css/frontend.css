@@ -1,0 +1,1298 @@
+/**
+ * Tourivo Frontend Stylesheet
+ */
+
+:root {
+    --trv-primary: #0284c7;
+    --trv-primary-hover: #0369a1;
+    --trv-success: #10b981;
+    --trv-danger: #ef4444;
+    --trv-text-main: #1e293b;
+    --trv-text-muted: #64748b;
+    --trv-border: #e2e8f0;
+    --trv-bg-light: #f8fafc;
+    --trv-radius: 8px;
+    --trv-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+}
+
+.tourivo-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    color: var(--trv-text-main);
+    line-height: 1.6;
+}
+
+/* Header & Meta */
+.tourivo-top-meta {
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.tourivo-top-meta .back-link {
+    color: var(--trv-text-muted);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.tourivo-top-meta .back-link:hover {
+    color: var(--trv-primary);
+}
+
+.tourivo-title {
+    font-size: 32px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    color: var(--trv-text-main);
+}
+
+.tourivo-sub-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 24px;
+    font-size: 14px;
+    color: var(--trv-text-muted);
+}
+
+.tourivo-sub-meta .meta-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tourivo-sub-meta .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: var(--trv-primary);
+}
+
+/* Layout Grid */
+.tourivo-layout-grid {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+.tourivo-main-content {
+    flex: 1;
+    min-width: 0;
+}
+
+.tourivo-sidebar {
+    width: 380px;
+    flex-shrink: 0;
+}
+
+.tourivo-sticky-box {
+    position: sticky;
+    top: 30px;
+}
+
+@media (max-width: 900px) {
+    .tourivo-layout-grid {
+        flex-direction: column;
+    }
+    .tourivo-sidebar {
+        width: 100%;
+    }
+}
+
+/* Featured Hero Banner */
+.tourivo-featured-banner {
+    margin-bottom: 25px;
+    border-radius: var(--trv-radius);
+    overflow: hidden;
+}
+
+.tourivo-hero-img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    display: block;
+}
+
+/* Block Sections */
+.tourivo-block-section {
+    background: #fff;
+    border: 1px solid var(--trv-border);
+    border-radius: var(--trv-radius);
+    padding: 24px;
+    margin-bottom: 25px;
+}
+
+.section-heading {
+    font-size: 20px;
+    font-weight: 700;
+    margin: 0 0 16px 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--trv-border);
+}
+
+/* Timeline Itinerary */
+.tourivo-itinerary-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.timeline-step {
+    display: flex;
+    gap: 16px;
+}
+
+.step-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--trv-primary);
+    color: #fff;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.step-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin: 0 0 6px 0;
+}
+
+.step-meals {
+    display: inline-block;
+    font-size: 12px;
+    background: #f1f5f9;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin-bottom: 8px;
+    color: var(--trv-text-muted);
+}
+
+.step-desc {
+    margin: 0;
+    color: #475569;
+    font-size: 14px;
+}
+
+/* Inclusions & Exclusions */
+.tourivo-inc-exc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 600px) {
+    .tourivo-inc-exc-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.inc-box ul, .exc-box ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.inc-box li, .exc-box li {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.inc-box li .dashicons { color: var(--trv-success); }
+.exc-box li .dashicons { color: var(--trv-danger); }
+
+/* FAQs */
+.tourivo-faqs-accordion {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.faq-item {
+    border: 1px solid var(--trv-border);
+    border-radius: 6px;
+    padding: 12px 16px;
+    background: var(--trv-bg-light);
+}
+
+.faq-question {
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 15px;
+}
+
+.faq-answer {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #475569;
+}
+
+/* Interactive Booking Panel */
+.tourivo-booking-panel {
+    background: #fff;
+    border: 1px solid var(--trv-border);
+    border-radius: var(--trv-radius);
+    box-shadow: var(--trv-shadow);
+    padding: 20px;
+}
+
+.panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--trv-border);
+}
+
+.panel-price-box .price-amount {
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--trv-primary);
+}
+
+.panel-price-box .price-suffix {
+    font-size: 13px;
+    color: var(--trv-text-muted);
+}
+
+.status-badge {
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.form-section {
+    margin-bottom: 15px;
+}
+
+.section-label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 6px;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.input-with-icon .dashicons {
+    position: absolute;
+    left: 10px;
+    color: var(--trv-text-muted);
+}
+
+.input-with-icon input {
+    width: 100%;
+    padding: 8px 12px 8px 36px;
+    border: 1px solid var(--trv-border);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Guest Counters */
+.guest-counter-row {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.guest-counter-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: var(--trv-bg-light);
+    padding: 8px 12px;
+    border-radius: 6px;
+}
+
+.guest-type strong { display: block; font-size: 13px; }
+.guest-type small { font-size: 11px; color: var(--trv-text-muted); }
+
+.counter-controls {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.counter-btn {
+    width: 28px;
+    height: 28px;
+    border: 1px solid var(--trv-border);
+    background: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.counter-controls input {
+    width: 36px;
+    text-align: center;
+    border: 0;
+    background: transparent;
+    font-weight: 700;
+    font-size: 14px;
+}
+
+/* Price Breakdown */
+.price-breakdown-box {
+    background: var(--trv-bg-light);
+    border-radius: 6px;
+    padding: 12px;
+    margin-bottom: 16px;
+    font-size: 13px;
+}
+
+.breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+}
+
+.breakdown-row.total-row {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--trv-border);
+    font-size: 15px;
+}
+
+.total-amount-val {
+    color: var(--trv-primary);
+    font-size: 17px;
+}
+
+/* Checkout fields inside panel */
+.checkout-fields-box {
+    margin-bottom: 16px;
+}
+
+.checkout-fields-title {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 0 0 10px 0;
+}
+
+.field-row {
+    margin-bottom: 8px;
+}
+
+.field-row input, .field-row textarea {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--trv-border);
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+/* Buttons */
+.tourivo-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--trv-primary);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 6px;
+    border: 0;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.tourivo-btn:hover {
+    background: var(--trv-primary-hover);
+    color: #fff;
+}
+
+.tourivo-btn-sm {
+    padding: 6px 12px;
+    font-size: 13px;
+}
+
+.tourivo-btn-block {
+    width: 100%;
+    padding: 12px;
+    font-size: 15px;
+}
+
+.panel-alert {
+    margin-top: 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+}
+
+.panel-alert.alert-success { background: #dcfce7; color: #15803d; }
+.panel-alert.alert-error { background: #fee2e2; color: #991b1b; }
+
+/* Cards & Grid */
+.tourivo-grid {
+    display: grid;
+    grid-template-columns: repeat(var(--trv-grid-cols, 3), 1fr);
+    gap: 24px;
+}
+
+@media (max-width: 900px) {
+    .tourivo-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+    .tourivo-grid { grid-template-columns: 1fr; }
+}
+
+.tourivo-card {
+    background: #fff;
+    border: 1px solid var(--trv-border);
+    border-radius: var(--trv-radius);
+    overflow: hidden;
+    box-shadow: var(--trv-shadow);
+    display: flex;
+    flex-direction: column;
+}
+
+.tourivo-card-thumb {
+    position: relative;
+    height: 200px;
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.tourivo-card-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.tourivo-card:hover .tourivo-card-thumb img {
+    transform: scale(1.05);
+}
+
+.tourivo-ribbon {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #f97316;
+    color: #fff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.tourivo-dest-tag {
+    position: absolute;
+    bottom: 12px;
+    left: 12px;
+    background: rgba(0,0,0,0.65);
+    color: #fff;
+    font-size: 12px;
+    padding: 2px 8px;
+    border-radius: 4px;
+}
+
+.tourivo-stars-badge {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    background: #fef08a;
+    color: #854d0e;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.tourivo-card-body {
+    padding: 16px;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.tourivo-card-meta {
+    display: flex;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--trv-text-muted);
+    margin-bottom: 8px;
+}
+
+.tourivo-card-title {
+    font-size: 16px;
+    font-weight: 700;
+    margin: 0 0 12px 0;
+    line-height: 1.4;
+    flex: 1;
+}
+
+.tourivo-card-title a {
+    color: var(--trv-text-main);
+    text-decoration: none;
+}
+
+.tourivo-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid var(--trv-border);
+    padding-top: 12px;
+}
+
+.tourivo-price-box .price-from { font-size: 11px; color: var(--trv-text-muted); display: block; }
+.tourivo-price-box .price-val { font-size: 18px; font-weight: 800; color: var(--trv-primary); }
+
+/* Search Bar */
+.tourivo-search-bar-wrap {
+    background: #fff;
+    padding: 16px;
+    border-radius: var(--trv-radius);
+    box-shadow: var(--trv-shadow);
+    border: 1px solid var(--trv-border);
+}
+
+.tourivo-search-form {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    align-items: flex-end;
+}
+
+.tourivo-search-form .search-field {
+    flex: 1;
+    min-width: 160px;
+}
+
+.tourivo-search-form label {
+    display: block;
+    font-weight: 600;
+    font-size: 13px;
+    margin-bottom: 4px;
+}
+
+.tourivo-search-form select, .tourivo-search-form input {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--trv-border);
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Inquiry CTA & Modal */
+.tourivo-inquiry-cta {
+    margin-top: 12px;
+    text-align: center;
+}
+
+.tourivo-btn-inquiry {
+    background: transparent;
+    border: none;
+    color: var(--trv-primary, #0284c7);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+    padding: 6px 0;
+}
+
+.tourivo-btn-inquiry:hover {
+    color: var(--trv-primary-hover, #0369a1);
+}
+
+.tourivo-modal-wrap {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 999999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.tourivo-modal-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.7);
+    backdrop-filter: blur(4px);
+}
+
+.tourivo-modal-content {
+    position: relative;
+    background: #ffffff;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 20px 30px rgba(0,0,0,0.25);
+    z-index: 10;
+    animation: tourivoModalFadeIn 0.25s ease-out;
+}
+
+@keyframes tourivoModalFadeIn {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+.tourivo-modal-content .modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 24px;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tourivo-modal-content .modal-header h3 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.tourivo-modal-content .close-inquiry-modal {
+    background: transparent;
+    border: none;
+    font-size: 24px;
+    line-height: 1;
+    color: #64748b;
+    cursor: pointer;
+}
+
+.tourivo-modal-content .close-inquiry-modal:hover {
+    color: #0f172a;
+}
+
+.tourivo-modal-content .modal-body {
+    padding: 20px 24px;
+}
+
+.modal-subtitle {
+    font-size: 13.5px;
+    color: #64748b;
+    margin: 0 0 16px 0;
+    line-height: 1.5;
+}
+
+.inquiry-field-row {
+    margin-bottom: 12px;
+}
+
+.inquiry-field-row input,
+.inquiry-field-row textarea {
+    width: 100%;
+    padding: 10px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.inquiry-field-row-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.inquiry-field-row-grid label {
+    display: block;
+    margin-bottom: 4px;
+    color: #475569;
+    font-weight: 600;
+}
+
+.inquiry-field-row-grid input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13.5px;
+    box-sizing: border-box;
+}
+
+.inquiry-alert {
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13.5px;
+    margin-top: 12px;
+}
+
+.inquiry-alert.alert-success {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #bbf7d0;
+}
+
+.inquiry-alert.alert-error {
+    background: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fca5a5;
+}
+
+.tourivo-modal-content .modal-footer {
+    padding: 14px 24px 20px;
+}
+
+/* =======================================================
+   STEP 2: WISHLIST HEART BUTTONS & BADGES
+   ======================================================= */
+.tourivo-wishlist-toggle {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    padding: 0;
+    color: #94a3b8;
+}
+
+.tourivo-wishlist-toggle:hover {
+    transform: scale(1.12);
+    background: #ffffff;
+    color: #ef4444;
+}
+
+.tourivo-wishlist-toggle.is-active {
+    color: #ef4444;
+    background: #ffffff;
+}
+
+.tourivo-wishlist-toggle .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.tourivo-wishlist-toggle.is-active .dashicons {
+    color: #ef4444;
+}
+
+/* Single Page Wishlist Toggle Button */
+.tourivo-wishlist-toggle-single {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.tourivo-wishlist-toggle-single:hover,
+.tourivo-wishlist-toggle-single.is-active {
+    background: #fee2e2;
+    border-color: #fca5a5;
+    color: #ef4444;
+}
+
+.tourivo-wishlist-toggle-single .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+}
+
+/* Card Rating Tag */
+.meta-rating {
+    color: #b45309 !important;
+    font-weight: 600;
+}
+.meta-rating .rating-star {
+    color: #f59e0b;
+}
+.meta-rating-link {
+    color: #b45309 !important;
+    text-decoration: none;
+    font-weight: 600;
+}
+.meta-rating-link:hover {
+    text-decoration: underline;
+}
+
+/* =======================================================
+   STEP 2: LIVE AJAX FILTER & SEARCH ENGINE
+   ======================================================= */
+.tourivo-live-filter-wrapper {
+    margin: 24px 0 36px;
+}
+
+.tourivo-filter-form {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+    margin-bottom: 20px;
+}
+
+.tourivo-filter-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    align-items: flex-end;
+}
+
+.tourivo-filter-col label {
+    display: block;
+    margin-bottom: 6px;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
+}
+
+.tourivo-filter-input,
+.tourivo-filter-select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    font-size: 13.5px;
+    box-sizing: border-box;
+    background: #f8fafc;
+    transition: all 0.2s;
+}
+
+.tourivo-filter-input:focus,
+.tourivo-filter-select:focus {
+    border-color: var(--trv-primary);
+    background: #ffffff;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.15);
+}
+
+.filter-price .price-header-labels {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.tourivo-price-display {
+    font-size: 13.5px;
+    color: var(--trv-primary);
+}
+
+.tourivo-filter-range {
+    width: 100%;
+    cursor: pointer;
+    accent-color: var(--trv-primary);
+}
+
+.tourivo-btn-reset-filters {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+    padding: 9px 14px;
+    border-radius: 8px;
+    background: #f1f5f9;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.tourivo-btn-reset-filters:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.tourivo-filter-results-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.tourivo-results-counter {
+    margin: 0;
+    font-size: 14px;
+    color: #64748b;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tourivo-filter-loader {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.tourivo-filter-loader .dashicons {
+    font-size: 32px;
+    width: 32px;
+    height: 32px;
+    color: var(--trv-primary);
+}
+
+/* =======================================================
+   STEP 2: WISHLIST PAGE & SHORTCODE STYLING
+   ======================================================= */
+.tourivo-wishlist-wrap {
+    max-width: 1200px;
+    margin: 30px auto;
+    padding: 0 15px;
+}
+
+.tourivo-wishlist-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #e2e8f0;
+}
+
+.tourivo-wishlist-header h2 {
+    margin: 0;
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.tourivo-wishlist-count-label {
+    margin: 0;
+    color: #64748b;
+    font-size: 14px;
+}
+
+/* =======================================================
+   STEP 2: REVIEWS & 5-STAR RATING SECTION
+   ======================================================= */
+.tourivo-reviews-block {
+    margin-top: 40px;
+    padding-top: 30px;
+    border-top: 1px solid #e2e8f0;
+}
+
+.reviews-total-badge {
+    font-size: 16px;
+    font-weight: 600;
+    color: #64748b;
+}
+
+.tourivo-rating-overview {
+    display: grid;
+    grid-template-columns: 220px 1fr;
+    gap: 32px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 30px;
+    align-items: center;
+}
+
+@media (max-width: 768px) {
+    .tourivo-rating-overview {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
+
+.rating-score-box {
+    text-align: center;
+    border-right: 1px solid #e2e8f0;
+    padding-right: 20px;
+}
+
+@media (max-width: 768px) {
+    .rating-score-box {
+        border-right: none;
+        border-bottom: 1px solid #e2e8f0;
+        padding-right: 0;
+        padding-bottom: 16px;
+    }
+}
+
+.score-number {
+    display: block;
+    font-size: 48px;
+    font-weight: 800;
+    color: #0f172a;
+    line-height: 1;
+}
+
+.score-stars {
+    margin: 8px 0;
+    font-size: 20px;
+}
+
+.score-stars .star.filled {
+    color: #f59e0b;
+}
+
+.score-stars .star {
+    color: #cbd5e1;
+}
+
+.score-subtext {
+    font-size: 13px;
+    color: #64748b;
+}
+
+.rating-bar-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 8px;
+    font-size: 13px;
+}
+
+.bar-star-label {
+    width: 40px;
+    font-weight: 600;
+    color: #475569;
+}
+
+.bar-track {
+    flex: 1;
+    height: 8px;
+    background: #e2e8f0;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.bar-fill {
+    height: 100%;
+    background: #f59e0b;
+    border-radius: 4px;
+    transition: width 0.4s ease;
+}
+
+.bar-count-label {
+    width: 30px;
+    text-align: right;
+    color: #64748b;
+    font-weight: 600;
+}
+
+/* Reviews List */
+.tourivo-reviews-list {
+    margin-bottom: 36px;
+}
+
+.tourivo-review-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    padding: 18px 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.tourivo-review-card .review-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 12px;
+}
+
+.review-author-avatar img {
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    object-fit: cover;
+}
+
+.review-author-info {
+    flex: 1;
+}
+
+.review-author-info .author-name {
+    margin: 0 0 2px 0;
+    font-size: 15px;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.verified-badge {
+    background: #dcfce7;
+    color: #15803d;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    display: inline-block;
+}
+
+.review-date {
+    font-size: 12px;
+    color: #64748b;
+}
+
+.review-stars .star.filled {
+    color: #f59e0b;
+}
+.review-stars .star {
+    color: #cbd5e1;
+}
+
+.review-content {
+    font-size: 14px;
+    color: #334155;
+    line-height: 1.6;
+}
+
+.review-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* Star Rating Picker Form */
+.tourivo-leave-review-form-wrap {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.tourivo-leave-review-form-wrap h3 {
+    margin: 0 0 16px 0;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.tourivo-star-picker {
+    display: inline-flex;
+    gap: 4px;
+    font-size: 28px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.tourivo-star-picker .picker-star {
+    color: #cbd5e1;
+    transition: transform 0.15s ease, color 0.15s ease;
+}
+
+.tourivo-star-picker .picker-star:hover {
+    transform: scale(1.2);
+}
+
+.tourivo-star-picker .picker-star.selected,
+.tourivo-star-picker .picker-star.hover {
+    color: #f59e0b;
+}
+
+.tourivo-review-form input[type="text"],
+.tourivo-review-form input[type="email"],
+.tourivo-review-form textarea {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    font-size: 13.5px;
+    box-sizing: border-box;
+    font-family: inherit;
+}
+
+.tourivo-review-form input:focus,
+.tourivo-review-form textarea:focus {
+    border-color: var(--trv-primary);
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+}
+
+/* =======================================================
+   STEP 3: MULTI-CURRENCY SWITCHER WIDGET
+   ======================================================= */
+.tourivo-currency-switcher-wrap {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 8px;
+    padding: 4px 10px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.tourivo-currency-switcher-wrap .currency-label {
+    display: flex;
+    align-items: center;
+    color: var(--trv-primary);
+}
+
+.tourivo-currency-switcher-wrap .currency-label .dashicons {
+    font-size: 18px;
+    width: 18px;
+    height: 18px;
+}
+
+.tourivo-currency-select {
+    border: none;
+    background: transparent;
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+    cursor: pointer;
+    outline: none;
+    padding-right: 4px;
+}
+
+.tourivo-currency-select:focus {
+    outline: none;
+}
+
+

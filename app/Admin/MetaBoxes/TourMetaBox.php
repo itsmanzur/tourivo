@@ -1,0 +1,159 @@
+<?php
+
+declare(strict_types=1);
+
+namespace Tourivo\Admin\MetaBoxes;
+
+use Tourivo\Common\Abstracts\MetaBox;
+use Tourivo\PostTypes\TourPostType;
+use WP_Post;
+
+if (!defined('ABSPATH')) {
+    exit;
+}
+
+/**
+ * Class TourMetaBox
+ *
+ * Handles Tour settings metabox: Pricing, Duration, Itinerary, Inclusions, Locations, FAQs.
+ *
+ * @package Tourivo\Admin\MetaBoxes
+ */
+class TourMetaBox extends MetaBox
+{
+    protected string $id = 'tourivo_tour_settings';
+    protected string $title = 'Tour Package & Booking Settings';
+    protected string|array $postTypes = TourPostType::POST_TYPE;
+    protected string $context = 'normal';
+    protected string $priority = 'high';
+
+    public function render(WP_Post $post): void
+    {
+        $tourType        = get_post_meta($post->ID, '_tourivo_tour_type', true) ?: 'single_day';
+        $basePrice       = get_post_meta($post->ID, '_tourivo_base_price', true) ?: '';
+        $salePrice       = get_post_meta($post->ID, '_tourivo_sale_price', true) ?: '';
+        $duration        = get_post_meta($post->ID, '_tourivo_duration', true) ?: '';
+        $minGuests       = get_post_meta($post->ID, '_tourivo_min_guests', true) ?: '1';
+        $maxGuests       = get_post_meta($post->ID, '_tourivo_max_guests', true) ?: '20';
+        $badge           = get_post_meta($post->ID, '_tourivo_badge', true) ?: '';
+        $pickupLocation  = get_post_meta($post->ID, '_tourivo_pickup_location', true) ?: '';
+        $dropoffLocation = get_post_meta($post->ID, '_tourivo_dropoff_location', true) ?: '';
+        $latitude        = get_post_meta($post->ID, '_tourivo_latitude', true) ?: '';
+        $longitude       = get_post_meta($post->ID, '_tourivo_longitude', true) ?: '';
+
+        // Decode JSON fields
+        $itinerary = json_decode((string) get_post_meta($post->ID, '_tourivo_itinerary', true), true) ?: [];
+        $inclusions = json_decode((string) get_post_meta($post->ID, '_tourivo_inclusions', true), true) ?: [];
+        $exclusions = json_decode((string) get_post_meta($post->ID, '_tourivo_exclusions', true), true) ?: [];
+        $faqs       = json_decode((string) get_post_meta($post->ID, '_tourivo_faqs', true), true) ?: [];
+
+        $this->loadView('admin/metaboxes/tour-metabox.php', [
+            'post'            => $post,
+            'tourType'        => $tourType,
+            'basePrice'       => $basePrice,
+            'salePrice'       => $salePrice,
+            'duration'        => $duration,
+            'minGuests'       => $minGuests,
+            'maxGuests'       => $maxGuests,
+            'badge'           => $badge,
+            'pickupLocation'  => $pickupLocation,
+            'dropoffLocation' => $dropoffLocation,
+            'latitude'        => $latitude,
+            'longitude'       => $longitude,
+            'itinerary'       => $itinerary,
+            'inclusions'      => $inclusions,
+            'exclusions'      => $exclusions,
+            'faqs'            => $faqs,
+        ]);
+    }
+
+    public function save(int $postId, WP_Post $post): void
+    {
+        // 1. Basic Fields
+        $fields = [
+            '_tourivo_tour_type'        => 'sanitize_text_field',
+            '_tourivo_base_price'       => static fn ($v) => number_format(max(0.0, (float) str_replace(',', '', (string) $v)), 2, '.', ''),
+            '_tourivo_sale_price'       => static fn ($v) => ($v !== '' && $v !== null) ? number_format(max(0.0, (float) str_replace(',', '', (string) $v)), 2, '.', '') : '',
+            '_tourivo_duration'         => 'sanitize_text_field',
+            '_tourivo_min_guests'       => 'absint',
+            '_tourivo_max_guests'       => 'absint',
+            '_tourivo_badge'            => 'sanitize_text_field',
+            '_tourivo_pickup_location'  => 'sanitize_text_field',
+            '_tourivo_dropoff_location' => 'sanitize_text_field',
+            '_tourivo_latitude'         => 'sanitize_text_field',
+            '_tourivo_longitude'        => 'sanitize_text_field',
+        ];
+
+        foreach ($fields as $field => $sanitizer) {
+            if (isset($_POST[$field])) {
+                $val = wp_unslash($_POST[$field]);
+                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field($val);
+                update_post_meta($postId, $field, $cleanVal);
+            }
+        }
+
+        // 1.1 Compute _tourivo_duration_days for search filter queries (supports English and Bengali digits/keywords)
+        $durationStr = isset($_POST['_tourivo_duration']) ? sanitize_text_field(wp_unslash($_POST['_tourivo_duration'])) : '';
+        $bengaliDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        $westernDigits = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $normalizedDurationStr = str_replace($bengaliDigits, $westernDigits, $durationStr);
+
+        $durationDays = 1;
+        if (preg_match('/(\d+)\s*(day|days|d|দিন)/iu', $normalizedDurationStr, $matches)) {
+            $durationDays = max(1, (int) $matches[1]);
+        }
+        update_post_meta($postId, '_tourivo_duration_days', $durationDays);
+
+        // 2. Inclusions Array
+        if (isset($_POST['_tourivo_inclusions']) && is_array($_POST['_tourivo_inclusions'])) {
+            $inclusions = array_filter(array_map('sanitize_text_field', wp_unslash($_POST['_tourivo_inclusions'])));
+            update_post_meta($postId, '_tourivo_inclusions', wp_slash(wp_json_encode(array_values($inclusions), JSON_UNESCAPED_UNICODE)));
+        } else {
+            update_post_meta($postId, '_tourivo_inclusions', wp_slash(wp_json_encode([], JSON_UNESCAPED_UNICODE)));
+        }
+
+        // 3. Exclusions Array
+        if (isset($_POST['_tourivo_exclusions']) && is_array($_POST['_tourivo_exclusions'])) {
+            $exclusions = array_filter(array_map('sanitize_text_field', wp_unslash($_POST['_tourivo_exclusions'])));
+            update_post_meta($postId, '_tourivo_exclusions', wp_slash(wp_json_encode(array_values($exclusions), JSON_UNESCAPED_UNICODE)));
+        } else {
+            update_post_meta($postId, '_tourivo_exclusions', wp_slash(wp_json_encode([], JSON_UNESCAPED_UNICODE)));
+        }
+
+        // 4. Itinerary Array
+        if (isset($_POST['_tourivo_itinerary']) && is_array($_POST['_tourivo_itinerary'])) {
+            $cleanItinerary = [];
+            foreach (wp_unslash($_POST['_tourivo_itinerary']) as $item) {
+                if (!empty($item['title'])) {
+                    $cleanItinerary[] = [
+                        'day'   => sanitize_text_field($item['day'] ?? ''),
+                        'title' => sanitize_text_field($item['title'] ?? ''),
+                        'desc'  => sanitize_textarea_field($item['desc'] ?? ''),
+                        'meals' => sanitize_text_field($item['meals'] ?? ''),
+                    ];
+                }
+            }
+            update_post_meta($postId, '_tourivo_itinerary', wp_slash(wp_json_encode($cleanItinerary, JSON_UNESCAPED_UNICODE)));
+        } else {
+            update_post_meta($postId, '_tourivo_itinerary', wp_slash(wp_json_encode([], JSON_UNESCAPED_UNICODE)));
+        }
+
+        // 5. FAQs Array
+        if (isset($_POST['_tourivo_faqs']) && is_array($_POST['_tourivo_faqs'])) {
+            $cleanFaqs = [];
+            foreach (wp_unslash($_POST['_tourivo_faqs']) as $faq) {
+                if (!empty($faq['question'])) {
+                    $cleanFaqs[] = [
+                        'question' => sanitize_text_field($faq['question'] ?? ''),
+                        'answer'   => sanitize_textarea_field($faq['answer'] ?? ''),
+                    ];
+                }
+            }
+            update_post_meta($postId, '_tourivo_faqs', wp_slash(wp_json_encode($cleanFaqs, JSON_UNESCAPED_UNICODE)));
+        } else {
+            update_post_meta($postId, '_tourivo_faqs', wp_slash(wp_json_encode([], JSON_UNESCAPED_UNICODE)));
+        }
+
+        do_action('tourivo_save_tour_meta', $postId, $post);
+    }
+}
