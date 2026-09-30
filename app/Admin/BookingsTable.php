@@ -28,7 +28,9 @@ class BookingsTable
 
         $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
         $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $statusFilter  = isset($_GET['status']) ? sanitize_text_field(wp_unslash($_GET['status'])) : 'all';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $searchQuery   = isset($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
 
         // Build SQL
@@ -53,10 +55,13 @@ class BookingsTable
         $sql = "SELECT * FROM {$bookingsTable} WHERE {$whereSql} ORDER BY id DESC LIMIT 50";
 
         if (!empty($params)) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $sql = $wpdb->prepare($sql, ...$params);
         }
 
-        $bookings = $wpdb->get_results($sql);
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+        $bookings = (array) $wpdb->get_results($sql);
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
         $nonce = wp_create_nonce('tourivo_admin_nonce');
 
@@ -114,6 +119,7 @@ class BookingsTable
                 </thead>
                 <tbody>
                     <?php if (!empty($bookings)) : foreach ($bookings as $b) : 
+                        // phpcs:ignore WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
                         $lineItem = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d LIMIT 1", $b->id));
                     ?>
                         <tr id="booking-row-<?php echo esc_attr((string)$b->id); ?>">
@@ -131,9 +137,25 @@ class BookingsTable
                             <td>
                                 <?php if ($lineItem) : ?>
                                     <strong><?php echo esc_html($lineItem->item_title); ?></strong>
-                                    <br><small><?php echo esc_html(sprintf(__('Date: %s', 'tourivo'), gmdate('M d, Y', strtotime($lineItem->check_in)))); ?>
-                                    <?php if ($lineItem->check_out) echo esc_html(' &rarr; ' . gmdate('M d, Y', strtotime($lineItem->check_out))); ?>
-                                    | <?php echo esc_html(sprintf(__('%d Travelers', 'tourivo'), $lineItem->quantity)); ?></small>
+                                    <br><small><?php
+                                    echo esc_html(
+                                        sprintf(
+                                            /* translators: %s: Booking check-in date */
+                                            __('Date: %s', 'tourivo'),
+                                            gmdate('M d, Y', strtotime($lineItem->check_in))
+                                        )
+                                    );
+                                    if ($lineItem->check_out) {
+                                        echo esc_html(' &rarr; ' . gmdate('M d, Y', strtotime($lineItem->check_out)));
+                                    }
+                                    echo esc_html(
+                                        sprintf(
+                                            /* translators: %d: Quantity of travelers */
+                                            __(' | %d Travelers', 'tourivo'),
+                                            $lineItem->quantity
+                                        )
+                                    );
+                                    ?></small>
                                 <?php else : ?>
                                     <span style="color:#94a3b8;">—</span>
                                 <?php endif; ?>
@@ -328,7 +350,7 @@ class BookingsTable
     public static function exportCsv(): void
     {
         if (!current_user_can('manage_tourivo_bookings')) {
-            wp_die(__('Unauthorized access.', 'tourivo'), 403);
+            wp_die(esc_html__('Unauthorized access.', 'tourivo'), 403);
         }
 
         check_admin_referer('tourivo_export_csv_action');
@@ -336,6 +358,7 @@ class BookingsTable
         global $wpdb;
         $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
         $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $statusFilter  = isset($_GET['status']) ? sanitize_text_field(wp_unslash($_GET['status'])) : 'all';
 
         $where = '1=1';
@@ -353,10 +376,13 @@ class BookingsTable
                 ORDER BY b.id DESC";
 
         if (!empty($params)) {
+            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
             $sql = $wpdb->prepare($sql, ...$params);
         }
 
-        $results = $wpdb->get_results($sql, ARRAY_A);
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
+        $results = (array) $wpdb->get_results($sql, ARRAY_A);
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.NotPrepared
 
         $filename = 'tourivo-bookings-manifest-' . gmdate('Y-m-d') . '.csv';
 
@@ -368,6 +394,7 @@ class BookingsTable
         $output = fopen('php://output', 'w');
 
         // UTF-8 BOM for Excel support
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
         fwrite($output, "\xEF\xBB\xBF");
 
         // Header Row
@@ -415,6 +442,7 @@ class BookingsTable
             ]);
         }
 
+        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
         fclose($output);
         exit;
     }

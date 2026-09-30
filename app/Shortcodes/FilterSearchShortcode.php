@@ -165,11 +165,14 @@ class FilterSearchShortcode
                 </div>
                 <div class="tourivo-grid tourivo-live-results" style="--trv-grid-cols: <?php echo esc_attr((string)$cols); ?>;">
                     <!-- Pre-rendered Initial Posts -->
-                    <?php echo self::queryAndRender([
-                        'type'     => $type,
-                        'columns'  => $cols,
-                        'count'    => $count,
-                    ]); ?>
+                    <?php
+                    // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+                    echo self::queryAndRender([
+                        'type'     => sanitize_key($type),
+                        'columns'  => absint($cols),
+                        'count'    => absint($count),
+                    ]);
+                    ?>
                 </div>
             </div>
         </div>
@@ -308,6 +311,7 @@ class FilterSearchShortcode
                 break;
         }
 
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_query
         $query = new WP_Query($args);
 
         if (!$query->have_posts()) {

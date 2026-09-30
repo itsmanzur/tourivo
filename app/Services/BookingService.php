@@ -121,7 +121,11 @@ class BookingService
             $itemTitle = $tour->getTitle();
             $maxGuests = $tour->getMaxGuests();
             if ($maxGuests > 0 && $totalGuests > $maxGuests) {
-                return ['success' => false, 'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'tourivo'), $maxGuests)];
+                return [
+                    'success' => false,
+                    /* translators: %d: Maximum allowed guests */
+                    'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'tourivo'), $maxGuests),
+                ];
             }
 
             $unitPrice = $tour->getActivePrice();
@@ -146,13 +150,25 @@ class BookingService
             $maxGuestsAllowed   = $room->getMaxGuests() * $roomsCount;
 
             if ($maxAdultsAllowed > 0 && $adultsCount > $maxAdultsAllowed) {
-                return ['success' => false, 'message' => sprintf(__('Selected %d room(s) can accommodate up to %d adults.', 'tourivo'), $roomsCount, $maxAdultsAllowed)];
+                return [
+                    'success' => false,
+                    /* translators: 1: Room count, 2: Maximum adults */
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d adults.', 'tourivo'), $roomsCount, $maxAdultsAllowed),
+                ];
             }
             if ($maxChildrenAllowed > 0 && $childrenCount > $maxChildrenAllowed) {
-                return ['success' => false, 'message' => sprintf(__('Selected %d room(s) can accommodate up to %d children.', 'tourivo'), $roomsCount, $maxChildrenAllowed)];
+                return [
+                    'success' => false,
+                    /* translators: 1: Room count, 2: Maximum children */
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d children.', 'tourivo'), $roomsCount, $maxChildrenAllowed),
+                ];
             }
             if ($maxGuestsAllowed > 0 && $totalGuests > $maxGuestsAllowed) {
-                return ['success' => false, 'message' => sprintf(__('Selected %d room(s) can accommodate up to %d total guests.', 'tourivo'), $roomsCount, $maxGuestsAllowed)];
+                return [
+                    'success' => false,
+                    /* translators: 1: Room count, 2: Maximum total guests */
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d total guests.', 'tourivo'), $roomsCount, $maxGuestsAllowed),
+                ];
             }
 
             $dates = $this->inventoryService->generateDateList($checkIn, $checkOut, false);
@@ -353,6 +369,7 @@ class BookingService
             'success'      => true,
             'booking_id'   => $bookingId,
             'booking_code' => $bookingCode,
+            /* translators: %s: Booking reference code */
             'message'      => sprintf(__('Booking created successfully! Your booking code is #%s.', 'tourivo'), $bookingCode),
         ];
     }

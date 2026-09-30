@@ -110,6 +110,7 @@ class Hotel extends Model
      */
     public function getRooms(): array
     {
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
         $query = new WP_Query([
             'post_type'      => RoomPostType::POST_TYPE,
             'post_status'    => 'publish',

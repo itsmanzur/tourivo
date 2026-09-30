@@ -40,11 +40,13 @@ class AdminDashboard
         $totalRevenue  = 0.0;
         $recentBookings = [];
 
-        if ($wpdb->get_var("SHOW TABLES LIKE '{$bookingsTable}'") === $bookingsTable) {
-            $bookingsCount = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$bookingsTable}");
-            $totalRevenue  = (float) ($wpdb->get_var("SELECT SUM(total_amount) FROM {$bookingsTable} WHERE booking_status != 'cancelled'") ?: 0.0);
-            $recentBookings = $wpdb->get_results("SELECT * FROM {$bookingsTable} ORDER BY id DESC LIMIT 5");
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        if ($wpdb->get_var($wpdb->prepare('SHOW TABLES LIKE %s', $bookingsTable)) === $bookingsTable) {
+            $bookingsCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$bookingsTable}");
+            $totalRevenue   = (float) ($wpdb->get_var("SELECT SUM(total_amount) FROM {$bookingsTable} WHERE booking_status != 'cancelled'") ?: 0.0);
+            $recentBookings = (array) $wpdb->get_results("SELECT * FROM {$bookingsTable} ORDER BY id DESC LIMIT 5");
         }
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
         ?>

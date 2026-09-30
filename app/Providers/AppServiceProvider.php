@@ -36,26 +36,8 @@ class AppServiceProvider extends ServiceProvider
             return (string) Config::get('currency', $default);
         });
 
-        // Load plugin textdomain
-        $this->addAction('init', [$this, 'loadTextdomain']);
-
         // Register custom image sizes or core setups
         $this->addAction('after_setup_theme', [$this, 'setupThemeSupport']);
-    }
-
-
-    /**
-     * Load plugin translations.
-     *
-     * @return void
-     */
-    public function loadTextdomain(): void
-    {
-        load_plugin_textdomain(
-            'tourivo',
-            false,
-            dirname(plugin_basename(TOURIVO_PLUGIN_FILE)) . '/languages/'
-        );
     }
 
     /**

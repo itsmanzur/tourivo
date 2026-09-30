@@ -198,6 +198,7 @@ class InventoryService
             'currency_symbol' => $currencySymbol,
             'dates_checked'   => $dates,
             'message'         => $allAvailable
+                /* translators: %d: Number of spots left */
                 ? sprintf(__('Available (%d spots left)', 'tourivo'), $minAvailableSpots)
                 : __('Selected dates or quantity are not available.', 'tourivo'),
         ];

@@ -12,9 +12,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$isTest = $isTest ?? false;
-$booking = $booking ?? [];
-$siteName = $siteName ?? get_bloginfo('name');
+$tourivoIsTest   = isset($isTest) ? (bool) $isTest : false;
+$tourivoBooking  = isset($booking) && is_array($booking) ? $booking : [];
+$tourivoSiteName = isset($siteName) && is_string($siteName) ? $siteName : get_bloginfo('name');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,16 +45,24 @@ $siteName = $siteName ?? get_bloginfo('name');
 <body>
     <div class="container">
         <div class="header">
-            <?php if ($isTest) : ?>
+            <?php if ($tourivoIsTest) : ?>
                 <div><span class="test-badge"><?php esc_html_e('TEST NOTIFICATION', 'tourivo'); ?></span></div>
             <?php endif; ?>
             <h1>🎉 <?php esc_html_e('Booking Confirmed!', 'tourivo'); ?></h1>
-            <p><?php echo esc_html($siteName); ?> &bull; <?php esc_html_e('Travel & Tours Reservation', 'tourivo'); ?></p>
+            <p><?php echo esc_html($tourivoSiteName); ?> &bull; <?php esc_html_e('Travel & Tours Reservation', 'tourivo'); ?></p>
         </div>
 
         <div class="content">
             <p style="font-size: 15px; margin-top: 0;">
-                <?php echo esc_html(sprintf(__('Hello %s,', 'tourivo'), $booking['customer_name'] ?? 'Traveler')); ?>
+                <?php
+                echo esc_html(
+                    sprintf(
+                        /* translators: %s: Customer Name */
+                        __('Hello %s,', 'tourivo'),
+                        $tourivoBooking['customer_name'] ?? 'Traveler'
+                    )
+                );
+                ?>
             </p>
             <p style="color: #475569; font-size: 14px;">
                 <?php esc_html_e('Thank you for booking with us! We have successfully received your reservation details below:', 'tourivo'); ?>
@@ -63,52 +71,52 @@ $siteName = $siteName ?? get_bloginfo('name');
             <div class="info-card">
                 <div class="info-row">
                     <span class="info-label"><?php esc_html_e('Booking Code:', 'tourivo'); ?></span>
-                    <span class="info-value" style="color: #0284c7;"><?php echo esc_html($booking['booking_code'] ?? 'N/A'); ?></span>
+                    <span class="info-value" style="color: #0284c7;"><?php echo esc_html($tourivoBooking['booking_code'] ?? 'N/A'); ?></span>
                 </div>
-                <?php if (!empty($booking['item_title'])) : ?>
+                <?php if (!empty($tourivoBooking['item_title'])) : ?>
                     <div class="info-row">
                         <span class="info-label"><?php esc_html_e('Trip / Stay:', 'tourivo'); ?></span>
-                        <span class="info-value"><?php echo esc_html($booking['item_title']); ?></span>
+                        <span class="info-value"><?php echo esc_html($tourivoBooking['item_title']); ?></span>
                     </div>
                 <?php endif; ?>
-                <?php if (!empty($booking['check_in'])) : ?>
+                <?php if (!empty($tourivoBooking['check_in'])) : ?>
                     <div class="info-row">
                         <span class="info-label"><?php esc_html_e('Check-in Date:', 'tourivo'); ?></span>
-                        <span class="info-value"><?php echo esc_html($booking['check_in']); ?></span>
+                        <span class="info-value"><?php echo esc_html($tourivoBooking['check_in']); ?></span>
                     </div>
                 <?php endif; ?>
-                <?php if (!empty($booking['check_out'])) : ?>
+                <?php if (!empty($tourivoBooking['check_out'])) : ?>
                     <div class="info-row">
                         <span class="info-label"><?php esc_html_e('Check-out Date:', 'tourivo'); ?></span>
-                        <span class="info-value"><?php echo esc_html($booking['check_out']); ?></span>
+                        <span class="info-value"><?php echo esc_html($tourivoBooking['check_out']); ?></span>
                     </div>
                 <?php endif; ?>
                 <div class="info-row">
                     <span class="info-label"><?php esc_html_e('Travelers / Guests:', 'tourivo'); ?></span>
                     <span class="info-value">
-                        <?php echo esc_html((string)($booking['adults'] ?? 1)); ?> <?php esc_html_e('Adult(s)', 'tourivo'); ?>
-                        <?php if (!empty($booking['children'])) : ?>
-                            , <?php echo esc_html((string)$booking['children']); ?> <?php esc_html_e('Child(ren)', 'tourivo'); ?>
+                        <?php echo esc_html((string)($tourivoBooking['adults'] ?? 1)); ?> <?php esc_html_e('Adult(s)', 'tourivo'); ?>
+                        <?php if (!empty($tourivoBooking['children'])) : ?>
+                            , <?php echo esc_html((string)$tourivoBooking['children']); ?> <?php esc_html_e('Child(ren)', 'tourivo'); ?>
                         <?php endif; ?>
                     </span>
                 </div>
-                <?php if (!empty($booking['customer_phone'])) : ?>
+                <?php if (!empty($tourivoBooking['customer_phone'])) : ?>
                     <div class="info-row">
                         <span class="info-label"><?php esc_html_e('Contact Phone:', 'tourivo'); ?></span>
-                        <span class="info-value"><?php echo esc_html($booking['customer_phone']); ?></span>
+                        <span class="info-value"><?php echo esc_html($tourivoBooking['customer_phone']); ?></span>
                     </div>
                 <?php endif; ?>
-                <?php if (!empty($booking['customer_notes'])) : ?>
+                <?php if (!empty($tourivoBooking['customer_notes'])) : ?>
                     <div class="info-row">
                         <span class="info-label"><?php esc_html_e('Special Notes:', 'tourivo'); ?></span>
-                        <span class="info-value" style="font-weight: 500;"><?php echo esc_html($booking['customer_notes']); ?></span>
+                        <span class="info-value" style="font-weight: 500;"><?php echo esc_html($tourivoBooking['customer_notes']); ?></span>
                     </div>
                 <?php endif; ?>
             </div>
 
             <div class="total-box">
                 <span class="total-label"><?php esc_html_e('Grand Total Amount', 'tourivo'); ?></span>
-                <div class="total-val"><?php echo esc_html($booking['total_amount'] ?? '$0.00'); ?></div>
+                <div class="total-val"><?php echo esc_html($tourivoBooking['total_amount'] ?? '$0.00'); ?></div>
             </div>
 
             <p style="color: #64748b; font-size: 13px; margin-top: 24px; text-align: center;">
@@ -117,7 +125,7 @@ $siteName = $siteName ?? get_bloginfo('name');
         </div>
 
         <div class="footer">
-            <p style="margin: 0 0 6px 0;">&copy; <?php echo esc_html(gmdate('Y')); ?> <strong><?php echo esc_html($siteName); ?></strong>. <?php esc_html_e('All rights reserved.', 'tourivo'); ?></p>
+            <p style="margin: 0 0 6px 0;">&copy; <?php echo esc_html(gmdate('Y')); ?> <strong><?php echo esc_html($tourivoSiteName); ?></strong>. <?php esc_html_e('All rights reserved.', 'tourivo'); ?></p>
             <p style="margin: 0;"><a href="<?php echo esc_url(home_url('/')); ?>"><?php echo esc_url(home_url('/')); ?></a></p>
         </div>
     </div>

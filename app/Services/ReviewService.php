@@ -102,6 +102,7 @@ class ReviewService
     {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $row = $wpdb->get_row($wpdb->prepare(
             "SELECT 
                 AVG(CAST(cm.meta_value AS DECIMAL(10,2))) as avg_rating, 
@@ -114,6 +115,7 @@ class ReviewService
             self::META_RATING,
             $postId
         ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         $avg = ($row && $row->avg_rating !== null) ? round((float) $row->avg_rating, 1) : 0.0;
         $count = ($row && $row->review_count !== null) ? (int) $row->review_count : 0;
@@ -132,6 +134,7 @@ class ReviewService
     {
         global $wpdb;
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $rows = $wpdb->get_results($wpdb->prepare(
             "SELECT 
                 CAST(cm.meta_value AS UNSIGNED) as star_rating,
@@ -145,6 +148,7 @@ class ReviewService
             self::META_RATING,
             $postId
         ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         $stars = [5 => 0, 4 => 0, 3 => 0, 2 => 0, 1 => 0];
         $totalRating = 0;
@@ -199,6 +203,7 @@ class ReviewService
 
         // If hotel, also match any rooms belonging to this hotel
         if ($postType === HotelPostType::POST_TYPE) {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
             $childRooms = get_posts([
                 'post_type'      => 'tourivo_room',
                 'posts_per_page' => -1,
@@ -225,7 +230,9 @@ class ReviewService
                 LIMIT 1";
 
         $params = array_merge([$email], $targetIds);
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $found = $wpdb->get_var($wpdb->prepare($sql, ...$params));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         return !empty($found);
     }

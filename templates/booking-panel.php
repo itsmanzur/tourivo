@@ -16,30 +16,30 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$itemId         = isset($itemId) ? (int) $itemId : get_the_ID();
-$postType       = get_post_type($itemId);
-$itemType       = ($postType === 'tourivo_room') ? 'room' : 'tour';
-$currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+$tourivoItemId         = isset($itemId) ? (int) $itemId : (int) get_the_ID();
+$tourivoPostType       = get_post_type($tourivoItemId);
+$tourivoItemType       = ($tourivoPostType === 'tourivo_room') ? 'room' : 'tour';
+$tourivoCurrencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
 
-if ($itemType === 'tour') {
-    $tour = new \Tourivo\Models\Tour($itemId);
-    $basePrice = $tour->getActivePrice();
-    $maxGuests = $tour->getMaxGuests() > 0 ? $tour->getMaxGuests() : 20;
-    $maxRooms  = 1;
+if ($tourivoItemType === 'tour') {
+    $tourivoTour      = new \Tourivo\Models\Tour($tourivoItemId);
+    $tourivoBasePrice = $tourivoTour->getActivePrice();
+    $tourivoMaxGuests = $tourivoTour->getMaxGuests() > 0 ? $tourivoTour->getMaxGuests() : 20;
+    $tourivoMaxRooms  = 1;
 } else {
-    $room = new \Tourivo\Models\Room($itemId);
-    $basePrice = $room->getNightlyPrice();
-    $maxGuests = $room->getMaxGuests() > 0 ? $room->getMaxGuests() : 4;
-    $maxRooms  = $room->getQuantity() > 0 ? $room->getQuantity() : 10;
+    $tourivoRoom      = new \Tourivo\Models\Room($tourivoItemId);
+    $tourivoBasePrice = $tourivoRoom->getNightlyPrice();
+    $tourivoMaxGuests = $tourivoRoom->getMaxGuests() > 0 ? $tourivoRoom->getMaxGuests() : 4;
+    $tourivoMaxRooms  = $tourivoRoom->getQuantity() > 0 ? $tourivoRoom->getQuantity() : 10;
 }
 ?>
 
-<div class="tourivo-booking-panel" id="tourivo-booking-panel-<?php echo esc_attr((string) $itemId); ?>" data-item-id="<?php echo esc_attr((string) $itemId); ?>" data-item-type="<?php echo esc_attr($itemType); ?>" data-unit-price="<?php echo esc_attr((string) $basePrice); ?>" data-currency="<?php echo esc_attr($currencySymbol); ?>">
+<div class="tourivo-booking-panel" id="tourivo-booking-panel-<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-id="<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-type="<?php echo esc_attr($tourivoItemType); ?>" data-unit-price="<?php echo esc_attr((string) $tourivoBasePrice); ?>" data-currency="<?php echo esc_attr($tourivoCurrencySymbol); ?>">
     <div class="panel-header">
         <div class="panel-price-box">
             <span class="price-label"><?php esc_html_e('Price:', 'tourivo'); ?></span>
-            <span class="price-amount" id="tourivo-live-price"><?php echo esc_html(Money::format($basePrice)); ?></span>
-            <span class="price-suffix"><?php echo ($itemType === 'tour') ? esc_html__('/ person', 'tourivo') : esc_html__('/ night', 'tourivo'); ?></span>
+            <span class="price-amount" id="tourivo-live-price"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
+            <span class="price-suffix"><?php echo ($tourivoItemType === 'tour') ? esc_html__('/ person', 'tourivo') : esc_html__('/ night', 'tourivo'); ?></span>
         </div>
         <div class="availability-status" id="tourivo-avail-status">
             <span class="status-badge status-check"><?php esc_html_e('Instant Confirmation', 'tourivo'); ?></span>
@@ -54,14 +54,14 @@ if ($itemType === 'tour') {
 
         <!-- Date Selection -->
         <div class="form-section">
-            <label class="section-label"><?php echo ($itemType === 'tour') ? esc_html__('Select Tour Date *', 'tourivo') : esc_html__('Check-in Date *', 'tourivo'); ?></label>
+            <label class="section-label"><?php echo ($tourivoItemType === 'tour') ? esc_html__('Select Tour Date *', 'tourivo') : esc_html__('Check-in Date *', 'tourivo'); ?></label>
             <div class="input-with-icon">
                 <span class="dashicons dashicons-calendar-alt"></span>
                 <input type="date" name="check_in" id="tourivo-check-in" min="<?php echo esc_attr(wp_date('Y-m-d')); ?>" value="<?php echo esc_attr(wp_date('Y-m-d', strtotime('+1 day'))); ?>" required>
             </div>
         </div>
 
-        <?php if ($itemType === 'room') : ?>
+        <?php if ($tourivoItemType === 'room') : ?>
             <div class="form-section">
                 <label class="section-label"><?php esc_html_e('Check-out Date *', 'tourivo'); ?></label>
                 <div class="input-with-icon">
@@ -77,11 +77,19 @@ if ($itemType === 'tour') {
                     <div class="guest-counter-item" style="width: 100%;">
                         <div class="guest-type">
                             <strong><?php esc_html_e('Rooms', 'tourivo'); ?></strong>
-                            <small><?php echo esc_html(sprintf(__('Up to %d available', 'tourivo'), $maxRooms)); ?></small>
+                            <small><?php
+                            echo esc_html(
+                                sprintf(
+                                    /* translators: %d: Maximum rooms available */
+                                    __('Up to %d available', 'tourivo'),
+                                    $tourivoMaxRooms
+                                )
+                            );
+                            ?></small>
                         </div>
                         <div class="counter-controls">
                             <button type="button" class="counter-btn minus-btn" data-target="rooms-count">-</button>
-                            <input type="number" name="rooms" id="rooms-count" value="1" min="1" max="<?php echo esc_attr((string) $maxRooms); ?>" readonly>
+                            <input type="number" name="rooms" id="rooms-count" value="1" min="1" max="<?php echo esc_attr((string) $tourivoMaxRooms); ?>" readonly>
                             <button type="button" class="counter-btn plus-btn" data-target="rooms-count">+</button>
                         </div>
                     </div>
@@ -100,7 +108,7 @@ if ($itemType === 'tour') {
                     </div>
                     <div class="counter-controls">
                         <button type="button" class="counter-btn minus-btn" data-target="adults-count">-</button>
-                        <input type="number" name="adults" id="adults-count" value="1" min="1" max="<?php echo esc_attr((string) $maxGuests); ?>" readonly>
+                        <input type="number" name="adults" id="adults-count" value="1" min="1" max="<?php echo esc_attr((string) $tourivoMaxGuests); ?>" readonly>
                         <button type="button" class="counter-btn plus-btn" data-target="adults-count">+</button>
                     </div>
                 </div>
@@ -112,24 +120,24 @@ if ($itemType === 'tour') {
                     </div>
                     <div class="counter-controls">
                         <button type="button" class="counter-btn minus-btn" data-target="children-count">-</button>
-                        <input type="number" name="children" id="children-count" value="0" min="0" max="<?php echo esc_attr((string) $maxGuests); ?>" readonly>
+                        <input type="number" name="children" id="children-count" value="0" min="0" max="<?php echo esc_attr((string) $tourivoMaxGuests); ?>" readonly>
                         <button type="button" class="counter-btn plus-btn" data-target="children-count">+</button>
                     </div>
                 </div>
             </div>
         </div>
 
-        <?php do_action('tourivo_booking_panel_after_guests', $itemId, $itemType); ?>
+        <?php do_action('tourivo_booking_panel_after_guests', $tourivoItemId, $tourivoItemType); ?>
 
         <!-- Live Price Breakdown -->
         <div class="price-breakdown-box" id="tourivo-price-breakdown">
             <div class="breakdown-row">
-                <span class="breakdown-desc" id="breakdown-calc-label"><?php echo esc_html(Money::format($basePrice)); ?> &times; 1 <?php echo ($itemType === 'room') ? esc_html__('Night', 'tourivo') : esc_html__('Guest', 'tourivo'); ?></span>
-                <span class="breakdown-val" id="breakdown-total-val"><?php echo esc_html(Money::format($basePrice)); ?></span>
+                <span class="breakdown-desc" id="breakdown-calc-label"><?php echo esc_html(Money::format($tourivoBasePrice)); ?> &times; 1 <?php echo ($tourivoItemType === 'room') ? esc_html__('Night', 'tourivo') : esc_html__('Guest', 'tourivo'); ?></span>
+                <span class="breakdown-val" id="breakdown-total-val"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
             </div>
             <div class="breakdown-row total-row">
                 <span><strong><?php esc_html_e('Total Amount', 'tourivo'); ?></strong></span>
-                <span class="total-amount-val" id="live-grand-total"><strong><?php echo esc_html(Money::format($basePrice)); ?></strong></span>
+                <span class="total-amount-val" id="live-grand-total"><strong><?php echo esc_html(Money::format($tourivoBasePrice)); ?></strong></span>
             </div>
         </div>
 
@@ -150,7 +158,7 @@ if ($itemType === 'tour') {
             </div>
         </div>
 
-        <?php do_action('tourivo_booking_panel_before_submit', $itemId, $itemType); ?>
+        <?php do_action('tourivo_booking_panel_before_submit', $tourivoItemId, $tourivoItemType); ?>
 
         <!-- Action Submit -->
         <button type="submit" class="tourivo-btn tourivo-btn-primary tourivo-btn-block" id="tourivo-submit-btn">
@@ -181,8 +189,8 @@ if ($itemType === 'tour') {
                     <input type="text" name="tourivo_inq_hp" value="" tabindex="-1" autocomplete="off">
                 </div>
                 <input type="hidden" name="action" value="tourivo_submit_inquiry">
-                <input type="hidden" name="item_id" value="<?php echo esc_attr((string) $itemId); ?>">
-                <input type="hidden" name="item_type" value="<?php echo esc_attr($itemType); ?>">
+                <input type="hidden" name="item_id" value="<?php echo esc_attr((string) $tourivoItemId); ?>">
+                <input type="hidden" name="item_type" value="<?php echo esc_attr($tourivoItemType); ?>">
                 <div class="modal-body">
                     <p class="modal-subtitle"><?php esc_html_e('Have special requests or group questions? Send your inquiry directly to our travel specialists.', 'tourivo'); ?></p>
                     <div class="inquiry-field-row">

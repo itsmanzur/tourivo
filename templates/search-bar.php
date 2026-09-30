@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$destinations = get_terms([
+$tourivoDestinations = get_terms([
     'taxonomy'   => 'tourivo_destination',
     'hide_empty' => false,
 ]);
@@ -22,8 +22,8 @@ $destinations = get_terms([
             <label><span class="dashicons dashicons-location"></span> <?php esc_html_e('Where to?', 'tourivo'); ?></label>
             <select name="tourivo_destination">
                 <option value=""><?php esc_html_e('All Destinations', 'tourivo'); ?></option>
-                <?php if (!empty($destinations) && !is_wp_error($destinations)) : foreach ($destinations as $dest) : ?>
-                    <option value="<?php echo esc_attr($dest->slug); ?>"><?php echo esc_html($dest->name); ?></option>
+                <?php if (!empty($tourivoDestinations) && !is_wp_error($tourivoDestinations)) : foreach ($tourivoDestinations as $tourivoDest) : ?>
+                    <option value="<?php echo esc_attr($tourivoDest->slug); ?>"><?php echo esc_html($tourivoDest->name); ?></option>
                 <?php endforeach; endif; ?>
             </select>
         </div>

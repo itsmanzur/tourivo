@@ -308,6 +308,7 @@ class AdminServiceProvider extends ServiceProvider
 
         global $wpdb;
         $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $oldBooking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
 
         if (!$oldBooking) {
@@ -321,7 +322,8 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
-        $lineItems = $wpdb->get_results($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
+        $lineItems = (array) $wpdb->get_results($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $inventoryService = Container::getInstance()->get(\Tourivo\Services\InventoryService::class);
 
         // Case 1: Reactivating from cancelled -> Try to commit inventory first
@@ -363,6 +365,7 @@ class AdminServiceProvider extends ServiceProvider
                 wp_send_json_error(['message' => __('Cannot reactivate booking. Required inventory spots are no longer available.', 'tourivo')], 409);
             }
 
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $updated = $wpdb->update(
                 $bookingsTable,
                 ['booking_status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')],
@@ -387,6 +390,7 @@ class AdminServiceProvider extends ServiceProvider
             }
         } else {
             // Case 2: Standard transition or Cancelling
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
             $updated = $wpdb->update(
                 $bookingsTable,
                 ['booking_status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')],
@@ -416,7 +420,16 @@ class AdminServiceProvider extends ServiceProvider
             }
         }
 
-        LogService::log($bookingId, 'status_changed', sprintf(__('Booking status changed from %s to %s', 'tourivo'), ucfirst($oldStatus), ucfirst($status)));
+        LogService::log(
+            $bookingId,
+            'status_changed',
+            sprintf(
+                /* translators: 1: Old status, 2: New status */
+                __('Booking status changed from %1$s to %2$s', 'tourivo'),
+                ucfirst($oldStatus),
+                ucfirst($status)
+            )
+        );
         do_action('tourivo/booking_status_changed', $bookingId, $oldStatus, $status);
 
         wp_send_json_success(['message' => __('Booking status updated successfully.', 'tourivo')]);
@@ -479,6 +492,7 @@ class AdminServiceProvider extends ServiceProvider
 
         if (!empty($result['success'])) {
             wp_send_json_success([
+                /* translators: %s: Booking Reference Code */
                 'message'      => sprintf(__('Manual booking created successfully! Reference Code: #%s', 'tourivo'), $result['booking_code']),
                 'booking_code' => $result['booking_code'],
             ]);
@@ -567,7 +581,10 @@ class AdminServiceProvider extends ServiceProvider
         $sent = $emailService->sendTestEmail($email);
 
         if ($sent) {
-            wp_send_json_success(['message' => sprintf(__('Test email successfully dispatched to %s!', 'tourivo'), $email)]);
+            wp_send_json_success([
+                /* translators: %s: Email address */
+                'message' => sprintf(__('Test email successfully dispatched to %s!', 'tourivo'), $email),
+            ]);
         } else {
             wp_send_json_error(['message' => __('Mail sending failed. Please verify your WordPress SMTP settings.', 'tourivo')], 500);
         }
@@ -605,7 +622,15 @@ class AdminServiceProvider extends ServiceProvider
                             <small style="color: #64748b;"><?php echo esc_html(gmdate('M d, Y g:i A', strtotime($log['created_at']))); ?></small>
                         </div>
                         <div style="color: #334155; line-height: 1.4;"><?php echo nl2br(esc_html($log['details'])); ?></div>
-                        <small style="color: #94a3b8; font-size: 11px;"><?php echo esc_html(sprintf(__('Logged by: %s', 'tourivo'), $userName)); ?></small>
+                        <small style="color: #94a3b8; font-size: 11px;"><?php
+                        echo esc_html(
+                            sprintf(
+                                /* translators: %s: Staff or user display name */
+                                __('Logged by: %s', 'tourivo'),
+                                $userName
+                            )
+                        );
+                        ?></small>
                     </li>
                 <?php endforeach; ?>
             </ul>

@@ -69,6 +69,12 @@ class TourMetaBox extends MetaBox
 
     public function save(int $postId, WP_Post $post): void
     {
+        // Nonce is verified by parent handleSave(), but documented here for PHPCS
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (empty($_POST)) {
+            return;
+        }
+
         // 1. Basic Fields
         $fields = [
             '_tourivo_tour_type'        => 'sanitize_text_field',
@@ -84,10 +90,11 @@ class TourMetaBox extends MetaBox
             '_tourivo_longitude'        => 'sanitize_text_field',
         ];
 
+        // phpcs:disable WordPress.Security.NonceVerification.Missing
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
-                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field($val);
+                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field((string)$val);
                 update_post_meta($postId, $field, $cleanVal);
             }
         }
@@ -123,14 +130,17 @@ class TourMetaBox extends MetaBox
         // 4. Itinerary Array
         if (isset($_POST['_tourivo_itinerary']) && is_array($_POST['_tourivo_itinerary'])) {
             $cleanItinerary = [];
-            foreach (wp_unslash($_POST['_tourivo_itinerary']) as $item) {
-                if (!empty($item['title'])) {
-                    $cleanItinerary[] = [
-                        'day'   => sanitize_text_field($item['day'] ?? ''),
-                        'title' => sanitize_text_field($item['title'] ?? ''),
-                        'desc'  => sanitize_textarea_field($item['desc'] ?? ''),
-                        'meals' => sanitize_text_field($item['meals'] ?? ''),
-                    ];
+            $rawItinerary = wp_unslash($_POST['_tourivo_itinerary']);
+            if (is_array($rawItinerary)) {
+                foreach ($rawItinerary as $item) {
+                    if (is_array($item) && !empty($item['title'])) {
+                        $cleanItinerary[] = [
+                            'day'   => sanitize_text_field($item['day'] ?? ''),
+                            'title' => sanitize_text_field($item['title'] ?? ''),
+                            'desc'  => sanitize_textarea_field($item['desc'] ?? ''),
+                            'meals' => sanitize_text_field($item['meals'] ?? ''),
+                        ];
+                    }
                 }
             }
             update_post_meta($postId, '_tourivo_itinerary', wp_slash(wp_json_encode($cleanItinerary, JSON_UNESCAPED_UNICODE)));
@@ -141,18 +151,22 @@ class TourMetaBox extends MetaBox
         // 5. FAQs Array
         if (isset($_POST['_tourivo_faqs']) && is_array($_POST['_tourivo_faqs'])) {
             $cleanFaqs = [];
-            foreach (wp_unslash($_POST['_tourivo_faqs']) as $faq) {
-                if (!empty($faq['question'])) {
-                    $cleanFaqs[] = [
-                        'question' => sanitize_text_field($faq['question'] ?? ''),
-                        'answer'   => sanitize_textarea_field($faq['answer'] ?? ''),
-                    ];
+            $rawFaqs = wp_unslash($_POST['_tourivo_faqs']);
+            if (is_array($rawFaqs)) {
+                foreach ($rawFaqs as $faq) {
+                    if (is_array($faq) && !empty($faq['question'])) {
+                        $cleanFaqs[] = [
+                            'question' => sanitize_text_field($faq['question'] ?? ''),
+                            'answer'   => sanitize_textarea_field($faq['answer'] ?? ''),
+                        ];
+                    }
                 }
             }
             update_post_meta($postId, '_tourivo_faqs', wp_slash(wp_json_encode($cleanFaqs, JSON_UNESCAPED_UNICODE)));
         } else {
             update_post_meta($postId, '_tourivo_faqs', wp_slash(wp_json_encode([], JSON_UNESCAPED_UNICODE)));
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 
         do_action('tourivo_save_tour_meta', $postId, $post);
     }

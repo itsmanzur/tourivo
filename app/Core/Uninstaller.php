@@ -63,6 +63,7 @@ class Uninstaller
             delete_option('tourivo_notification_email');
 
             // Purge rate-limiting, hold sessions, and cached transients
+            // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
             $wpdb->query(
                 "DELETE FROM {$wpdb->options} 
                  WHERE option_name LIKE '_transient_trv_%' 
@@ -74,6 +75,7 @@ class Uninstaller
                 "DELETE FROM {$wpdb->usermeta} 
                  WHERE meta_key IN ('_tourivo_wishlist', 'tourivo_dismiss_welcome_notice')"
             );
+            // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         }
 
         do_action('tourivo/uninstalled');

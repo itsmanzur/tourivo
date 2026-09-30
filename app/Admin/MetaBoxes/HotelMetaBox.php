@@ -59,6 +59,12 @@ class HotelMetaBox extends MetaBox
 
     public function save(int $postId, WP_Post $post): void
     {
+        // Nonce is verified by parent handleSave(), but documented here for PHPCS
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (empty($_POST)) {
+            return;
+        }
+
         $fields = [
             '_tourivo_star_rating'   => 'absint',
             '_tourivo_address'       => 'sanitize_text_field',
@@ -73,12 +79,14 @@ class HotelMetaBox extends MetaBox
             '_tourivo_policy'        => 'sanitize_textarea_field',
         ];
 
+        // phpcs:disable WordPress.Security.NonceVerification.Missing
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
-                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field($val);
+                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field((string)$val);
                 update_post_meta($postId, $field, $cleanVal);
             }
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
     }
 }

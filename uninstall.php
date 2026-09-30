@@ -14,9 +14,9 @@ if (!defined('WP_UNINSTALL_PLUGIN')) {
 
 // Load autoloader if not present
 if (!class_exists('Tourivo\\Core\\Uninstaller')) {
-    $autoloader = plugin_dir_path(__FILE__) . 'vendor/autoload.php';
-    if (file_exists($autoloader)) {
-        require_once $autoloader;
+    $tourivoAutoloader = plugin_dir_path(__FILE__) . 'vendor/autoload.php';
+    if (file_exists($tourivoAutoloader)) {
+        require_once $tourivoAutoloader;
     } else {
         spl_autoload_register(static function (string $class) {
             $prefix = 'Tourivo\\';

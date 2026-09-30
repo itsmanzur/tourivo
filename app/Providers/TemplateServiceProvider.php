@@ -55,16 +55,16 @@ class TemplateServiceProvider extends ServiceProvider
         check_ajax_referer('tourivo_frontend_nonce', 'nonce');
 
         $params = [
-            'type'        => sanitize_text_field((string) ($_GET['type'] ?? 'tour')),
-            's'           => sanitize_text_field((string) ($_GET['s'] ?? '')),
-            'destination' => sanitize_text_field((string) ($_GET['destination'] ?? '')),
-            'activity'    => sanitize_text_field((string) ($_GET['activity'] ?? '')),
-            'duration'    => sanitize_text_field((string) ($_GET['duration'] ?? '')),
-            'star_rating' => (int) ($_GET['star_rating'] ?? 0),
-            'max_price'   => (float) ($_GET['max_price'] ?? 0),
-            'orderby'     => sanitize_text_field((string) ($_GET['orderby'] ?? 'newest')),
-            'count'       => max(1, (int) ($_GET['count'] ?? 9)),
-            'columns'     => max(1, min(4, (int) ($_GET['columns'] ?? 3))),
+            'type'        => isset($_GET['type']) ? sanitize_text_field(wp_unslash($_GET['type'])) : 'tour',
+            's'           => isset($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '',
+            'destination' => isset($_GET['destination']) ? sanitize_text_field(wp_unslash($_GET['destination'])) : '',
+            'activity'    => isset($_GET['activity']) ? sanitize_text_field(wp_unslash($_GET['activity'])) : '',
+            'duration'    => isset($_GET['duration']) ? sanitize_text_field(wp_unslash($_GET['duration'])) : '',
+            'star_rating' => isset($_GET['star_rating']) ? absint(wp_unslash($_GET['star_rating'])) : 0,
+            'max_price'   => isset($_GET['max_price']) ? (float) sanitize_text_field(wp_unslash($_GET['max_price'])) : 0.0,
+            'orderby'     => isset($_GET['orderby']) ? sanitize_text_field(wp_unslash($_GET['orderby'])) : 'newest',
+            'count'       => isset($_GET['count']) ? max(1, absint(wp_unslash($_GET['count']))) : 9,
+            'columns'     => isset($_GET['columns']) ? max(1, min(4, absint(wp_unslash($_GET['columns'])))) : 3,
         ];
 
         $html = \Tourivo\Shortcodes\FilterSearchShortcode::queryAndRender($params);
@@ -83,9 +83,8 @@ class TemplateServiceProvider extends ServiceProvider
     {
         check_ajax_referer('tourivo_frontend_nonce', 'nonce');
 
-        $rawIds = $_POST['ids'] ?? [];
-        $ids = is_array($rawIds) ? array_map('intval', $rawIds) : [];
-        $ids = array_filter($ids, fn($id) => $id > 0);
+        $rawIds = isset($_POST['ids']) && is_array($_POST['ids']) ? array_map('absint', wp_unslash($_POST['ids'])) : [];
+        $ids = array_values(array_filter($rawIds, fn($id) => $id > 0));
 
         if (empty($ids)) {
             wp_send_json_success([
@@ -116,9 +115,8 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $userId = get_current_user_id();
-        $rawIds = $_POST['ids'] ?? [];
-        $ids = is_array($rawIds) ? array_map('intval', $rawIds) : [];
-        $ids = array_values(array_unique(array_filter($ids, fn($id) => $id > 0)));
+        $rawIds = isset($_POST['ids']) && is_array($_POST['ids']) ? array_map('absint', wp_unslash($_POST['ids'])) : [];
+        $ids = array_values(array_unique(array_filter($rawIds, fn($id) => $id > 0)));
 
         update_user_meta($userId, '_tourivo_wishlist', $ids);
 

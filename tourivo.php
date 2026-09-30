@@ -36,7 +36,7 @@ if (version_compare(PHP_VERSION, TOURIVO_MIN_PHP_VER, '<')) {
             TOURIVO_MIN_PHP_VER,
             PHP_VERSION
         );
-        echo '<div class="notice notice-error"><p>' . $message . '</p></div>';
+        echo '<div class="notice notice-error"><p>' . esc_html($message) . '</p></div>';
     });
     return;
 }

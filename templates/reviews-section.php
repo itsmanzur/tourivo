@@ -10,15 +10,15 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$postId = $postId ?? get_the_ID();
-if (!$postId) {
+$tourivoPostId = isset($postId) ? (int) $postId : (int) get_the_ID();
+if (!$tourivoPostId) {
     return;
 }
 
-$reviewService = new \Tourivo\Services\ReviewService();
-$breakdown = $reviewService->getRatingBreakdown($postId);
-$comments = get_comments([
-    'post_id' => $postId,
+$tourivoReviewService = new \Tourivo\Services\ReviewService();
+$tourivoBreakdown     = $tourivoReviewService->getRatingBreakdown($tourivoPostId);
+$tourivoComments      = get_comments([
+    'post_id' => $tourivoPostId,
     'status'  => 'approve',
     'type'    => 'comment',
     'order'   => 'DESC',
@@ -28,39 +28,47 @@ $comments = get_comments([
 <div class="tourivo-block-section tourivo-reviews-block" id="tourivo-reviews">
     <h2 class="section-heading">
         ⭐ <?php esc_html_e('Traveler Reviews & Ratings', 'tourivo'); ?>
-        <?php if ($breakdown['total'] > 0) : ?>
-            <span class="reviews-total-badge">(<?php echo esc_html((string)$breakdown['total']); ?>)</span>
+        <?php if ($tourivoBreakdown['total'] > 0) : ?>
+            <span class="reviews-total-badge">(<?php echo esc_html((string) $tourivoBreakdown['total']); ?>)</span>
         <?php endif; ?>
     </h2>
 
     <!-- Rating Summary Header -->
     <div class="tourivo-rating-overview">
         <div class="rating-score-box">
-            <span class="score-number"><?php echo esc_html(number_format($breakdown['average'], 1)); ?></span>
+            <span class="score-number"><?php echo esc_html(number_format($tourivoBreakdown['average'], 1)); ?></span>
             <div class="score-stars">
                 <?php
-                $filledStars = (int) round($breakdown['average']);
-                for ($i = 1; $i <= 5; $i++) {
-                    echo $i <= $filledStars ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
+                $tourivoFilledStars = (int) round($tourivoBreakdown['average']);
+                for ($tourivoStarIdx = 1; $tourivoStarIdx <= 5; $tourivoStarIdx++) {
+                    echo $tourivoStarIdx <= $tourivoFilledStars ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
                 }
                 ?>
             </div>
             <span class="score-subtext">
-                <?php echo esc_html(sprintf(_n('Based on %d review', 'Based on %d reviews', $breakdown['total'], 'tourivo'), $breakdown['total'])); ?>
+                <?php
+                echo esc_html(
+                    sprintf(
+                        /* translators: %d: Number of reviews */
+                        _n('Based on %d review', 'Based on %d reviews', $tourivoBreakdown['total'], 'tourivo'),
+                        $tourivoBreakdown['total']
+                    )
+                );
+                ?>
             </span>
         </div>
 
         <div class="rating-bars-box">
-            <?php for ($s = 5; $s >= 1; $s--) : 
-                $pct = $breakdown['percentages'][$s] ?? 0;
-                $count = $breakdown['stars'][$s] ?? 0;
+            <?php for ($tourivoStarRating = 5; $tourivoStarRating >= 1; $tourivoStarRating--) : 
+                $tourivoPct   = $tourivoBreakdown['percentages'][$tourivoStarRating] ?? 0;
+                $tourivoCount = $tourivoBreakdown['stars'][$tourivoStarRating] ?? 0;
             ?>
                 <div class="rating-bar-row">
-                    <span class="bar-star-label"><?php echo esc_html((string)$s); ?> ★</span>
+                    <span class="bar-star-label"><?php echo esc_html((string) $tourivoStarRating); ?> ★</span>
                     <div class="bar-track">
-                        <div class="bar-fill" style="width: <?php echo esc_attr((string)$pct); ?>%;"></div>
+                        <div class="bar-fill" style="width: <?php echo esc_attr((string) $tourivoPct); ?>%;"></div>
                     </div>
-                    <span class="bar-count-label"><?php echo esc_html((string)$count); ?></span>
+                    <span class="bar-count-label"><?php echo esc_html((string) $tourivoCount); ?></span>
                 </div>
             <?php endfor; ?>
         </div>
@@ -68,39 +76,39 @@ $comments = get_comments([
 
     <!-- Reviews List -->
     <div class="tourivo-reviews-list">
-        <?php if (!empty($comments)) : ?>
-            <?php foreach ($comments as $comm) : 
-                $rating = (int) get_comment_meta((int)$comm->comment_ID, \Tourivo\Services\ReviewService::META_RATING, true);
-                $isVerified = $reviewService->isVerifiedTraveler($comm->comment_author_email, $postId);
+        <?php if (!empty($tourivoComments)) : ?>
+            <?php foreach ($tourivoComments as $tourivoComment) : 
+                $tourivoCommentRating   = (int) get_comment_meta((int) $tourivoComment->comment_ID, \Tourivo\Services\ReviewService::META_RATING, true);
+                $tourivoIsVerifiedUser = $tourivoReviewService->isVerifiedTraveler($tourivoComment->comment_author_email, $tourivoPostId);
             ?>
-                <div class="tourivo-review-card" id="comment-<?php echo esc_attr((string)$comm->comment_ID); ?>">
+                <div class="tourivo-review-card" id="comment-<?php echo esc_attr((string) $tourivoComment->comment_ID); ?>">
                     <div class="review-header">
                         <div class="review-author-avatar">
-                            <?php echo get_avatar($comm, 48); ?>
+                            <?php echo get_avatar($tourivoComment, 48); ?>
                         </div>
                         <div class="review-author-info">
                             <h4 class="author-name">
-                                <?php echo esc_html($comm->comment_author); ?>
-                                <?php if ($isVerified) : ?>
+                                <?php echo esc_html($tourivoComment->comment_author); ?>
+                                <?php if ($tourivoIsVerifiedUser) : ?>
                                     <span class="verified-badge" title="<?php esc_attr_e('Verified Booking Traveler', 'tourivo'); ?>">
                                         ✓ <?php esc_html_e('Verified Traveler', 'tourivo'); ?>
                                     </span>
                                 <?php endif; ?>
                             </h4>
-                            <span class="review-date"><?php echo esc_html(get_comment_date('F j, Y', $comm)); ?></span>
+                            <span class="review-date"><?php echo esc_html(get_comment_date('F j, Y', $tourivoComment)); ?></span>
                         </div>
-                        <?php if ($rating > 0) : ?>
+                        <?php if ($tourivoCommentRating > 0) : ?>
                             <div class="review-stars">
                                 <?php 
-                                for ($i = 1; $i <= 5; $i++) {
-                                    echo $i <= $rating ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
+                                for ($tourivoRatingIdx = 1; $tourivoRatingIdx <= 5; $tourivoRatingIdx++) {
+                                    echo $tourivoRatingIdx <= $tourivoCommentRating ? '<span class="star filled">★</span>' : '<span class="star">☆</span>';
                                 }
                                 ?>
                             </div>
                         <?php endif; ?>
                     </div>
                     <div class="review-content">
-                        <?php echo wp_kses_post(wpautop($comm->comment_content)); ?>
+                        <?php echo wp_kses_post(wpautop($tourivoComment->comment_content)); ?>
                     </div>
                 </div>
             <?php endforeach; ?>
@@ -115,7 +123,7 @@ $comments = get_comments([
     <div class="tourivo-leave-review-form-wrap">
         <h3>✍️ <?php esc_html_e('Write a Review', 'tourivo'); ?></h3>
         
-        <?php if (comments_open($postId)) : ?>
+        <?php if (comments_open($tourivoPostId)) : ?>
             <form action="<?php echo esc_url(site_url('/wp-comments-post.php')); ?>" method="post" class="tourivo-review-form">
                 <!-- Interactive Star Selector -->
                 <div class="form-row rating-picker-row">
@@ -146,7 +154,7 @@ $comments = get_comments([
                     <textarea name="comment" id="comment" rows="4" required placeholder="<?php esc_attr_e('What did you love about this trip? How was the guide, accommodation, and itinerary?', 'tourivo'); ?>"></textarea>
                 </div>
 
-                <input type="hidden" name="comment_post_ID" value="<?php echo esc_attr((string)$postId); ?>">
+                <input type="hidden" name="comment_post_ID" value="<?php echo esc_attr((string) $tourivoPostId); ?>">
                 <input type="hidden" name="comment_parent" id="comment_parent" value="0">
 
                 <div class="form-row form-submit-row" style="margin-top: 14px;">

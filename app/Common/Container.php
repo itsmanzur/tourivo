@@ -151,7 +151,8 @@ class Container
             if (class_exists($id)) {
                 return $this->resolveClass($id);
             }
-            throw new Exception("Target [{$id}] is not bound in Tourivo container and cannot be resolved.");
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+            throw new Exception(esc_html(sprintf('Target [%s] is not bound in Tourivo container and cannot be resolved.', $id)));
         }
 
         $binding = $this->bindings[$id];
@@ -185,11 +186,13 @@ class Container
         try {
             $reflector = new ReflectionClass($className);
         } catch (ReflectionException $e) {
-            throw new Exception("Class [{$className}] does not exist: {$e->getMessage()}", 0, $e);
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+            throw new Exception(esc_html(sprintf('Class [%s] does not exist: %s', $className, $e->getMessage())), 0, $e);
         }
 
         if (!$reflector->isInstantiable()) {
-            throw new Exception("Class [{$className}] is not instantiable.");
+            // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+            throw new Exception(esc_html(sprintf('Class [%s] is not instantiable.', $className)));
         }
 
         $constructor = $reflector->getConstructor();
@@ -232,6 +235,7 @@ class Container
             return null;
         }
 
-        throw new Exception("Unresolvable parameter [{$parameter->getName()}] for dependency injection.");
+        // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
+        throw new Exception(esc_html(sprintf('Unresolvable parameter [%s] for dependency injection.', $parameter->getName())));
     }
 }

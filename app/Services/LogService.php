@@ -35,6 +35,7 @@ class LogService
             $userId = get_current_user_id();
         }
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
         $inserted = $wpdb->insert(
             $table,
             [
@@ -46,6 +47,7 @@ class LogService
             ],
             ['%d', '%s', '%d', '%s', '%s']
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
 
         return $inserted ? (int) $wpdb->insert_id : 0;
     }
@@ -61,6 +63,7 @@ class LogService
         global $wpdb;
         $table = $wpdb->prefix . 'tourivo_logs';
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $results = $wpdb->get_results(
             $wpdb->prepare(
                 "SELECT * FROM {$table} WHERE booking_id = %d ORDER BY created_at DESC, id DESC",
@@ -68,6 +71,7 @@ class LogService
             ),
             ARRAY_A
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         return is_array($results) ? $results : [];
     }

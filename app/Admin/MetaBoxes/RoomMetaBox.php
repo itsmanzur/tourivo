@@ -77,6 +77,12 @@ class RoomMetaBox extends MetaBox
 
     public function save(int $postId, WP_Post $post): void
     {
+        // Nonce is verified by parent handleSave(), but documented here for PHPCS
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        if (empty($_POST)) {
+            return;
+        }
+
         $oldParentHotelId = (int) (get_post_meta($postId, '_tourivo_parent_hotel_id', true) ?: 0);
 
         $fields = [
@@ -90,15 +96,17 @@ class RoomMetaBox extends MetaBox
             '_tourivo_bed_type'        => 'sanitize_text_field',
         ];
 
+        // phpcs:disable WordPress.Security.NonceVerification.Missing
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
-                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field($val);
+                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field((string)$val);
                 update_post_meta($postId, $field, $cleanVal);
             }
         }
 
-        $newParentHotelId = isset($_POST['_tourivo_parent_hotel_id']) ? absint($_POST['_tourivo_parent_hotel_id']) : 0;
+        $newParentHotelId = isset($_POST['_tourivo_parent_hotel_id']) ? absint(wp_unslash($_POST['_tourivo_parent_hotel_id'])) : 0;
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 
         if ($newParentHotelId > 0) {
             self::updateHotelMinPrice($newParentHotelId);

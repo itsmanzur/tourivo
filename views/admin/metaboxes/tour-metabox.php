@@ -93,30 +93,38 @@ if (!defined('ABSPATH')) {
             <p class="description"><?php esc_html_e('Add day-by-day plan and activities for this tour.', 'tourivo'); ?></p>
             <div id="tourivo-itinerary-repeater" class="tourivo-repeater-container">
                 <?php if (!empty($itinerary)) : ?>
-                    <?php foreach ($itinerary as $index => $item) : ?>
+                    <?php foreach ($itinerary as $tourivoItineraryIndex => $tourivoItineraryItem) : ?>
                         <div class="tourivo-repeater-row">
                             <div class="row-header">
-                                <strong><?php echo esc_html(sprintf(__('Day / Stage: %s', 'tourivo'), $item['day'] ?? ($index + 1))); ?></strong>
+                                <strong><?php
+                                echo esc_html(
+                                    sprintf(
+                                        /* translators: %s: Day number or stage title */
+                                        __('Day / Stage: %s', 'tourivo'),
+                                        $tourivoItineraryItem['day'] ?? ($tourivoItineraryIndex + 1)
+                                    )
+                                );
+                                ?></strong>
                                 <button type="button" class="button remove-row-btn">&times;</button>
                             </div>
                             <div class="row-body">
                                 <div class="tourivo-row">
                                     <div class="tourivo-col" style="flex: 0 0 100px;">
                                         <label><?php esc_html_e('Day #', 'tourivo'); ?></label>
-                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr($index); ?>][day]" value="<?php echo esc_attr($item['day'] ?? ($index + 1)); ?>">
+                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][day]" value="<?php echo esc_attr($tourivoItineraryItem['day'] ?? ($tourivoItineraryIndex + 1)); ?>">
                                     </div>
                                     <div class="tourivo-col">
                                         <label><?php esc_html_e('Day Title', 'tourivo'); ?></label>
-                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr($index); ?>][title]" value="<?php echo esc_attr($item['title'] ?? ''); ?>" placeholder="e.g. Arrival in Bali & Beach Walk">
+                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][title]" value="<?php echo esc_attr($tourivoItineraryItem['title'] ?? ''); ?>" placeholder="e.g. Arrival in Bali & Beach Walk">
                                     </div>
                                     <div class="tourivo-col" style="flex: 0 0 160px;">
                                         <label><?php esc_html_e('Included Meals', 'tourivo'); ?></label>
-                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr($index); ?>][meals]" value="<?php echo esc_attr($item['meals'] ?? ''); ?>" placeholder="Breakfast, Dinner">
+                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][meals]" value="<?php echo esc_attr($tourivoItineraryItem['meals'] ?? ''); ?>" placeholder="Breakfast, Dinner">
                                     </div>
                                 </div>
                                 <div class="tourivo-form-group" style="margin-top: 10px;">
                                     <label><?php esc_html_e('Description & Details', 'tourivo'); ?></label>
-                                    <textarea rows="3" name="_tourivo_itinerary[<?php echo esc_attr($index); ?>][desc]"><?php echo esc_textarea($item['desc'] ?? ''); ?></textarea>
+                                    <textarea rows="3" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][desc]"><?php echo esc_textarea($tourivoItineraryItem['desc'] ?? ''); ?></textarea>
                                 </div>
                             </div>
                         </div>
@@ -132,10 +140,10 @@ if (!defined('ABSPATH')) {
                 <div class="tourivo-col">
                     <h3><?php esc_html_e('Included in Tour', 'tourivo'); ?></h3>
                     <div id="tourivo-inclusions-list" class="tourivo-list-repeater">
-                        <?php if (!empty($inclusions)) : foreach ($inclusions as $inc) : ?>
+                        <?php if (!empty($inclusions)) : foreach ($inclusions as $tourivoIncItem) : ?>
                             <div class="list-item-row">
                                 <span class="dashicons dashicons-yes-alt" style="color: #10b981;"></span>
-                                <input type="text" name="_tourivo_inclusions[]" value="<?php echo esc_attr($inc); ?>">
+                                <input type="text" name="_tourivo_inclusions[]" value="<?php echo esc_attr($tourivoIncItem); ?>">
                                 <button type="button" class="button remove-list-item">&times;</button>
                             </div>
                         <?php endforeach; endif; ?>
@@ -146,10 +154,10 @@ if (!defined('ABSPATH')) {
                 <div class="tourivo-col">
                     <h3><?php esc_html_e('Excluded from Tour', 'tourivo'); ?></h3>
                     <div id="tourivo-exclusions-list" class="tourivo-list-repeater">
-                        <?php if (!empty($exclusions)) : foreach ($exclusions as $exc) : ?>
+                        <?php if (!empty($exclusions)) : foreach ($exclusions as $tourivoExcItem) : ?>
                             <div class="list-item-row">
                                 <span class="dashicons dashicons-dismiss" style="color: #ef4444;"></span>
-                                <input type="text" name="_tourivo_exclusions[]" value="<?php echo esc_attr($exc); ?>">
+                                <input type="text" name="_tourivo_exclusions[]" value="<?php echo esc_attr($tourivoExcItem); ?>">
                                 <button type="button" class="button remove-list-item">&times;</button>
                             </div>
                         <?php endforeach; endif; ?>
@@ -202,7 +210,7 @@ if (!defined('ABSPATH')) {
 
             <h3><?php esc_html_e('Frequently Asked Questions (FAQs)', 'tourivo'); ?></h3>
             <div id="tourivo-faqs-list" class="tourivo-repeater-container">
-                <?php if (!empty($faqs)) : foreach ($faqs as $i => $faq) : ?>
+                <?php if (!empty($faqs)) : foreach ($faqs as $tourivoFaqIdx => $tourivoFaqItem) : ?>
                     <div class="tourivo-repeater-row">
                         <div class="row-header">
                             <strong><?php esc_html_e('Question & Answer', 'tourivo'); ?></strong>
@@ -211,11 +219,11 @@ if (!defined('ABSPATH')) {
                         <div class="row-body">
                             <div class="tourivo-form-group">
                                 <label><?php esc_html_e('Question', 'tourivo'); ?></label>
-                                <input type="text" name="_tourivo_faqs[<?php echo esc_attr($i); ?>][question]" value="<?php echo esc_attr($faq['question'] ?? ''); ?>">
+                                <input type="text" name="_tourivo_faqs[<?php echo esc_attr((string)$tourivoFaqIdx); ?>][question]" value="<?php echo esc_attr($tourivoFaqItem['question'] ?? ''); ?>">
                             </div>
                             <div class="tourivo-form-group">
                                 <label><?php esc_html_e('Answer', 'tourivo'); ?></label>
-                                <textarea rows="2" name="_tourivo_faqs[<?php echo esc_attr($i); ?>][answer]"><?php echo esc_textarea($faq['answer'] ?? ''); ?></textarea>
+                                <textarea rows="2" name="_tourivo_faqs[<?php echo esc_attr((string)$tourivoFaqIdx); ?>][answer]"><?php echo esc_textarea($tourivoFaqItem['answer'] ?? ''); ?></textarea>
                             </div>
                         </div>
                     </div>

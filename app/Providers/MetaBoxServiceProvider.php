@@ -175,7 +175,7 @@ class MetaBoxServiceProvider extends ServiceProvider
 
         switch ($column) {
             case 'star_rating':
-                echo str_repeat('★', $hotel->getStarRating());
+                echo esc_html(str_repeat('★', $hotel->getStarRating()));
                 break;
             case 'city':
                 echo esc_html($hotel->getCity() ?: '—');
@@ -198,9 +198,9 @@ class MetaBoxServiceProvider extends ServiceProvider
         foreach ($columns as $key => $title) {
             $newColumns[$key] = $title;
             if ($key === 'title') {
-                $newColumns['parent_hotel'] = __('Parent Hotel', 'tourivo');
-                $newColumns['nightly_rate'] = __('Price / Night', 'tourivo');
-                $newColumns['capacity']     = __('Capacity', 'tourivo');
+                $newColumns['parent_hotel'] = esc_html__('Parent Hotel', 'tourivo');
+                $newColumns['nightly_rate'] = esc_html__('Price / Night', 'tourivo');
+                $newColumns['capacity']     = esc_html__('Capacity', 'tourivo');
             }
         }
         return $newColumns;
@@ -230,11 +230,13 @@ class MetaBoxServiceProvider extends ServiceProvider
                 echo '<strong>' . esc_html($room->getFormattedPrice()) . '</strong>';
                 break;
             case 'capacity':
-                echo sprintf(
-                    /* translators: 1: Adults count, 2: Children count */
-                    esc_html__('%1$d Adults, %2$d Children', 'tourivo'),
-                    $room->getMaxAdults(),
-                    $room->getMaxChildren()
+                echo esc_html(
+                    sprintf(
+                        /* translators: 1: Adults count, 2: Children count */
+                        __('%1$d Adults, %2$d Children', 'tourivo'),
+                        $room->getMaxAdults(),
+                        $room->getMaxChildren()
+                    )
                 );
                 break;
         }

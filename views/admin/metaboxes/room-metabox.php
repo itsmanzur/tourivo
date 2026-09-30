@@ -36,9 +36,9 @@ if (!defined('ABSPATH')) {
                 <label for="_tourivo_parent_hotel_id"><strong><?php esc_html_e('Select Parent Hotel / Property *', 'tourivo'); ?></strong></label>
                 <select name="_tourivo_parent_hotel_id" id="_tourivo_parent_hotel_id" style="width: 100%; max-width: 480px;">
                     <option value=""><?php esc_html_e('-- Select Hotel --', 'tourivo'); ?></option>
-                    <?php foreach ($hotels as $hotel) : ?>
-                        <option value="<?php echo esc_attr((string)$hotel->ID); ?>" <?php selected($parentHotelId, $hotel->ID); ?>>
-                            🏨 <?php echo esc_html($hotel->post_title); ?>
+                    <?php foreach ($hotels as $tourivoHotelOption) : ?>
+                        <option value="<?php echo esc_attr((string)$tourivoHotelOption->ID); ?>" <?php selected($parentHotelId, $tourivoHotelOption->ID); ?>>
+                            🏨 <?php echo esc_html($tourivoHotelOption->post_title); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

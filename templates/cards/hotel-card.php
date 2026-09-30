@@ -14,8 +14,8 @@ if (!isset($hotel) || !($hotel instanceof \Tourivo\Models\Hotel)) {
     return;
 }
 
-$minPrice = $hotel->getMinPrice();
-$symbol = (string) apply_filters('tourivo/currency_symbol', '$');
+$tourivoMinPrice = $hotel->getMinPrice();
+$tourivoSymbol = (string) apply_filters('tourivo/currency_symbol', '$');
 ?>
 <div class="tourivo-card tourivo-hotel-card">
     <div class="tourivo-card-thumb">
@@ -33,7 +33,7 @@ $symbol = (string) apply_filters('tourivo/currency_symbol', '$');
         </button>
 
         <div class="tourivo-stars-badge">
-            <?php echo str_repeat('★', $hotel->getStarRating()); ?>
+            <?php echo esc_html(str_repeat('★', $hotel->getStarRating())); ?>
         </div>
 
         <?php if ($hotel->getCity()) : ?>
@@ -43,12 +43,28 @@ $symbol = (string) apply_filters('tourivo/currency_symbol', '$');
 
     <div class="tourivo-card-body">
         <div class="tourivo-card-meta">
-            <span class="meta-item"><span class="dashicons dashicons-admin-home"></span> <?php echo esc_html(sprintf(__('%d Room Types', 'tourivo'), count($hotel->getRooms()))); ?></span>
+            <span class="meta-item"><span class="dashicons dashicons-admin-home"></span> <?php
+            echo esc_html(
+                sprintf(
+                    /* translators: %d: Number of room types */
+                    __('%d Room Types', 'tourivo'),
+                    count($hotel->getRooms())
+                )
+            );
+            ?></span>
             <?php if ($hotel->getAddress()) : ?>
                 <span class="meta-item text-truncate"><span class="dashicons dashicons-location-alt"></span> <?php echo esc_html($hotel->getAddress()); ?></span>
             <?php endif; ?>
             <?php if ($hotel->getReviewCount() > 0) : ?>
-                <span class="meta-item meta-rating" title="<?php echo esc_attr(sprintf(__('%s out of 5 stars', 'tourivo'), $hotel->getAverageRating())); ?>">
+                <span class="meta-item meta-rating" title="<?php
+                echo esc_attr(
+                    sprintf(
+                        /* translators: %s: Rating score out of 5 */
+                        __('%s out of 5 stars', 'tourivo'),
+                        $hotel->getAverageRating()
+                    )
+                );
+                ?>">
                     <span class="rating-star">★</span> <?php echo esc_html(number_format($hotel->getAverageRating(), 1)); ?> <span class="rating-count">(<?php echo esc_html((string)$hotel->getReviewCount()); ?>)</span>
                 </span>
             <?php endif; ?>
@@ -61,11 +77,10 @@ $symbol = (string) apply_filters('tourivo/currency_symbol', '$');
         <div class="tourivo-card-footer">
             <div class="tourivo-price-box">
                 <span class="price-from"><?php esc_html_e('Starts from', 'tourivo'); ?></span>
-                <span class="price-val"><?php echo esc_html(\Tourivo\Support\Money::format($minPrice)); ?></span>
+                <span class="price-val"><?php echo esc_html(\Tourivo\Support\Money::format($tourivoMinPrice)); ?></span>
                 <span class="price-unit">/ <?php esc_html_e('night', 'tourivo'); ?></span>
             </div>
             <a href="<?php echo esc_url($hotel->getPermalink()); ?>" class="tourivo-btn tourivo-btn-sm"><?php esc_html_e('View Rooms', 'tourivo'); ?> &rarr;</a>
         </div>
     </div>
 </div>
-

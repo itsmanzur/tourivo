@@ -70,6 +70,7 @@ class TourGridShortcode
             $args['tax_query'] = $taxQuery;
         }
 
+        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
         $query = new WP_Query($args);
 
         if (!$query->have_posts()) {

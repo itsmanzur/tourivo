@@ -1,6 +1,6 @@
-=== Tourivo – Travel, Tour & Hotel Booking Engine ===
+=== Tourivo ===
 Contributors: tourivo
-Tags: travel, tour booking, hotel booking, accommodation, tour operator, booking engine, reservation, travel agency, tour package
+Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 6.7
 Requires PHP: 8.0

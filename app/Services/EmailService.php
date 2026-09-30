@@ -100,6 +100,7 @@ class EmailService
         $fromName  = Config::get('email_from_name', $siteName);
         $fromEmail = Config::get('email_from_address', get_option('admin_email'));
 
+        /* translators: %s: Website name */
         $subject = sprintf(__('[Tourivo Test] Email Dispatch Verification - %s', 'tourivo'), $siteName);
         
         $mockBooking = [

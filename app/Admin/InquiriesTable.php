@@ -26,15 +26,18 @@ class InquiriesTable
     public static function render(): void
     {
         $inquiryService = Container::getInstance()->get(InquiryService::class);
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $statusFilter   = isset($_GET['status']) ? sanitize_text_field(wp_unslash($_GET['status'])) : '';
         $inquiries      = $inquiryService->getInquiries(['status' => $statusFilter, 'limit' => 50]);
 
         global $wpdb;
         $table = $wpdb->prefix . 'tourivo_inquiries';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         $countAll     = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
         $countNew     = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE status = 'new'");
         $countReplied = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE status = 'replied'");
         $countClosed  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE status = 'closed'");
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
 
         $baseUrl = admin_url('admin.php?page=tourivo-inquiries');
         ?>
@@ -48,10 +51,10 @@ class InquiriesTable
 
             <!-- Status Filter Bar -->
             <ul class="subsubsub">
-                <li><a href="<?php echo esc_url($baseUrl); ?>" class="<?php echo empty($statusFilter) ? 'current' : ''; ?>"><?php esc_html_e('All', 'tourivo'); ?> <span class="count">(<?php echo $countAll; ?>)</span></a> |</li>
-                <li><a href="<?php echo esc_url($baseUrl . '&status=new'); ?>" class="<?php echo $statusFilter === 'new' ? 'current' : ''; ?>"><?php esc_html_e('New Leads', 'tourivo'); ?> <span class="count">(<?php echo $countNew; ?>)</span></a> |</li>
-                <li><a href="<?php echo esc_url($baseUrl . '&status=replied'); ?>" class="<?php echo $statusFilter === 'replied' ? 'current' : ''; ?>"><?php esc_html_e('Replied', 'tourivo'); ?> <span class="count">(<?php echo $countReplied; ?>)</span></a> |</li>
-                <li><a href="<?php echo esc_url($baseUrl . '&status=closed'); ?>" class="<?php echo $statusFilter === 'closed' ? 'current' : ''; ?>"><?php esc_html_e('Closed', 'tourivo'); ?> <span class="count">(<?php echo $countClosed; ?>)</span></a></li>
+                <li><a href="<?php echo esc_url($baseUrl); ?>" class="<?php echo empty($statusFilter) ? 'current' : ''; ?>"><?php esc_html_e('All', 'tourivo'); ?> <span class="count">(<?php echo esc_html((string)$countAll); ?>)</span></a> |</li>
+                <li><a href="<?php echo esc_url($baseUrl . '&status=new'); ?>" class="<?php echo $statusFilter === 'new' ? 'current' : ''; ?>"><?php esc_html_e('New Leads', 'tourivo'); ?> <span class="count">(<?php echo esc_html((string)$countNew); ?>)</span></a> |</li>
+                <li><a href="<?php echo esc_url($baseUrl . '&status=replied'); ?>" class="<?php echo $statusFilter === 'replied' ? 'current' : ''; ?>"><?php esc_html_e('Replied', 'tourivo'); ?> <span class="count">(<?php echo esc_html((string)$countReplied); ?>)</span></a> |</li>
+                <li><a href="<?php echo esc_url($baseUrl . '&status=closed'); ?>" class="<?php echo $statusFilter === 'closed' ? 'current' : ''; ?>"><?php esc_html_e('Closed', 'tourivo'); ?> <span class="count">(<?php echo esc_html((string)$countClosed); ?>)</span></a></li>
             </ul>
 
             <table class="wp-list-table widefat fixed striped tourivo-inquiries-table">
@@ -75,8 +78,15 @@ class InquiriesTable
                         </tr>
                     <?php else : foreach ($inquiries as $inq) :
                         $itemPost = get_post((int) $inq['item_id']);
-                        $itemTitle = $itemPost ? $itemPost->post_title : __('General Inquiry', 'tourivo');
-                        $mailtoSubject = rawurlencode(sprintf(__('Re: Your Inquiry for %s — %s', 'tourivo'), $itemTitle, get_bloginfo('name')));
+                        $itemTitle = $itemPost ? $itemPost->post_title : esc_html__('General Inquiry', 'tourivo');
+                        $mailtoSubject = rawurlencode(
+                            sprintf(
+                                /* translators: 1: Item title, 2: Site name */
+                                __('Re: Your Inquiry for %1$s — %2$s', 'tourivo'),
+                                $itemTitle,
+                                get_bloginfo('name')
+                            )
+                        );
                         $mailtoUrl = 'mailto:' . esc_attr($inq['customer_email']) . '?subject=' . $mailtoSubject;
                         ?>
                         <tr id="inquiry-row-<?php echo esc_attr($inq['id']); ?>">

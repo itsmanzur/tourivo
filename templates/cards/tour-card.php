@@ -34,10 +34,10 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
         <?php endif; ?>
 
         <?php 
-        $destinations = $tour->getDestinations();
-        if (!empty($destinations)) : 
+        $tourivoDestinations = $tour->getDestinations();
+        if (!empty($tourivoDestinations)) : 
         ?>
-            <span class="tourivo-dest-tag"><span class="dashicons dashicons-location"></span> <?php echo esc_html($destinations[0]->name); ?></span>
+            <span class="tourivo-dest-tag"><span class="dashicons dashicons-location"></span> <?php echo esc_html($tourivoDestinations[0]->name); ?></span>
         <?php endif; ?>
     </div>
 
@@ -46,9 +46,25 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
             <?php if ($tour->getDuration()) : ?>
                 <span class="meta-item"><span class="dashicons dashicons-clock"></span> <?php echo esc_html($tour->getDuration()); ?></span>
             <?php endif; ?>
-            <span class="meta-item"><span class="dashicons dashicons-groups"></span> <?php echo esc_html(sprintf(__('Max: %d', 'tourivo'), $tour->getMaxGuests())); ?></span>
+            <span class="meta-item"><span class="dashicons dashicons-groups"></span> <?php
+            echo esc_html(
+                sprintf(
+                    /* translators: %d: Maximum guests allowed */
+                    __('Max: %d', 'tourivo'),
+                    $tour->getMaxGuests()
+                )
+            );
+            ?></span>
             <?php if ($tour->getReviewCount() > 0) : ?>
-                <span class="meta-item meta-rating" title="<?php echo esc_attr(sprintf(__('%s out of 5 stars', 'tourivo'), $tour->getAverageRating())); ?>">
+                <span class="meta-item meta-rating" title="<?php
+                echo esc_attr(
+                    sprintf(
+                        /* translators: %s: Rating score out of 5 */
+                        __('%s out of 5 stars', 'tourivo'),
+                        $tour->getAverageRating()
+                    )
+                );
+                ?>">
                     <span class="rating-star">★</span> <?php echo esc_html(number_format($tour->getAverageRating(), 1)); ?> <span class="rating-count">(<?php echo esc_html((string)$tour->getReviewCount()); ?>)</span>
                 </span>
             <?php endif; ?>
@@ -70,4 +86,3 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
         </div>
     </div>
 </div>
-

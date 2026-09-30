@@ -126,7 +126,8 @@ class InquiryService
         $itemTitle = $itemPost ? $itemPost->post_title : __('General Travel Inquiry', 'tourivo');
         $adminEmail = (string) \Tourivo\Config\Config::get('email_notification_address', get_option('admin_email'));
 
-        $subject = sprintf(__('[%s] New Trip Inquiry for: %s', 'tourivo'), get_bloginfo('name'), $itemTitle);
+        /* translators: 1: Site name, 2: Item title */
+        $subject = sprintf(__('[%1$s] New Trip Inquiry for: %2$s', 'tourivo'), get_bloginfo('name'), $itemTitle);
         $body  = "<h2>" . esc_html__('New Traveler Inquiry Received', 'tourivo') . "</h2>\n";
         $body .= "<p><strong>" . esc_html__('Trip / Stay:', 'tourivo') . "</strong> " . esc_html($itemTitle) . "</p>\n";
         $body .= "<p><strong>" . esc_html__('Traveler Name:', 'tourivo') . "</strong> " . esc_html($name) . "</p>\n";
@@ -181,7 +182,9 @@ class InquiryService
 
         $sql = "SELECT * FROM {$table} WHERE {$where} ORDER BY created_at DESC LIMIT %d OFFSET %d";
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
         return (array) $wpdb->get_results($wpdb->prepare($sql, ...$params), ARRAY_A);
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
     }
 
     /**
@@ -196,11 +199,13 @@ class InquiryService
             return false;
         }
 
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $updated = $wpdb->update(
             $table,
             ['status' => $status, 'updated_at' => current_time('mysql')],
             ['id' => $id]
         );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         return $updated !== false;
     }
@@ -212,6 +217,8 @@ class InquiryService
     {
         global $wpdb;
         $table = $wpdb->prefix . 'tourivo_inquiries';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         return (bool) $wpdb->delete($table, ['id' => $id]);
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
     }
 }
