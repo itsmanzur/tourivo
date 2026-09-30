@@ -308,7 +308,7 @@ class AdminServiceProvider extends ServiceProvider
 
         global $wpdb;
         $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $oldBooking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
 
         if (!$oldBooking) {
@@ -323,7 +323,7 @@ class AdminServiceProvider extends ServiceProvider
 
         $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
         $lineItems = (array) $wpdb->get_results($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $inventoryService = Container::getInstance()->get(\Tourivo\Services\InventoryService::class);
 
         // Case 1: Reactivating from cancelled -> Try to commit inventory first

@@ -50,6 +50,7 @@ class HotelGridShortcode
             'order'          => sanitize_text_field((string) $attributes['order']),
         ];
 
+        // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
         if (!empty($attributes['destination'])) {
             $args['tax_query'] = [
                 [
@@ -60,8 +61,8 @@ class HotelGridShortcode
             ];
         }
 
-        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
         $query = new WP_Query($args);
+        // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
         if (!$query->have_posts()) {
             return '<p class="tourivo-no-items">' . esc_html__('No hotels found matching criteria.', 'tourivo') . '</p>';

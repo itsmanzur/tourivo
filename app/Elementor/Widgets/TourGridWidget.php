@@ -99,11 +99,13 @@ class TourGridWidget extends \Elementor\Widget_Base
     {
         $settings = $this->get_settings_for_display();
 
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo TourGridShortcode::render([
+        $content = TourGridShortcode::render([
             'count'       => isset($settings['count']) ? absint($settings['count']) : 6,
             'columns'     => isset($settings['columns']) ? absint($settings['columns']) : 3,
             'destination' => isset($settings['destination']) ? sanitize_text_field($settings['destination']) : '',
         ]);
+
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo $content;
     }
 }

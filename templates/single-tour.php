@@ -181,7 +181,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
 
                 <!-- Reviews & Star Ratings Section -->
                 <?php 
-                $postId = $tourivoTourId;
+                $tourivoPostId = $tourivoTourId;
                 include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/reviews-section.php'; 
                 ?>
             </div>

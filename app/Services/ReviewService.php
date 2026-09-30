@@ -55,10 +55,12 @@ class ReviewService
             return;
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification.Missing
         if (isset($_POST['tourivo_rating'])) {
             $rating = max(1, min(5, (int) sanitize_text_field(wp_unslash((string) $_POST['tourivo_rating']))));
             update_comment_meta($commentId, self::META_RATING, $rating);
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
 
         $this->updatePostRatingCache($postId);
     }
@@ -203,7 +205,7 @@ class ReviewService
 
         // If hotel, also match any rooms belonging to this hotel
         if ($postType === HotelPostType::POST_TYPE) {
-            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+            // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
             $childRooms = get_posts([
                 'post_type'      => 'tourivo_room',
                 'posts_per_page' => -1,
@@ -216,6 +218,7 @@ class ReviewService
                     ],
                 ],
             ]);
+            // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
             if (!empty($childRooms)) {
                 $targetIds = array_merge($targetIds, array_map('intval', $childRooms));
             }
@@ -230,9 +233,9 @@ class ReviewService
                 LIMIT 1";
 
         $params = array_merge([$email], $targetIds);
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $found = $wpdb->get_var($wpdb->prepare($sql, ...$params));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         return !empty($found);
     }

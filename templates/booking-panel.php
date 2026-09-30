@@ -16,9 +16,9 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$tourivoItemId         = isset($itemId) ? (int) $itemId : (int) get_the_ID();
+$tourivoItemId         = isset($tourivoItemId) ? (int) $tourivoItemId : (isset($itemId) ? (int) $itemId : (int) get_the_ID());
 $tourivoPostType       = get_post_type($tourivoItemId);
-$tourivoItemType       = ($tourivoPostType === 'tourivo_room') ? 'room' : 'tour';
+$tourivoItemType       = isset($tourivoItemType) ? (string) $tourivoItemType : (($tourivoPostType === 'tourivo_room') ? 'room' : 'tour');
 $tourivoCurrencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
 
 if ($tourivoItemType === 'tour') {

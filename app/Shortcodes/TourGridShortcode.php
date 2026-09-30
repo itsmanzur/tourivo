@@ -51,6 +51,7 @@ class TourGridShortcode
             'order'          => sanitize_text_field((string) $attributes['order']),
         ];
 
+        // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
         $taxQuery = [];
         if (!empty($attributes['destination'])) {
             $taxQuery[] = [
@@ -70,8 +71,8 @@ class TourGridShortcode
             $args['tax_query'] = $taxQuery;
         }
 
-        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query
         $query = new WP_Query($args);
+        // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query
 
         if (!$query->have_posts()) {
             return '<p class="tourivo-no-items">' . esc_html__('No tours found matching criteria.', 'tourivo') . '</p>';

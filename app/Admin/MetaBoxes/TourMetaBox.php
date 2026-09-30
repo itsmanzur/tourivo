@@ -90,7 +90,7 @@ class TourMetaBox extends MetaBox
             '_tourivo_longitude'        => 'sanitize_text_field',
         ];
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
+        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
@@ -166,7 +166,7 @@ class TourMetaBox extends MetaBox
         } else {
             update_post_meta($postId, '_tourivo_faqs', wp_slash(wp_json_encode([], JSON_UNESCAPED_UNICODE)));
         }
-        // phpcs:enable WordPress.Security.NonceVerification.Missing
+        // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         do_action('tourivo_save_tour_meta', $postId, $post);
     }

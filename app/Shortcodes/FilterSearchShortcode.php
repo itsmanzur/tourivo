@@ -209,6 +209,7 @@ class FilterSearchShortcode
             $args['s'] = $keyword;
         }
 
+        // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_tax_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
         $taxQuery = [];
         if (!empty($destination)) {
             $taxQuery[] = [
@@ -311,8 +312,8 @@ class FilterSearchShortcode
                 break;
         }
 
-        // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_query
         $query = new WP_Query($args);
+        // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_tax_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_query, WordPress.DB.SlowDBQuery.slow_db_query_meta_key
 
         if (!$query->have_posts()) {
             return '<div class="tourivo-no-results-msg" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #64748b;">

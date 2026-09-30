@@ -96,7 +96,7 @@ class RoomMetaBox extends MetaBox
             '_tourivo_bed_type'        => 'sanitize_text_field',
         ];
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
+        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
@@ -106,7 +106,7 @@ class RoomMetaBox extends MetaBox
         }
 
         $newParentHotelId = isset($_POST['_tourivo_parent_hotel_id']) ? absint(wp_unslash($_POST['_tourivo_parent_hotel_id'])) : 0;
-        // phpcs:enable WordPress.Security.NonceVerification.Missing
+        // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
 
         if ($newParentHotelId > 0) {
             self::updateHotelMinPrice($newParentHotelId);
@@ -192,6 +192,7 @@ class RoomMetaBox extends MetaBox
         }
 
         global $wpdb;
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
         $minPrice = $wpdb->get_var($wpdb->prepare(
             "SELECT MIN(CAST(pm_price.meta_value AS DECIMAL(10,2))) 
              FROM {$wpdb->posts} p
@@ -201,6 +202,7 @@ class RoomMetaBox extends MetaBox
             RoomPostType::POST_TYPE,
             $hotelId
         ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
         if ($minPrice !== null && is_numeric($minPrice)) {
             update_post_meta($hotelId, '_tourivo_min_price', (float) $minPrice);

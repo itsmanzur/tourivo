@@ -10,7 +10,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-$tourivoPostId = isset($postId) ? (int) $postId : (int) get_the_ID();
+$tourivoPostId = isset($tourivoPostId) ? (int) $tourivoPostId : (isset($postId) ? (int) $postId : (int) get_the_ID());
 if (!$tourivoPostId) {
     return;
 }

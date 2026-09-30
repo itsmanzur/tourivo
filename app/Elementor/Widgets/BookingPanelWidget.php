@@ -87,10 +87,12 @@ class BookingPanelWidget extends \Elementor\Widget_Base
         $settings = $this->get_settings_for_display();
         $itemId = !empty($settings['item_id']) ? absint($settings['item_id']) : (int) get_the_ID();
 
-        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-        echo BookingPanelShortcode::render([
+        $content = BookingPanelShortcode::render([
             'item_id'   => $itemId,
             'item_type' => sanitize_key($settings['item_type'] ?? 'tour'),
         ]);
+
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo $content;
     }
 }

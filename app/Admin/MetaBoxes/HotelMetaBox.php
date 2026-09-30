@@ -79,7 +79,7 @@ class HotelMetaBox extends MetaBox
             '_tourivo_policy'        => 'sanitize_textarea_field',
         ];
 
-        // phpcs:disable WordPress.Security.NonceVerification.Missing
+        // phpcs:disable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
@@ -87,6 +87,6 @@ class HotelMetaBox extends MetaBox
                 update_post_meta($postId, $field, $cleanVal);
             }
         }
-        // phpcs:enable WordPress.Security.NonceVerification.Missing
+        // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
     }
 }

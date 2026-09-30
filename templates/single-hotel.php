@@ -141,8 +141,8 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
                                         <summary class="tourivo-btn tourivo-btn-primary"><?php esc_html_e('Reserve Room', 'tourivo'); ?></summary>
                                         <div class="room-dropdown-content">
                                             <?php 
-                                            $itemId = $tourivoRoom->getId();
-                                            $itemType = 'hotel_room';
+                                            $tourivoItemId = $tourivoRoom->getId();
+                                            $tourivoItemType = 'hotel_room';
                                             include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/booking-panel.php'; 
                                             ?>
                                         </div>
@@ -159,7 +159,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
 
         <!-- Reviews & Star Ratings Section -->
         <?php 
-        $postId = $tourivoHotelId;
+        $tourivoPostId = $tourivoHotelId;
         include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/reviews-section.php'; 
         ?>
     </div>
