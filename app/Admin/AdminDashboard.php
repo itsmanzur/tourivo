@@ -164,9 +164,9 @@ class AdminDashboard
                     <div class="tourivo-card-box">
                         <h3><span class="dashicons dashicons-shortcode"></span> <?php esc_html_e('Useful Shortcodes', 'tourivo'); ?></h3>
                         <ul class="shortcode-tips">
-                            <li><code>[tourivo_search_bar]</code> – Search filter bar</li>
-                            <li><code>[tourivo_tours columns="3"]</code> – Tours grid</li>
-                            <li><code>[tourivo_hotels columns="3"]</code> – Hotels grid</li>
+                            <li><code>[tourivo_search_bar]</code> – <?php esc_html_e('Search filter bar', 'tourivo'); ?></li>
+                            <li><code>[tourivo_tours columns="3"]</code> – <?php esc_html_e('Tours grid', 'tourivo'); ?></li>
+                            <li><code>[tourivo_hotels columns="3"]</code> – <?php esc_html_e('Hotels grid', 'tourivo'); ?></li>
                         </ul>
                     </div>
                 </div>

@@ -7,34 +7,139 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-04 07:56:41+00:00\n"
-"PO-Revision-Date: 2026-10-04 07:56:41+00:00\n"
+"POT-Creation-Date: 2026-10-04 08:10:25+00:00\n"
+"PO-Revision-Date: 2026-10-04 08:10:25+00:00\n"
 "Language: bn_BD\n"
 "X-Domain: tourivo\n"
-
-msgid "The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress."
-msgstr "ওয়ার্ডপ্রেসের জন্য আধুনিক ও স্বয়ংসম্পূর্ণ ভ্রমণ, ট্যুর ও হোটেল বুকিং ইঞ্জিন।"
 
 msgid "Tourivo"
 msgstr "ট্যুরিতো"
 
-msgid "Tourivo Settings"
-msgstr "ট্যুরিতো সেটিংস"
-
-msgid "Settings"
-msgstr "সেটিংস"
+msgid "Tourivo Dashboard"
+msgstr "ট্যুরিতো ড্যাশবোর্ড"
 
 msgid "Dashboard"
 msgstr "ড্যাশবোর্ড"
 
-msgid "Bookings"
-msgstr "বুকিং তালিকা"
+msgid "The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress."
+msgstr "ওয়ার্ডপ্রেসের জন্য আধুনিক ও স্বয়ংসম্পূর্ণ ভ্রমণ, ট্যুর ও হোটেল বুকিং ইঞ্জিন।"
 
-msgid "All Bookings"
-msgstr "সকল বুকিং"
+msgid "Welcome back! Overview of your travel packages, hotel rooms, and live booking activity."
+msgstr "স্বাগতম! আপনার ট্যুর প্যাকেজ, হোটেল রুম এবং সাম্প্রতিক বুকিং কার্যক্রমের সামগ্রিক বিবরণ।"
 
-msgid "Inquiries"
-msgstr "জিজ্ঞাসা / ইনকোয়ারি"
+msgid "Setup Wizard"
+msgstr "সেটআপ উইজার্ড"
+
+msgid "New Tour"
+msgstr "নতুন ট্যুর"
+
+msgid "+ New Tour"
+msgstr "+ নতুন ট্যুর"
+
+msgid "New Hotel"
+msgstr "নতুন হোটেল"
+
+msgid "+ New Hotel"
+msgstr "+ নতুন হোটেল"
+
+msgid "Add New Tour"
+msgstr "নতুন ট্যুর যোগ করুন"
+
+msgid "Add New Hotel"
+msgstr "নতুন হোটেল যোগ করুন"
+
+msgid "Add New Room"
+msgstr "নতুন রুম যোগ করুন"
+
+msgid "Docs & Features"
+msgstr "ডকুমেন্টেশন ও ফিচার"
+
+msgid "Documentation"
+msgstr "ডকুমেন্টেশন ও গাইড"
+
+msgid "Settings"
+msgstr "সেটিংস"
+
+msgid "Tourivo Settings"
+msgstr "ট্যুরিতো সেটিংস"
+
+msgid "Active Tours"
+msgstr "সক্রিয় ট্যুর"
+
+msgid "ACTIVE TOURS"
+msgstr "সক্রিয় ট্যুর"
+
+msgid "Hotels & Stays"
+msgstr "হোটেল ও স্টে"
+
+msgid "HOTELS & STAYS"
+msgstr "হোটেল ও স্টে"
+
+msgid "Room Types"
+msgstr "রুমের ধরন"
+
+msgid "ROOM TYPES"
+msgstr "রুমের ধরন"
+
+msgid "Total Bookings"
+msgstr "মোট বুকিং"
+
+msgid "TOTAL BOOKINGS"
+msgstr "মোট বুকিং"
+
+msgid "Total Revenue"
+msgstr "মোট রেভিনিউ"
+
+msgid "TOTAL REVENUE"
+msgstr "মোট রেভিনিউ"
+
+msgid "Recent Bookings"
+msgstr "সাম্প্রতিক বুকিং"
+
+msgid "View All Bookings &rarr;"
+msgstr "সকল বুকিং দেখুন &rarr;"
+
+msgid "View All Bookings"
+msgstr "সকল বুকিং দেখুন"
+
+msgid "No bookings recorded yet. Start sharing your tours and hotels with travelers!"
+msgstr "এখনও কোনো বুকিং রেকর্ড নেই। ভ্রমণকারীদের সাথে আপনার ট্যুর ও হোটেল শেয়ার করা শুরু করুন!"
+
+msgid "Code"
+msgstr "কোড"
+
+msgid "Customer"
+msgstr "গ্রাহক"
+
+msgid "Amount"
+msgstr "টাকার পরিমাণ"
+
+msgid "Status"
+msgstr "স্ট্যাটাস"
+
+msgid "Date"
+msgstr "তারিখ"
+
+msgid "1-Click Demo Travel & Hotel Data"
+msgstr "১-ক্লিক ডেমো ট্যুর ও হোটেল ডাটা"
+
+msgid "Quickly test Tourivo by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms."
+msgstr "প্রস্তুতকৃত আকর্ষণীয় ট্যুর ও লাক্সারি হোটেল ইমপোর্ট করে এক ক্লিকে ট্যুরিতো পরীক্ষা করুন।"
+
+msgid "Import Demo Data"
+msgstr "ডেমো ডাটা ইমপোর্ট করুন"
+
+msgid "Useful Shortcodes"
+msgstr "প্রয়োজনীয় শর্টকোডসমূহ"
+
+msgid "Search filter bar"
+msgstr "সার্চ ও ফিল্টার বার"
+
+msgid "Tours grid"
+msgstr "ট্যুর গ্রিড"
+
+msgid "Hotels grid"
+msgstr "হোটেল গ্রিড"
 
 msgid "Tours"
 msgstr "ট্যুরসমূহ"
@@ -42,8 +147,20 @@ msgstr "ট্যুরসমূহ"
 msgid "All Tours"
 msgstr "সকল ট্যুর"
 
-msgid "Add New Tour"
-msgstr "নতুন ট্যুর যোগ করুন"
+msgid "Edit Tour"
+msgstr "ট্যুর সম্পাদনা"
+
+msgid "View Tour"
+msgstr "ট্যুর দেখুন"
+
+msgid "Search Tours"
+msgstr "ট্যুর খুঁজুন"
+
+msgid "No tours found."
+msgstr "কোনো ট্যুর পাওয়া যায়নি।"
+
+msgid "No tours found in Trash."
+msgstr "ট্র্যাশে কোনো ট্যুর নেই।"
 
 msgid "Hotels"
 msgstr "হোটেলসমূহ"
@@ -51,20 +168,77 @@ msgstr "হোটেলসমূহ"
 msgid "All Hotels"
 msgstr "সকল হোটেল"
 
-msgid "Add New Hotel"
-msgstr "নতুন হোটেল যোগ করুন"
+msgid "Edit Hotel"
+msgstr "হোটেল সম্পাদনা"
+
+msgid "View Hotel"
+msgstr "হোটেল দেখুন"
+
+msgid "Search Hotels"
+msgstr "হোটেল খুঁজুন"
+
+msgid "No hotels found."
+msgstr "কোনো হোটেল পাওয়া যায়নি।"
+
+msgid "No hotels found in Trash."
+msgstr "ট্র্যাশে কোনো হোটেল নেই।"
 
 msgid "Rooms"
 msgstr "রুম / কক্ষসমূহ"
 
-msgid "Add New Room"
-msgstr "নতুন রুম যোগ করুন"
+msgid "All Rooms"
+msgstr "সকল রুম"
+
+msgid "Rooms & Units"
+msgstr "রুম ও ইউনিটসমূহ"
+
+msgid "Room"
+msgstr "রুম / কক্ষ"
+
+msgid "Edit Room"
+msgstr "রুম সম্পাদনা"
+
+msgid "View Room"
+msgstr "রুম দেখুন"
+
+msgid "Search Rooms"
+msgstr "রুম খুঁজুন"
+
+msgid "No rooms found."
+msgstr "কোনো রুম পাওয়া যায়নি।"
+
+msgid "No rooms found in Trash."
+msgstr "ট্র্যাশে কোনো রুম নেই।"
+
+msgid "Room Photo"
+msgstr "রুমের ছবি"
+
+msgid "Set room photo"
+msgstr "রুমের ছবি সেট করুন"
+
+msgid "Remove room photo"
+msgstr "রুমের ছবি মুছুন"
+
+msgid "Use as room photo"
+msgstr "রুমের ছবি হিসেবে ব্যবহার করুন"
 
 msgid "Destinations"
 msgstr "গন্তব্যসমূহ"
 
+msgid "Destination"
+msgstr "গন্তব্য"
+
+msgid "All Destinations"
+msgstr "সকল গন্তব্য"
+
 msgid "Activities"
 msgstr "কার্যক্রম / অ্যাক্টিভিটি"
+
+msgid "Activity"
+msgstr "অ্যাক্টিভিটি"
+
+msgid "All Activities"
+msgstr "সকল অ্যাক্টিভিটি"
 
 msgid "Hotel Types"
 msgstr "হোটেলের ধরন"
@@ -72,11 +246,20 @@ msgstr "হোটেলের ধরন"
 msgid "Amenities"
 msgstr "সুযোগ-সুবিধা (Amenities)"
 
-msgid "Documentation"
-msgstr "ডকুমেন্টেশন ও গাইড"
+msgid "Amenity"
+msgstr "সুযোগ-সুবিধা"
 
-msgid "Setup Wizard"
-msgstr "সেটআপ উইজার্ড"
+msgid "Bookings"
+msgstr "বুকিং তালিকা"
+
+msgid "All Bookings"
+msgstr "সকল বুকিং"
+
+msgid "Booking Reference"
+msgstr "বুকিং রেফারেন্স"
+
+msgid "Booking Code"
+msgstr "বুকিং কোড"
 
 msgid "Pending"
 msgstr "অপেক্ষমাণ (Pending)"
@@ -113,6 +296,12 @@ msgstr "তাত্ক্ষণিক নিশ্চিত"
 
 msgid "Pending (Awaiting Admin Confirmation)"
 msgstr "অপেক্ষমাণ (অ্যাডমিন অনুমোদনের অপেক্ষায়)"
+
+msgid "Inquiries"
+msgstr "জিজ্ঞাসা / ইনকোয়ারি"
+
+msgid "All Inquiries"
+msgstr "সকল জিজ্ঞাসা"
 
 msgid "Book This Tour"
 msgstr "এই ট্যুরটি বুক করুন"
@@ -327,9 +516,6 @@ msgstr "কোথায় যেতে চান?"
 msgid "Any Destination"
 msgstr "যে কোনো গন্তব্য"
 
-msgid "All Activities"
-msgstr "সকল অ্যাক্টিভিটি"
-
 msgid "All Durations"
 msgstr "যে কোনো সময়কাল"
 
@@ -528,9 +714,6 @@ msgstr "JSON-LD Schema.org এসইও সক্রিয় করুন"
 msgid "Enable OpenGraph & Twitter Social Meta"
 msgstr "OpenGraph ও সোশ্যাল মেটা ট্যাগ সক্রিয় করুন"
 
-msgid "Total Bookings"
-msgstr "মোট বুকিং"
-
 msgid "Confirmed Bookings"
 msgstr "নিশ্চিত বুকিং"
 
@@ -551,4 +734,2182 @@ msgstr "প্রকাশিত হোটেল"
 
 msgid "Published Rooms"
 msgstr "প্রকাশিত রুম"
+
+msgid "Date: %s"
+msgstr "Date: %s"
+
+msgid " | %d Travelers"
+msgstr " | %d Travelers"
+
+msgid "Unauthorized access."
+msgstr "Unauthorized access."
+
+msgid "Customer Name"
+msgstr "Customer Name"
+
+msgid "Customer Email"
+msgstr "Customer Email"
+
+msgid "Customer Phone"
+msgstr "Customer Phone"
+
+msgid "Trip / Stay Title"
+msgstr "Trip / Stay Title"
+
+msgid "Type"
+msgstr "Type"
+
+msgid "Travelers"
+msgstr "Travelers"
+
+msgid "Payment Method"
+msgstr "Payment Method"
+
+msgid "Payment Status"
+msgstr "Payment Status"
+
+msgid "Booking Status"
+msgstr "Booking Status"
+
+msgid "Booking Created At"
+msgstr "Booking Created At"
+
+msgid "Add Manual Booking"
+msgstr "Add Manual Booking"
+
+msgid "Export to CSV"
+msgstr "Export to CSV"
+
+msgid "All"
+msgstr "All"
+
+msgid "Search bookings..."
+msgstr "Search bookings..."
+
+msgid "Item & Dates"
+msgstr "Item & Dates"
+
+msgid "Payment"
+msgstr "Payment"
+
+msgid "Quick Actions"
+msgstr "Quick Actions"
+
+msgid "View Booking Details & Timeline Notes"
+msgstr "View Booking Details & Timeline Notes"
+
+msgid "Details"
+msgstr "Details"
+
+msgid "Print Booking Voucher"
+msgstr "Print Booking Voucher"
+
+msgid "Voucher"
+msgstr "Voucher"
+
+msgid "Confirm"
+msgstr "Confirm"
+
+msgid "Cancel"
+msgstr "Cancel"
+
+msgid "No bookings found matching criteria."
+msgstr "No bookings found matching criteria."
+
+msgid "Create Manual Booking (Phone / WhatsApp / Walk-in)"
+msgstr "Create Manual Booking (Phone / WhatsApp / Walk-in)"
+
+msgid "Select Tour or Hotel Room *"
+msgstr "Select Tour or Hotel Room *"
+
+msgid "-- Select Trip or Room --"
+msgstr "-- Select Trip or Room --"
+
+msgid "Tour Packages"
+msgstr "Tour Packages"
+
+msgid "Hotel Rooms"
+msgstr "Hotel Rooms"
+
+msgid "Check-in Date *"
+msgstr "Check-in Date *"
+
+msgid "Check-out Date (For Rooms)"
+msgstr "Check-out Date (For Rooms)"
+
+msgid "Adults *"
+msgstr "Adults *"
+
+msgid "Total Price ($) *"
+msgstr "Total Price ($) *"
+
+msgid "Customer Full Name *"
+msgstr "Customer Full Name *"
+
+msgid "Customer Email *"
+msgstr "Customer Email *"
+
+msgid "Paid (Full Cash / Online)"
+msgstr "Paid (Full Cash / Online)"
+
+msgid "Pending (Pay on Arrival)"
+msgstr "Pending (Pay on Arrival)"
+
+msgid "Internal Notes"
+msgstr "Internal Notes"
+
+msgid "e.g. Phone booking confirmed by agent."
+msgstr "e.g. Phone booking confirmed by agent."
+
+msgid "Confirm & Create Booking"
+msgstr "Confirm & Create Booking"
+
+msgid "Customer:"
+msgstr "Customer:"
+
+msgid "Email:"
+msgstr "Email:"
+
+msgid "Phone:"
+msgstr "Phone:"
+
+msgid "Total Amount:"
+msgstr "Total Amount:"
+
+msgid "Trip / Room:"
+msgstr "Trip / Room:"
+
+msgid "Activity History & Internal Notes"
+msgstr "Activity History & Internal Notes"
+
+msgid "Add Internal Staff Note"
+msgstr "Add Internal Staff Note"
+
+msgid "e.g. Customer requested early check-in or confirmed passport."
+msgstr "e.g. Customer requested early check-in or confirmed passport."
+
+msgid "Add Note"
+msgstr "Add Note"
+
+msgid "Close"
+msgstr "Close"
+
+msgid "The Complete Agency Guide & Feature Showcase"
+msgstr "The Complete Agency Guide & Feature Showcase"
+
+msgid "Tourivo Docs & Features Hub"
+msgstr "Tourivo Docs & Features Hub"
+
+msgid "Tourivo is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
+msgstr "Tourivo is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
+
+msgid "Go to Dashboard"
+msgstr "Go to Dashboard"
+
+msgid "Configure Settings"
+msgstr "Configure Settings"
+
+msgid "1. Introduction & Quick Start"
+msgstr "1. Introduction & Quick Start"
+
+msgid "2. ✨ All Features Catalog"
+msgstr "2. ✨ All Features Catalog"
+
+msgid "3. Creating Tour Packages"
+msgstr "3. Creating Tour Packages"
+
+msgid "4. Hotels & Room Listings"
+msgstr "4. Hotels & Room Listings"
+
+msgid "5. Page Builders & Shortcodes"
+msgstr "5. Page Builders & Shortcodes"
+
+msgid "6. Managing Orders & Bookings"
+msgstr "6. Managing Orders & Bookings"
+
+msgid "7. Tourivo Pro Features"
+msgstr "7. Tourivo Pro Features"
+
+msgid "What is Tourivo and How Does it Work?"
+msgstr "What is Tourivo and How Does it Work?"
+
+msgid "Think of Tourivo as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
+msgstr "Think of Tourivo as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
+
+msgid "Tour Packages & Day Trips"
+msgstr "Tour Packages & Day Trips"
+
+msgid "Sell single-day adventures or multi-day guided trips with day-by-day itineraries, included meals, pickup locations, and passenger caps."
+msgstr "Sell single-day adventures or multi-day guided trips with day-by-day itineraries, included meals, pickup locations, and passenger caps."
+
+msgid "Hotels, Resorts & Rooms"
+msgstr "Hotels, Resorts & Rooms"
+
+msgid "List hotels, resorts, or guest houses. Attach multiple room units with specific bed styles, guest capacities, and per-night rates."
+msgstr "List hotels, resorts, or guest houses. Attach multiple room units with specific bed styles, guest capacities, and per-night rates."
+
+msgid "Anti-Double-Booking Protection"
+msgstr "Anti-Double-Booking Protection"
+
+msgid "Our smart inventory engine automatically prevents two travelers from booking the same room or seat at the same time."
+msgstr "Our smart inventory engine automatically prevents two travelers from booking the same room or seat at the same time."
+
+msgid "🚀 4-Step Quick Launch Checklist"
+msgstr "🚀 4-Step Quick Launch Checklist"
+
+msgid "Set Your Currency & Details"
+msgstr "Set Your Currency & Details"
+
+msgid "Go to Tourivo -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
+msgstr "Go to Tourivo -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
+
+msgid "Open Settings"
+msgstr "Open Settings"
+
+msgid "Import Starter Demo Data (Recommended for Beginners)"
+msgstr "Import Starter Demo Data (Recommended for Beginners)"
+
+msgid "Instantly create complete starter packages: 3 guided tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to see full itineraries, rooms, and booking forms in action."
+msgstr "Instantly create complete starter packages: 3 guided tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to see full itineraries, rooms, and booking forms in action."
+
+msgid "⚡ Import Starter Demo Content Now"
+msgstr "⚡ Import Starter Demo Content Now"
+
+msgid "Create or Edit Your Tours & Hotels"
+msgstr "Create or Edit Your Tours & Hotels"
+
+msgid "Add your trip prices, itineraries, photos, room quantities, and pickup points using our beginner-friendly tabbed editor."
+msgstr "Add your trip prices, itineraries, photos, room quantities, and pickup points using our beginner-friendly tabbed editor."
+
+msgid "Publish on Pages via Shortcode or Elementor"
+msgstr "Publish on Pages via Shortcode or Elementor"
+
+msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Tourivo widgets into Elementor."
+msgstr "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Tourivo widgets into Elementor."
+
+msgid "View Shortcodes Table"
+msgstr "View Shortcodes Table"
+
+msgid "✨ Complete Tourivo Feature Catalog"
+msgstr "✨ Complete Tourivo Feature Catalog"
+
+msgid "Explore the complete roster of features engineered into Tourivo to power modern travel agencies, tour operators, and boutique hoteliers."
+msgstr "Explore the complete roster of features engineered into Tourivo to power modern travel agencies, tour operators, and boutique hoteliers."
+
+msgid "Tour & Excursion Management"
+msgstr "Tour & Excursion Management"
+
+msgid "Interactive Itinerary Builder"
+msgstr "Interactive Itinerary Builder"
+
+msgid "Create day-by-day or stage-by-stage itineraries with custom titles, included meals (Breakfast/Lunch/Dinner), and detailed descriptions."
+msgstr "Create day-by-day or stage-by-stage itineraries with custom titles, included meals (Breakfast/Lunch/Dinner), and detailed descriptions."
+
+msgid "Inclusions & Exclusions Checklist"
+msgstr "Inclusions & Exclusions Checklist"
+
+msgid "Visual checkmark and cross-mark list displaying what is included (e.g. Flight, Hotel, Tour Guide) and excluded (e.g. Visa, Tips)."
+msgstr "Visual checkmark and cross-mark list displaying what is included (e.g. Flight, Hotel, Tour Guide) and excluded (e.g. Visa, Tips)."
+
+msgid "GPS Map Coordinates & Pickup Points"
+msgstr "GPS Map Coordinates & Pickup Points"
+
+msgid "Define exact departure points, return drop-offs, and GPS Latitude/Longitude for interactive map pinpoints."
+msgstr "Define exact departure points, return drop-offs, and GPS Latitude/Longitude for interactive map pinpoints."
+
+msgid "Hotels, Resorts & Accommodation Engine"
+msgstr "Hotels, Resorts & Accommodation Engine"
+
+msgid "2-Level Hierarchy (Hotel -> Rooms)"
+msgstr "2-Level Hierarchy (Hotel -> Rooms)"
+
+msgid "Create parent hotels/resorts and attach unlimited individual room types (Deluxe Suite, Ocean Villa, Standard Room) with unique specs."
+msgstr "Create parent hotels/resorts and attach unlimited individual room types (Deluxe Suite, Ocean Villa, Standard Room) with unique specs."
+
+msgid "Star Ratings & Amenities"
+msgstr "Star Ratings & Amenities"
+
+msgid "Display 1 to 5 star rating badges, property check-in/out times, and assign custom amenities (Free WiFi, Pool, Spa)."
+msgstr "Display 1 to 5 star rating badges, property check-in/out times, and assign custom amenities (Free WiFi, Pool, Spa)."
+
+msgid "Bed Styles & Dimensions"
+msgstr "Bed Styles & Dimensions"
+
+msgid "Specify room dimensions (m²/sqft) and bed configurations (King Bed, Twin Beds) for traveler clarity."
+msgstr "Specify room dimensions (m²/sqft) and bed configurations (King Bed, Twin Beds) for traveler clarity."
+
+msgid "Live Search, Filter & Traveler Wishlist"
+msgstr "Live Search, Filter & Traveler Wishlist"
+
+msgid "Live AJAX Filter & Search [tourivo_filter_search]"
+msgstr "Live AJAX Filter & Search [tourivo_filter_search]"
+
+msgid "Real-time, zero page-reload filtering by keyword, destination, budget range slider, duration, and star ratings."
+msgstr "Real-time, zero page-reload filtering by keyword, destination, budget range slider, duration, and star ratings."
+
+msgid "Traveler Wishlist & Favorites [tourivo_wishlist]"
+msgstr "Traveler Wishlist & Favorites [tourivo_wishlist]"
+
+msgid "1-Click animated heart button on all cards. Snappy LocalStorage saving + cloud account sync for logged-in users."
+msgstr "1-Click animated heart button on all cards. Snappy LocalStorage saving + cloud account sync for logged-in users."
+
+msgid "Multi-Currency Switcher [tourivo_currency_switcher]"
+msgstr "Multi-Currency Switcher [tourivo_currency_switcher]"
+
+msgid "Instant dropdown widget converting prices into USD, EUR, GBP, BDT ৳, INR ₹, AUD, CAD, and AED in real-time."
+msgstr "Instant dropdown widget converting prices into USD, EUR, GBP, BDT ৳, INR ₹, AUD, CAD, and AED in real-time."
+
+msgid "Trust, Reviews & Lead Management"
+msgstr "Trust, Reviews & Lead Management"
+
+msgid "5-Star Reviews & Rating Scorecards"
+msgstr "5-Star Reviews & Rating Scorecards"
+
+msgid "Interactive star rating submission form with aggregate 5★ to 1★ breakdown progress bars on single pages."
+msgstr "Interactive star rating submission form with aggregate 5★ to 1★ breakdown progress bars on single pages."
+
+msgid "✓ Verified Traveler Trust Badge"
+msgstr "✓ Verified Traveler Trust Badge"
+
+msgid "Automatically detects confirmed booking emails in database and awards a glowing Verified Traveler badge to genuine reviews."
+msgstr "Automatically detects confirmed booking emails in database and awards a glowing Verified Traveler badge to genuine reviews."
+
+msgid "1-Click \"Trip Inquiry\" Lead Capture"
+msgstr "1-Click \"Trip Inquiry\" Lead Capture"
+
+msgid "Lead capture popup directly on booking panels with instant admin email alerts and full lead management table in wp-admin."
+msgstr "Lead capture popup directly on booking panels with instant admin email alerts and full lead management table in wp-admin."
+
+msgid "Booking Operations & Safety"
+msgstr "Booking Operations & Safety"
+
+msgid "Anti-Double-Booking Inventory Engine"
+msgstr "Anti-Double-Booking Inventory Engine"
+
+msgid "MySQL row-level pessimistic locking ensures zero double-booking or overselling even during high-traffic sales."
+msgstr "MySQL row-level pessimistic locking ensures zero double-booking or overselling even during high-traffic sales."
+
+msgid "Admin Manual Booking Creator"
+msgstr "Admin Manual Booking Creator"
+
+msgid "Log phone, WhatsApp, and walk-in offline bookings with inventory lock enforcement and reference code generation."
+msgstr "Log phone, WhatsApp, and walk-in offline bookings with inventory lock enforcement and reference code generation."
+
+msgid "1-Click Excel / CSV Traveler Export"
+msgstr "1-Click Excel / CSV Traveler Export"
+
+msgid "Download traveler manifest lists with UTF-8 BOM encoding for seamless viewing in Microsoft Excel & Google Sheets."
+msgstr "Download traveler manifest lists with UTF-8 BOM encoding for seamless viewing in Microsoft Excel & Google Sheets."
+
+msgid "Tourivo Pro Enterprise Upgrades"
+msgstr "Tourivo Pro Enterprise Upgrades"
+
+msgid "WooCommerce 100+ Gateways Bridge"
+msgstr "WooCommerce 100+ Gateways Bridge"
+
+msgid "Accept Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, Authorize.net, and COD with automated inventory commit on payment."
+msgstr "Accept Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, Authorize.net, and COD with automated inventory commit on payment."
+
+msgid "Bookable Extra Addons & Upsells"
+msgstr "Bookable Extra Addons & Upsells"
+
+msgid "Sell airport transfers, private guides, breakfast buffets, and extra beds with per-person, per-night calculations."
+msgstr "Sell airport transfers, private guides, breakfast buffets, and extra beds with per-person, per-night calculations."
+
+msgid "iCal 2-Way Sync (Airbnb / Booking.com)"
+msgstr "iCal 2-Way Sync (Airbnb / Booking.com)"
+
+msgid "Automatic two-way calendar sync with Airbnb, Booking.com, and VRBO via standard RFC 5545 iCalendar feeds."
+msgstr "Automatic two-way calendar sync with Airbnb, Booking.com, and VRBO via standard RFC 5545 iCalendar feeds."
+
+msgid "Printable PDF Tickets & QR Check-in"
+msgstr "Printable PDF Tickets & QR Check-in"
+
+msgid "Generate beautiful PDF boarding passes with secure HMAC-verified QR codes for mobile smartphone scanning."
+msgstr "Generate beautiful PDF boarding passes with secure HMAC-verified QR codes for mobile smartphone scanning."
+
+msgid "Customer Account Dashboard [tourivo_customer_dashboard]"
+msgstr "Customer Account Dashboard [tourivo_customer_dashboard]"
+
+msgid "Dedicated traveler portal displaying upcoming trips, past itineraries, 1-click PDF vouchers, and guest lookup form."
+msgstr "Dedicated traveler portal displaying upcoming trips, past itineraries, 1-click PDF vouchers, and guest lookup form."
+
+msgid "Tiered Passenger & Group Discounts"
+msgstr "Tiered Passenger & Group Discounts"
+
+msgid "Independent rates for Adults, Children, and Infants + automated volume discounts (e.g. 5+ travelers get 10% off)."
+msgstr "Independent rates for Adults, Children, and Infants + automated volume discounts (e.g. 5+ travelers get 10% off)."
+
+msgid "How to Create & Configure Tour Packages"
+msgstr "How to Create & Configure Tour Packages"
+
+msgid "Navigate to <strong>Tours -> Add New Tour</strong> in your WordPress admin menu. Tourivo uses a structured tabbed interface:"
+msgstr "Navigate to <strong>Tours -> Add New Tour</strong> in your WordPress admin menu. Tourivo uses a structured tabbed interface:"
+
+msgid "1. Pricing & General Tab"
+msgstr "1. Pricing & General Tab"
+
+msgid "Tour Type:"
+msgstr "Tour Type:"
+
+msgid "Base Price & Sale Price:"
+msgstr "Base Price & Sale Price:"
+
+msgid "Duration Text:"
+msgstr "Duration Text:"
+
+msgid "Passenger Caps:"
+msgstr "Passenger Caps:"
+
+msgid "2. Itinerary Builder Tab"
+msgstr "2. Itinerary Builder Tab"
+
+msgid "Click <strong>\"+ Add Day / Stage\"</strong> to build a timeline:"
+msgstr "Click <strong>\"+ Add Day / Stage\"</strong> to build a timeline:"
+
+msgid "Day Title:"
+msgstr "Day Title:"
+
+msgid "Included Meals:"
+msgstr "Included Meals:"
+
+msgid "Stage Description:"
+msgstr "Stage Description:"
+
+msgid "3. Inclusions & Exclusions Tab"
+msgstr "3. Inclusions & Exclusions Tab"
+
+msgid "Clearly outline what travelers get with their ticket:"
+msgstr "Clearly outline what travelers get with their ticket:"
+
+msgid "Inclusions:"
+msgstr "Inclusions:"
+
+msgid "Exclusions:"
+msgstr "Exclusions:"
+
+msgid "4. Map & FAQs Tab"
+msgstr "4. Map & FAQs Tab"
+
+msgid "Pickup & Drop-off Points:"
+msgstr "Pickup & Drop-off Points:"
+
+msgid "GPS Coordinates:"
+msgstr "GPS Coordinates:"
+
+msgid "FAQs Accordion:"
+msgstr "FAQs Accordion:"
+
+msgid "Understanding the 2-Level Hotel Structure"
+msgstr "Understanding the 2-Level Hotel Structure"
+
+msgid "Tourivo handles accommodation in an industry-standard 2-level hierarchy: <strong>1. Hotel Property</strong> (the building / resort) and <strong>2. Room Types</strong> (the bookable units)."
+msgstr "Tourivo handles accommodation in an industry-standard 2-level hierarchy: <strong>1. Hotel Property</strong> (the building / resort) and <strong>2. Room Types</strong> (the bookable units)."
+
+msgid "Step 1: Create the Hotel Property"
+msgstr "Step 1: Create the Hotel Property"
+
+msgid "Go to <strong>Hotels -> Add New Hotel</strong>:"
+msgstr "Go to <strong>Hotels -> Add New Hotel</strong>:"
+
+msgid "Enter Hotel Title (e.g. \"Grand Ocean Resort & Spa\")."
+msgstr "Enter Hotel Title (e.g. \"Grand Ocean Resort & Spa\")."
+
+msgid "Set Star Rating (1 to 5 Stars)."
+msgstr "Set Star Rating (1 to 5 Stars)."
+
+msgid "Enter Street Address, City, Phone, and Email."
+msgstr "Enter Street Address, City, Phone, and Email."
+
+msgid "Assign Amenities (Pool, Free WiFi, Spa, Gym)."
+msgstr "Assign Amenities (Pool, Free WiFi, Spa, Gym)."
+
+msgid "Set Check-in and Check-out standard times."
+msgstr "Set Check-in and Check-out standard times."
+
+msgid "Step 2: Add Room Units to that Hotel"
+msgstr "Step 2: Add Room Units to that Hotel"
+
+msgid "Go to <strong>Rooms -> Add New Room</strong>:"
+msgstr "Go to <strong>Rooms -> Add New Room</strong>:"
+
+msgid "Enter Room Title (e.g. \"Deluxe Sea View Suite\")."
+msgstr "Enter Room Title (e.g. \"Deluxe Sea View Suite\")."
+
+msgid "Select the Parent Hotel from the dropdown."
+msgstr "Select the Parent Hotel from the dropdown."
+
+msgid "Set the Base Nightly Price (e.g., $180/night)."
+msgstr "Set the Base Nightly Price (e.g., $180/night)."
+
+msgid "Set Maximum Adults & Children capacity."
+msgstr "Set Maximum Adults & Children capacity."
+
+msgid "Set Total Units Available (e.g. 10 suites)."
+msgstr "Set Total Units Available (e.g. 10 suites)."
+
+msgid "How Travelers Experience Your Hotel Page:"
+msgstr "How Travelers Experience Your Hotel Page:"
+
+msgid "When travelers open any Hotel page, Tourivo displays all linked room types with their nightly prices, specs, bed styles, and an interactive \"Reserve Room\" dropdown for each room."
+msgstr "When travelers open any Hotel page, Tourivo displays all linked room types with their nightly prices, specs, bed styles, and an interactive \"Reserve Room\" dropdown for each room."
+
+msgid "Displaying Tours, Hotels & Search Bars on Your Pages"
+msgstr "Displaying Tours, Hotels & Search Bars on Your Pages"
+
+msgid "You can embed Tourivo elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes."
+msgstr "You can embed Tourivo elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes."
+
+msgid "1. Copy-and-Paste Shortcodes"
+msgstr "1. Copy-and-Paste Shortcodes"
+
+msgid "Element / Purpose"
+msgstr "Element / Purpose"
+
+msgid "Shortcode"
+msgstr "Shortcode"
+
+msgid "Action"
+msgstr "Action"
+
+msgid "Travel Search Bar"
+msgstr "Travel Search Bar"
+
+msgid "Destination dropdown, date picker, and traveler counter bar."
+msgstr "Destination dropdown, date picker, and traveler counter bar."
+
+msgid "Copy"
+msgstr "Copy"
+
+msgid "All Tours Grid (3 Columns)"
+msgstr "All Tours Grid (3 Columns)"
+
+msgid "Displays 6 latest tours in a 3-column responsive card grid."
+msgstr "Displays 6 latest tours in a 3-column responsive card grid."
+
+msgid "Tours by Destination (e.g. Bali)"
+msgstr "Tours by Destination (e.g. Bali)"
+
+msgid "Filters tours belonging only to a specific destination slug."
+msgstr "Filters tours belonging only to a specific destination slug."
+
+msgid "All Hotels & Stays Grid"
+msgstr "All Hotels & Stays Grid"
+
+msgid "Displays your luxury hotels with star ratings and starting prices."
+msgstr "Displays your luxury hotels with star ratings and starting prices."
+
+msgid "Live AJAX Filter & Search Grid"
+msgstr "Live AJAX Filter & Search Grid"
+
+msgid "Instant no-reload live search with destination, budget slider & duration filters."
+msgstr "Instant no-reload live search with destination, budget slider & duration filters."
+
+msgid "Traveler Wishlist & Favorites Page"
+msgstr "Traveler Wishlist & Favorites Page"
+
+msgid "Displays all saved tours and hotels stored in traveler wishlist."
+msgstr "Displays all saved tours and hotels stored in traveler wishlist."
+
+msgid "Track My Booking & Voucher Portal"
+msgstr "Track My Booking & Voucher Portal"
+
+msgid "Self-service portal for travelers to track status & download printable vouchers."
+msgstr "Self-service portal for travelers to track status & download printable vouchers."
+
+msgid "Multi-Currency Dropdown Switcher"
+msgstr "Multi-Currency Dropdown Switcher"
+
+msgid "Allows travelers to toggle and convert pricing into USD, EUR, GBP, BDT, INR, AUD, CAD, AED."
+msgstr "Allows travelers to toggle and convert pricing into USD, EUR, GBP, BDT, INR, AUD, CAD, AED."
+
+msgid "Customer Frontend Account Dashboard"
+msgstr "Customer Frontend Account Dashboard"
+
+msgid "Self-service portal for travelers: past bookings, itinerary lookup, PDF tickets & invoices."
+msgstr "Self-service portal for travelers: past bookings, itinerary lookup, PDF tickets & invoices."
+
+msgid "Elementor Page Builder"
+msgstr "Elementor Page Builder"
+
+msgid "If you use Elementor, simply open the Elementor editor and search for <strong>\"Tourivo\"</strong> in the widget panel. You will find:"
+msgstr "If you use Elementor, simply open the Elementor editor and search for <strong>\"Tourivo\"</strong> in the widget panel. You will find:"
+
+msgid "Gutenberg Block Editor"
+msgstr "Gutenberg Block Editor"
+
+msgid "In the WordPress standard block editor, click <strong>(+)</strong> and search for <strong>\"Tourivo\"</strong> blocks:"
+msgstr "In the WordPress standard block editor, click <strong>(+)</strong> and search for <strong>\"Tourivo\"</strong> blocks:"
+
+msgid "Managing Traveler Bookings & Inquiries"
+msgstr "Managing Traveler Bookings & Inquiries"
+
+msgid "Tourivo gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries."
+msgstr "Tourivo gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries."
+
+msgid "Orders & Bookings Table"
+msgstr "Orders & Bookings Table"
+
+msgid "Open <strong>Tourivo -> Bookings</strong>:"
+msgstr "Open <strong>Tourivo -> Bookings</strong>:"
+
+msgid "Booking Code:"
+msgstr "Booking Code:"
+
+msgid "1-Click Confirm / Cancel:"
+msgstr "1-Click Confirm / Cancel:"
+
+msgid "Activity Timeline & Notes:"
+msgstr "Activity Timeline & Notes:"
+
+msgid "CSV Export:"
+msgstr "CSV Export:"
+
+msgid "Trip Inquiries & Leads Table"
+msgstr "Trip Inquiries & Leads Table"
+
+msgid "Open <strong>Tourivo -> Inquiries</strong>:"
+msgstr "Open <strong>Tourivo -> Inquiries</strong>:"
+
+msgid "Pre-sale Leads:"
+msgstr "Pre-sale Leads:"
+
+msgid "1-Click Email Reply:"
+msgstr "1-Click Email Reply:"
+
+msgid "Status Pipeline:"
+msgstr "Status Pipeline:"
+
+msgid "Unlock the Full Potential with Tourivo Pro"
+msgstr "Unlock the Full Potential with Tourivo Pro"
+
+msgid "Tourivo Pro upgrades your booking engine into a fully automated travel marketplace with WooCommerce payments, calendar sync, and ticket check-in."
+msgstr "Tourivo Pro upgrades your booking engine into a fully automated travel marketplace with WooCommerce payments, calendar sync, and ticket check-in."
+
+msgid "1. WooCommerce Payment Gateway Bridge"
+msgstr "1. WooCommerce Payment Gateway Bridge"
+
+msgid "Seamlessly checkout via 100+ gateways: Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, COD, and direct bank transfers."
+msgstr "Seamlessly checkout via 100+ gateways: Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, COD, and direct bank transfers."
+
+msgid "2. Bookable Extra Add-ons & Upsells"
+msgstr "2. Bookable Extra Add-ons & Upsells"
+
+msgid "Sell optional extras like Airport Transfer, Private Tour Guide, Breakfast Buffet, and Extra Beds with per-person and per-night calculation options."
+msgstr "Sell optional extras like Airport Transfer, Private Tour Guide, Breakfast Buffet, and Extra Beds with per-person and per-night calculation options."
+
+msgid "3. Passenger Pricing Tiers & Group Discounts"
+msgstr "3. Passenger Pricing Tiers & Group Discounts"
+
+msgid "Set different rates for Adults, Children, and Infants, plus automatic volume discounts when booking for 5+ travelers."
+msgstr "Set different rates for Adults, Children, and Infants, plus automatic volume discounts when booking for 5+ travelers."
+
+msgid "4. PDF Tickets & QR Code Mobile Check-in"
+msgstr "4. PDF Tickets & QR Code Mobile Check-in"
+
+msgid "Automated PDF boarding vouchers with cryptographically signed QR codes that staff can scan at boarding with any mobile camera."
+msgstr "Automated PDF boarding vouchers with cryptographically signed QR codes that staff can scan at boarding with any mobile camera."
+
+msgid "5. Two-Way iCal Calendar Sync (Airbnb, Booking.com)"
+msgstr "5. Two-Way iCal Calendar Sync (Airbnb, Booking.com)"
+
+msgid "Export and auto-import iCal feeds to sync room and tour availability with Airbnb, Booking.com, VRBO, and Google Calendar."
+msgstr "Export and auto-import iCal feeds to sync room and tour availability with Airbnb, Booking.com, VRBO, and Google Calendar."
+
+msgid "6. Customer Frontend Dashboard & Guest Lookup"
+msgstr "6. Customer Frontend Dashboard & Guest Lookup"
+
+msgid "Shortcode [tourivo_customer_dashboard] gives travelers a self-service portal to view upcoming trips, order history, and download PDF tickets."
+msgstr "Shortcode [tourivo_customer_dashboard] gives travelers a self-service portal to view upcoming trips, order history, and download PDF tickets."
+
+msgid "General Inquiry"
+msgstr "General Inquiry"
+
+msgid "Re: Your Inquiry for %1$s — %2$s"
+msgstr "Re: Your Inquiry for %1$s — %2$s"
+
+msgid "Flexible"
+msgstr "Flexible"
+
+msgid "Travel Inquiries & Consultation Requests"
+msgstr "Travel Inquiries & Consultation Requests"
+
+msgid "Manage leads and custom trip questions submitted by travelers through the \"Ask an Expert\" inquiry modal."
+msgstr "Manage leads and custom trip questions submitted by travelers through the \"Ask an Expert\" inquiry modal."
+
+msgid "New Leads"
+msgstr "New Leads"
+
+msgid "Replied"
+msgstr "Replied"
+
+msgid "Closed"
+msgstr "Closed"
+
+msgid "Traveler"
+msgstr "Traveler"
+
+msgid "Trip / Stay"
+msgstr "Trip / Stay"
+
+msgid "Travel Date & Party"
+msgstr "Travel Date & Party"
+
+msgid "Inquiry Message"
+msgstr "Inquiry Message"
+
+msgid "No inquiries found."
+msgstr "No inquiries found."
+
+msgid "New"
+msgstr "New"
+
+msgid "Reply"
+msgstr "Reply"
+
+msgid "Site Default (WordPress Locale: %s)"
+msgstr "Site Default (WordPress Locale: %s)"
+
+msgid "Configure your currency rates, booking defaults, design styling, SEO, and Webhooks."
+msgstr "Configure your currency rates, booking defaults, design styling, SEO, and Webhooks."
+
+msgid "The main currency used to store prices in the database."
+msgstr "The main currency used to store prices in the database."
+
+msgid "Supported Multi-Currencies for Frontend Switcher"
+msgstr "Supported Multi-Currencies for Frontend Switcher"
+
+msgid "These exchange rates are used when travelers switch currencies with [tourivo_currency_switcher]:"
+msgstr "These exchange rates are used when travelers switch currencies with [tourivo_currency_switcher]:"
+
+msgid "Currency"
+msgstr "Currency"
+
+msgid "Symbol"
+msgstr "Symbol"
+
+msgid "Exchange Rate (vs 1 Base)"
+msgstr "Exchange Rate (vs 1 Base)"
+
+msgid "Booking Defaults"
+msgstr "Booking Defaults"
+
+msgid "Brand Color Customizer & Styling"
+msgstr "Brand Color Customizer & Styling"
+
+msgid "Match Tourivo booking widgets, cards, and buttons with your active WordPress theme styling."
+msgstr "Match Tourivo booking widgets, cards, and buttons with your active WordPress theme styling."
+
+msgid "Used for primary booking buttons, price tags, active calendar dates, and highlights."
+msgstr "Used for primary booking buttons, price tags, active calendar dates, and highlights."
+
+msgid "Used for promotional ribbons, star ratings, and discount tags."
+msgstr "Used for promotional ribbons, star ratings, and discount tags."
+
+msgid "Widget Border Radius"
+msgstr "Widget Border Radius"
+
+msgid "Sharp (4px)"
+msgstr "Sharp (4px)"
+
+msgid "Modern Rounded (8px - Default)"
+msgstr "Modern Rounded (8px - Default)"
+
+msgid "Smooth Curved (12px)"
+msgstr "Smooth Curved (12px)"
+
+msgid "Pill Curved (16px)"
+msgstr "Pill Curved (16px)"
+
+msgid "Search Engine Optimization (SEO) & Social Sharing"
+msgstr "Search Engine Optimization (SEO) & Social Sharing"
+
+msgid "Schema.org JSON-LD"
+msgstr "Schema.org JSON-LD"
+
+msgid "Enable automatic Schema.org structured data on Tour and Hotel pages."
+msgstr "Enable automatic Schema.org structured data on Tour and Hotel pages."
+
+msgid "Generates TouristTrip and Hotel JSON-LD metadata so Google can display rich search snippets, prices, and star ratings."
+msgstr "Generates TouristTrip and Hotel JSON-LD metadata so Google can display rich search snippets, prices, and star ratings."
+
+msgid "OpenGraph & Twitter Cards"
+msgstr "OpenGraph & Twitter Cards"
+
+msgid "Enable rich social sharing preview cards on Facebook, WhatsApp, and Twitter / X."
+msgstr "Enable rich social sharing preview cards on Facebook, WhatsApp, and Twitter / X."
+
+msgid "Sender Details"
+msgstr "Sender Details"
+
+msgid "Sender Name"
+msgstr "Sender Name"
+
+msgid "Sender Email Address"
+msgstr "Sender Email Address"
+
+msgid "Admin Notification Recipient Email"
+msgstr "Admin Notification Recipient Email"
+
+msgid "New booking alerts and customer trip inquiries will be delivered to this email address."
+msgstr "New booking alerts and customer trip inquiries will be delivered to this email address."
+
+msgid "Email Template Customizer"
+msgstr "Email Template Customizer"
+
+msgid "Customer Confirmation Subject"
+msgstr "Customer Confirmation Subject"
+
+msgid "Available tags: {customer_name}, {booking_code}, {item_title}, {check_in}, {total_amount}, {site_name}"
+msgstr "Available tags: {customer_name}, {booking_code}, {item_title}, {check_in}, {total_amount}, {site_name}"
+
+msgid "Admin Alert Subject"
+msgstr "Admin Alert Subject"
+
+msgid "Test Email Dispatcher"
+msgstr "Test Email Dispatcher"
+
+msgid "Send a sample booking confirmation email to verify your WordPress mail server setup."
+msgstr "Send a sample booking confirmation email to verify your WordPress mail server setup."
+
+msgid "Send Test Email"
+msgstr "Send Test Email"
+
+msgid "Outbound Webhooks (Zapier, Make, n8n, CRMs)"
+msgstr "Outbound Webhooks (Zapier, Make, n8n, CRMs)"
+
+msgid "Send real-time JSON payloads to external webhooks whenever reservations are created or updated."
+msgstr "Send real-time JSON payloads to external webhooks whenever reservations are created or updated."
+
+msgid "Webhook Target URL"
+msgstr "Webhook Target URL"
+
+msgid "Your external automation endpoint URL that receives POST requests."
+msgstr "Your external automation endpoint URL that receives POST requests."
+
+msgid "Secret Key (HMAC SHA-256)"
+msgstr "Secret Key (HMAC SHA-256)"
+
+msgid "Generate Secret"
+msgstr "Generate Secret"
+
+msgid "Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification."
+msgstr "Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification."
+
+msgid "Subscribed Events"
+msgstr "Subscribed Events"
+
+msgid "Fired when a new tour or hotel booking is submitted."
+msgstr "Fired when a new tour or hotel booking is submitted."
+
+msgid "Fired when a booking status changes (confirmed, cancelled, completed)."
+msgstr "Fired when a booking status changes (confirmed, cancelled, completed)."
+
+msgid "Fired when a customer inquiry is received."
+msgstr "Fired when a customer inquiry is received."
+
+msgid "Test Webhook Dispatcher"
+msgstr "Test Webhook Dispatcher"
+
+msgid "Send a test ping payload to your webhook target URL to verify connectivity."
+msgstr "Send a test ping payload to your webhook target URL to verify connectivity."
+
+msgid "Send Test Ping Payload"
+msgstr "Send Test Ping Payload"
+
+msgid "Network & Proxy Configuration"
+msgstr "Network & Proxy Configuration"
+
+msgid "Behind Cloudflare / Reverse Proxy"
+msgstr "Behind Cloudflare / Reverse Proxy"
+
+msgid "Disabled (Standard direct connection / REMOTE_ADDR)"
+msgstr "Disabled (Standard direct connection / REMOTE_ADDR)"
+
+msgid "Cloudflare (Trust CF-Connecting-IP only from Cloudflare IPs)"
+msgstr "Cloudflare (Trust CF-Connecting-IP only from Cloudflare IPs)"
+
+msgid "Reverse Proxy / Load Balancer (Trust X-Forwarded-For)"
+msgstr "Reverse Proxy / Load Balancer (Trust X-Forwarded-For)"
+
+msgid "Enable this if your website is behind Cloudflare, AWS CloudFront, Nginx reverse proxy, or load balancers for accurate client IP detection."
+msgstr "Enable this if your website is behind Cloudflare, AWS CloudFront, Nginx reverse proxy, or load balancers for accurate client IP detection."
+
+msgid "Custom Trusted Proxies"
+msgstr "Custom Trusted Proxies"
+
+msgid "Optional comma- or newline-separated list of trusted upstream proxy/load balancer IPs or CIDR subnets."
+msgstr "Optional comma- or newline-separated list of trusted upstream proxy/load balancer IPs or CIDR subnets."
+
+msgid "Data Deletion on Uninstall"
+msgstr "Data Deletion on Uninstall"
+
+msgid "Erase Data on Delete"
+msgstr "Erase Data on Delete"
+
+msgid "Check this box if you want to completely erase custom database tables and settings when the plugin is deleted."
+msgstr "Check this box if you want to completely erase custom database tables and settings when the plugin is deleted."
+
+msgid "Setup Wizard & Demo Tools"
+msgstr "Setup Wizard & Demo Tools"
+
+msgid "Quick Onboarding & Sample Data"
+msgstr "Quick Onboarding & Sample Data"
+
+msgid "Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?"
+msgstr "Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?"
+
+msgid "Launch Setup Wizard"
+msgstr "Launch Setup Wizard"
+
+msgid "System Information"
+msgstr "System Information"
+
+msgid "Tourivo Core Version"
+msgstr "Tourivo Core Version"
+
+msgid "Database Schema Version"
+msgstr "Database Schema Version"
+
+msgid "PHP Version"
+msgstr "PHP Version"
+
+msgid "WordPress Version"
+msgstr "WordPress Version"
+
+msgid "You do not have permission to access the setup wizard."
+msgstr "You do not have permission to access the setup wizard."
+
+msgid "Saving..."
+msgstr "Saving..."
+
+msgid "Continue to Pages →"
+msgstr "Continue to Pages →"
+
+msgid "Creating Pages..."
+msgstr "Creating Pages..."
+
+msgid "Generate Pages & Next →"
+msgstr "Generate Pages & Next →"
+
+msgid "Quick Setup & Configuration Wizard"
+msgstr "Quick Setup & Configuration Wizard"
+
+msgid "Store & Currency"
+msgstr "Store & Currency"
+
+msgid "Core Pages"
+msgstr "Core Pages"
+
+msgid "Demo Content"
+msgstr "Demo Content"
+
+msgid "Ready!"
+msgstr "Ready!"
+
+msgid "Agency & Currency Setup"
+msgstr "Agency & Currency Setup"
+
+msgid "Configure your business name and default pricing currency."
+msgstr "Configure your business name and default pricing currency."
+
+msgid "Agency / Site Name"
+msgstr "Agency / Site Name"
+
+msgid "Booking Notification Email"
+msgstr "Booking Notification Email"
+
+msgid "New booking alerts and customer inquiry notifications will be sent here."
+msgstr "New booking alerts and customer inquiry notifications will be sent here."
+
+msgid "Base Currency"
+msgstr "Base Currency"
+
+msgid "Left ($100)"
+msgstr "Left ($100)"
+
+msgid "Right (100$)"
+msgstr "Right (100$)"
+
+msgid "Skip Setup"
+msgstr "Skip Setup"
+
+msgid "Create Essential Pages"
+msgstr "Create Essential Pages"
+
+msgid "Select the default pages you would like Tourivo to automatically generate on your website."
+msgstr "Select the default pages you would like Tourivo to automatically generate on your website."
+
+msgid "Tours Directory Page"
+msgstr "Tours Directory Page"
+
+msgid "Creates \"/tours\" displaying the interactive tour packages grid."
+msgstr "Creates \"/tours\" displaying the interactive tour packages grid."
+
+msgid "Hotels & Stays Page"
+msgstr "Hotels & Stays Page"
+
+msgid "Creates \"/hotels\" displaying boutique hotels, rooms, and resorts."
+msgstr "Creates \"/hotels\" displaying boutique hotels, rooms, and resorts."
+
+msgid "Search & Filter Portal"
+msgstr "Search & Filter Portal"
+
+msgid "Creates \"/search-trips\" with live price sliders, destination & star filters."
+msgstr "Creates \"/search-trips\" with live price sliders, destination & star filters."
+
+msgid "Creates \"/track-booking\" for travelers to track status & print vouchers."
+msgstr "Creates \"/track-booking\" for travelers to track status & print vouchers."
+
+msgid "Traveler Wishlist Page"
+msgstr "Traveler Wishlist Page"
+
+msgid "Creates \"/wishlist\" allowing travelers to save favorite trips."
+msgstr "Creates \"/wishlist\" allowing travelers to save favorite trips."
+
+msgid "Back"
+msgstr "Back"
+
+msgid "Import Realistic Sample Trips & Hotels"
+msgstr "Import Realistic Sample Trips & Hotels"
+
+msgid "Populate sample data (Bali Beach, Swiss Alps, Kyoto Heritage, Grand Oceanfront Resort) to immediately test booking flows."
+msgstr "Populate sample data (Bali Beach, Swiss Alps, Kyoto Heritage, Grand Oceanfront Resort) to immediately test booking flows."
+
+msgid "Ready to install 3 Featured Tours, 2 Boutique Hotels & 4 Room Types."
+msgstr "Ready to install 3 Featured Tours, 2 Boutique Hotels & 4 Room Types."
+
+msgid "Includes complete day-by-day itineraries, high-res photos, inclusions, FAQs, and realistic pricing."
+msgstr "Includes complete day-by-day itineraries, high-res photos, inclusions, FAQs, and realistic pricing."
+
+msgid "Importing sample tours, hotels, rooms, and destinations..."
+msgstr "Importing sample tours, hotels, rooms, and destinations..."
+
+msgid "Skip Demo Import"
+msgstr "Skip Demo Import"
+
+msgid "Import Demo Data Now"
+msgstr "Import Demo Data Now"
+
+msgid "Your Booking Engine is Ready!"
+msgstr "Your Booking Engine is Ready!"
+
+msgid "Tourivo has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms."
+msgstr "Tourivo has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms."
+
+msgid "View Tours Page"
+msgstr "View Tours Page"
+
+msgid "Browse travel packages"
+msgstr "Browse travel packages"
+
+msgid "View Hotels Page"
+msgstr "View Hotels Page"
+
+msgid "Browse rooms & stays"
+msgstr "Browse rooms & stays"
+
+msgid "Track Booking Portal"
+msgstr "Track Booking Portal"
+
+msgid "Customer self-service"
+msgstr "Customer self-service"
+
+msgid "Create First Tour"
+msgstr "Create First Tour"
+
+msgid "Add your custom itinerary"
+msgstr "Add your custom itinerary"
+
+msgid "Go to Tourivo Dashboard"
+msgstr "Go to Tourivo Dashboard"
+
+msgid "Tourivo Travel Engine"
+msgstr "Tourivo Travel Engine"
+
+msgid "Tourivo Tour Grid"
+msgstr "Tourivo Tour Grid"
+
+msgid "Display tours in a modern responsive grid layout."
+msgstr "Display tours in a modern responsive grid layout."
+
+msgid "Tourivo Hotel Grid"
+msgstr "Tourivo Hotel Grid"
+
+msgid "Display hotels and resorts in a responsive grid."
+msgstr "Display hotels and resorts in a responsive grid."
+
+msgid "Tourivo Search Bar"
+msgstr "Tourivo Search Bar"
+
+msgid "Destination, date and traveler search filter bar."
+msgstr "Destination, date and traveler search filter bar."
+
+msgid "Tourivo Filter & Search Grid"
+msgstr "Tourivo Filter & Search Grid"
+
+msgid "Live AJAX filtering by destination, price slider, and duration."
+msgstr "Live AJAX filtering by destination, price slider, and duration."
+
+msgid "Tourivo Booking Panel"
+msgstr "Tourivo Booking Panel"
+
+msgid "Interactive booking panel with instant pricing and checkout."
+msgstr "Interactive booking panel with instant pricing and checkout."
+
+msgid "Tourivo Track My Booking"
+msgstr "Tourivo Track My Booking"
+
+msgid "Self-service portal for travelers to check reservation status and download vouchers."
+msgstr "Self-service portal for travelers to check reservation status and download vouchers."
+
+msgid "Tourivo Traveler Wishlist"
+msgstr "Tourivo Traveler Wishlist"
+
+msgid "Display saved favorite tours and hotels for the traveler."
+msgstr "Display saved favorite tours and hotels for the traveler."
+
+msgid "No bookings found matching your criteria."
+msgstr "No bookings found matching your criteria."
+
+msgid "Please provide a valid numeric booking ID. Example: wp tourivo booking get 12"
+msgstr "Please provide a valid numeric booking ID. Example: wp tourivo booking get 12"
+
+msgid "Booking #%d not found."
+msgstr "Booking #%d not found."
+
+msgid "Usage: wp tourivo booking set-status <id> <status>"
+msgstr "Usage: wp tourivo booking set-status <id> <status>"
+
+msgid "Invalid status \"%s\". Valid statuses are: %s"
+msgstr "Invalid status \"%s\". Valid statuses are: %s"
+
+msgid "Booking #%1$d status updated from \"%2$s\" to \"%3$s\"."
+msgstr "Booking #%1$d status updated from \"%2$s\" to \"%3$s\"."
+
+msgid "Failed to update booking status in database."
+msgstr "Failed to update booking status in database."
+
+msgid "Unknown booking action \"%s\". Use list, get, or set-status."
+msgstr "Unknown booking action \"%s\". Use list, get, or set-status."
+
+msgid "Running Tourivo database migrations..."
+msgstr "Running Tourivo database migrations..."
+
+msgid "Tourivo database schema migrated successfully."
+msgstr "Tourivo database schema migrated successfully."
+
+msgid "Unknown db command \"%s\". Use: wp tourivo db migrate"
+msgstr "Unknown db command \"%s\". Use: wp tourivo db migrate"
+
+msgid "Please specify a valid item ID. Example: wp tourivo inventory 15"
+msgstr "Please specify a valid item ID. Example: wp tourivo inventory 15"
+
+msgid "Item: #%1$d (%2$s) | Date: %3$s"
+msgstr "Item: #%1$d (%2$s) | Date: %3$s"
+
+msgid "Available! Remaining capacity: %d spots."
+msgstr "Available! Remaining capacity: %d spots."
+
+msgid "Unavailable: %s"
+msgstr "Unavailable: %s"
+
+msgid "Valid published Item ID and start_date are required."
+msgstr "Valid published Item ID and start_date are required."
+
+msgid "Invalid parameters for calendar query."
+msgstr "Invalid parameters for calendar query."
+
+msgid "Too many hold requests initiated. Please complete your existing reservation."
+msgstr "Too many hold requests initiated. Please complete your existing reservation."
+
+msgid "Could not reserve selected dates or quantity. Selected spots may already be booked."
+msgstr "Could not reserve selected dates or quantity. Selected spots may already be booked."
+
+msgid "Submission blocked."
+msgstr "Submission blocked."
+
+msgid "Too many booking requests submitted. Please wait a few minutes before trying again."
+msgstr "Too many booking requests submitted. Please wait a few minutes before trying again."
+
+msgid "For group reservations of more than 50 travelers, please contact our support."
+msgstr "For group reservations of more than 50 travelers, please contact our support."
+
+msgid "Tourivo Elements"
+msgstr "Tourivo Elements"
+
+msgid "Booking Panel"
+msgstr "Booking Panel"
+
+msgid "Booking Settings"
+msgstr "Booking Settings"
+
+msgid "Custom Item ID (Leave 0 for Current Page)"
+msgstr "Custom Item ID (Leave 0 for Current Page)"
+
+msgid "Item Type"
+msgstr "Item Type"
+
+msgid "Hotel Grid"
+msgstr "Hotel Grid"
+
+msgid "Hotel Grid Settings"
+msgstr "Hotel Grid Settings"
+
+msgid "Hotels Count"
+msgstr "Hotels Count"
+
+msgid "Columns"
+msgstr "Columns"
+
+msgid "Filter by Destination Slug"
+msgstr "Filter by Destination Slug"
+
+msgid "Search Bar"
+msgstr "Search Bar"
+
+msgid "Search Bar Settings"
+msgstr "Search Bar Settings"
+
+msgid "This widget renders the responsive Destination, Date, and Travelers search bar."
+msgstr "This widget renders the responsive Destination, Date, and Travelers search bar."
+
+msgid "Tour Grid"
+msgstr "Tour Grid"
+
+msgid "Grid Settings"
+msgstr "Grid Settings"
+
+msgid "Tours Count"
+msgstr "Tours Count"
+
+msgid "Search Amenities"
+msgstr "Search Amenities"
+
+msgid "All Amenities"
+msgstr "All Amenities"
+
+msgid "Edit Amenity"
+msgstr "Edit Amenity"
+
+msgid "Update Amenity"
+msgstr "Update Amenity"
+
+msgid "Add New Amenity"
+msgstr "Add New Amenity"
+
+msgid "Hotel"
+msgstr "Hotel"
+
+msgid "Hotel Cover Image"
+msgstr "Hotel Cover Image"
+
+msgid "Set hotel cover image"
+msgstr "Set hotel cover image"
+
+msgid "Remove hotel cover image"
+msgstr "Remove hotel cover image"
+
+msgid "Use as hotel cover image"
+msgstr "Use as hotel cover image"
+
+msgid "New Room"
+msgstr "New Room"
+
+msgid "Search Destinations"
+msgstr "Search Destinations"
+
+msgid "Parent Destination"
+msgstr "Parent Destination"
+
+msgid "Parent Destination:"
+msgstr "Parent Destination:"
+
+msgid "Edit Destination"
+msgstr "Edit Destination"
+
+msgid "Update Destination"
+msgstr "Update Destination"
+
+msgid "Add New Destination"
+msgstr "Add New Destination"
+
+msgid "New Destination Name"
+msgstr "New Destination Name"
+
+msgid "Search Activities"
+msgstr "Search Activities"
+
+msgid "Edit Activity"
+msgstr "Edit Activity"
+
+msgid "Update Activity"
+msgstr "Update Activity"
+
+msgid "Add New Activity"
+msgstr "Add New Activity"
+
+msgid "Tour Features"
+msgstr "Tour Features"
+
+msgid "Tours & Packages"
+msgstr "Tours & Packages"
+
+msgid "Tour"
+msgstr "Tour"
+
+msgid "Tour Cover Image"
+msgstr "Tour Cover Image"
+
+msgid "Set tour cover image"
+msgstr "Set tour cover image"
+
+msgid "Remove tour cover image"
+msgstr "Remove tour cover image"
+
+msgid "Use as tour cover image"
+msgstr "Use as tour cover image"
+
+msgid "Activities & Categories"
+msgstr "Activities & Categories"
+
+msgid "Feature"
+msgstr "Feature"
+
+msgid "Unauthorized permission."
+msgstr "Unauthorized permission."
+
+msgid "Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms."
+msgstr "Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms."
+
+msgid "Invalid booking ID or status."
+msgstr "Invalid booking ID or status."
+
+msgid "Booking not found."
+msgstr "Booking not found."
+
+msgid "Booking status unchanged."
+msgstr "Booking status unchanged."
+
+msgid "Cannot reactivate booking. Required inventory spots are no longer available."
+msgstr "Cannot reactivate booking. Required inventory spots are no longer available."
+
+msgid "Database update error."
+msgstr "Database update error."
+
+msgid "Booking status changed from %1$s to %2$s"
+msgstr "Booking status changed from %1$s to %2$s"
+
+msgid "Booking status updated successfully."
+msgstr "Booking status updated successfully."
+
+msgid "Please fill in all required fields."
+msgstr "Please fill in all required fields."
+
+msgid "Manual booking created successfully! Reference Code: #%s"
+msgstr "Manual booking created successfully! Reference Code: #%s"
+
+msgid "Failed to create manual booking."
+msgstr "Failed to create manual booking."
+
+msgid "Inquiry status updated."
+msgstr "Inquiry status updated."
+
+msgid "Failed to update inquiry status."
+msgstr "Failed to update inquiry status."
+
+msgid "Inquiry deleted."
+msgstr "Inquiry deleted."
+
+msgid "Failed to delete inquiry."
+msgstr "Failed to delete inquiry."
+
+msgid "Please enter a valid email address."
+msgstr "Please enter a valid email address."
+
+msgid "Test email successfully dispatched to %s!"
+msgstr "Test email successfully dispatched to %s!"
+
+msgid "Mail sending failed. Please verify your WordPress SMTP settings."
+msgstr "Mail sending failed. Please verify your WordPress SMTP settings."
+
+msgid "Invalid booking ID."
+msgstr "Invalid booking ID."
+
+msgid "System / Guest"
+msgstr "System / Guest"
+
+msgid "Internal Staff Note"
+msgstr "Internal Staff Note"
+
+msgid "Logged by: %s"
+msgstr "Logged by: %s"
+
+msgid "Note content cannot be empty."
+msgstr "Note content cannot be empty."
+
+msgid "Internal note added successfully."
+msgstr "Internal note added successfully."
+
+msgid "Failed to record note."
+msgstr "Failed to record note."
+
+msgid "Invalid or missing booking reference code."
+msgstr "Invalid or missing booking reference code."
+
+msgid "Access denied. Invalid voucher security token."
+msgstr "Access denied. Invalid voucher security token."
+
+msgid "Welcome to Tourivo! Want to explore with ready-made demo content?"
+msgstr "Welcome to Tourivo! Want to explore with ready-made demo content?"
+
+msgid "Get started in seconds! Import 3 complete tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to test booking forms, filters, and calendars immediately."
+msgstr "Get started in seconds! Import 3 complete tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to test booking forms, filters, and calendars immediately."
+
+msgid "⚡ Import Starter Demo Content"
+msgstr "⚡ Import Starter Demo Content"
+
+msgid "Docs & Features Hub"
+msgstr "Docs & Features Hub"
+
+msgid "No activity logs recorded yet for this booking."
+msgstr "No activity logs recorded yet for this booking."
+
+msgid "Price"
+msgstr "Price"
+
+msgid "Duration"
+msgstr "Duration"
+
+msgid "Rating"
+msgstr "Rating"
+
+msgid "City"
+msgstr "City"
+
+msgid "Parent Hotel"
+msgstr "Parent Hotel"
+
+msgid "Price / Night"
+msgstr "Price / Night"
+
+msgid "Capacity"
+msgstr "Capacity"
+
+msgid "Unassigned"
+msgstr "Unassigned"
+
+msgid "%1$d Adults, %2$d Children"
+msgstr "%1$d Adults, %2$d Children"
+
+msgid "Database connection not available."
+msgstr "Database connection not available."
+
+msgid "Selected item is invalid or no longer available."
+msgstr "Selected item is invalid or no longer available."
+
+msgid "Invalid booking item type."
+msgstr "Invalid booking item type."
+
+msgid "Please provide all required traveler details (Name, Valid Email, Date)."
+msgstr "Please provide all required traveler details (Name, Valid Email, Date)."
+
+msgid "This tour allows a maximum of %d guests per booking."
+msgstr "This tour allows a maximum of %d guests per booking."
+
+msgid "Please select a valid check-out date for room reservations."
+msgstr "Please select a valid check-out date for room reservations."
+
+msgid "Selected %1$d room(s) can accommodate up to %2$d adults."
+msgstr "Selected %1$d room(s) can accommodate up to %2$d adults."
+
+msgid "Selected %1$d room(s) can accommodate up to %2$d children."
+msgstr "Selected %1$d room(s) can accommodate up to %2$d children."
+
+msgid "Selected %1$d room(s) can accommodate up to %2$d total guests."
+msgstr "Selected %1$d room(s) can accommodate up to %2$d total guests."
+
+msgid "Invalid total price calculated for this booking."
+msgstr "Invalid total price calculated for this booking."
+
+msgid "Failed to commit inventory. Selected slots are no longer available."
+msgstr "Failed to commit inventory. Selected slots are no longer available."
+
+msgid "Could not save booking record to database."
+msgstr "Could not save booking record to database."
+
+msgid "Could not save booking item line to database."
+msgstr "Could not save booking item line to database."
+
+msgid "An error occurred while creating booking: "
+msgstr "An error occurred while creating booking: "
+
+msgid "Booking created successfully! Your booking code is #%s."
+msgstr "Booking created successfully! Your booking code is #%s."
+
+msgid "Your Booking Confirmation #%1$s - %2$s"
+msgstr "Your Booking Confirmation #%1$s - %2$s"
+
+msgid "[New Booking] #%1$s by %2$s"
+msgstr "[New Booking] #%1$s by %2$s"
+
+msgid "[Tourivo Test] Email Dispatch Verification - %s"
+msgstr "[Tourivo Test] Email Dispatch Verification - %s"
+
+msgid "Invalid submission."
+msgstr "Invalid submission."
+
+msgid "Too many inquiries submitted. Please wait a few minutes before trying again."
+msgstr "Too many inquiries submitted. Please wait a few minutes before trying again."
+
+msgid "Please fill in all required fields (Name, Email, Message)."
+msgstr "Please fill in all required fields (Name, Email, Message)."
+
+msgid "Please provide a valid email address."
+msgstr "Please provide a valid email address."
+
+msgid "Failed to save your inquiry. Please try again later."
+msgstr "Failed to save your inquiry. Please try again later."
+
+msgid "General Travel Inquiry"
+msgstr "General Travel Inquiry"
+
+msgid "[%1$s] New Trip Inquiry for: %2$s"
+msgstr "[%1$s] New Trip Inquiry for: %2$s"
+
+msgid "New Traveler Inquiry Received"
+msgstr "New Traveler Inquiry Received"
+
+msgid "Trip / Stay:"
+msgstr "Trip / Stay:"
+
+msgid "Traveler Name:"
+msgstr "Traveler Name:"
+
+msgid "Phone / WhatsApp:"
+msgstr "Phone / WhatsApp:"
+
+msgid "Expected Travel Date:"
+msgstr "Expected Travel Date:"
+
+msgid "Travelers:"
+msgstr "Travelers:"
+
+msgid "Question / Request:"
+msgstr "Question / Request:"
+
+msgid "Manage inquiries in WP Admin -> Tourivo -> Inquiries"
+msgstr "Manage inquiries in WP Admin -> Tourivo -> Inquiries"
+
+msgid "Invalid date range specified."
+msgstr "Invalid date range specified."
+
+msgid "Available (%d spots left)"
+msgstr "Available (%d spots left)"
+
+msgid "Selected dates or quantity are not available."
+msgstr "Selected dates or quantity are not available."
+
+msgid "Invalid webhook URL format."
+msgstr "Invalid webhook URL format."
+
+msgid "This is a test webhook payload from Tourivo."
+msgstr "This is a test webhook payload from Tourivo."
+
+msgid "Endpoint responded with HTTP status %d."
+msgstr "Endpoint responded with HTTP status %d."
+
+msgid "Too many lookup attempts. Please wait a few minutes before trying again."
+msgstr "Too many lookup attempts. Please wait a few minutes before trying again."
+
+msgid "Please enter a valid Booking Reference Code and Email Address."
+msgstr "Please enter a valid Booking Reference Code and Email Address."
+
+msgid "No reservation found matching the provided Booking Code and Email Address. Please check your confirmation details."
+msgstr "No reservation found matching the provided Booking Code and Email Address. Please check your confirmation details."
+
+msgid "Hotel Stay"
+msgstr "Hotel Stay"
+
+msgid "Tour Package"
+msgstr "Tour Package"
+
+msgid "Dates:"
+msgstr "Dates:"
+
+msgid "Qty / Pax:"
+msgstr "Qty / Pax:"
+
+msgid "Select Currency"
+msgstr "Select Currency"
+
+msgid "Search hotels, cities..."
+msgstr "Search hotels, cities..."
+
+msgid "Search trips, keywords..."
+msgstr "Search trips, keywords..."
+
+msgid "Any Duration"
+msgstr "Any Duration"
+
+msgid "1 - 3 Days"
+msgstr "1 - 3 Days"
+
+msgid "4 - 7 Days"
+msgstr "4 - 7 Days"
+
+msgid "8+ Days"
+msgstr "8+ Days"
+
+msgid "All Ratings"
+msgstr "All Ratings"
+
+msgid "Max Budget:"
+msgstr "Max Budget:"
+
+msgid "Customer Rating"
+msgstr "Customer Rating"
+
+msgid "Title: A to Z"
+msgstr "Title: A to Z"
+
+msgid "Reset"
+msgstr "Reset"
+
+msgid "items found"
+msgstr "items found"
+
+msgid "My Saved Trips & Stays"
+msgstr "My Saved Trips & Stays"
+
+msgid "items saved"
+msgstr "items saved"
+
+msgid "Loading your favorites..."
+msgstr "Loading your favorites..."
+
+msgid "Your Wishlist is Empty"
+msgstr "Your Wishlist is Empty"
+
+msgid "Explore our exciting tour packages and luxury hotels, and click the heart icon to save your favorite itineraries here!"
+msgstr "Explore our exciting tour packages and luxury hotels, and click the heart icon to save your favorite itineraries here!"
+
+msgid "Explore Tours & Stays"
+msgstr "Explore Tours & Stays"
+
+msgid "Please enter both your Booking Reference Code and Email Address."
+msgstr "Please enter both your Booking Reference Code and Email Address."
+
+msgid "Could not retrieve reservation details."
+msgstr "Could not retrieve reservation details."
+
+msgid "Connection error. Please try again."
+msgstr "Connection error. Please try again."
+
+msgid "Booked on:"
+msgstr "Booked on:"
+
+msgid "e.g. TRV-A1B2C3D4"
+msgstr "e.g. TRV-A1B2C3D4"
+
+msgid "Customer Email Address"
+msgstr "Customer Email Address"
+
+msgid "your-email@domain.com"
+msgstr "your-email@domain.com"
+
+msgid "Track Reservation"
+msgstr "Track Reservation"
+
+msgid "Searching..."
+msgstr "Searching..."
+
+msgid "Traveler:"
+msgstr "Traveler:"
+
+msgid "Payment Method:"
+msgstr "Payment Method:"
+
+msgid "Booked Package / Stays"
+msgstr "Booked Package / Stays"
+
+msgid "/ person"
+msgstr "/ person"
+
+msgid "/ night"
+msgstr "/ night"
+
+msgid "Select Tour Date *"
+msgstr "Select Tour Date *"
+
+msgid "Up to %d available"
+msgstr "Up to %d available"
+
+msgid "Night"
+msgstr "Night"
+
+msgid "Guest"
+msgstr "Guest"
+
+msgid "Price:"
+msgstr "Price:"
+
+msgid "Instant Confirmation"
+msgstr "Instant Confirmation"
+
+msgid "Check-out Date *"
+msgstr "Check-out Date *"
+
+msgid "Number of Rooms *"
+msgstr "Number of Rooms *"
+
+msgid "Guests / Travelers"
+msgstr "Guests / Travelers"
+
+msgid "Lead Traveler Information"
+msgstr "Lead Traveler Information"
+
+msgid "Full Name *"
+msgstr "Full Name *"
+
+msgid "Email Address *"
+msgstr "Email Address *"
+
+msgid "Phone / WhatsApp *"
+msgstr "Phone / WhatsApp *"
+
+msgid "Special requests or notes..."
+msgstr "Special requests or notes..."
+
+msgid "Book Now (Pay Offline)"
+msgstr "Book Now (Pay Offline)"
+
+msgid "Have questions? Ask a Travel Specialist"
+msgstr "Have questions? Ask a Travel Specialist"
+
+msgid "Ask an Expert / Custom Trip Inquiry"
+msgstr "Ask an Expert / Custom Trip Inquiry"
+
+msgid "Have special requests or group questions? Send your inquiry directly to our travel specialists."
+msgstr "Have special requests or group questions? Send your inquiry directly to our travel specialists."
+
+msgid "Your Full Name *"
+msgstr "Your Full Name *"
+
+msgid "Your Email Address *"
+msgstr "Your Email Address *"
+
+msgid "Phone / WhatsApp Number"
+msgstr "Phone / WhatsApp Number"
+
+msgid "Travelers Count"
+msgstr "Travelers Count"
+
+msgid "Tell us about your questions or custom trip preferences..."
+msgstr "Tell us about your questions or custom trip preferences..."
+
+msgid "Send Inquiry to Specialists"
+msgstr "Send Inquiry to Specialists"
+
+msgid "Booking Voucher #%s — %s"
+msgstr "Booking Voucher #%s — %s"
+
+msgid "Issued: %s"
+msgstr "Issued: %s"
+
+msgid "Hotel Room"
+msgstr "Hotel Room"
+
+msgid "Official Travel & Accommodation Booking Confirmation Voucher"
+msgstr "Official Travel & Accommodation Booking Confirmation Voucher"
+
+msgid "Traveler Details"
+msgstr "Traveler Details"
+
+msgid "Name:"
+msgstr "Name:"
+
+msgid "Reservation Status"
+msgstr "Reservation Status"
+
+msgid "Trip / Stay Description"
+msgstr "Trip / Stay Description"
+
+msgid "Travel / Check-in Dates"
+msgstr "Travel / Check-in Dates"
+
+msgid "Qty / Pax"
+msgstr "Qty / Pax"
+
+msgid "Total"
+msgstr "Total"
+
+msgid "Subtotal:"
+msgstr "Subtotal:"
+
+msgid "Total Paid / Due:"
+msgstr "Total Paid / Due:"
+
+msgid "Important Instructions for Travelers:"
+msgstr "Important Instructions for Travelers:"
+
+msgid "Please present this voucher along with a valid government-issued photo ID during hotel check-in or tour boarding."
+msgstr "Please present this voucher along with a valid government-issued photo ID during hotel check-in or tour boarding."
+
+msgid "For inquiries, date changes, or support, please contact our team with your Booking Reference Code."
+msgstr "For inquiries, date changes, or support, please contact our team with your Booking Reference Code."
+
+msgid "Thank you for traveling with us! Powered by Tourivo Travel Engine."
+msgstr "Thank you for traveling with us! Powered by Tourivo Travel Engine."
+
+msgid "%d Room Types"
+msgstr "%d Room Types"
+
+msgid "%s out of 5 stars"
+msgstr "%s out of 5 stars"
+
+msgid "Save to Wishlist"
+msgstr "Save to Wishlist"
+
+msgid "Starts from"
+msgstr "Starts from"
+
+msgid "View Rooms"
+msgstr "View Rooms"
+
+msgid "Max: %d"
+msgstr "Max: %d"
+
+msgid "From"
+msgstr "From"
+
+msgid "Explore"
+msgstr "Explore"
+
+msgid "Hello %s,"
+msgstr "Hello %s,"
+
+msgid "Booking Confirmation"
+msgstr "Booking Confirmation"
+
+msgid "TEST NOTIFICATION"
+msgstr "TEST NOTIFICATION"
+
+msgid "Booking Confirmed!"
+msgstr "Booking Confirmed!"
+
+msgid "Travel & Tours Reservation"
+msgstr "Travel & Tours Reservation"
+
+msgid "Thank you for booking with us! We have successfully received your reservation details below:"
+msgstr "Thank you for booking with us! We have successfully received your reservation details below:"
+
+msgid "Check-in Date:"
+msgstr "Check-in Date:"
+
+msgid "Check-out Date:"
+msgstr "Check-out Date:"
+
+msgid "Travelers / Guests:"
+msgstr "Travelers / Guests:"
+
+msgid "Adult(s)"
+msgstr "Adult(s)"
+
+msgid "Child(ren)"
+msgstr "Child(ren)"
+
+msgid "Contact Phone:"
+msgstr "Contact Phone:"
+
+msgid "Special Notes:"
+msgstr "Special Notes:"
+
+msgid "Grand Total Amount"
+msgstr "Grand Total Amount"
+
+msgid "If you have questions about your itinerary or need to make adjustments, please reply directly to this email."
+msgstr "If you have questions about your itinerary or need to make adjustments, please reply directly to this email."
+
+msgid "All rights reserved."
+msgstr "All rights reserved."
+
+msgid "Traveler Reviews & Ratings"
+msgstr "Traveler Reviews & Ratings"
+
+msgid "Verified Booking Traveler"
+msgstr "Verified Booking Traveler"
+
+msgid "Verified Traveler"
+msgstr "Verified Traveler"
+
+msgid "No reviews yet. Be the first to share your travel experience!"
+msgstr "No reviews yet. Be the first to share your travel experience!"
+
+msgid "Write a Review"
+msgstr "Write a Review"
+
+msgid "Your Rating *"
+msgstr "Your Rating *"
+
+msgid "Your Name *"
+msgstr "Your Name *"
+
+msgid "Your Email *"
+msgstr "Your Email *"
+
+msgid "Your Review / Feedback *"
+msgstr "Your Review / Feedback *"
+
+msgid "What did you love about this trip? How was the guide, accommodation, and itinerary?"
+msgstr "What did you love about this trip? How was the guide, accommodation, and itinerary?"
+
+msgid "Comments and reviews are closed for this trip."
+msgstr "Comments and reviews are closed for this trip."
+
+msgid "Where to?"
+msgstr "Where to?"
+
+msgid "When?"
+msgstr "When?"
+
+msgid "Check-in: %1$s | Check-out: %2$s"
+msgstr "Check-in: %1$s | Check-out: %2$s"
+
+msgid "Up to %d Guests"
+msgstr "Up to %d Guests"
+
+msgid "All Hotels & Accommodations"
+msgstr "All Hotels & Accommodations"
+
+msgid "Save"
+msgstr "Save"
+
+msgid "Property Amenities & Highlights"
+msgstr "Property Amenities & Highlights"
+
+msgid "About this Property"
+msgstr "About this Property"
+
+msgid "Available Room Types & Rates"
+msgstr "Available Room Types & Rates"
+
+msgid "Tour Overview & Description"
+msgstr "Tour Overview & Description"
+
+msgid "Day by Day Itinerary"
+msgstr "Day by Day Itinerary"
+
+msgid "Meals:"
+msgstr "Meals:"
+
+msgid "What's Included & Excluded"
+msgstr "What's Included & Excluded"
+
+msgid "Included"
+msgstr "Included"
+
+msgid "Excluded"
+msgstr "Excluded"
+
+msgid "Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
+msgstr "Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
+
+msgid "General & Rating"
+msgstr "General & Rating"
+
+msgid "Location & Contact"
+msgstr "Location & Contact"
+
+msgid "Policies & Rules"
+msgstr "Policies & Rules"
+
+msgid "Star Rating *"
+msgstr "Star Rating *"
+
+msgid "Property official star rating category."
+msgstr "Property official star rating category."
+
+msgid "City / Region"
+msgstr "City / Region"
+
+msgid "City or neighborhood location."
+msgstr "City or neighborhood location."
+
+msgid "Standard Check-in Time"
+msgstr "Standard Check-in Time"
+
+msgid "Standard Check-out Time"
+msgstr "Standard Check-out Time"
+
+msgid "Full Street Address"
+msgstr "Full Street Address"
+
+msgid "Contact Phone / WhatsApp"
+msgstr "Contact Phone / WhatsApp"
+
+msgid "Front Desk Contact Email"
+msgstr "Front Desk Contact Email"
+
+msgid "Postal / ZIP Code"
+msgstr "Postal / ZIP Code"
+
+msgid "Map Latitude (GPS)"
+msgstr "Map Latitude (GPS)"
+
+msgid "Map Longitude (GPS)"
+msgstr "Map Longitude (GPS)"
+
+msgid "Hotel Policies & House Rules"
+msgstr "Hotel Policies & House Rules"
+
+msgid "e.g. Pets are not allowed. Valid Government ID card required at check-in. Cancellation allowed up to 48 hours before arrival."
+msgstr "e.g. Pets are not allowed. Valid Government ID card required at check-in. Cancellation allowed up to 48 hours before arrival."
+
+msgid "These house rules will be displayed clearly to travelers before booking."
+msgstr "These house rules will be displayed clearly to travelers before booking."
+
+msgid "Pricing & Capacity"
+msgstr "Pricing & Capacity"
+
+msgid "Room Specs & Beds"
+msgstr "Room Specs & Beds"
+
+msgid "Select Parent Hotel / Property *"
+msgstr "Select Parent Hotel / Property *"
+
+msgid "-- Select Hotel --"
+msgstr "-- Select Hotel --"
+
+msgid "Select which hotel or resort property this room unit belongs to."
+msgstr "Select which hotel or resort property this room unit belongs to."
+
+msgid "Base Nightly Price ($) *"
+msgstr "Base Nightly Price ($) *"
+
+msgid "Total Units Available"
+msgstr "Total Units Available"
+
+msgid "Inventory capacity for this room type."
+msgstr "Inventory capacity for this room type."
+
+msgid "Max Adults"
+msgstr "Max Adults"
+
+msgid "Max Children"
+msgstr "Max Children"
+
+msgid "Total Max Guests"
+msgstr "Total Max Guests"
+
+msgid "Bed Configuration"
+msgstr "Bed Configuration"
+
+msgid "Room Dimensions / Size"
+msgstr "Room Dimensions / Size"
+
+msgid "Day / Stage: %s"
+msgstr "Day / Stage: %s"
+
+msgid "Pricing & General"
+msgstr "Pricing & General"
+
+msgid "Itinerary Builder"
+msgstr "Itinerary Builder"
+
+msgid "Location & Map"
+msgstr "Location & Map"
+
+msgid "FAQs & Badge"
+msgstr "FAQs & Badge"
+
+msgid "Tour Type"
+msgstr "Tour Type"
+
+msgid "Single Day Tour"
+msgstr "Single Day Tour"
+
+msgid "Multi-Day Tour"
+msgstr "Multi-Day Tour"
+
+msgid "Hourly / Time Slot Activity"
+msgstr "Hourly / Time Slot Activity"
+
+msgid "Fixed Departure Tour"
+msgstr "Fixed Departure Tour"
+
+msgid "Base Price ($)"
+msgstr "Base Price ($)"
+
+msgid "Sale / Offer Price ($)"
+msgstr "Sale / Offer Price ($)"
+
+msgid "Trip Duration Text"
+msgstr "Trip Duration Text"
+
+msgid "Min Guests"
+msgstr "Min Guests"
+
+msgid "Max Group Size"
+msgstr "Max Group Size"
+
+msgid "Add day-by-day plan and activities for this tour."
+msgstr "Add day-by-day plan and activities for this tour."
+
+msgid "Day #"
+msgstr "Day #"
+
+msgid "Day Title"
+msgstr "Day Title"
+
+msgid "Included Meals"
+msgstr "Included Meals"
+
+msgid "Description & Details"
+msgstr "Description & Details"
+
+msgid "Add Day to Itinerary"
+msgstr "Add Day to Itinerary"
+
+msgid "Included in Tour"
+msgstr "Included in Tour"
+
+msgid "Add Included Item"
+msgstr "Add Included Item"
+
+msgid "Excluded from Tour"
+msgstr "Excluded from Tour"
+
+msgid "Add Excluded Item"
+msgstr "Add Excluded Item"
+
+msgid "Pickup Point / Meeting Place"
+msgstr "Pickup Point / Meeting Place"
+
+msgid "Drop-off Location"
+msgstr "Drop-off Location"
+
+msgid "Latitude (GPS)"
+msgstr "Latitude (GPS)"
+
+msgid "Longitude (GPS)"
+msgstr "Longitude (GPS)"
+
+msgid "Highlight Ribbon / Badge"
+msgstr "Highlight Ribbon / Badge"
+
+msgid "Frequently Asked Questions (FAQs)"
+msgstr "Frequently Asked Questions (FAQs)"
+
+msgid "Question & Answer"
+msgstr "Question & Answer"
+
+msgid "Question"
+msgstr "Question"
+
+msgid "Answer"
+msgstr "Answer"
+
+msgid "Add FAQ Question"
+msgstr "Add FAQ Question"
 
