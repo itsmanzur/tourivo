@@ -83,29 +83,29 @@ class TourivoCli extends WP_CLI_Command
         switch ($action) {
             case 'list':
                 $limit  = isset($assocArgs['limit']) ? max(1, (int) $assocArgs['limit']) : 20;
-                $status = $assocArgs['status'] ?? '';
+                $status = isset($assocArgs['status']) ? sanitize_key($assocArgs['status']) : '';
                 $format = $assocArgs['format'] ?? 'table';
 
-                $where = '1=1';
-                $whereClauses = ['1=1'];
-                $params       = [];
-
                 if (!empty($status)) {
-                    $whereClauses[] = 'booking_status = %s';
-                    $params[]       = $status;
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $results = $wpdb->get_results(
+                        $wpdb->prepare(
+                            "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = %s ORDER BY id DESC LIMIT %d",
+                            $status,
+                            $limit
+                        ),
+                        ARRAY_A
+                    );
+                } else {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                    $results = $wpdb->get_results(
+                        $wpdb->prepare(
+                            "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}tourivo_bookings ORDER BY id DESC LIMIT %d",
+                            $limit
+                        ),
+                        ARRAY_A
+                    );
                 }
-
-                $params[] = $limit;
-                $whereSql = implode(' AND ', $whereClauses);
-
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $results = $wpdb->get_results(
-                    $wpdb->prepare(
-                        "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}tourivo_bookings WHERE {$whereSql} ORDER BY id DESC LIMIT %d",
-                        ...$params
-                    ),
-                    ARRAY_A
-                );
 
                 if (empty($results)) {
                     WP_CLI::log(__('No bookings found matching your criteria.', 'tourivo'));

@@ -95,13 +95,23 @@ abstract class MetaBox
         foreach ($screen as $postType) {
             add_meta_box(
                 $this->id,
-                __($this->title, 'tourivo'),
+                $this->getTitle(),
                 [$this, 'renderView'],
                 $postType,
                 $this->context,
                 $this->priority
             );
         }
+    }
+
+    /**
+     * Get the metabox title.
+     *
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
     }
 
     /**

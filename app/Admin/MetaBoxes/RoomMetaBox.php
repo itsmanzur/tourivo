@@ -30,6 +30,11 @@ class RoomMetaBox extends MetaBox
     protected string $context = 'normal';
     protected string $priority = 'high';
 
+    public function getTitle(): string
+    {
+        return __('Room Configuration & Pricing', 'tourivo');
+    }
+
     public function __construct()
     {
         parent::__construct();

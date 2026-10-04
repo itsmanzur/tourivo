@@ -27,6 +27,11 @@ class TourMetaBox extends MetaBox
     protected string $context = 'normal';
     protected string $priority = 'high';
 
+    public function getTitle(): string
+    {
+        return __('Tour Package & Booking Settings', 'tourivo');
+    }
+
     public function render(WP_Post $post): void
     {
         $tourType        = get_post_meta($post->ID, '_tourivo_tour_type', true) ?: 'single_day';

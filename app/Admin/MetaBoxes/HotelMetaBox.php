@@ -27,6 +27,11 @@ class HotelMetaBox extends MetaBox
     protected string $context = 'normal';
     protected string $priority = 'high';
 
+    public function getTitle(): string
+    {
+        return __('Hotel & Property Settings', 'tourivo');
+    }
+
     public function render(WP_Post $post): void
     {
         $starRating   = get_post_meta($post->ID, '_tourivo_star_rating', true) ?: '3';
