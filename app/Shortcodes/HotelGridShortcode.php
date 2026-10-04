@@ -75,7 +75,7 @@ class HotelGridShortcode
         while ($query->have_posts()) {
             $query->the_post();
             $hotel = new Hotel(get_post());
-            include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/cards/hotel-card.php';
+            tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
         }
         echo '</div>';
         wp_reset_postdata();

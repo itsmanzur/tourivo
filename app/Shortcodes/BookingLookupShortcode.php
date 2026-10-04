@@ -44,11 +44,11 @@ class BookingLookupShortcode
         ], (array) $atts, 'tourivo_booking_lookup');
 
         ob_start();
-        $tourivoLookupTitle = sanitize_text_field((string) $attributes['title']);
-        $tourivoLookupDesc  = sanitize_text_field((string) $attributes['description']);
-        $tourivoNonce       = wp_create_nonce('tourivo_lookup_nonce');
-
-        include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/booking-lookup.php';
+        tourivo_get_template('booking-lookup.php', [
+            'tourivoLookupTitle' => sanitize_text_field((string) $attributes['title']),
+            'tourivoLookupDesc'  => sanitize_text_field((string) $attributes['description']),
+            'tourivoNonce'       => wp_create_nonce('tourivo_lookup_nonce'),
+        ]);
 
         return ob_get_clean() ?: '';
     }

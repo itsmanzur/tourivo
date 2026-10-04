@@ -68,7 +68,10 @@ if (file_exists(TOURIVO_PLUGIN_DIR . 'vendor/autoload.php')) {
 register_activation_hook(TOURIVO_PLUGIN_FILE, ['Tourivo\\Core\\Installer', 'activate']);
 register_deactivation_hook(TOURIVO_PLUGIN_FILE, ['Tourivo\\Core\\Deactivator', 'deactivate']);
 
-// 5. Global Accessor Helper
+// 5. Load Public Developer Functions & Template Engine API
+require_once TOURIVO_PLUGIN_DIR . 'app/Support/functions.php';
+
+// 6. Global Accessor Helper
 if (!function_exists('tourivo')) {
     /**
      * Get the main Tourivo plugin orchestrator instance.

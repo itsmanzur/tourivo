@@ -31,6 +31,14 @@ class AppServiceProvider extends ServiceProvider
         // Initialize Review Service
         new ReviewService();
 
+        // Initialize Webhook Dispatcher
+        new \Tourivo\Services\WebhookService();
+
+        // Register WP-CLI command if CLI environment
+        if (defined('WP_CLI') && WP_CLI && class_exists('\WP_CLI')) {
+            \WP_CLI::add_command('tourivo', \Tourivo\Cli\TourivoCli::class);
+        }
+
         // Currency code filter
         add_filter('tourivo/currency_code', static function (string $default = 'USD'): string {
             return (string) Config::get('currency', $default);

@@ -181,8 +181,7 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
 
                 <!-- Reviews & Star Ratings Section -->
                 <?php 
-                $tourivoPostId = $tourivoTourId;
-                include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/reviews-section.php'; 
+                tourivo_get_template('reviews-section.php', ['tourivoPostId' => $tourivoTourId]); 
                 ?>
             </div>
 
@@ -190,7 +189,10 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
             <div class="tourivo-sidebar">
                 <div class="tourivo-sticky-box">
                     <?php 
-                    include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/booking-panel.php'; 
+                    tourivo_get_template('booking-panel.php', [
+                        'tourivoItemId'   => $tourivoTourId,
+                        'tourivoItemType' => 'tour',
+                    ]); 
                     ?>
                 </div>
             </div>

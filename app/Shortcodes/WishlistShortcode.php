@@ -105,10 +105,10 @@ class WishlistShortcode
             $post = get_post();
             if ($post->post_type === TourPostType::POST_TYPE) {
                 $tour = new Tour($post);
-                include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/cards/tour-card.php';
+                tourivo_get_template('cards/tour-card.php', ['tour' => $tour]);
             } elseif ($post->post_type === HotelPostType::POST_TYPE) {
                 $hotel = new Hotel($post);
-                include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/cards/hotel-card.php';
+                tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
             }
         }
         wp_reset_postdata();

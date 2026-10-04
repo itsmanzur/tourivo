@@ -31,15 +31,7 @@ class SearchBarShortcode
     public static function render(array|string $atts = []): string
     {
         ob_start();
-        $template = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/search-bar.php';
-        $themeTemplate = locate_template(['tourivo/search-bar.php']);
-        if (!empty($themeTemplate) && file_exists($themeTemplate)) {
-            $template = $themeTemplate;
-        }
-
-        if (file_exists($template)) {
-            include $template;
-        }
+        tourivo_get_template('search-bar.php');
 
         return ob_get_clean() ?: '';
     }

@@ -149,6 +149,19 @@ class InquiryService
 
         wp_mail($adminEmail, $subject, $body, $headers);
 
+        do_action('tourivo/inquiry_created', $inquiryId, [
+            'inquiry_id'  => $inquiryId,
+            'item_id'     => $itemId,
+            'item_type'   => ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour',
+            'item_title'  => $itemTitle,
+            'name'        => $name,
+            'email'       => $email,
+            'phone'       => $phone,
+            'travel_date' => $travelDate,
+            'guests'      => $guests,
+            'message'     => $message,
+        ]);
+
         return [
             'success'    => true,
             'inquiry_id' => $inquiryId,

@@ -68,6 +68,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('wp_ajax_tourivo_update_inquiry_status', [$this, 'handleUpdateInquiryStatus']);
         $this->addAction('wp_ajax_tourivo_delete_inquiry', [$this, 'handleDeleteInquiry']);
         $this->addAction('wp_ajax_tourivo_send_test_email', [$this, 'handleSendTestEmail']);
+        $this->addAction('wp_ajax_tourivo_send_test_webhook', [$this, 'handleSendTestWebhook']);
         $this->addAction('wp_ajax_tourivo_get_booking_timeline', [$this, 'handleGetBookingTimeline']);
         $this->addAction('wp_ajax_tourivo_add_booking_note', [$this, 'handleAddBookingNote']);
 
@@ -607,6 +608,30 @@ class AdminServiceProvider extends ServiceProvider
             ]);
         } else {
             wp_send_json_error(['message' => __('Mail sending failed. Please verify your WordPress SMTP settings.', 'tourivo')], 500);
+        }
+    }
+
+    /**
+     * AJAX handler to dispatch a test webhook payload.
+     */
+    public function handleSendTestWebhook(): void
+    {
+        check_ajax_referer('tourivo_test_webhook_nonce', 'nonce');
+
+        if (!current_user_can('manage_tourivo_settings')) {
+            wp_send_json_error(['message' => __('Unauthorized access.', 'tourivo')], 403);
+        }
+
+        $url    = isset($_POST['url']) ? esc_url_raw(wp_unslash($_POST['url'])) : '';
+        $secret = isset($_POST['secret']) ? sanitize_text_field(wp_unslash($_POST['secret'])) : '';
+
+        $webhookService = new \Tourivo\Services\WebhookService();
+        $res = $webhookService->sendTestWebhook($url, $secret);
+
+        if ($res['success']) {
+            wp_send_json_success(['message' => $res['message']]);
+        } else {
+            wp_send_json_error(['message' => $res['message']]);
         }
     }
 

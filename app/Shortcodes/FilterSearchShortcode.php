@@ -329,10 +329,10 @@ class FilterSearchShortcode
             $post = get_post();
             if ($type === 'tour') {
                 $tour = new Tour($post);
-                include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/cards/tour-card.php';
+                tourivo_get_template('cards/tour-card.php', ['tour' => $tour]);
             } else {
                 $hotel = new Hotel($post);
-                include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/cards/hotel-card.php';
+                tourivo_get_template('cards/hotel-card.php', ['hotel' => $hotel]);
             }
         }
         wp_reset_postdata();

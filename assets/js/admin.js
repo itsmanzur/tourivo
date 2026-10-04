@@ -419,6 +419,78 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
+    // 8b. Webhook Secret Generator
+    const genSecretBtn = document.getElementById('tourivo-gen-secret-btn');
+    const secretInput = document.getElementById('webhook_secret');
+    if (genSecretBtn && secretInput) {
+        genSecretBtn.addEventListener('click', function () {
+            const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let secret = 'sec_trv_';
+            for (let i = 0; i < 24; i++) {
+                secret += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            secretInput.value = secret;
+        });
+    }
+
+    // 8c. Test Webhook Dispatcher
+    const sendTestWebhookBtn = document.getElementById('tourivo-send-test-webhook-btn');
+    const webhookUrlInput = document.getElementById('webhook_url');
+    const testWebhookAlert = document.getElementById('tourivo-test-webhook-alert');
+
+    if (sendTestWebhookBtn && webhookUrlInput) {
+        sendTestWebhookBtn.addEventListener('click', function () {
+            const url = webhookUrlInput.value.trim();
+            const secret = secretInput ? secretInput.value.trim() : '';
+            const nonce = this.dataset.nonce;
+
+            if (!url) {
+                alert('Please enter a Webhook Target URL first.');
+                return;
+            }
+
+            sendTestWebhookBtn.disabled = true;
+            sendTestWebhookBtn.innerHTML = '<span class="dashicons dashicons-update spin"></span> Testing...';
+            if (testWebhookAlert) testWebhookAlert.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('action', 'tourivo_send_test_webhook');
+            formData.append('url', url);
+            formData.append('secret', secret);
+            formData.append('_wpnonce', nonce);
+
+            fetch(ajaxurl, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(res => res.json())
+                .then(data => {
+                    sendTestWebhookBtn.disabled = false;
+                    sendTestWebhookBtn.innerHTML = '🚀 Send Test Ping Payload';
+
+                    if (testWebhookAlert) {
+                        if (data.success) {
+                            testWebhookAlert.style.color = '#15803d';
+                            testWebhookAlert.innerHTML = `✓ ${data.data ? data.data.message : 'Webhook test successful!'}`;
+                        } else {
+                            testWebhookAlert.style.color = '#b91c1c';
+                            testWebhookAlert.innerHTML = `✕ ${data.data ? data.data.message : 'Webhook ping failed.'}`;
+                        }
+                        testWebhookAlert.style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    sendTestWebhookBtn.disabled = false;
+                    sendTestWebhookBtn.innerHTML = '🚀 Send Test Ping Payload';
+                    if (testWebhookAlert) {
+                        testWebhookAlert.style.color = '#b91c1c';
+                        testWebhookAlert.innerHTML = '✕ Network error while contacting test endpoint.';
+                        testWebhookAlert.style.display = 'block';
+                    }
+                });
+        });
+    }
+
     // 9. Booking Details & Activity Timeline Modal
     const timelineModal = document.getElementById('tourivo-booking-timeline-modal');
     const logsContainer = document.getElementById('timeline-logs-container');

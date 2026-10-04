@@ -85,7 +85,7 @@ class TourGridShortcode
         while ($query->have_posts()) {
             $query->the_post();
             $tour = new Tour(get_post());
-            include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/cards/tour-card.php';
+            tourivo_get_template('cards/tour-card.php', ['tour' => $tour]);
         }
         echo '</div>';
         wp_reset_postdata();

@@ -42,6 +42,9 @@ class Config
             'accent_color'          => '#f59e0b',
             'border_radius'         => '8px',
             'button_text_color'     => '#ffffff',
+            'webhook_url'           => '',
+            'webhook_secret'        => '',
+            'webhook_events'        => ['booking.created', 'booking.status_changed', 'inquiry.created'],
         ];
     }
 

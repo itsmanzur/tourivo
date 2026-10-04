@@ -54,6 +54,9 @@ class SettingsPage
                 'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
                 'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
                 'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
+                'webhook_url'                => esc_url_raw(wp_unslash($_POST['webhook_url'] ?? '')),
+                'webhook_secret'             => sanitize_text_field(wp_unslash($_POST['webhook_secret'] ?? '')),
+                'webhook_events'             => isset($_POST['webhook_events']) && is_array($_POST['webhook_events']) ? array_map('sanitize_text_field', wp_unslash($_POST['webhook_events'])) : [],
                 'proxy_mode'                 => in_array(sanitize_text_field(wp_unslash($_POST['proxy_mode'] ?? '')), ['cloudflare', 'reverse_proxy'], true) ? sanitize_text_field(wp_unslash($_POST['proxy_mode'])) : 'disabled',
                 'trusted_proxies'            => sanitize_textarea_field(wp_unslash($_POST['trusted_proxies'] ?? '')),
                 'trust_proxy_headers'        => (isset($_POST['proxy_mode']) && in_array($_POST['proxy_mode'], ['cloudflare', 'reverse_proxy'], true)) ? 1 : 0,
@@ -82,6 +85,9 @@ class SettingsPage
         $btnTextColor      = Config::get('button_text_color', '#ffffff');
         $enableSchema      = Config::get('enable_schema', 1);
         $enableOpenGraph   = Config::get('enable_opengraph', 1);
+        $webhookUrl        = Config::get('webhook_url', '');
+        $webhookSecret     = Config::get('webhook_secret', '');
+        $webhookEvents     = (array) Config::get('webhook_events', ['booking.created', 'booking.status_changed', 'inquiry.created']);
         $proxyMode         = Config::get('proxy_mode', 'disabled');
         $trustedProxies    = Config::get('trusted_proxies', '');
         $eraseData         = Config::get('erase_data_on_uninstall', 0);
@@ -91,7 +97,7 @@ class SettingsPage
             <div class="tourivo-dashboard-header">
                 <div>
                     <h1 class="wp-heading-inline">⚙️ <?php esc_html_e('Tourivo Settings', 'tourivo'); ?></h1>
-                    <p class="tourivo-subtitle"><?php esc_html_e('Configure your currency rates, booking defaults, design styling, and SEO options.', 'tourivo'); ?></p>
+                    <p class="tourivo-subtitle"><?php esc_html_e('Configure your currency rates, booking defaults, design styling, SEO, and Webhooks.', 'tourivo'); ?></p>
                 </div>
             </div>
 
@@ -105,6 +111,9 @@ class SettingsPage
                 </a>
                 <a href="#tab-emails" class="nav-tab" data-tab="emails">
                     <span class="dashicons dashicons-email"></span> <?php esc_html_e('Email Notifications', 'tourivo'); ?>
+                </a>
+                <a href="#tab-webhooks" class="nav-tab" data-tab="webhooks">
+                    <span class="dashicons dashicons-rest-api"></span> <?php esc_html_e('Webhooks & API', 'tourivo'); ?>
                 </a>
                 <a href="#tab-advanced" class="nav-tab" data-tab="advanced">
                     <span class="dashicons dashicons-shield"></span> <?php esc_html_e('Advanced & System', 'tourivo'); ?>
@@ -334,7 +343,66 @@ class SettingsPage
                     </div>
                 </div>
 
-                <!-- TAB 3: Advanced & System -->
+                <!-- TAB 4: Webhooks & API -->
+                <div id="settings-tab-webhooks" class="tourivo-settings-tab-pane" style="display: none;">
+                    <div class="tourivo-settings-box">
+                        <h2>🔗 <?php esc_html_e('Outbound Webhooks (Zapier, Make, n8n, CRMs)', 'tourivo'); ?></h2>
+                        <p class="description"><?php esc_html_e('Send real-time JSON payloads to external webhooks whenever reservations are created or updated.', 'tourivo'); ?></p>
+                        
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><label for="webhook_url"><?php esc_html_e('Webhook Target URL', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="webhook_url" type="url" id="webhook_url" value="<?php echo esc_url($webhookUrl); ?>" class="large-text" placeholder="https://hooks.zapier.com/hooks/catch/..." style="max-width: 600px;">
+                                    <p class="description"><?php esc_html_e('Your external automation endpoint URL that receives POST requests.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row"><label for="webhook_secret"><?php esc_html_e('Secret Key (HMAC SHA-256)', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="webhook_secret" type="text" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="e.g. secret_trv_xxxx" style="max-width: 400px;">
+                                    <button type="button" class="button" id="tourivo-gen-secret-btn"><?php esc_html_e('Generate Secret', 'tourivo'); ?></button>
+                                    <p class="description"><?php esc_html_e('Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Subscribed Events', 'tourivo'); ?></th>
+                                <td>
+                                    <fieldset>
+                                        <label style="display: block; margin-bottom: 8px;">
+                                            <input name="webhook_events[]" type="checkbox" value="booking.created" <?php checked(in_array('booking.created', $webhookEvents, true)); ?>>
+                                            <strong><code>booking.created</code></strong> — <?php esc_html_e('Fired when a new tour or hotel booking is submitted.', 'tourivo'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 8px;">
+                                            <input name="webhook_events[]" type="checkbox" value="booking.status_changed" <?php checked(in_array('booking.status_changed', $webhookEvents, true)); ?>>
+                                            <strong><code>booking.status_changed</code></strong> — <?php esc_html_e('Fired when a booking status changes (confirmed, cancelled, completed).', 'tourivo'); ?>
+                                        </label>
+                                        <label style="display: block; margin-bottom: 8px;">
+                                            <input name="webhook_events[]" type="checkbox" value="inquiry.created" <?php checked(in_array('inquiry.created', $webhookEvents, true)); ?>>
+                                            <strong><code>inquiry.created</code></strong> — <?php esc_html_e('Fired when a customer inquiry is received.', 'tourivo'); ?>
+                                        </label>
+                                    </fieldset>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+                        <h2>🧪 <?php esc_html_e('Test Webhook Dispatcher', 'tourivo'); ?></h2>
+                        <p class="description"><?php esc_html_e('Send a test ping payload to your webhook target URL to verify connectivity.', 'tourivo'); ?></p>
+                        
+                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 12px;">
+                            <button type="button" class="button button-secondary" id="tourivo-send-test-webhook-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_test_webhook_nonce')); ?>">
+                                🚀 <?php esc_html_e('Send Test Ping Payload', 'tourivo'); ?>
+                            </button>
+                        </div>
+                        <div id="tourivo-test-webhook-alert" style="display: none; margin-top: 12px; font-weight: 600;"></div>
+                    </div>
+                </div>
+
+                <!-- TAB 5: Advanced & System -->
                 <div id="settings-tab-advanced" class="tourivo-settings-tab-pane" style="display: none;">
                     <div class="tourivo-settings-box">
                         <h2><?php esc_html_e('Network & Proxy Configuration', 'tourivo'); ?></h2>

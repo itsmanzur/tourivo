@@ -43,15 +43,10 @@ class BookingPanelShortcode
         }
 
         ob_start();
-        $template = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/booking-panel.php';
-        $themeTemplate = locate_template(['tourivo/booking-panel.php']);
-        if (!empty($themeTemplate) && file_exists($themeTemplate)) {
-            $template = $themeTemplate;
-        }
-
-        if (file_exists($template)) {
-            include $template;
-        }
+        tourivo_get_template('booking-panel.php', [
+            'tourivoItemId'   => $itemId,
+            'tourivoItemType' => $itemType,
+        ]);
 
         return ob_get_clean() ?: '';
     }
