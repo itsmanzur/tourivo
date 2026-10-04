@@ -70,7 +70,7 @@ if (!defined('ABSPATH')) {
                 <div class="tourivo-col">
                     <div class="tourivo-form-group">
                         <label for="_tourivo_duration"><?php esc_html_e('Trip Duration Text', 'tourivo'); ?></label>
-                        <input type="text" name="_tourivo_duration" id="_tourivo_duration" value="<?php echo esc_attr($duration); ?>" placeholder="e.g. 3 Days / 2 Nights">
+                        <input type="text" name="_tourivo_duration" id="_tourivo_duration" value="<?php echo esc_attr($duration); ?>" placeholder="<?php esc_attr_e('e.g. 3 Days / 2 Nights', 'tourivo'); ?>">
                     </div>
                 </div>
                 <div class="tourivo-col">
@@ -115,11 +115,11 @@ if (!defined('ABSPATH')) {
                                     </div>
                                     <div class="tourivo-col">
                                         <label><?php esc_html_e('Day Title', 'tourivo'); ?></label>
-                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][title]" value="<?php echo esc_attr($tourivoItineraryItem['title'] ?? ''); ?>" placeholder="e.g. Arrival in Bali & Beach Walk">
+                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][title]" value="<?php echo esc_attr($tourivoItineraryItem['title'] ?? ''); ?>" placeholder="<?php esc_attr_e('e.g. Arrival in Bali & Beach Walk', 'tourivo'); ?>">
                                     </div>
                                     <div class="tourivo-col" style="flex: 0 0 160px;">
                                         <label><?php esc_html_e('Included Meals', 'tourivo'); ?></label>
-                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][meals]" value="<?php echo esc_attr($tourivoItineraryItem['meals'] ?? ''); ?>" placeholder="Breakfast, Dinner">
+                                        <input type="text" name="_tourivo_itinerary[<?php echo esc_attr((string)$tourivoItineraryIndex); ?>][meals]" value="<?php echo esc_attr($tourivoItineraryItem['meals'] ?? ''); ?>" placeholder="<?php esc_attr_e('Breakfast, Dinner', 'tourivo'); ?>">
                                     </div>
                                 </div>
                                 <div class="tourivo-form-group" style="margin-top: 10px;">
@@ -173,13 +173,13 @@ if (!defined('ABSPATH')) {
                 <div class="tourivo-col">
                     <div class="tourivo-form-group">
                         <label for="_tourivo_pickup_location"><?php esc_html_e('Pickup Point / Meeting Place', 'tourivo'); ?></label>
-                        <input type="text" name="_tourivo_pickup_location" id="_tourivo_pickup_location" value="<?php echo esc_attr($pickupLocation); ?>" placeholder="e.g. Airport Terminal 1 or Hotel Lobby">
+                        <input type="text" name="_tourivo_pickup_location" id="_tourivo_pickup_location" value="<?php echo esc_attr($pickupLocation); ?>" placeholder="<?php esc_attr_e('e.g. Airport Terminal 1 or Hotel Lobby', 'tourivo'); ?>">
                     </div>
                 </div>
                 <div class="tourivo-col">
                     <div class="tourivo-form-group">
                         <label for="_tourivo_dropoff_location"><?php esc_html_e('Drop-off Location', 'tourivo'); ?></label>
-                        <input type="text" name="_tourivo_dropoff_location" id="_tourivo_dropoff_location" value="<?php echo esc_attr($dropoffLocation); ?>" placeholder="e.g. Central City Station">
+                        <input type="text" name="_tourivo_dropoff_location" id="_tourivo_dropoff_location" value="<?php echo esc_attr($dropoffLocation); ?>" placeholder="<?php esc_attr_e('e.g. Central City Station', 'tourivo'); ?>">
                     </div>
                 </div>
             </div>
@@ -203,7 +203,7 @@ if (!defined('ABSPATH')) {
         <div id="tab-faqs" class="tourivo-tab-pane">
             <div class="tourivo-form-group">
                 <label for="_tourivo_badge"><?php esc_html_e('Highlight Ribbon / Badge', 'tourivo'); ?></label>
-                <input type="text" name="_tourivo_badge" id="_tourivo_badge" value="<?php echo esc_attr($badge); ?>" placeholder="e.g. Bestseller, 20% Off, Top Rated">
+                <input type="text" name="_tourivo_badge" id="_tourivo_badge" value="<?php echo esc_attr($badge); ?>" placeholder="<?php esc_attr_e('e.g. Bestseller, 20% Off, Top Rated', 'tourivo'); ?>">
             </div>
 
             <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">

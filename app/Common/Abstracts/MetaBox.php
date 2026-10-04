@@ -95,7 +95,7 @@ abstract class MetaBox
         foreach ($screen as $postType) {
             add_meta_box(
                 $this->id,
-                $this->title,
+                __($this->title, 'tourivo'),
                 [$this, 'renderView'],
                 $postType,
                 $this->context,
