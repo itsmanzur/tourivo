@@ -198,6 +198,49 @@ class Seeder
             update_post_meta($tour4Id, '_tourivo_faqs', wp_slash(wp_json_encode($faqs4, JSON_UNESCAPED_UNICODE)));
         }
 
+        // Tour 5: Sajek Valley & Cloud Kingdom (Bangladesh)
+        $tour5Id = wp_insert_post([
+            'post_title'   => 'সাজেক ভ্যালি ও মেঘের রাজ্য ৩ দিন ২ রাত প্রিমিয়াম ট্যুর (Sajek Valley Tour)',
+            'post_content' => 'পাহাড়ের চূড়ায় মেঘের দেশে হারিয়ে যাওয়ার রোমাঞ্চকর ৩ দিন ২ রাতের সফর। খোলা চাঁদের গাড়িতে পাহাড়ি আঁকাবাঁকা পথ ভ্রমণ, কংলাক পাহাড় ট্র্যাকিং, রুইলুই পাড়ার ঐতিহ্যবাহী জীবন এবং পাহাড়ি ব্যাম্বু চিকেন ডিনার।',
+            'post_status'  => 'publish',
+            'post_type'    => TourPostType::POST_TYPE,
+        ]);
+
+        if ($tour5Id && !is_wp_error($tour5Id)) {
+            $toursCount++;
+            wp_set_object_terms($tour5Id, [$destSajek], TourPostType::TAX_DESTINATION);
+            wp_set_object_terms($tour5Id, [$actAdv], TourPostType::TAX_ACTIVITY);
+
+            update_post_meta($tour5Id, '_tourivo_tour_type', 'multi_day');
+            update_post_meta($tour5Id, '_tourivo_base_price', '7500.00');
+            update_post_meta($tour5Id, '_tourivo_sale_price', '6500.00');
+            update_post_meta($tour5Id, '_tourivo_duration', '৩ দিন / ২ রাত');
+            update_post_meta($tour5Id, '_tourivo_duration_days', 3);
+            update_post_meta($tour5Id, '_tourivo_min_guests', 1);
+            update_post_meta($tour5Id, '_tourivo_max_guests', 24);
+            update_post_meta($tour5Id, '_tourivo_badge', 'ক্লাউড ট্যুর');
+            update_post_meta($tour5Id, '_tourivo_pickup_location', 'খাগড়াছড়ি বাসস্ট্যান্ড বা দীঘিনালা');
+            update_post_meta($tour5Id, '_tourivo_dropoff_location', 'খাগড়াছড়ি বাসস্ট্যান্ড');
+
+            $itinerary5 = [
+                ['day' => '১', 'title' => 'চাঁদের গাড়িতে মেঘের দেশে যাত্রা ও রুইলুই সূর্যাস্ত', 'desc' => 'দীঘিনালা আর্মি এস্কর্টের সাথে পাহাড়ি মেঘের মধ্য দিয়ে সাজেক পৌঁছানো। বিকেলে রুইলুই পাড়ায় মুক্ত বিচরণ ও হেলিপ্যাডে সূর্যাস্ত উপভোগ। রাতে স্পেশাল ব্যাম্বু চিকেন বারবিকিউ।', 'meals' => 'লাঞ্চ, ডিনার'],
+                ['day' => '২', 'title' => 'হেলিপ্যাডে মেঘের সমুদ্র দর্শন ও কংলাক পাহাড় অভিযান', 'desc' => 'ভোরে কটেজের ব্যালকনি থেকে মেঘের ভেলা অবলোকন। সকালে সাজেকের সর্বোচ্চ চূড়া কংলাক পাহাড়ে ট্র্যাকিং ও স্থানীয় আদিবাসী সংস্কৃতির অভিজ্ঞতা।', 'meals' => 'ব্রেকফাস্ট, লাঞ্চ, ডিনার'],
+                ['day' => '৩', 'title' => 'আলুটিলা গুহা ও তারাতারেং ঝরনা ভ্রমণ শেষে প্রস্থান', 'desc' => 'সকালে সাজেক থেকে খাগড়াছড়ি ফিরে আলুটিলা রহস্যময় গুহা ও রিছাং ঝরনায় স্নান। ঐতিহ্যবাহী পাহাড়ি রেস্তোরাঁয় লাঞ্চ শেষে ঢাকার গাড়িতে উঠা।', 'meals' => 'ব্রেকফাস্ট, লাঞ্চ'],
+            ];
+            update_post_meta($tour5Id, '_tourivo_itinerary', wp_slash(wp_json_encode($itinerary5, JSON_UNESCAPED_UNICODE)));
+
+            $inclusions5 = ['২ রাত সাজেকের সেরা প্রিমিয়াম রিসোর্টে থাকার ব্যবস্থা', 'খাগড়াছড়ি-সাজেক আপ-ডাউন রিজার্ভ চাঁদের গাড়ি', 'প্রতিদিনের সকল খাবার (৬ বেলা)', 'সকল এন্ট্রি ফি ও অভিজ্ঞ গাইড ফি'];
+            $exclusions5 = ['ঢাকা-খাগড়াছড়ি দূরপাল্লার বাস টিকিট', 'ব্যক্তিগত ওষুধ ও শপিং খরচ'];
+            update_post_meta($tour5Id, '_tourivo_inclusions', wp_slash(wp_json_encode($inclusions5, JSON_UNESCAPED_UNICODE)));
+            update_post_meta($tour5Id, '_tourivo_exclusions', wp_slash(wp_json_encode($exclusions5, JSON_UNESCAPED_UNICODE)));
+
+            $faqs5 = [
+                ['question' => 'চাঁদের গাড়িতে কি অন্যান্য যাত্রীদের সাথে শেয়ার করতে হবে?', 'answer' => 'না, আমাদের প্রতিটি ট্রিপেই নির্ধারিত গ্রুপের জন্য সম্পূর্ণ প্রাইভেট রিজার্ভ গাড়ি দেওয়া হয়।'],
+                ['question' => 'সাজেকে বিদ্যুৎ ও ওয়াইফাই সুবিধা কেমন?', 'answer' => 'আমাদের নির্বাচিত প্রিমিয়াম রিসোর্টে সার্বক্ষণিক সোলার/জেনারেটর ব্যাকআপ ও ওয়াইফাই সুবিধা রয়েছে।'],
+            ];
+            update_post_meta($tour5Id, '_tourivo_faqs', wp_slash(wp_json_encode($faqs5, JSON_UNESCAPED_UNICODE)));
+        }
+
         // 3. Seed Hotels & Rooms
         // Hotel 1: Ocean Paradise Resort (Bali)
         $hotel1Id = wp_insert_post([
@@ -378,6 +421,65 @@ class Seeder
                 update_post_meta($room6, '_tourivo_room_size', '৮৫ বর্গমিটার');
             }
             update_post_meta($hotel3Id, '_tourivo_min_price', 7500.00);
+        }
+
+        // Hotel 4: Meghpolli Resort (Sajek Valley, Bangladesh)
+        $hotel4Id = wp_insert_post([
+            'post_title'   => 'মেঘপল্লী রিসোর্ট - সাজেক ভ্যালি (Meghpolli Resort Sajek)',
+            'post_content' => 'সাজেক ভ্যালির সর্বোচ্চ চূড়ায় অবস্থিত প্রিমিয়াম ইকো-রিসোর্ট। প্রতিটি রুমের সুবিশাল ব্যালকনি থেকে মেঘের ভেলা স্পর্শ করার এবং সূর্যোদয়ের মায়াবী দৃশ্য অবলোকনের অনন্য অভিজ্ঞতা।',
+            'post_status'  => 'publish',
+            'post_type'    => HotelPostType::POST_TYPE,
+        ]);
+
+        if ($hotel4Id && !is_wp_error($hotel4Id)) {
+            $hotelsCount++;
+            wp_set_object_terms($hotel4Id, [$destSajek], TourPostType::TAX_DESTINATION);
+            wp_set_object_terms($hotel4Id, [$amenWifi, $amenBreak], HotelPostType::TAX_AMENITY);
+
+            update_post_meta($hotel4Id, '_tourivo_star_rating', 4);
+            update_post_meta($hotel4Id, '_tourivo_city', 'Sajek Valley');
+            update_post_meta($hotel4Id, '_tourivo_address', 'রুইলুই পাড়া, সাজেক ভ্যালি, বাঘাইছড়ি');
+            update_post_meta($hotel4Id, '_tourivo_check_in_time', '13:00');
+            update_post_meta($hotel4Id, '_tourivo_check_out_time', '11:00');
+
+            // Room 4.1: Cloud View Wooden Cottage
+            $room7 = wp_insert_post([
+                'post_title'   => 'ক্লাউড ভিউ উডেন কটেজ (Cloud View Cottage)',
+                'post_content' => 'সেগুন ও বাঁশের প্রাকৃতিক নকশায় নির্মিত প্রিমিয়াম কাপল কটেজ। সাথে রয়েছে মেঘের প্যানোরামিক ভিউ সহ প্রাইভেট বারান্দা।',
+                'post_status'  => 'publish',
+                'post_type'    => RoomPostType::POST_TYPE,
+            ]);
+            if ($room7 && !is_wp_error($room7)) {
+                $roomsCount++;
+                update_post_meta($room7, '_tourivo_parent_hotel_id', $hotel4Id);
+                update_post_meta($room7, '_tourivo_nightly_price', '4500.00');
+                update_post_meta($room7, '_tourivo_max_adults', 2);
+                update_post_meta($room7, '_tourivo_max_children', 1);
+                update_post_meta($room7, '_tourivo_max_guests', 3);
+                update_post_meta($room7, '_tourivo_room_quantity', 8);
+                update_post_meta($room7, '_tourivo_bed_type', '১টি কুইন বেড');
+                update_post_meta($room7, '_tourivo_room_size', '২৮ বর্গমিটার');
+            }
+
+            // Room 4.2: VIP Family Cloud Suite
+            $room8 = wp_insert_post([
+                'post_title'   => 'ভিআইপি ফ্যামিলি ক্লাউড স্যুইট (VIP Family Suite)',
+                'post_content' => 'পাহাড় ও মেঘের ১৮০ ডিগ্রি ভিউ সহ বিশাল পারিবারিক কটেজ স্যুইট। একসাথে ৪-৫ জনের আরামদায়ক থাকার সুবিধা।',
+                'post_status'  => 'publish',
+                'post_type'    => RoomPostType::POST_TYPE,
+            ]);
+            if ($room8 && !is_wp_error($room8)) {
+                $roomsCount++;
+                update_post_meta($room8, '_tourivo_parent_hotel_id', $hotel4Id);
+                update_post_meta($room8, '_tourivo_nightly_price', '7500.00');
+                update_post_meta($room8, '_tourivo_max_adults', 4);
+                update_post_meta($room8, '_tourivo_max_children', 2);
+                update_post_meta($room8, '_tourivo_max_guests', 5);
+                update_post_meta($room8, '_tourivo_room_quantity', 4);
+                update_post_meta($room8, '_tourivo_bed_type', '২টি ডাবল বেড');
+                update_post_meta($room8, '_tourivo_room_size', '৫৫ বর্গমিটার');
+            }
+            update_post_meta($hotel4Id, '_tourivo_min_price', 4500.00);
         }
 
         return [
