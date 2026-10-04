@@ -84,7 +84,48 @@ if (!function_exists('tourivo')) {
     }
 }
 
-// 6. Bootstrap Plugin on plugins_loaded
+// 7. Multi-language Locale Filter & Textdomain Loader
+add_filter(
+    'plugin_locale',
+    static function (string $locale, string $domain): string {
+        if ('tourivo' !== $domain) {
+            return $locale;
+        }
+
+        $lang = (string) \Tourivo\Config\Config::get('plugin_language', 'default');
+        if ('bn' === $lang) {
+            return 'bn_BD';
+        }
+        if ('en' === $lang) {
+            return 'en_US';
+        }
+
+        return $locale;
+    },
+    10,
+    2
+);
+
+add_action('init', static function (): void {
+    $locale = tourivo_current_locale();
+
+    if ('en_US' === $locale || 'en' === $locale) {
+        return;
+    }
+
+    $wporgFile   = WP_LANG_DIR . '/plugins/tourivo-' . $locale . '.mo';
+    $bundledFile = TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo';
+
+    if (!file_exists($wporgFile) && file_exists($bundledFile)) {
+        load_textdomain('tourivo', $bundledFile);
+    } elseif (file_exists($wporgFile)) {
+        load_textdomain('tourivo', $wporgFile);
+    } else {
+        load_plugin_textdomain('tourivo', false, dirname(plugin_basename(__FILE__)) . '/languages');
+    }
+}, 1);
+
+// 8. Bootstrap Plugin on plugins_loaded
 add_action('plugins_loaded', static function () {
     tourivo()->boot();
 }, 10);

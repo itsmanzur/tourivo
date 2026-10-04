@@ -41,6 +41,8 @@ class SettingsPage
                 'currency'                => sanitize_text_field(wp_unslash($_POST['currency'] ?? 'USD')),
                 'currency_symbol'         => sanitize_text_field(wp_unslash($_POST['currency_symbol'] ?? '$')),
                 'currency_position'       => sanitize_text_field(wp_unslash($_POST['currency_position'] ?? 'left')),
+                'plugin_language'         => in_array(sanitize_key(wp_unslash($_POST['plugin_language'] ?? 'default')), ['default', 'en', 'bn'], true) ? sanitize_key(wp_unslash($_POST['plugin_language'])) : 'default',
+                'use_bangla_digits'       => isset($_POST['use_bangla_digits']) ? 1 : 0,
                 'default_booking_status'  => sanitize_text_field(wp_unslash($_POST['default_booking_status'] ?? 'pending')),
                 'email_from_name'            => sanitize_text_field(wp_unslash($_POST['email_from_name'] ?? get_bloginfo('name'))),
                 'email_from_address'         => sanitize_email(wp_unslash($_POST['email_from_address'] ?? get_option('admin_email'))),
@@ -72,6 +74,8 @@ class SettingsPage
         $currency          = Config::get('currency', 'USD');
         $currencySymbol    = Config::get('currency_symbol', '$');
         $currencyPos       = Config::get('currency_position', 'left');
+        $pluginLanguage    = Config::get('plugin_language', 'default');
+        $useBanglaDigits   = Config::get('use_bangla_digits', 0);
         $defaultStatus     = Config::get('default_booking_status', 'pending');
         $fromName          = Config::get('email_from_name', get_bloginfo('name'));
         $fromEmail         = Config::get('email_from_address', get_option('admin_email'));
@@ -200,6 +204,33 @@ class SettingsPage
                                         <option value="pending" <?php selected($defaultStatus, 'pending'); ?>><?php esc_html_e('Pending (Awaiting Admin Confirmation)', 'tourivo'); ?></option>
                                         <option value="confirmed" <?php selected($defaultStatus, 'confirmed'); ?>><?php esc_html_e('Instant Confirmed', 'tourivo'); ?></option>
                                     </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+                        <h2>🌐 <?php esc_html_e('Language & Localization / ভাষা ও লোকালাইজেশন', 'tourivo'); ?></h2>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><label for="plugin_language"><?php esc_html_e('Plugin Language / প্লাগিনের ভাষা', 'tourivo'); ?></label></th>
+                                <td>
+                                    <select name="plugin_language" id="plugin_language">
+                                        <option value="default" <?php selected($pluginLanguage, 'default'); ?>><?php printf(esc_html__('Site Default (WordPress Locale: %s)', 'tourivo'), esc_html(get_locale())); ?></option>
+                                        <option value="en" <?php selected($pluginLanguage, 'en'); ?>>English (US)</option>
+                                        <option value="bn" <?php selected($pluginLanguage, 'bn'); ?>>বাংলা (Bengali - Bangladesh & Global)</option>
+                                    </select>
+                                    <p class="description"><?php esc_html_e('Choose whether Tourivo displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Bengali Numbers / বাংলা সংখ্যা', 'tourivo'); ?></th>
+                                <td>
+                                    <label for="use_bangla_digits">
+                                        <input name="use_bangla_digits" type="checkbox" id="use_bangla_digits" value="1" <?php checked($useBanglaDigits, 1); ?>>
+                                        <?php esc_html_e('Render prices and counters in Bengali digits (যেমন: ৳১,৫০০, ৩ জন)', 'tourivo'); ?>
+                                    </label>
                                 </td>
                             </tr>
                         </table>

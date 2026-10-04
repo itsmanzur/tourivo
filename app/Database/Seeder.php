@@ -32,6 +32,8 @@ class Seeder
         $destBali   = self::ensureTerm('Bali', TourPostType::TAX_DESTINATION);
         $destSwiss  = self::ensureTerm('Switzerland', TourPostType::TAX_DESTINATION);
         $destDubai  = self::ensureTerm('Dubai', TourPostType::TAX_DESTINATION);
+        $destCox    = self::ensureTerm("Cox's Bazar / কক্সবাজার", TourPostType::TAX_DESTINATION);
+        $destSajek  = self::ensureTerm('Sajek Valley / সাজেক ভ্যালি', TourPostType::TAX_DESTINATION);
 
         $actBeach   = self::ensureTerm('Beach & Island', TourPostType::TAX_ACTIVITY);
         $actAdv     = self::ensureTerm('Mountain Adventure', TourPostType::TAX_ACTIVITY);
@@ -151,6 +153,49 @@ class Seeder
 
             $inclusions3 = ['Hotel Pickup & Drop-off in 4x4 Land Cruiser', 'Dune Bashing (30-45 mins)', 'Sunset Photo Stop', 'Camel Riding & Sandboarding', 'Lavish Buffet BBQ Dinner (Veg & Non-Veg)', 'Live Belly Dance & Fire Show'];
             update_post_meta($tour3Id, '_tourivo_inclusions', wp_slash(wp_json_encode($inclusions3, JSON_UNESCAPED_UNICODE)));
+        }
+
+        // Tour 4: Cox's Bazar Beach & Marine Drive (Bangladesh)
+        $tour4Id = wp_insert_post([
+            'post_title'   => "কক্সবাজার ৩ দিন ২ রাত বিচ ট্যুর ও মেরিন ড্রাইভ (Cox's Bazar Beach Tour)",
+            'post_content' => 'বিশ্বের দীর্ঘতম প্রাকৃতিক সমুদ্র সৈকত কক্সবাজারে ৩ দিন ২ রাতের প্রিমিয়াম হলিডে ট্যুর। ইনানী বিচ, হিমছড়ি ঝরনা, মেরিন ড্রাইভ সূর্যাস্ত এবং কলাতলী সৈকতের এক্সক্লুসিভ সি-ফুড ডিনারের দারুণ অভিজ্ঞতা।',
+            'post_status'  => 'publish',
+            'post_type'    => TourPostType::POST_TYPE,
+        ]);
+
+        if ($tour4Id && !is_wp_error($tour4Id)) {
+            $toursCount++;
+            wp_set_object_terms($tour4Id, [$destCox], TourPostType::TAX_DESTINATION);
+            wp_set_object_terms($tour4Id, [$actBeach], TourPostType::TAX_ACTIVITY);
+
+            update_post_meta($tour4Id, '_tourivo_tour_type', 'multi_day');
+            update_post_meta($tour4Id, '_tourivo_base_price', '9500.00');
+            update_post_meta($tour4Id, '_tourivo_sale_price', '8200.00');
+            update_post_meta($tour4Id, '_tourivo_duration', '৩ দিন / ২ রাত');
+            update_post_meta($tour4Id, '_tourivo_duration_days', 3);
+            update_post_meta($tour4Id, '_tourivo_min_guests', 1);
+            update_post_meta($tour4Id, '_tourivo_max_guests', 20);
+            update_post_meta($tour4Id, '_tourivo_badge', 'হট ডিল');
+            update_post_meta($tour4Id, '_tourivo_pickup_location', 'কক্সবাজার বিমানবন্দর বা বাস টার্মিনাল');
+            update_post_meta($tour4Id, '_tourivo_dropoff_location', 'কলাতলী মোড় / বিমানবন্দর');
+
+            $itinerary4 = [
+                ['day' => '১', 'title' => 'কক্সবাজার আগমন ও সুগন্ধা বিচ সূর্যাস্ত', 'desc' => 'বিমানবন্দর/বাস টার্মিনাল থেকে পিকআপ ও রিসোর্টে চেক-ইন। বিকেলে লাবণী ও সুগন্ধা বিচে সময় কাটানো এবং সন্ধ্যায় বিখ্যাত রুপচাঁদা ফ্রাই সহ ওয়েলকাম ডিনার।', 'meals' => 'ডিনার'],
+                ['day' => '২', 'title' => 'মেরিন ড্রাইভ, হিমছড়ি ঝরনা ও ইনানী বিচ ড্রাইভ', 'desc' => 'খোলা জিপে মেরিন ড্রাইভ রোড ভ্রমণ, হিমছড়ি পাহাড়ের চূড়া থেকে সমুদ্র দর্শন এবং ইনানী প্রবাল দ্বীপে স্নান।', 'meals' => 'ব্রেকফাস্ট, লাঞ্চ'],
+                ['day' => '৩', 'title' => 'বার্মিজ মার্কেট শপিং ও ঢাকা প্রস্থান', 'desc' => 'সকালে বিচে মুক্ত সময় ও ছবি তোলা। দুপুরের পর ঐতিহ্যবাহী বার্মিজ মার্কেটে শুঁটকি ও আচার শপিং শেষে বিমানবন্দরে ড্রপ।', 'meals' => 'ব্রেকফাস্ট'],
+            ];
+            update_post_meta($tour4Id, '_tourivo_itinerary', wp_slash(wp_json_encode($itinerary4, JSON_UNESCAPED_UNICODE)));
+
+            $inclusions4 = ['২ রাত প্রিমিয়াম বিচ রিসোর্টে থাকার ব্যবস্থা', 'প্রতিদিন সকালের নাস্তা এবং একটি স্পেশাল সি-ফুড ডিনার', 'মেরিন ড্রাইভ ও ইনানী সাইটসিয়িং প্রাইভেট গাড়ি', 'অভিজ্ঞ বাংলা ও ইংরেজি গাইড সার্ভিস'];
+            $exclusions4 = ['ঢাকা-কক্সবাজার এয়ার বা বাস টিকিট', 'ব্যক্তিগত কেনাকাটা ও রাইড খরচ'];
+            update_post_meta($tour4Id, '_tourivo_inclusions', wp_slash(wp_json_encode($inclusions4, JSON_UNESCAPED_UNICODE)));
+            update_post_meta($tour4Id, '_tourivo_exclusions', wp_slash(wp_json_encode($exclusions4, JSON_UNESCAPED_UNICODE)));
+
+            $faqs4 = [
+                ['question' => 'ফ্যামিলি বা কাপলদের জন্য কি নিরাপদ?', 'answer' => 'সম্পূর্ণ নিরাপদ এবং পারিবারিক পরিবেশের মানসম্মত রিসোর্টে ব্যবস্থা করা হয়।'],
+                ['question' => 'বুকিং ক্যান্সেল করলে রিফান্ড পাওয়া যাবে?', 'answer' => 'যাত্রার ৩ দিন আগে জানালে শতভাগ রিফান্ড প্রদান করা হয়।'],
+            ];
+            update_post_meta($tour4Id, '_tourivo_faqs', wp_slash(wp_json_encode($faqs4, JSON_UNESCAPED_UNICODE)));
         }
 
         // 3. Seed Hotels & Rooms
@@ -274,6 +319,65 @@ class Seeder
                 update_post_meta($room4, '_tourivo_room_size', '52 m²');
             }
             update_post_meta($hotel2Id, '_tourivo_min_price', 140.00);
+        }
+
+        // Hotel 3: Sayeman Beach Resort (Cox's Bazar, Bangladesh)
+        $hotel3Id = wp_insert_post([
+            'post_title'   => "সায়মন বিচ রিসোর্ট - কক্সবাজার (Sayeman Beach Resort)",
+            'post_content' => 'কলাতলী সমুদ্র সৈকতে সরাসরি ওশান-ভিউ সহ কক্সবাজারের অন্যতম ঐতিহ্যবাহী ও লাক্সারি ৫-স্টার রিসোর্ট। ইনফিনিটি সুইমিং পুল, বিশ্বমানের স্পা ও সি-ফুড ডাইনিংয়ের সেরা অভিজ্ঞতা।',
+            'post_status'  => 'publish',
+            'post_type'    => HotelPostType::POST_TYPE,
+        ]);
+
+        if ($hotel3Id && !is_wp_error($hotel3Id)) {
+            $hotelsCount++;
+            wp_set_object_terms($hotel3Id, [$destCox], TourPostType::TAX_DESTINATION);
+            wp_set_object_terms($hotel3Id, [$amenWifi, $amenPool, $amenAc, $amenBreak, $amenSpa], HotelPostType::TAX_AMENITY);
+
+            update_post_meta($hotel3Id, '_tourivo_star_rating', 5);
+            update_post_meta($hotel3Id, '_tourivo_city', 'Cox\'s Bazar');
+            update_post_meta($hotel3Id, '_tourivo_address', 'মেরিন ড্রাইভ রোড, কলাতলী, কক্সবাজার');
+            update_post_meta($hotel3Id, '_tourivo_check_in_time', '14:00');
+            update_post_meta($hotel3Id, '_tourivo_check_out_time', '12:00');
+
+            // Room 3.1: Sea View Deluxe Room
+            $room5 = wp_insert_post([
+                'post_title'   => 'সি ভিউ ডিলাক্স রুম (Sea View Deluxe)',
+                'post_content' => 'সরাসরি বঙ্গোপসাগরের ঢেউ দেখার মতো প্রাইভেট বারান্দা, এসি, বাথটাব এবং কিং বেড সমৃদ্ধ প্রিমিয়াম রুম।',
+                'post_status'  => 'publish',
+                'post_type'    => RoomPostType::POST_TYPE,
+            ]);
+            if ($room5 && !is_wp_error($room5)) {
+                $roomsCount++;
+                update_post_meta($room5, '_tourivo_parent_hotel_id', $hotel3Id);
+                update_post_meta($room5, '_tourivo_nightly_price', '7500.00');
+                update_post_meta($room5, '_tourivo_max_adults', 2);
+                update_post_meta($room5, '_tourivo_max_children', 1);
+                update_post_meta($room5, '_tourivo_max_guests', 3);
+                update_post_meta($room5, '_tourivo_room_quantity', 12);
+                update_post_meta($room5, '_tourivo_bed_type', '১টি কিং সাইজ বেড');
+                update_post_meta($room5, '_tourivo_room_size', '৩৫ বর্গমিটার');
+            }
+
+            // Room 3.2: Ocean Front Presidential Suite
+            $room6 = wp_insert_post([
+                'post_title'   => 'ওশান ফ্রন্ট প্যানোরামিক স্যুইট (Ocean Suite)',
+                'post_content' => 'বিশাল লিভিং রুম, ডাইনিং স্পেস ও ১৮০ ডিগ্রি সমুদ্রের দৃশ্য সহ সর্বাধুনিক লাক্সারি স্যুইট।',
+                'post_status'  => 'publish',
+                'post_type'    => RoomPostType::POST_TYPE,
+            ]);
+            if ($room6 && !is_wp_error($room6)) {
+                $roomsCount++;
+                update_post_meta($room6, '_tourivo_parent_hotel_id', $hotel3Id);
+                update_post_meta($room6, '_tourivo_nightly_price', '14500.00');
+                update_post_meta($room6, '_tourivo_max_adults', 4);
+                update_post_meta($room6, '_tourivo_max_children', 2);
+                update_post_meta($room6, '_tourivo_max_guests', 5);
+                update_post_meta($room6, '_tourivo_room_quantity', 4);
+                update_post_meta($room6, '_tourivo_bed_type', '২টি কিং বেড + ১টি সোফা বেড');
+                update_post_meta($room6, '_tourivo_room_size', '৮৫ বর্গমিটার');
+            }
+            update_post_meta($hotel3Id, '_tourivo_min_price', 7500.00);
         }
 
         return [

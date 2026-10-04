@@ -202,15 +202,22 @@ class TemplateServiceProvider extends ServiceProvider
         );
 
         wp_localize_script('tourivo-frontend', 'tourivoData', [
-            'restUrl'        => esc_url_raw(rest_url()),
-            'ajaxUrl'        => esc_url_raw(admin_url('admin-ajax.php')),
-            'nonce'          => wp_create_nonce('wp_rest'),
-            'frontendNonce'  => wp_create_nonce('tourivo_frontend_nonce'),
-            'currencySymbol' => (string) apply_filters('tourivo/currency_symbol', '$'),
-            'currencies'     => \Tourivo\Shortcodes\CurrencySwitcherShortcode::getCurrencies(),
-            'i18n'           => [
-                'processing' => __('Processing...', 'tourivo'),
-                'success'    => __('Booking successful!', 'tourivo'),
+            'restUrl'         => esc_url_raw(rest_url()),
+            'ajaxUrl'         => esc_url_raw(admin_url('admin-ajax.php')),
+            'nonce'           => wp_create_nonce('wp_rest'),
+            'frontendNonce'   => wp_create_nonce('tourivo_frontend_nonce'),
+            'currencySymbol'  => (string) apply_filters('tourivo/currency_symbol', '$'),
+            'currencies'      => \Tourivo\Shortcodes\CurrencySwitcherShortcode::getCurrencies(),
+            'isBengali'       => function_exists('tourivo_is_bengali') && tourivo_is_bengali(),
+            'useBanglaDigits' => (bool) \Tourivo\Config\Config::get('use_bangla_digits', false),
+            'i18n'            => [
+                'processing'      => __('Processing...', 'tourivo'),
+                'success'         => __('Booking successful!', 'tourivo'),
+                'savedToWishlist' => __('Saved to wishlist', 'tourivo'),
+                'saveToWishlist'  => __('Save to wishlist', 'tourivo'),
+                'submitting'      => __('Submitting...', 'tourivo'),
+                'night'           => __('night', 'tourivo'),
+                'person'          => __('person', 'tourivo'),
             ],
         ]);
     }

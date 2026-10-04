@@ -54,6 +54,7 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         $this->addAction('admin_menu', [$this, 'registerAdminMenus'], 9);
+        $this->addAction('admin_enqueue_scripts', [$this, 'maybeSwitchUiLocale'], 1);
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
         $this->addAction('admin_post_tourivo_export_bookings_csv', [BookingsTable::class, 'exportCsv']);
 
@@ -76,6 +77,45 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('wp_ajax_tourivo_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
         $this->addAction('wp_ajax_tourivo_wizard_create_pages', [SetupWizard::class, 'handleCreatePages']);
         $this->addAction('wp_ajax_tourivo_wizard_import_demo', [SetupWizard::class, 'handleImportDemo']);
+    }
+
+    /**
+     * Switch WordPress locale on Tourivo admin pages if plugin_language is customized.
+     *
+     * @return void
+     */
+    public function maybeSwitchUiLocale(): void
+    {
+        $lang = (string) \Tourivo\Config\Config::get('plugin_language', 'default');
+        if ('default' === $lang) {
+            return;
+        }
+
+        $screen = get_current_screen();
+        if (!$screen) {
+            return;
+        }
+
+        $isTourivo = str_contains((string) $screen->id, 'tourivo')
+            || in_array((string) $screen->post_type, ['tourivo_tour', 'tourivo_hotel', 'tourivo_room'], true);
+
+        if (!$isTourivo) {
+            return;
+        }
+
+        $locale = ('bn' === $lang) ? 'bn_BD' : 'en_US';
+
+        if (function_exists('switch_to_locale')) {
+            switch_to_locale($locale);
+        }
+
+        unload_textdomain('tourivo');
+        if ('en_US' !== $locale && 'en' !== $locale) {
+            $bundledFile = TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo';
+            if (file_exists($bundledFile)) {
+                load_textdomain('tourivo', $bundledFile);
+            }
+        }
     }
 
     /**

@@ -328,3 +328,52 @@ if (!function_exists('tourivo_render_wishlist_button')) {
         );
     }
 }
+
+if (!function_exists('tourivo_bn_number')) {
+    /**
+     * Convert English numbers to Bengali digits.
+     *
+     * @param int|float|string $number
+     * @return string
+     */
+    function tourivo_bn_number($number): string
+    {
+        $en = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+        $bn = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+        return str_replace($en, $bn, (string) $number);
+    }
+}
+
+if (!function_exists('tourivo_current_locale')) {
+    /**
+     * Get the active plugin locale code (e.g. 'en_US', 'bn_BD').
+     *
+     * @return string
+     */
+    function tourivo_current_locale(): string
+    {
+        $lang = (string) Config::get('plugin_language', 'default');
+        if ('bn' === $lang) {
+            return 'bn_BD';
+        }
+        if ('en' === $lang) {
+            return 'en_US';
+        }
+
+        return function_exists('determine_locale') ? determine_locale() : get_locale();
+    }
+}
+
+if (!function_exists('tourivo_is_bengali')) {
+    /**
+     * Check if the current plugin language is Bengali.
+     *
+     * @return bool
+     */
+    function tourivo_is_bengali(): bool
+    {
+        $locale = tourivo_current_locale();
+        return str_starts_with($locale, 'bn');
+    }
+}
+

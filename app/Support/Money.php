@@ -38,6 +38,11 @@ class Money
 
         $formattedNum = number_format($num, $decimals, $decPoint, $thousands);
 
+        $useBangla = (bool) apply_filters('tourivo/use_bangla_digits', (bool) Config::get('use_bangla_digits', false));
+        if ($useBangla && function_exists('tourivo_bn_number')) {
+            $formattedNum = tourivo_bn_number($formattedNum);
+        }
+
         return match ($position) {
             'right'       => $formattedNum . $symbol,
             'left_space'  => $symbol . ' ' . $formattedNum,

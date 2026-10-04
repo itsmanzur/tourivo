@@ -1,87 +1,554 @@
-# Copyright (C) 2026 Tourivo Team
-# This file is distributed under the GPL v2 or later.
 msgid ""
 msgstr ""
-"Project-Id-Version: Tourivo 1.0.0\n"
+"Project-Id-Version: Tourivo 1.2.0\n"
 "Report-Msgid-Bugs-To: https://tourivo.com/support\n"
-"POT-Creation-Date: 2026-09-29 14:00+0000\n"
+"Last-Translator: Tourivo Team <support@tourivo.com>\n"
+"Language-Team: Bengali <bn_BD@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2026-MO-DA HO:MI+ZONE\n"
-"Last-Translator: Tourivo Team <support@tourivo.com>\n"
-"Language-Team: English <support@tourivo.com>\n"
-"X-Generator: Tourivo i18n\n"
+"POT-Creation-Date: 2026-10-04 06:36:56+00:00\n"
+"PO-Revision-Date: 2026-10-04 06:36:56+00:00\n"
+"Language: bn_BD\n"
 "X-Domain: tourivo\n"
 
-#: tourivo.php:40
-msgid "Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
+msgid "The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress."
 msgstr ""
 
-#: app/PostTypes/TourPostType.php:40
-msgid "Tours & Packages"
+msgid "Tourivo"
 msgstr ""
 
-#: app/PostTypes/TourPostType.php:41
-msgid "Tour"
+msgid "Tourivo Settings"
 msgstr ""
 
-#: app/PostTypes/TourPostType.php:42
+msgid "Settings"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "Bookings"
+msgstr ""
+
+msgid "All Bookings"
+msgstr ""
+
+msgid "Inquiries"
+msgstr ""
+
 msgid "Tours"
 msgstr ""
 
-#: app/PostTypes/HotelPostType.php:40
-msgid "Hotels & Stays"
+msgid "All Tours"
 msgstr ""
 
-#: app/PostTypes/HotelPostType.php:41
-msgid "Hotel"
+msgid "Add New Tour"
 msgstr ""
 
-#: app/PostTypes/RoomPostType.php:40
-msgid "Rooms & Units"
+msgid "Hotels"
 msgstr ""
 
-#: app/PostTypes/RoomPostType.php:41
-msgid "Room"
+msgid "All Hotels"
 msgstr ""
 
-#: app/Services/BookingService.php:165
-msgid "Booking created successfully! Your booking code is #%s."
+msgid "Add New Hotel"
 msgstr ""
 
-#: templates/booking-panel.php:38
-msgid "Instant Confirmation"
+msgid "Rooms"
 msgstr ""
 
-#: templates/booking-panel.php:44
-msgid "Select Tour Date *"
+msgid "Add New Room"
 msgstr ""
 
-#: templates/booking-panel.php:44
-msgid "Check-in Date *"
+msgid "Destinations"
 msgstr ""
 
-#: templates/booking-panel.php:53
-msgid "Check-out Date *"
+msgid "Activities"
 msgstr ""
 
-#: templates/booking-panel.php:63
-msgid "Guests / Travelers"
+msgid "Hotel Types"
 msgstr ""
 
-#: templates/booking-panel.php:67
+msgid "Amenities"
+msgstr ""
+
+msgid "Documentation"
+msgstr ""
+
+msgid "Setup Wizard"
+msgstr ""
+
+msgid "Pending"
+msgstr ""
+
+msgid "Confirmed"
+msgstr ""
+
+msgid "Completed"
+msgstr ""
+
+msgid "Cancelled"
+msgstr ""
+
+msgid "On Hold"
+msgstr ""
+
+msgid "Paid"
+msgstr ""
+
+msgid "Unpaid"
+msgstr ""
+
+msgid "Partially Paid"
+msgstr ""
+
+msgid "Refunded"
+msgstr ""
+
+msgid "Failed"
+msgstr ""
+
+msgid "Instant Confirmed"
+msgstr ""
+
+msgid "Pending (Awaiting Admin Confirmation)"
+msgstr ""
+
+msgid "Book This Tour"
+msgstr ""
+
+msgid "Book Your Stay"
+msgstr ""
+
+msgid "Reserve Room"
+msgstr ""
+
+msgid "Instant Reservation"
+msgstr ""
+
+msgid "Booking Details"
+msgstr ""
+
+msgid "Check-in Date"
+msgstr ""
+
+msgid "Check-out Date"
+msgstr ""
+
+msgid "Select Date"
+msgstr ""
+
+msgid "Time Slot"
+msgstr ""
+
+msgid "All Day"
+msgstr ""
+
 msgid "Adults"
 msgstr ""
 
-#: templates/booking-panel.php:78
 msgid "Children"
 msgstr ""
 
-#: templates/booking-panel.php:97
+msgid "Rooms Count"
+msgstr ""
+
+msgid "Guests"
+msgstr ""
+
+msgid "Number of Guests"
+msgstr ""
+
+msgid "Age 12+"
+msgstr ""
+
+msgid "Age 2-11"
+msgstr ""
+
+msgid "Price Breakdown"
+msgstr ""
+
+msgid "Base Price"
+msgstr ""
+
 msgid "Total Amount"
 msgstr ""
 
-#: templates/booking-panel.php:121
-msgid "Book Now (Pay Offline)"
+msgid "Grand Total"
 msgstr ""
+
+msgid "Confirm & Book Now"
+msgstr ""
+
+msgid "Processing..."
+msgstr ""
+
+msgid "Booking successful!"
+msgstr ""
+
+msgid "Your Name"
+msgstr ""
+
+msgid "Full Name"
+msgstr ""
+
+msgid "Email Address"
+msgstr ""
+
+msgid "Phone / WhatsApp"
+msgstr ""
+
+msgid "Billing Address"
+msgstr ""
+
+msgid "Special Notes / Requests"
+msgstr ""
+
+msgid "Any special requests or dietary needs..."
+msgstr ""
+
+msgid "Offline / Pay on Arrival"
+msgstr ""
+
+msgid "Save to wishlist"
+msgstr ""
+
+msgid "Saved to wishlist"
+msgstr ""
+
+msgid "My Wishlist"
+msgstr ""
+
+msgid "No items saved to your wishlist yet."
+msgstr ""
+
+msgid "Explore Tours"
+msgstr ""
+
+msgid "Overview"
+msgstr ""
+
+msgid "Tour Details"
+msgstr ""
+
+msgid "Tour Plan & Itinerary"
+msgstr ""
+
+msgid "Day %d: %s"
+msgstr ""
+
+msgid "Meals Included:"
+msgstr ""
+
+msgid "Inclusions & Exclusions"
+msgstr ""
+
+msgid "What is Included"
+msgstr ""
+
+msgid "What is NOT Included"
+msgstr ""
+
+msgid "Meeting & Logistics"
+msgstr ""
+
+msgid "Pickup / Meeting Point:"
+msgstr ""
+
+msgid "Drop-off Point:"
+msgstr ""
+
+msgid "Frequently Asked Questions"
+msgstr ""
+
+msgid "Customer Reviews & Ratings"
+msgstr ""
+
+msgid "Leave a Review & Rating"
+msgstr ""
+
+msgid "Your Rating:"
+msgstr ""
+
+msgid "Your Review / Experience:"
+msgstr ""
+
+msgid "Submit Review"
+msgstr ""
+
+msgid "Submitting..."
+msgstr ""
+
+msgid "Review submitted successfully! Thank you."
+msgstr ""
+
+msgid "All Tours & Packages"
+msgstr ""
+
+msgid "All Hotels & Resorts"
+msgstr ""
+
+msgid "Min: %1$d | Max: %2$d Pax"
+msgstr ""
+
+msgid "reviews"
+msgstr ""
+
+msgid "night"
+msgstr ""
+
+msgid "person"
+msgstr ""
+
+msgid "Featured"
+msgstr ""
+
+msgid "Best Seller"
+msgstr ""
+
+msgid "Special Offer"
+msgstr ""
+
+msgid "No tours found matching criteria."
+msgstr ""
+
+msgid "No hotels found matching criteria."
+msgstr ""
+
+msgid "No rooms currently available for this property."
+msgstr ""
+
+msgid "Search Tours & Hotels"
+msgstr ""
+
+msgid "Where to go?"
+msgstr ""
+
+msgid "Any Destination"
+msgstr ""
+
+msgid "All Activities"
+msgstr ""
+
+msgid "All Durations"
+msgstr ""
+
+msgid "Search"
+msgstr ""
+
+msgid "Filter Results"
+msgstr ""
+
+msgid "Keyword / Title"
+msgstr ""
+
+msgid "Search by name..."
+msgstr ""
+
+msgid "Sort By"
+msgstr ""
+
+msgid "Newest First"
+msgstr ""
+
+msgid "Price: Low to High"
+msgstr ""
+
+msgid "Price: High to Low"
+msgstr ""
+
+msgid "Top Rated"
+msgstr ""
+
+msgid "Max Budget"
+msgstr ""
+
+msgid "Star Rating"
+msgstr ""
+
+msgid "All Stars"
+msgstr ""
+
+msgid "5 Stars"
+msgstr ""
+
+msgid "4+ Stars"
+msgstr ""
+
+msgid "3+ Stars"
+msgstr ""
+
+msgid "No results found matching your filters."
+msgstr ""
+
+msgid "Try adjusting your keywords, budget, or destination criteria."
+msgstr ""
+
+msgid "Clear All Filters"
+msgstr ""
+
+msgid "Track Your Booking"
+msgstr ""
+
+msgid "Enter your booking reference code and email to check your reservation status and download your voucher."
+msgstr ""
+
+msgid "Booking Reference Code"
+msgstr ""
+
+msgid "Lookup Booking"
+msgstr ""
+
+msgid "Print Voucher"
+msgstr ""
+
+msgid "Download Voucher"
+msgstr ""
+
+msgid "Booking Confirmation Voucher"
+msgstr ""
+
+msgid "Traveler Information"
+msgstr ""
+
+msgid "Reservation Summary"
+msgstr ""
+
+msgid "Payment Status:"
+msgstr ""
+
+msgid "Booking Status:"
+msgstr ""
+
+msgid "Booking Date:"
+msgstr ""
+
+msgid "Have Questions? Send an Inquiry"
+msgstr ""
+
+msgid "Ask a Question"
+msgstr ""
+
+msgid "Expected Travel Date"
+msgstr ""
+
+msgid "Your Message / Question"
+msgstr ""
+
+msgid "Send Inquiry"
+msgstr ""
+
+msgid "Sending..."
+msgstr ""
+
+msgid "Thank you! Your inquiry has been sent to our travel specialists. We will get back to you shortly."
+msgstr ""
+
+msgid "Base Currency & Pricing Options"
+msgstr ""
+
+msgid "Base Currency Code"
+msgstr ""
+
+msgid "Currency Symbol"
+msgstr ""
+
+msgid "Symbol Position"
+msgstr ""
+
+msgid "Left ($99)"
+msgstr ""
+
+msgid "Right (99$)"
+msgstr ""
+
+msgid "Left with space ($ 99)"
+msgstr ""
+
+msgid "Right with space (99 $)"
+msgstr ""
+
+msgid "Default Booking Status"
+msgstr ""
+
+msgid "General & Currency"
+msgstr ""
+
+msgid "Design & SEO"
+msgstr ""
+
+msgid "Email Notifications"
+msgstr ""
+
+msgid "Webhooks & API"
+msgstr ""
+
+msgid "Advanced & System"
+msgstr ""
+
+msgid "Language & Localization / ভাষা ও লোকালাইজেশন"
+msgstr ""
+
+msgid "Plugin Language / প্লাগিনের ভাষা"
+msgstr ""
+
+msgid "Bengali Numbers / বাংলা সংখ্যা"
+msgstr ""
+
+msgid "Render prices and counters in Bengali digits (যেমন: ৳১,৫০০, ৩ জন)"
+msgstr ""
+
+msgid "Choose whether Tourivo displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications."
+msgstr ""
+
+msgid "Save Changes"
+msgstr ""
+
+msgid "Settings saved successfully."
+msgstr ""
+
+msgid "Primary Brand Color"
+msgstr ""
+
+msgid "Primary Hover Color"
+msgstr ""
+
+msgid "Accent / Badge Color"
+msgstr ""
+
+msgid "Corner Border Radius"
+msgstr ""
+
+msgid "Button Text Color"
+msgstr ""
+
+msgid "Enable JSON-LD Schema.org SEO"
+msgstr ""
+
+msgid "Enable OpenGraph & Twitter Social Meta"
+msgstr ""
+
+msgid "Total Bookings"
+msgstr ""
+
+msgid "Confirmed Bookings"
+msgstr ""
+
+msgid "Pending Bookings"
+msgstr ""
+
+msgid "Cancelled Bookings"
+msgstr ""
+
+msgid "Gross Paid Revenue"
+msgstr ""
+
+msgid "Published Tours"
+msgstr ""
+
+msgid "Published Hotels"
+msgstr ""
+
+msgid "Published Rooms"
+msgstr ""
+

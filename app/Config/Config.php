@@ -45,6 +45,8 @@ class Config
             'webhook_url'           => '',
             'webhook_secret'        => '',
             'webhook_events'        => ['booking.created', 'booking.status_changed', 'inquiry.created'],
+            'plugin_language'       => 'default', // 'default' (WP site default), 'en' (English), 'bn' (বাংলা)
+            'use_bangla_digits'     => false,
         ];
     }
 

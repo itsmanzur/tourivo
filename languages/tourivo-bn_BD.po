@@ -1,0 +1,554 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Tourivo 1.2.0\n"
+"Report-Msgid-Bugs-To: https://tourivo.com/support\n"
+"Last-Translator: Tourivo Team <support@tourivo.com>\n"
+"Language-Team: Bengali <bn_BD@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2026-10-04 06:36:56+00:00\n"
+"PO-Revision-Date: 2026-10-04 06:36:56+00:00\n"
+"Language: bn_BD\n"
+"X-Domain: tourivo\n"
+
+msgid "The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress."
+msgstr "ওয়ার্ডপ্রেসের জন্য আধুনিক ও স্বয়ংসম্পূর্ণ ভ্রমণ, ট্যুর ও হোটেল বুকিং ইঞ্জিন।"
+
+msgid "Tourivo"
+msgstr "ট্যুরিতো"
+
+msgid "Tourivo Settings"
+msgstr "ট্যুরিতো সেটিংস"
+
+msgid "Settings"
+msgstr "সেটিংস"
+
+msgid "Dashboard"
+msgstr "ড্যাশবোর্ড"
+
+msgid "Bookings"
+msgstr "বুকিং তালিকা"
+
+msgid "All Bookings"
+msgstr "সকল বুকিং"
+
+msgid "Inquiries"
+msgstr "জিজ্ঞাসা / ইনকোয়ারি"
+
+msgid "Tours"
+msgstr "ট্যুরসমূহ"
+
+msgid "All Tours"
+msgstr "সকল ট্যুর"
+
+msgid "Add New Tour"
+msgstr "নতুন ট্যুর যোগ করুন"
+
+msgid "Hotels"
+msgstr "হোটেলসমূহ"
+
+msgid "All Hotels"
+msgstr "সকল হোটেল"
+
+msgid "Add New Hotel"
+msgstr "নতুন হোটেল যোগ করুন"
+
+msgid "Rooms"
+msgstr "রুম / কক্ষসমূহ"
+
+msgid "Add New Room"
+msgstr "নতুন রুম যোগ করুন"
+
+msgid "Destinations"
+msgstr "গন্তব্যসমূহ"
+
+msgid "Activities"
+msgstr "কার্যক্রম / অ্যাক্টিভিটি"
+
+msgid "Hotel Types"
+msgstr "হোটেলের ধরন"
+
+msgid "Amenities"
+msgstr "সুযোগ-সুবিধা (Amenities)"
+
+msgid "Documentation"
+msgstr "ডকুমেন্টেশন ও গাইড"
+
+msgid "Setup Wizard"
+msgstr "সেটআপ উইজার্ড"
+
+msgid "Pending"
+msgstr "অপেক্ষমাণ (Pending)"
+
+msgid "Confirmed"
+msgstr "নিশ্চিত (Confirmed)"
+
+msgid "Completed"
+msgstr "সম্পন্ন (Completed)"
+
+msgid "Cancelled"
+msgstr "বাতিল (Cancelled)"
+
+msgid "On Hold"
+msgstr "হোল্ডে আছে (On Hold)"
+
+msgid "Paid"
+msgstr "পরিশোধিত (Paid)"
+
+msgid "Unpaid"
+msgstr "অপরিশোধিত (Unpaid)"
+
+msgid "Partially Paid"
+msgstr "আংশিক পরিশোধিত"
+
+msgid "Refunded"
+msgstr "রিফান্ড করা হয়েছে"
+
+msgid "Failed"
+msgstr "ব্যর্থ (Failed)"
+
+msgid "Instant Confirmed"
+msgstr "তাত্ক্ষণিক নিশ্চিত"
+
+msgid "Pending (Awaiting Admin Confirmation)"
+msgstr "অপেক্ষমাণ (অ্যাডমিন অনুমোদনের অপেক্ষায়)"
+
+msgid "Book This Tour"
+msgstr "এই ট্যুরটি বুক করুন"
+
+msgid "Book Your Stay"
+msgstr "আপনার রুম বুক করুন"
+
+msgid "Reserve Room"
+msgstr "রুম রিজার্ভ করুন"
+
+msgid "Instant Reservation"
+msgstr "তাত্ক্ষণিক রিজার্ভেশন"
+
+msgid "Booking Details"
+msgstr "বুকিং বিবরণ"
+
+msgid "Check-in Date"
+msgstr "চেক-ইন তারিখ"
+
+msgid "Check-out Date"
+msgstr "চেক-আউট তারিখ"
+
+msgid "Select Date"
+msgstr "তারিখ নির্বাচন করুন"
+
+msgid "Time Slot"
+msgstr "সময় স্লট"
+
+msgid "All Day"
+msgstr "সারাদিন (All Day)"
+
+msgid "Adults"
+msgstr "প্রাপ্তবয়স্ক (Adults)"
+
+msgid "Children"
+msgstr "শিশু (Children)"
+
+msgid "Rooms Count"
+msgstr "রুম সংখ্যা"
+
+msgid "Guests"
+msgstr "অতিথি"
+
+msgid "Number of Guests"
+msgstr "মোট অতিথি সংখ্যা"
+
+msgid "Age 12+"
+msgstr "বয়স ১২+"
+
+msgid "Age 2-11"
+msgstr "বয়স ২-১১"
+
+msgid "Price Breakdown"
+msgstr "মূল্য বিভাজন"
+
+msgid "Base Price"
+msgstr "মূল ভাড়া"
+
+msgid "Total Amount"
+msgstr "সর্বমোট টাকা"
+
+msgid "Grand Total"
+msgstr "সর্বমোট মূল্য"
+
+msgid "Confirm & Book Now"
+msgstr "নিশ্চিত করুন ও বুক করুন"
+
+msgid "Processing..."
+msgstr "প্রক্রিয়াকরণ চলছে..."
+
+msgid "Booking successful!"
+msgstr "বুকিং সফলভাবে সম্পন্ন হয়েছে!"
+
+msgid "Your Name"
+msgstr "আপনার পুরো নাম"
+
+msgid "Full Name"
+msgstr "পুরো নাম"
+
+msgid "Email Address"
+msgstr "ইমেইল ঠিকানা"
+
+msgid "Phone / WhatsApp"
+msgstr "ফোন / হোয়াটসঅ্যাপ নম্বর"
+
+msgid "Billing Address"
+msgstr "ঠিকানা (বিলিং)"
+
+msgid "Special Notes / Requests"
+msgstr "বিশেষ কোনো অনুরোধ বা নোট"
+
+msgid "Any special requests or dietary needs..."
+msgstr "কোনো বিশেষ অনুরোধ বা খাবারের পছন্দ থাকলে লিখুন..."
+
+msgid "Offline / Pay on Arrival"
+msgstr "অফলাইন / উপস্থিত হয়ে পরিশোধ"
+
+msgid "Save to wishlist"
+msgstr "উইশলিস্টে সংরক্ষণ করুন"
+
+msgid "Saved to wishlist"
+msgstr "উইশলিস্টে সংরক্ষিত"
+
+msgid "My Wishlist"
+msgstr "আমার সংরক্ষিত তালিকা"
+
+msgid "No items saved to your wishlist yet."
+msgstr "আপনার উইশলিস্টে এখনও কোনো ট্যুর বা হোটেল সংরক্ষিত নেই।"
+
+msgid "Explore Tours"
+msgstr "ট্যুরসমূহ দেখুন"
+
+msgid "Overview"
+msgstr "বিবরণ ও সারসংক্ষেপ"
+
+msgid "Tour Details"
+msgstr "ট্যুরের বিস্তারিত তথ্য"
+
+msgid "Tour Plan & Itinerary"
+msgstr "ভ্রমণ পরিকল্পনা ও আইটিনেরারি"
+
+msgid "Day %d: %s"
+msgstr "দিন %d: %s"
+
+msgid "Meals Included:"
+msgstr "খাবার অন্তর্ভুক্ত:"
+
+msgid "Inclusions & Exclusions"
+msgstr "যা যা অন্তর্ভুক্ত এবং যা অন্তর্ভুক্ত নয়"
+
+msgid "What is Included"
+msgstr "ট্যুরে যা যা অন্তর্ভুক্ত"
+
+msgid "What is NOT Included"
+msgstr "ট্যুরে যা অন্তর্ভুক্ত নয়"
+
+msgid "Meeting & Logistics"
+msgstr "সাক্ষাতের স্থান ও লজিস্টিকস"
+
+msgid "Pickup / Meeting Point:"
+msgstr "যাত্রা শুরুর স্থান / পিকআপ পয়েন্ট:"
+
+msgid "Drop-off Point:"
+msgstr "ট্যুর সমাপ্তির স্থান / ড্রপ-অফ:"
+
+msgid "Frequently Asked Questions"
+msgstr "সাধারণ জিজ্ঞাসা (FAQ)"
+
+msgid "Customer Reviews & Ratings"
+msgstr "ভ্রমণকারীদের রিভিউ ও রেটিং"
+
+msgid "Leave a Review & Rating"
+msgstr "একটি রিভিউ ও রেটিং দিন"
+
+msgid "Your Rating:"
+msgstr "আপনার রেটিং:"
+
+msgid "Your Review / Experience:"
+msgstr "আপনার অভিজ্ঞতা ও মতামত লিখুন:"
+
+msgid "Submit Review"
+msgstr "রিভিউ জমা দিন"
+
+msgid "Submitting..."
+msgstr "জমা হচ্ছে..."
+
+msgid "Review submitted successfully! Thank you."
+msgstr "আপনার রিভিউ সফলভাবে জমা হয়েছে! ধন্যবাদ।"
+
+msgid "All Tours & Packages"
+msgstr "সকল ট্যুর ও প্যাকেজ"
+
+msgid "All Hotels & Resorts"
+msgstr "সকল হোটেল ও রিসোর্ট"
+
+msgid "Min: %1$d | Max: %2$d Pax"
+msgstr "নূন্যতম: %1$d | সর্বোচ্চ: %2$d জন"
+
+msgid "reviews"
+msgstr "রিভিউ"
+
+msgid "night"
+msgstr "রাত"
+
+msgid "person"
+msgstr "জন"
+
+msgid "Featured"
+msgstr "জনপ্রিয়"
+
+msgid "Best Seller"
+msgstr "হট ডিল"
+
+msgid "Special Offer"
+msgstr "বিশেষ অফার"
+
+msgid "No tours found matching criteria."
+msgstr "কোনো ট্যুর পাওয়া যায়নি।"
+
+msgid "No hotels found matching criteria."
+msgstr "কোনো হোটেল পাওয়া যায়নি।"
+
+msgid "No rooms currently available for this property."
+msgstr "এই প্রপার্টিতে বর্তমানে কোনো রুম খালি নেই।"
+
+msgid "Search Tours & Hotels"
+msgstr "ট্যুর ও হোটেল খুঁজুন"
+
+msgid "Where to go?"
+msgstr "কোথায় যেতে চান?"
+
+msgid "Any Destination"
+msgstr "যে কোনো গন্তব্য"
+
+msgid "All Activities"
+msgstr "সকল অ্যাক্টিভিটি"
+
+msgid "All Durations"
+msgstr "যে কোনো সময়কাল"
+
+msgid "Search"
+msgstr "অনুসন্ধান করুন"
+
+msgid "Filter Results"
+msgstr "ফিল্টার করুন"
+
+msgid "Keyword / Title"
+msgstr "কীওয়ার্ড / নাম"
+
+msgid "Search by name..."
+msgstr "নাম দিয়ে খুঁজুন..."
+
+msgid "Sort By"
+msgstr "সাজান (Sort)"
+
+msgid "Newest First"
+msgstr "নতুনগুলো আগে"
+
+msgid "Price: Low to High"
+msgstr "মূল্য: কম থেকে বেশি"
+
+msgid "Price: High to Low"
+msgstr "মূল্য: বেশি থেকে কম"
+
+msgid "Top Rated"
+msgstr "সর্বোচ্চ রেটিংপ্রাপ্ত"
+
+msgid "Max Budget"
+msgstr "সর্বোচ্চ বাজেট"
+
+msgid "Star Rating"
+msgstr "স্টার রেটিং"
+
+msgid "All Stars"
+msgstr "সকল স্টার"
+
+msgid "5 Stars"
+msgstr "৫ স্টার"
+
+msgid "4+ Stars"
+msgstr "৪+ স্টার"
+
+msgid "3+ Stars"
+msgstr "৩+ স্টার"
+
+msgid "No results found matching your filters."
+msgstr "আপনার ফিল্টারের সাথে মিলে এমন কোনো ফলাফল পাওয়া যায়নি।"
+
+msgid "Try adjusting your keywords, budget, or destination criteria."
+msgstr "অনুগ্রহ করে কীওয়ার্ড, বাজেট বা গন্তব্য পরিবর্তন করে আবার চেষ্টা করুন।"
+
+msgid "Clear All Filters"
+msgstr "সকল ফিল্টার মুছুন"
+
+msgid "Track Your Booking"
+msgstr "আপনার বুকিং ট্র্যাক করুন"
+
+msgid "Enter your booking reference code and email to check your reservation status and download your voucher."
+msgstr "আপনার বুকিং রেফারেন্স কোড ও ইমেইল দিয়ে রিজার্ভেশন স্ট্যাটাস দেখুন এবং ভাউচার প্রিন্ট করুন।"
+
+msgid "Booking Reference Code"
+msgstr "বুকিং রেফারেন্স কোড (যেমন: TRV-2026-XXXX)"
+
+msgid "Lookup Booking"
+msgstr "বুকিং অনুসন্ধান করুন"
+
+msgid "Print Voucher"
+msgstr "ভাউচার প্রিন্ট করুন"
+
+msgid "Download Voucher"
+msgstr "ভাউচার ডাউনলোড"
+
+msgid "Booking Confirmation Voucher"
+msgstr "বুকিং নিশ্চিতকরণ ভাউচার"
+
+msgid "Traveler Information"
+msgstr "ভ্রমণকারীর তথ্য"
+
+msgid "Reservation Summary"
+msgstr "রিজার্ভেশন সারসংক্ষেপ"
+
+msgid "Payment Status:"
+msgstr "পেমেন্ট স্ট্যাটাস:"
+
+msgid "Booking Status:"
+msgstr "বুকিং স্ট্যাটাস:"
+
+msgid "Booking Date:"
+msgstr "বুকিংয়ের তারিখ:"
+
+msgid "Have Questions? Send an Inquiry"
+msgstr "কোনো প্রশ্ন আছে? বার্তা পাঠান"
+
+msgid "Ask a Question"
+msgstr "জিজ্ঞাসা করুন"
+
+msgid "Expected Travel Date"
+msgstr "সম্ভাব্য ভ্রমণের তারিখ"
+
+msgid "Your Message / Question"
+msgstr "আপনার প্রশ্ন বা বার্তা"
+
+msgid "Send Inquiry"
+msgstr "বার্তা পাঠান"
+
+msgid "Sending..."
+msgstr "পাঠানো হচ্ছে..."
+
+msgid "Thank you! Your inquiry has been sent to our travel specialists. We will get back to you shortly."
+msgstr "ধন্যবাদ! আপনার বার্তাটি আমাদের ভ্রমণ বিশেষজ্ঞদের কাছে পাঠানো হয়েছে। আমরা শীঘ্রই যোগাযোগ করব।"
+
+msgid "Base Currency & Pricing Options"
+msgstr "মূল মুদ্রা ও মূল্য নির্ধারণ অপশন"
+
+msgid "Base Currency Code"
+msgstr "মূল মুদ্রার কোড"
+
+msgid "Currency Symbol"
+msgstr "মুদ্রার প্রতীক"
+
+msgid "Symbol Position"
+msgstr "প্রতীকের অবস্থান"
+
+msgid "Left ($99)"
+msgstr "বামে ($৯৯)"
+
+msgid "Right (99$)"
+msgstr "ডানে (৯৯$)"
+
+msgid "Left with space ($ 99)"
+msgstr "বামে স্পেসসহ ($ ৯৯)"
+
+msgid "Right with space (99 $)"
+msgstr "ডানে স্পেসসহ (৯৯ $)"
+
+msgid "Default Booking Status"
+msgstr "ডিফল্ট বুকিং স্ট্যাটাস"
+
+msgid "General & Currency"
+msgstr "সাধারণ ও মুদ্রা"
+
+msgid "Design & SEO"
+msgstr "ডিজাইন ও এসইও"
+
+msgid "Email Notifications"
+msgstr "ইমেইল নোটিফিকেশন"
+
+msgid "Webhooks & API"
+msgstr "ওয়েবহুক ও API"
+
+msgid "Advanced & System"
+msgstr "অ্যাডভান্সড ও সিস্টেম"
+
+msgid "Language & Localization / ভাষা ও লোকালাইজেশন"
+msgstr "ভাষা ও লোকালাইজেশন / Language & Localization"
+
+msgid "Plugin Language / প্লাগিনের ভাষা"
+msgstr "প্লাগিনের ভাষা / Plugin Language"
+
+msgid "Bengali Numbers / বাংলা সংখ্যা"
+msgstr "বাংলা সংখ্যা / Bengali Numbers"
+
+msgid "Render prices and counters in Bengali digits (যেমন: ৳১,৫০০, ৩ জন)"
+msgstr "মূল্য ও সংখ্যাগুলো বাংলায় দেখান (যেমন: ৳১,৫০০, ৩ জন)"
+
+msgid "Choose whether Tourivo displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications."
+msgstr "ট্যুরিতো অ্যাডমিন প্যানেল, বুকিং ফর্ম, ভাউচার ও ইমেইলে ইংরেজি নাকি বাংলায় প্রদর্শিত হবে তা নির্বাচন করুন।"
+
+msgid "Save Changes"
+msgstr "পরিবর্তন সংরক্ষণ করুন"
+
+msgid "Settings saved successfully."
+msgstr "সেটিংস সফলভাবে সংরক্ষিত হয়েছে।"
+
+msgid "Primary Brand Color"
+msgstr "মূল ব্র্যান্ডের রঙ (Primary Color)"
+
+msgid "Primary Hover Color"
+msgstr "হোভার কালার (Hover Color)"
+
+msgid "Accent / Badge Color"
+msgstr "অ্যাকসেন্ট / ব্যাজের রঙ"
+
+msgid "Corner Border Radius"
+msgstr "কোণার রাউন্ডনেস (Border Radius)"
+
+msgid "Button Text Color"
+msgstr "বাটনের লেখার রঙ"
+
+msgid "Enable JSON-LD Schema.org SEO"
+msgstr "JSON-LD Schema.org এসইও সক্রিয় করুন"
+
+msgid "Enable OpenGraph & Twitter Social Meta"
+msgstr "OpenGraph ও সোশ্যাল মেটা ট্যাগ সক্রিয় করুন"
+
+msgid "Total Bookings"
+msgstr "মোট বুকিং"
+
+msgid "Confirmed Bookings"
+msgstr "নিশ্চিত বুকিং"
+
+msgid "Pending Bookings"
+msgstr "অপেক্ষমাণ বুকিং"
+
+msgid "Cancelled Bookings"
+msgstr "বাতিলকৃত বুকিং"
+
+msgid "Gross Paid Revenue"
+msgstr "মোট আদায়কৃত রেভিনিউ"
+
+msgid "Published Tours"
+msgstr "প্রকাশিত ট্যুর"
+
+msgid "Published Hotels"
+msgstr "প্রকাশিত হোটেল"
+
+msgid "Published Rooms"
+msgstr "প্রকাশিত রুম"
+
