@@ -27,8 +27,8 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php 
-        /* translators: %s: Booking Reference Code */
-        echo esc_html(sprintf(__('Booking Voucher #%s — %s', 'tourivo'), $tourivoBooking->booking_code, $tourivoSite)); 
+        /* translators: 1: Booking Reference Code, 2: Site Name */
+        echo esc_html(sprintf(__('Booking Voucher #%1$s — %2$s', 'tourivo'), $tourivoBooking->booking_code, $tourivoSite)); 
     ?></title>
     <style>
         * {

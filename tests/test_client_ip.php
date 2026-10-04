@@ -1,4 +1,5 @@
 <?php
+// phpcs:ignoreFile
 /**
  * Unit Test for ClientIp with Proxy & Anti-Spoofing Verification
  */

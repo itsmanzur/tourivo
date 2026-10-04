@@ -121,6 +121,7 @@ add_action('init', static function (): void {
     } elseif (file_exists($wporgFile)) {
         load_textdomain('tourivo', $wporgFile);
     } else {
+        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
         load_plugin_textdomain('tourivo', false, dirname(plugin_basename(__FILE__)) . '/languages');
     }
 }, 1);

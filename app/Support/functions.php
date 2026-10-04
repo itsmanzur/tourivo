@@ -200,8 +200,15 @@ if (!function_exists('tourivo_get_booking')) {
             return null;
         }
 
-        $table = $wpdb->prefix . 'tourivo_bookings';
-        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE id = %d LIMIT 1", $bookingId));
+        $cacheKey = 'tourivo_booking_' . $bookingId;
+        $cached   = wp_cache_get($cacheKey, 'tourivo');
+        if ($cached !== false) {
+            return is_object($cached) ? $cached : null;
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d LIMIT 1", $bookingId));
+        wp_cache_set($cacheKey, $row ?: '', 'tourivo', 3600);
 
         return $row ?: null;
     }
@@ -222,8 +229,15 @@ if (!function_exists('tourivo_get_booking_by_code')) {
             return null;
         }
 
-        $table = $wpdb->prefix . 'tourivo_bookings';
-        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE booking_code = %s LIMIT 1", $bookingCode));
+        $cacheKey = 'tourivo_booking_code_' . md5($bookingCode);
+        $cached   = wp_cache_get($cacheKey, 'tourivo');
+        if ($cached !== false) {
+            return is_object($cached) ? $cached : null;
+        }
+
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $row = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE booking_code = %s LIMIT 1", $bookingCode));
+        wp_cache_set($cacheKey, $row ?: '', 'tourivo', 3600);
 
         return $row ?: null;
     }

@@ -87,20 +87,25 @@ class TourivoCli extends WP_CLI_Command
                 $format = $assocArgs['format'] ?? 'table';
 
                 $where = '1=1';
-                $params = [];
+                $whereClauses = ['1=1'];
+                $params       = [];
 
                 if (!empty($status)) {
-                    $where .= ' AND booking_status = %s';
-                    $params[] = $status;
+                    $whereClauses[] = 'booking_status = %s';
+                    $params[]       = $status;
                 }
 
-                $query = "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$table} WHERE {$where} ORDER BY id DESC LIMIT {$limit}";
+                $params[] = $limit;
+                $whereSql = implode(' AND ', $whereClauses);
 
-                if (!empty($params)) {
-                    $query = $wpdb->prepare($query, ...$params);
-                }
-
-                $results = $wpdb->get_results($query, ARRAY_A);
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $results = $wpdb->get_results(
+                    $wpdb->prepare(
+                        "SELECT id, booking_code, customer_name, customer_email, total_amount, currency, booking_status, payment_status, created_at FROM {$wpdb->prefix}tourivo_bookings WHERE {$whereSql} ORDER BY id DESC LIMIT %d",
+                        ...$params
+                    ),
+                    ARRAY_A
+                );
 
                 if (empty($results)) {
                     WP_CLI::log(__('No bookings found matching your criteria.', 'tourivo'));
@@ -117,8 +122,10 @@ class TourivoCli extends WP_CLI_Command
                     return;
                 }
 
-                $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$table} WHERE id = %d", $id), ARRAY_A);
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $id), ARRAY_A);
                 if (!$booking) {
+                    /* translators: %d: Numeric booking ID */
                     WP_CLI::error(sprintf(__('Booking #%d not found.', 'tourivo'), $id));
                     return;
                 }
@@ -146,20 +153,25 @@ class TourivoCli extends WP_CLI_Command
 
                 $validStatuses = ['pending', 'confirmed', 'completed', 'cancelled', 'on_hold'];
                 if (!in_array($newStatus, $validStatuses, true)) {
-                    WP_CLI::error(sprintf(__('Invalid status "%s". Valid statuses are: %s', 'tourivo'), $newStatus, implode(', ', $validStatuses)));
+                    /* translators: 1: Invalid status string, 2: Comma-separated list of valid statuses */
+                    WP_CLI::error(sprintf(__('Invalid status "%1$s". Valid statuses are: %2$s', 'tourivo'), $newStatus, implode(', ', $validStatuses)));
                     return;
                 }
 
-                $old = $wpdb->get_var($wpdb->prepare("SELECT booking_status FROM {$table} WHERE id = %d", $id));
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+                $old = $wpdb->get_var($wpdb->prepare("SELECT booking_status FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $id));
                 if (!$old) {
+                    /* translators: %d: Numeric booking ID */
                     WP_CLI::error(sprintf(__('Booking #%d not found.', 'tourivo'), $id));
                     return;
                 }
 
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
                 $updated = $wpdb->update($table, ['booking_status' => $newStatus, 'updated_at' => current_time('mysql', 1)], ['id' => $id], ['%s', '%s'], ['%d']);
 
                 if ($updated !== false) {
                     do_action('tourivo/booking_status_changed', $id, $old, $newStatus);
+                    /* translators: 1: Booking ID, 2: Old status, 3: New status */
                     WP_CLI::success(sprintf(__('Booking #%1$d status updated from "%2$s" to "%3$s".', 'tourivo'), $id, $old, $newStatus));
                 } else {
                     WP_CLI::error(__('Failed to update booking status in database.', 'tourivo'));
@@ -167,6 +179,7 @@ class TourivoCli extends WP_CLI_Command
                 break;
 
             default:
+                /* translators: %s: Action name */
                 WP_CLI::error(sprintf(__('Unknown booking action "%s". Use list, get, or set-status.', 'tourivo'), $action));
                 break;
         }
@@ -193,6 +206,7 @@ class TourivoCli extends WP_CLI_Command
             Schema::migrate();
             WP_CLI::success(__('Tourivo database schema migrated successfully.', 'tourivo'));
         } else {
+            /* translators: %s: Unknown command name */
             WP_CLI::error(sprintf(__('Unknown db command "%s". Use: wp tourivo db migrate', 'tourivo'), $sub));
         }
     }
@@ -242,10 +256,13 @@ class TourivoCli extends WP_CLI_Command
 
         $avail = $inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, 1);
 
+        /* translators: 1: Item ID, 2: Item title, 3: Date string */
         WP_CLI::line(sprintf(__('Item: #%1$d (%2$s) | Date: %3$s', 'tourivo'), $itemId, get_the_title($itemId), $checkIn));
         if ($avail['available']) {
+            /* translators: %d: Remaining capacity count */
             WP_CLI::success(sprintf(__('Available! Remaining capacity: %d spots.', 'tourivo'), $avail['available_spots']));
         } else {
+            /* translators: %s: Error message reason */
             WP_CLI::warning(sprintf(__('Unavailable: %s', 'tourivo'), $avail['message']));
         }
     }
@@ -263,13 +280,17 @@ class TourivoCli extends WP_CLI_Command
     public function stats(): void
     {
         global $wpdb;
-        $table = $wpdb->prefix . 'tourivo_bookings';
 
-        $totalBookings   = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table}");
-        $confirmedCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE booking_status = 'confirmed'");
-        $pendingCount    = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE booking_status = 'pending'");
-        $cancelledCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$table} WHERE booking_status = 'cancelled'");
-        $grossRevenue    = (float) $wpdb->get_var("SELECT SUM(total_amount) FROM {$table} WHERE payment_status = 'paid'");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $totalBookings   = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $confirmedCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = 'confirmed'");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $pendingCount    = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = 'pending'");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $cancelledCount  = (int) $wpdb->get_var("SELECT COUNT(*) FROM {$wpdb->prefix}tourivo_bookings WHERE booking_status = 'cancelled'");
+        // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $grossRevenue    = (float) $wpdb->get_var("SELECT SUM(total_amount) FROM {$wpdb->prefix}tourivo_bookings WHERE payment_status = 'paid'");
 
         $toursCount      = (int) wp_count_posts('tourivo_tour')->publish;
         $hotelsCount     = (int) wp_count_posts('tourivo_hotel')->publish;

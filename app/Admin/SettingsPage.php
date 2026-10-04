@@ -216,7 +216,15 @@ class SettingsPage
                                 <th scope="row"><label for="plugin_language"><?php esc_html_e('Plugin Language / প্লাগিনের ভাষা', 'tourivo'); ?></label></th>
                                 <td>
                                     <select name="plugin_language" id="plugin_language">
-                                        <option value="default" <?php selected($pluginLanguage, 'default'); ?>><?php printf(esc_html__('Site Default (WordPress Locale: %s)', 'tourivo'), esc_html(get_locale())); ?></option>
+                                        <option value="default" <?php selected($pluginLanguage, 'default'); ?>><?php
+                                        echo esc_html(
+                                            sprintf(
+                                                /* translators: %s: Active WordPress locale code */
+                                                __('Site Default (WordPress Locale: %s)', 'tourivo'),
+                                                get_locale()
+                                            )
+                                        );
+                                        ?></option>
                                         <option value="en" <?php selected($pluginLanguage, 'en'); ?>>English (US)</option>
                                         <option value="bn" <?php selected($pluginLanguage, 'bn'); ?>>বাংলা (Bengali - Bangladesh & Global)</option>
                                     </select>
