@@ -47,6 +47,13 @@ class SettingsPage
                 'email_notification_address' => sanitize_email(wp_unslash($_POST['email_notification_address'] ?? get_option('admin_email'))),
                 'email_customer_subject'     => sanitize_text_field(wp_unslash($_POST['email_customer_subject'] ?? '')),
                 'email_admin_subject'        => sanitize_text_field(wp_unslash($_POST['email_admin_subject'] ?? '')),
+                'primary_color'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_color'] ?? '#0d9488'))) ?: '#0d9488',
+                'primary_hover'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_hover'] ?? '#0f766e'))) ?: '#0f766e',
+                'accent_color'               => sanitize_hex_color(wp_unslash((string)($_POST['accent_color'] ?? '#f59e0b'))) ?: '#f59e0b',
+                'border_radius'              => sanitize_text_field(wp_unslash((string)($_POST['border_radius'] ?? '8px'))),
+                'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
+                'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
+                'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
                 'proxy_mode'                 => in_array(sanitize_text_field(wp_unslash($_POST['proxy_mode'] ?? '')), ['cloudflare', 'reverse_proxy'], true) ? sanitize_text_field(wp_unslash($_POST['proxy_mode'])) : 'disabled',
                 'trusted_proxies'            => sanitize_textarea_field(wp_unslash($_POST['trusted_proxies'] ?? '')),
                 'trust_proxy_headers'        => (isset($_POST['proxy_mode']) && in_array($_POST['proxy_mode'], ['cloudflare', 'reverse_proxy'], true)) ? 1 : 0,
@@ -68,6 +75,13 @@ class SettingsPage
         $notifyEmail       = Config::get('email_notification_address', get_option('admin_email'));
         $custSubject       = Config::get('email_customer_subject', '');
         $admSubject        = Config::get('email_admin_subject', '');
+        $primaryColor      = Config::get('primary_color', '#0d9488');
+        $primaryHover      = Config::get('primary_hover', '#0f766e');
+        $accentColor       = Config::get('accent_color', '#f59e0b');
+        $borderRadius      = Config::get('border_radius', '8px');
+        $btnTextColor      = Config::get('button_text_color', '#ffffff');
+        $enableSchema      = Config::get('enable_schema', 1);
+        $enableOpenGraph   = Config::get('enable_opengraph', 1);
         $proxyMode         = Config::get('proxy_mode', 'disabled');
         $trustedProxies    = Config::get('trusted_proxies', '');
         $eraseData         = Config::get('erase_data_on_uninstall', 0);
@@ -77,7 +91,7 @@ class SettingsPage
             <div class="tourivo-dashboard-header">
                 <div>
                     <h1 class="wp-heading-inline">⚙️ <?php esc_html_e('Tourivo Settings', 'tourivo'); ?></h1>
-                    <p class="tourivo-subtitle"><?php esc_html_e('Configure your currency rates, booking defaults, and email notifications.', 'tourivo'); ?></p>
+                    <p class="tourivo-subtitle"><?php esc_html_e('Configure your currency rates, booking defaults, design styling, and SEO options.', 'tourivo'); ?></p>
                 </div>
             </div>
 
@@ -85,6 +99,9 @@ class SettingsPage
             <h2 class="nav-tab-wrapper tourivo-settings-tabs">
                 <a href="#tab-general" class="nav-tab nav-tab-active" data-tab="general">
                     <span class="dashicons dashicons-admin-generic"></span> <?php esc_html_e('General & Currency', 'tourivo'); ?>
+                </a>
+                <a href="#tab-appearance" class="nav-tab" data-tab="appearance">
+                    <span class="dashicons dashicons-admin-appearance"></span> <?php esc_html_e('Design & SEO', 'tourivo'); ?>
                 </a>
                 <a href="#tab-emails" class="nav-tab" data-tab="emails">
                     <span class="dashicons dashicons-email"></span> <?php esc_html_e('Email Notifications', 'tourivo'); ?>
@@ -180,7 +197,84 @@ class SettingsPage
                     </div>
                 </div>
 
-                <!-- TAB 2: Email Notifications -->
+                <!-- TAB 2: Design & SEO Styling -->
+                <div id="settings-tab-appearance" class="tourivo-settings-tab-pane" style="display:none;">
+                    <div class="tourivo-settings-box">
+                        <h2>🎨 <?php esc_html_e('Brand Color Customizer & Styling', 'tourivo'); ?></h2>
+                        <p class="description"><?php esc_html_e('Match Tourivo booking widgets, cards, and buttons with your active WordPress theme styling.', 'tourivo'); ?></p>
+                        
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><label for="primary_color"><?php esc_html_e('Primary Brand Color', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="primary_color" type="color" id="primary_color" value="<?php echo esc_attr($primaryColor); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <code><?php echo esc_html($primaryColor); ?></code>
+                                    <p class="description"><?php esc_html_e('Used for primary booking buttons, price tags, active calendar dates, and highlights.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="primary_hover"><?php esc_html_e('Primary Hover Color', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="primary_hover" type="color" id="primary_hover" value="<?php echo esc_attr($primaryHover); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <code><?php echo esc_html($primaryHover); ?></code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="accent_color"><?php esc_html_e('Accent / Badge Color', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="accent_color" type="color" id="accent_color" value="<?php echo esc_attr($accentColor); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <code><?php echo esc_html($accentColor); ?></code>
+                                    <p class="description"><?php esc_html_e('Used for promotional ribbons, star ratings, and discount tags.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="button_text_color"><?php esc_html_e('Button Text Color', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="button_text_color" type="color" id="button_text_color" value="<?php echo esc_attr($btnTextColor); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <code><?php echo esc_html($btnTextColor); ?></code>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="border_radius"><?php esc_html_e('Widget Border Radius', 'tourivo'); ?></label></th>
+                                <td>
+                                    <select name="border_radius" id="border_radius">
+                                        <option value="4px" <?php selected($borderRadius, '4px'); ?>><?php esc_html_e('Sharp (4px)', 'tourivo'); ?></option>
+                                        <option value="8px" <?php selected($borderRadius, '8px'); ?>><?php esc_html_e('Modern Rounded (8px - Default)', 'tourivo'); ?></option>
+                                        <option value="12px" <?php selected($borderRadius, '12px'); ?>><?php esc_html_e('Smooth Curved (12px)', 'tourivo'); ?></option>
+                                        <option value="16px" <?php selected($borderRadius, '16px'); ?>><?php esc_html_e('Pill Curved (16px)', 'tourivo'); ?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+                        <h2>🚀 <?php esc_html_e('Search Engine Optimization (SEO) & Social Sharing', 'tourivo'); ?></h2>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Schema.org JSON-LD', 'tourivo'); ?></th>
+                                <td>
+                                    <label for="enable_schema">
+                                        <input name="enable_schema" type="checkbox" id="enable_schema" value="1" <?php checked($enableSchema, 1); ?>>
+                                        <strong><?php esc_html_e('Enable automatic Schema.org structured data on Tour and Hotel pages.', 'tourivo'); ?></strong>
+                                    </label>
+                                    <p class="description"><?php esc_html_e('Generates TouristTrip and Hotel JSON-LD metadata so Google can display rich search snippets, prices, and star ratings.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php esc_html_e('OpenGraph & Twitter Cards', 'tourivo'); ?></th>
+                                <td>
+                                    <label for="enable_opengraph">
+                                        <input name="enable_opengraph" type="checkbox" id="enable_opengraph" value="1" <?php checked($enableOpenGraph, 1); ?>>
+                                        <strong><?php esc_html_e('Enable rich social sharing preview cards on Facebook, WhatsApp, and Twitter / X.', 'tourivo'); ?></strong>
+                                    </label>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- TAB 3: Email Notifications -->
                 <div id="settings-tab-emails" class="tourivo-settings-tab-pane" style="display: none;">
                     <div class="tourivo-settings-box">
                         <h2><?php esc_html_e('Sender Details', 'tourivo'); ?></h2>

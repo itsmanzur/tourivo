@@ -3,8 +3,10 @@
  */
 
 :root {
-    --trv-primary: #0284c7;
-    --trv-primary-hover: #0369a1;
+    --trv-primary: #0d9488;
+    --trv-primary-hover: #0f766e;
+    --trv-accent: #f59e0b;
+    --trv-btn-color: #ffffff;
     --trv-success: #10b981;
     --trv-danger: #ef4444;
     --trv-text-main: #1e293b;
@@ -409,15 +411,15 @@
     justify-content: center;
     gap: 6px;
     background: var(--trv-primary);
-    color: #fff;
+    color: var(--trv-btn-color, #ffffff);
     padding: 10px 18px;
-    border-radius: 6px;
+    border-radius: var(--trv-radius, 6px);
     border: 0;
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
     cursor: pointer;
-    transition: background 0.2s ease;
+    transition: background 0.2s ease, transform 0.15s ease;
 }
 
 .tourivo-btn:hover {
@@ -1294,5 +1296,138 @@
 .tourivo-currency-select:focus {
     outline: none;
 }
+
+/* =======================================================
+   STEP 4: ZERO-DEPENDENCY PHOTO LIGHTBOX & GALLERY
+   ======================================================= */
+.tourivo-lightbox-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.88);
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.25s ease, visibility 0.25s ease;
+}
+
+.tourivo-lightbox-overlay.is-active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.tourivo-lightbox-container {
+    position: relative;
+    max-width: 90vw;
+    max-height: 88vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tourivo-lightbox-img {
+    max-width: 100%;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: var(--trv-radius, 8px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+    user-select: none;
+}
+
+.tourivo-lightbox-caption {
+    color: #f1f5f9;
+    font-size: 14px;
+    margin-top: 12px;
+    text-align: center;
+    max-width: 600px;
+}
+
+.tourivo-lightbox-close {
+    position: absolute;
+    top: -45px;
+    right: 0;
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: none;
+    font-size: 24px;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.tourivo-lightbox-close:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.tourivo-lightbox-prev,
+.tourivo-lightbox-next {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.2);
+    color: #ffffff;
+    border: none;
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s;
+    user-select: none;
+}
+
+.tourivo-lightbox-prev:hover,
+.tourivo-lightbox-next:hover {
+    background: rgba(255, 255, 255, 0.4);
+}
+
+.tourivo-lightbox-prev {
+    left: -55px;
+}
+
+.tourivo-lightbox-next {
+    right: -55px;
+}
+
+@media (max-width: 640px) {
+    .tourivo-lightbox-prev {
+        left: 10px;
+    }
+    .tourivo-lightbox-next {
+        right: 10px;
+    }
+    .tourivo-lightbox-close {
+        top: 10px;
+        right: 10px;
+    }
+}
+
+/* Gallery image zoom cursor */
+.tourivo-hero-img img,
+.tourivo-featured-banner img,
+.tourivo-gallery-item img,
+.tourivo-gallery-grid img {
+    cursor: zoom-in;
+    transition: transform 0.2s ease;
+}
+
+.tourivo-hero-img img:hover,
+.tourivo-gallery-item img:hover {
+    transform: scale(1.01);
+}
+
 
 

@@ -28,6 +28,9 @@ class TemplateServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Initialize SEO Service (Schema.org JSON-LD and OpenGraph)
+        new \Tourivo\Services\SeoService();
+
         // Template loader hooks
         $this->addFilter('template_include', [$this, 'loadPostTemplates']);
 
@@ -174,6 +177,21 @@ class TemplateServiceProvider extends ServiceProvider
             ['dashicons'],
             TOURIVO_VERSION
         );
+
+        $primaryColor = (string) \Tourivo\Config\Config::get('primary_color', '#0d9488');
+        $primaryHover = (string) \Tourivo\Config\Config::get('primary_hover', '#0f766e');
+        $accentColor  = (string) \Tourivo\Config\Config::get('accent_color', '#f59e0b');
+        $borderRadius = (string) \Tourivo\Config\Config::get('border_radius', '8px');
+        $btnTextColor = (string) \Tourivo\Config\Config::get('button_text_color', '#ffffff');
+
+        $customCss = ":root {
+            --trv-primary: {$primaryColor};
+            --trv-primary-hover: {$primaryHover};
+            --trv-accent: {$accentColor};
+            --trv-radius: {$borderRadius};
+            --trv-btn-color: {$btnTextColor};
+        }";
+        wp_add_inline_style('tourivo-frontend', $customCss);
 
         wp_enqueue_script(
             'tourivo-frontend',

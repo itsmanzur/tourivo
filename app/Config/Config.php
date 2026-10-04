@@ -37,6 +37,11 @@ class Config
             'email_from_name'       => get_bloginfo('name'),
             'email_from_address'    => get_option('admin_email'),
             'email_notification_address' => get_option('admin_email'),
+            'primary_color'         => '#0d9488',
+            'primary_hover'         => '#0f766e',
+            'accent_color'          => '#f59e0b',
+            'border_radius'         => '8px',
+            'button_text_color'     => '#ffffff',
         ];
     }
 

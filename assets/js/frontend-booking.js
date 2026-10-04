@@ -663,6 +663,117 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     initCurrencySwitcher();
+
+    /* =======================================================
+       STEP 4: ZERO-DEPENDENCY PHOTO LIGHTBOX & GALLERY
+       ======================================================= */
+    function initLightbox() {
+        const galleryImages = Array.from(document.querySelectorAll(
+            '.tourivo-hero-img img, .tourivo-featured-banner img, .tourivo-gallery-item img, .tourivo-gallery-grid img, .tourivo-room-card-img img'
+        ));
+
+        if (galleryImages.length === 0) return;
+
+        let currentIndex = 0;
+        let activeImagesList = [];
+
+        let overlay = document.getElementById('tourivo-lightbox-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'tourivo-lightbox-overlay';
+            overlay.className = 'tourivo-lightbox-overlay';
+            overlay.innerHTML = `
+                <div class="tourivo-lightbox-container">
+                    <button type="button" class="tourivo-lightbox-close" aria-label="Close">&times;</button>
+                    <button type="button" class="tourivo-lightbox-prev" aria-label="Previous">&#8249;</button>
+                    <img class="tourivo-lightbox-img" src="" alt="">
+                    <div class="tourivo-lightbox-caption"></div>
+                    <button type="button" class="tourivo-lightbox-next" aria-label="Next">&#8250;</button>
+                </div>
+            `;
+            document.body.appendChild(overlay);
+        }
+
+        const imgEl = overlay.querySelector('.tourivo-lightbox-img');
+        const captionEl = overlay.querySelector('.tourivo-lightbox-caption');
+        const closeBtn = overlay.querySelector('.tourivo-lightbox-close');
+        const prevBtn = overlay.querySelector('.tourivo-lightbox-prev');
+        const nextBtn = overlay.querySelector('.tourivo-lightbox-next');
+
+        function showImage(index) {
+            if (index < 0) index = activeImagesList.length - 1;
+            if (index >= activeImagesList.length) index = 0;
+            currentIndex = index;
+
+            const target = activeImagesList[currentIndex];
+            const src = target.getAttribute('data-full-src') || target.currentSrc || target.src;
+            const caption = target.getAttribute('alt') || target.getAttribute('title') || '';
+
+            imgEl.src = src;
+            imgEl.alt = caption;
+            captionEl.textContent = caption;
+
+            prevBtn.style.display = activeImagesList.length > 1 ? 'flex' : 'none';
+            nextBtn.style.display = activeImagesList.length > 1 ? 'flex' : 'none';
+        }
+
+        function openLightbox(list, index) {
+            activeImagesList = list;
+            showImage(index);
+            overlay.classList.add('is-active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            overlay.classList.remove('is-active');
+            document.body.style.overflow = '';
+            imgEl.src = '';
+        }
+
+        galleryImages.forEach((img) => {
+            img.style.cursor = 'zoom-in';
+            img.addEventListener('click', function (e) {
+                e.preventDefault();
+                const parentSection = img.closest('.tourivo-container') || document;
+                const sectionImgs = Array.from(parentSection.querySelectorAll(
+                    '.tourivo-hero-img img, .tourivo-featured-banner img, .tourivo-gallery-item img, .tourivo-gallery-grid img, .tourivo-room-card-img img'
+                ));
+                const list = sectionImgs.length > 0 ? sectionImgs : galleryImages;
+                const idx = list.indexOf(img);
+                openLightbox(list, idx >= 0 ? idx : 0);
+            });
+        });
+
+        closeBtn.addEventListener('click', closeLightbox);
+        overlay.addEventListener('click', function (e) {
+            if (e.target === overlay) {
+                closeLightbox();
+            }
+        });
+
+        prevBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            showImage(currentIndex - 1);
+        });
+
+        nextBtn.addEventListener('click', function (e) {
+            e.stopPropagation();
+            showImage(currentIndex + 1);
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (!overlay.classList.contains('is-active')) return;
+            if (e.key === 'Escape') {
+                closeLightbox();
+            } else if (e.key === 'ArrowLeft') {
+                showImage(currentIndex - 1);
+            } else if (e.key === 'ArrowRight') {
+                showImage(currentIndex + 1);
+            }
+        });
+    }
+
+    initLightbox();
 });
 
 
