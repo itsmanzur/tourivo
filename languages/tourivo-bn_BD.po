@@ -6,6 +6,12 @@ msgstr ""
 "Language: bn_BD\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
+msgid "The Complete Agency Guide & Feature Showcase"
+msgstr "পরিপূর্ণ এজেন্সি গাইড ও ফিচার পরিচিতি"
+
+msgid "Tourivo Docs & Features Hub"
+msgstr "ট্যুরিতো ডকুমেন্টেশন ও ফিচার হাব"
+
 msgid "Tourivo"
 msgstr "ট্যুরিতো"
 
@@ -21,134 +27,647 @@ msgstr "ওয়ার্ডপ্রেসের জন্য আধুনি�
 msgid "Welcome back! Overview of your travel packages, hotel rooms, and live booking activity."
 msgstr "স্বাগতম! আপনার ট্যুর প্যাকেজ, হোটেল রুম এবং সাম্প্রতিক বুকিং কার্যক্রমের সামগ্রিক বিবরণ।"
 
-msgid "Setup Wizard"
-msgstr "সেটআপ উইজার্ড"
+msgid "Tourivo is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
+msgstr "ট্যুরিতো হল ওয়ার্ডপ্রেসের জন্য একটি অল-ইন-ওয়ান ট্রাভেল বুকিং ইঞ্জিন ও ট্যুর ম্যানেজমেন্ট পাওয়ারহাউস। কোনো কোডিং ছাড়াই সহজে আপনার বুকিং ওয়েবসাইট চালু করতে আমাদের সম্পূর্ণ ফিচার ক্যাটালগ, নির্দেশিকা ও শর্টকোডগুলো দেখুন!"
 
-msgid "New Tour"
-msgstr "নতুন ট্যুর"
+msgid "Go to Dashboard"
+msgstr "ড্যাশবোর্ডে যান"
 
-msgid "+ New Tour"
-msgstr "+ নতুন ট্যুর"
+msgid "Configure Settings"
+msgstr "সেটিংস কনফিগার করুন"
 
-msgid "New Hotel"
-msgstr "নতুন হোটেল"
+msgid "1. Introduction & Quick Start"
+msgstr "১. পরিচিতি ও দ্রুত শুরু"
 
-msgid "+ New Hotel"
-msgstr "+ নতুন হোটেল"
+msgid "2. ✨ All Features Catalog"
+msgstr "২. ✨ সকল ফিচারের তালিকা"
 
-msgid "Add New Tour"
-msgstr "নতুন ট্যুর যোগ করুন"
+msgid "3. Creating Tour Packages"
+msgstr "৩. ট্যুর প্যাকেজ তৈরি"
 
-msgid "Add New Hotel"
-msgstr "নতুন হোটেল যোগ করুন"
+msgid "4. Hotels & Room Listings"
+msgstr "৪. হোটেল ও রুম লিস্টিং"
 
-msgid "Add New Room"
-msgstr "নতুন রুম যোগ করুন"
+msgid "5. Page Builders & Shortcodes"
+msgstr "৫. পেজ বিল্ডার ও শর্টকোড"
 
-msgid "Docs & Features"
-msgstr "ডকুমেন্টেশন ও ফিচার"
+msgid "6. Managing Orders & Bookings"
+msgstr "৬. অর্ডার ও বুকিং পরিচালনা"
 
-msgid "Documentation"
-msgstr "ডকুমেন্টেশন ও গাইড"
+msgid "7. Tourivo Pro Features"
+msgstr "৭. ট্যুরিতো প্রো ফিচারসমূহ"
 
-msgid "Settings"
-msgstr "সেটিংস"
+msgid "What is Tourivo and How Does it Work?"
+msgstr "ট্যুরিতো কী এবং এটি কীভাবে কাজ করে?"
 
-msgid "Tourivo Settings"
-msgstr "ট্যুরিতো সেটিংস"
+msgid "Think of Tourivo as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
+msgstr "ট্যুরিতোকে আপনার নিজস্ব প্রাইভেট বুকিং ইঞ্জিন (যেমন Booking.com, Airbnb, বা Viator) হিসেবে বিবেচনা করুন যা সরাসরি আপনার ওয়ার্ডপ্রেস ওয়েবসাইটের ভেতর কাজ করে।"
 
-msgid "All Tours"
-msgstr "সকল ট্যুর"
+msgid "Tour Packages & Day Trips"
+msgstr "ট্যুর প্যাকেজ ও ডে ট্রিপ"
 
-msgid "Tours"
-msgstr "ট্যুরসমূহ"
+msgid "Sell single-day adventures or multi-day guided trips with day-by-day itineraries, included meals, pickup locations, and passenger caps."
+msgstr "একদিনের রোমাঞ্চকর ভ্রমণ বা একাধিক দিনের গাইডেড ট্যুর বিক্রি করুন বিস্তারিত আইটিনারারি, খাবার, পিকআপ লোকেশন ও যাত্রী সীমা সহ।"
 
-msgid "All Hotels"
-msgstr "সকল হোটেল"
+msgid "Hotels, Resorts & Rooms"
+msgstr "হোটেল, রিসোর্ট ও রুম"
 
-msgid "Hotels"
-msgstr "হোটেলসমূহ"
+msgid "List hotels, resorts, or guest houses. Attach multiple room units with specific bed styles, guest capacities, and per-night rates."
+msgstr "হোটেল, রিসোর্ট বা গেস্ট হাউস যুক্ত করুন। নির্দিষ্ট বেড স্টাইল, অতিথি ধারণক্ষমতা ও রাতপ্রতি রেট সহ একাধিক রুম যুক্ত করুন।"
 
-msgid "All Rooms"
-msgstr "সকল রুম"
+msgid "Anti-Double-Booking Protection"
+msgstr "ডাবল-বুকিং প্রতিরোধ সুরক্ষা"
 
-msgid "Rooms"
-msgstr "রুম / কক্ষসমূহ"
+msgid "Our smart inventory engine automatically prevents two travelers from booking the same room or seat at the same time."
+msgstr "আমাদের স্মার্ট ইনভেন্টরি ইঞ্জিন একই সময়ে একাধিক ভ্রমণকারী কর্তৃক একই রুম বা সিট বুকিং হওয়া স্বয়ংক্রিয়ভাবে প্রতিহত করে।"
 
-msgid "Bookings"
-msgstr "বুকিং তালিকা"
+msgid "🚀 4-Step Quick Launch Checklist"
+msgstr "🚀 ৪-ধাপের দ্রুত চালুকরণ চেকলিস্ট"
 
-msgid "Inquiries"
-msgstr "জিজ্ঞাসা / ইনকোয়ারি"
+msgid "Set Your Currency & Details"
+msgstr "আপনার মুদ্রা ও তথ্য নির্ধারণ করুন"
 
-msgid "Destinations"
-msgstr "গন্তব্যসমূহ"
+msgid "Go to Tourivo -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
+msgstr "ট্যুরিতো -> সেটিংস-এ যান। আপনার মুদ্রার কোড (যেমন USD $, EUR €, BDT ৳), প্রতীকের অবস্থান এবং প্রেরক ইমেল নির্বাচন করুন।"
 
-msgid "Activities"
-msgstr "কার্যক্রম / অ্যাক্টিভিটি"
+msgid "Open Settings"
+msgstr "সেটিংস খুলুন"
 
-msgid "Amenities"
-msgstr "সুযোগ-সুবিধাসমূহ"
+msgid "Import Starter Demo Data (Recommended for Beginners)"
+msgstr "স্টার্টার ডেমো ডাটা ইমপোর্ট করুন (নতুনদের জন্য সুপারিশকৃত)"
 
-msgid "Active Tours"
-msgstr "সক্রিয় ট্যুর"
+msgid "Instantly create complete starter packages: 3 guided tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to see full itineraries, rooms, and booking forms in action."
+msgstr "সম্পূর্ণ স্টার্টার প্যাকেজ তৈরি করুন: ৩টি আকর্ষণীয় ট্যুর (কক্সবাজার, সাজেক ভ্যালি, শ্রীমঙ্গল) এবং ২টি বুটিক হোটেল ও ৪টি রুম।"
 
-msgid "ACTIVE TOURS"
-msgstr "সক্রিয় ট্যুর"
+msgid "⚡ Import Starter Demo Content Now"
+msgstr "⚡ এখনই স্টার্টার ডেমো কন্টেন্ট ইমপোর্ট করুন"
 
-msgid "Hotels & Stays"
-msgstr "হোটেল ও স্টে"
+msgid "Create or Edit Your Tours & Hotels"
+msgstr "আপনার ট্যুর ও হোটেল তৈরি বা সম্পাদনা করুন"
 
-msgid "HOTELS & STAYS"
-msgstr "হোটেল ও স্টে"
+msgid "Add your trip prices, itineraries, photos, room quantities, and pickup points using our beginner-friendly tabbed editor."
+msgstr "আমাদের সহজ ট্যাব এডিটর ব্যবহার করে আপনার ট্রিপের মূল্য, ভ্রমণ পরিকল্পনা, ছবি, রুমের সংখ্যা এবং পিকআপ পয়েন্ট যুক্ত করুন।"
 
-msgid "Room Types"
-msgstr "রুমের ধরন"
+msgid "Publish on Pages via Shortcode or Elementor"
+msgstr "শর্টকোড বা এলিমেন্টরের মাধ্যমে পেজে প্রকাশ করুন"
 
-msgid "ROOM TYPES"
-msgstr "রুমের ধরন"
+msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Tourivo widgets into Elementor."
+msgstr "যেকোনো পেজে [tourivo_tours] বা [tourivo_filter_search]-এর মতো শর্টকোড বসান অথবা এলিমেন্টরে ট্যুরিতো উইজেট ড্র্যাগ করুন।"
 
-msgid "Total Bookings"
-msgstr "মোট বুকিং"
+msgid "View Shortcodes Table"
+msgstr "শর্টকোড টেবিল দেখুন"
 
-msgid "TOTAL BOOKINGS"
-msgstr "মোট বুকিং"
+msgid "✨ Complete Tourivo Feature Catalog"
+msgstr "✨ ট্যুরিতোর সম্পূর্ণ ফিচার ক্যাটালগ"
 
-msgid "Total Revenue"
-msgstr "মোট রেভিনিউ"
+msgid "Complete Tourivo Feature Catalog"
+msgstr "ট্যুরিতোর সম্পূর্ণ ফিচার ক্যাটালগ"
 
-msgid "TOTAL REVENUE"
-msgstr "মোট রেভিনিউ"
+msgid "Explore the complete roster of features engineered into Tourivo to power modern travel agencies, tour operators, and boutique hoteliers."
+msgstr "আধুনিক ট্রাভেল এজেন্সি, ট্যুর অপারেটর এবং বুটিক হোটেল পরিচালনার জন্য ট্যুরিতোতে তৈরি চমৎকার ফিচারগুলো দেখুন।"
 
-msgid "Recent Bookings"
-msgstr "সাম্প্রতিক বুকিং"
+msgid "Tour & Excursion Management"
+msgstr "ট্যুর ও ভ্রমণ পরিচালনা"
 
-msgid "View All Bookings &rarr;"
-msgstr "সকল বুকিং দেখুন &rarr;"
+msgid "FREE CORE"
+msgstr "ফ্রি কোর"
 
-msgid "View All Bookings"
-msgstr "সকল বুকিং দেখুন"
+msgid "PRO ADDON"
+msgstr "প্রো অ্যাড-অন"
 
-msgid "No bookings recorded yet. Start sharing your tours and hotels with travelers!"
-msgstr "এখনও কোনো বুকিং রেকর্ড নেই। ভ্রমণকারীদের সাথে আপনার ট্যুর ও হোটেল শেয়ার করা শুরু করুন!"
+msgid "PRO"
+msgstr "প্রো"
 
-msgid "1-Click Demo Travel & Hotel Data"
-msgstr "১-ক্লিক ডেমো ট্যুর ও হোটেল ডাটা"
+msgid "ENTERPRISE EXTENSIONS"
+msgstr "এন্টারপ্রাইজ এক্সটেনশন"
 
-msgid "Import Demo Data"
-msgstr "ডেমো ডাটা ইমপোর্ট করুন"
+msgid "Interactive Itinerary Builder"
+msgstr "ইন্টারেক্টিভ আইটিনারারি বিল্ডার"
 
-msgid "Useful Shortcodes"
-msgstr "প্রয়োজনীয় শর্টকোডসমূহ"
+msgid "Create day-by-day or stage-by-stage itineraries with custom titles, included meals (Breakfast/Lunch/Dinner), and detailed descriptions."
+msgstr "কাস্টম শিরোনাম, অন্তর্ভূক্ত খাবার (সকালের নাস্তা/দুপুরের খাবার/রাতের খাবার) এবং বিস্তারিত বিবরণ সহ দিনভিত্তিক ভ্রমণ পরিকল্পনা তৈরি করুন।"
 
-msgid "Search filter bar"
-msgstr "সার্চ ও ফিল্টার বার"
+msgid "Inclusions & Exclusions Checklist"
+msgstr "অন্তর্ভুক্তি ও বহির্ভুক্তি চেকলিস্ট"
 
-msgid "Tours grid"
-msgstr "ট্যুর গ্রিড"
+msgid "Visual checkmark and cross-mark list displaying what is included (e.g. Flight, Hotel, Tour Guide) and excluded (e.g. Visa, Tips)."
+msgstr "কী কী অন্তর্ভুক্ত রয়েছে (যেমন ফ্লাইট, হোটেল, ট্যুর গাইড) এবং কী কী অন্তর্ভুক্ত নয় (যেমন ভিসা, টিপস) তা টিক ও ক্রস চিহ্নে প্রদর্শন করুন।"
 
-msgid "Hotels grid"
-msgstr "হোটেল গ্রিড"
+msgid "GPS Map Coordinates & Pickup Points"
+msgstr "জিপিএস ম্যাপ কোঅর্ডিনেট ও পিকআপ পয়েন্ট"
+
+msgid "Define exact departure points, return drop-offs, and GPS Latitude/Longitude for interactive map pinpoints."
+msgstr "ইন্টারেক্টিভ ম্যাপ পিনপয়েন্টের জন্য সঠিক যাত্রা শুরুর স্থান, ড্রপ-অফ স্থান এবং জিপিএস অক্ষাংশ/দ্রাঘিমাংশ নির্ধারণ করুন।"
+
+msgid "Hotels, Resorts & Accommodation Engine"
+msgstr "হোটেল, রিসোর্ট ও বাসস্থান ইঞ্জিন"
+
+msgid "2-Level Hierarchy (Hotel -> Rooms)"
+msgstr "২-স্তরের কাঠামো (হোটেল -> রুমসমূহ)"
+
+msgid "Create parent hotels/resorts and attach unlimited individual room types (Deluxe Suite, Ocean Villa, Standard Room) with unique specs."
+msgstr "প্রধান হোটেল/রিসোর্ট তৈরি করুন এবং এর অধীনে স্বতন্ত্র স্পেসিফিকেশন সহ একাধিক রুমের ধরন (ডিলাক্স সুইট, ওশান ভিলা, স্ট্যান্ডার্ড রুম) যুক্ত করুন।"
+
+msgid "Star Ratings & Amenities"
+msgstr "স্টার রেটিং ও সুযোগ-সুবিধাসমূহ"
+
+msgid "Display 1 to 5 star rating badges, property check-in/out times, and assign custom amenities (Free WiFi, Pool, Spa)."
+msgstr "১ থেকে ৫ স্টার রেটিং ব্যাজ, চেক-ইন/আউট সময় প্রদর্শন করুন এবং সুযোগ-সুবিধা (ফ্রি ওয়াইফাই, সুইমিং পুল, স্পা) যুক্ত করুন।"
+
+msgid "Bed Styles & Dimensions"
+msgstr "বেড স্টাইল ও সাইজ"
+
+msgid "Specify room dimensions (m²/sqft) and bed configurations (King Bed, Twin Beds) for traveler clarity."
+msgstr "ভ্রমণকারীদের স্পষ্ট ধারণার জন্য রুমের সাইজ (বর্গফুট/বর্গমিটার) এবং বেড কনফিগারেশন (কিং বেড, টুইন বেড) উল্লেখ করুন।"
+
+msgid "Live Search, Filter & Traveler Wishlist"
+msgstr "লাইভ সার্চ, ফিল্টার ও উইশলিস্ট"
+
+msgid "Live AJAX Filter & Search [tourivo_filter_search]"
+msgstr "লাইভ AJAX ফিল্টার ও সার্চ [tourivo_filter_search]"
+
+msgid "Real-time, zero page-reload filtering by keyword, destination, budget range slider, duration, and star ratings."
+msgstr "পেজ রিলোড ছাড়াই কিওয়ার্ড, গন্তব্য, বাজেট রেঞ্জ স্লাইডার, সময়কাল এবং স্টার রেটিং অনুযায়ী তাৎক্ষণিক ফিল্টারিং।"
+
+msgid "Traveler Wishlist & Favorites [tourivo_wishlist]"
+msgstr "ভ্রমণকারীদের উইশলিস্ট ও প্রিয় তালিকা [tourivo_wishlist]"
+
+msgid "1-Click animated heart button on all cards. Snappy LocalStorage saving + cloud account sync for logged-in users."
+msgstr "প্রতিটি কার্ডে ১-ক্লিক অ্যানিমেটেড হার্ট বাটন। লোকালস্টোরেজ সেভিং এবং লগইন করা ব্যবহারকারীদের ক্লাউড অ্যাকাউন্ট সিঙ্ক।"
+
+msgid "Multi-Currency Switcher [tourivo_currency_switcher]"
+msgstr "বহু-মুদ্রা সুইচার [tourivo_currency_switcher]"
+
+msgid "Instant dropdown widget converting prices into USD, EUR, GBP, BDT ৳, INR ₹, AUD, CAD, and AED in real-time."
+msgstr "তাৎক্ষণিক ড্রপডাউন উইজেট যা রিয়েল-টাইমে দামকে USD, EUR, GBP, BDT ৳, INR ₹, AUD, CAD, এবং AED-তে রূপান্তর করে।"
+
+msgid "Trust, Reviews & Lead Management"
+msgstr "আস্থা, রিভিউ ও কাস্টমার লিড পরিচালনা"
+
+msgid "5-Star Reviews & Rating Scorecards"
+msgstr "৫-স্টার রিভিউ ও রেটিং স্কোরকার্ড"
+
+msgid "Interactive star rating submission form with aggregate 5★ to 1★ breakdown progress bars on single pages."
+msgstr "একক পেজে বিস্তারিত ৫★ থেকে ১★ ব্রেকডাউন বার সহ ইন্টারেক্টিভ স্টার রেটিং ফর্ম।"
+
+msgid "✓ Verified Traveler Trust Badge"
+msgstr "✓ ভেরিফাইড ট্রাভেলার ট্রাস্ট ব্যাজ"
+
+msgid "Automatically detects confirmed booking emails in database and awards a glowing Verified Traveler badge to genuine reviews."
+msgstr "ডাটাবেসে কনফার্মড বুকিং স্বয়ংক্রিয়ভাবে শনাক্ত করে প্রকৃত রিভিউগুলোতে আকর্ষণীয় 'ভেরিফাইড ট্রাভেলার' ব্যাজ প্রদান করে।"
+
+msgid "1-Click \"Trip Inquiry\" Lead Capture"
+msgstr "১-ক্লিক \"ট্রিপ অনুসন্ধান\" লিড ক্যাপচার"
+
+msgid "Lead capture popup directly on booking panels with instant admin email alerts and full lead management table in wp-admin."
+msgstr "বুকিং প্যানেলে সরাসরি লিড ক্যাপচার পপআপ, তাৎক্ষণিক অ্যাডমিন ইমেল অ্যালার্ট এবং ডাব্লুপি-অ্যাডমিনে পূর্ণাঙ্গ লিড ম্যানেজমেন্ট।"
+
+msgid "Booking Operations & Safety"
+msgstr "বুকিং কার্যক্রম ও নিরাপত্তা"
+
+msgid "Anti-Double-Booking Inventory Engine"
+msgstr "অ্যান্টি-ডাবল-বুকিং ইনভেন্টরি ইঞ্জিন"
+
+msgid "MySQL row-level pessimistic locking ensures zero double-booking or overselling even during high-traffic sales."
+msgstr "MySQL রো-লেভেল পেসিমিস্টিক লকিং উচ্চ ট্রাফিকের সময়েও ডাবল বুকিং বা অতিরিক্ত বুকিং হওয়া প্রতিরোধ করে।"
+
+msgid "Admin Manual Booking Creator"
+msgstr "অ্যাডমিন ম্যানুয়াল বুকিং ক্রিয়েটর"
+
+msgid "Log phone, WhatsApp, and walk-in offline bookings with inventory lock enforcement and reference code generation."
+msgstr "ফোন, হোয়াটসঅ্যাপ এবং সরাসরি আসা অফলাইন বুকিং ইনভেন্টরি লক ও রেফারেন্স কোড সহ এন্ট্রি করুন।"
+
+msgid "1-Click Excel / CSV Traveler Export"
+msgstr "১-ক্লিক এক্সেল / সিএসভি ট্রাভেলার এক্সপোর্ট"
+
+msgid "Download traveler manifest lists with UTF-8 BOM encoding for seamless viewing in Microsoft Excel & Google Sheets."
+msgstr "মাইক্রোসফট এক্সেল ও গুগল শিটসে সহজে দেখার জন্য UTF-8 BOM এনকোডিং সহ প্যাসেঞ্জার লিস্ট ডাউনলোড করুন।"
+
+msgid "Tourivo Pro Enterprise Upgrades"
+msgstr "ট্যুরিতো প্রো এন্টারপ্রাইজ আপগ্রেডসমূহ"
+
+msgid "WooCommerce 100+ Gateways Bridge"
+msgstr "উকমার্স ১০০+ পেমেন্ট গেটওয়ে ব্রিজ"
+
+msgid "Accept Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, Authorize.net, and COD with automated inventory commit on payment."
+msgstr "Stripe, PayPal, বিকাশ, নগদ, Mollie, Razorpay, Authorize.net এবং ক্যাশ অন ডেলিভারির মাধ্যমে পেমেন্ট গ্রহণ করুন।"
+
+msgid "Bookable Extra Addons & Upsells"
+msgstr "বুকিংযোগ্য অতিরিক্ত অ্যাড-অন ও আপসেল"
+
+msgid "Sell airport transfers, private guides, breakfast buffets, and extra beds with per-person, per-night calculations."
+msgstr "জনপ্রতি ও রাতপ্রতি গণনার সুবিধাসহ এয়ারপোর্ট ট্রান্সফার, প্রাইভেট গাইড, বুফে ব্রেকফাস্ট এবং অতিরিক্ত বেড বিক্রি করুন।"
+
+msgid "iCal 2-Way Sync (Airbnb / Booking.com)"
+msgstr "iCal ২-মুখী ক্যালেন্ডার সিঙ্ক (Airbnb / Booking.com)"
+
+msgid "Automatic two-way calendar sync with Airbnb, Booking.com, and VRBO via standard RFC 5545 iCalendar feeds."
+msgstr "স্ট্যান্ডার্ড RFC 5545 iCalendar ফিডের মাধ্যমে Airbnb, Booking.com এবং VRBO-এর সাথে স্বয়ংক্রিয় ক্যালেন্ডার সিঙ্ক।"
+
+msgid "Printable PDF Tickets & QR Check-in"
+msgstr "প্রিন্টযোগ্য পিডিএফ টিকিট ও কিউআর কোড চেক-ইন"
+
+msgid "Generate beautiful PDF boarding passes with secure HMAC-verified QR codes for mobile smartphone scanning."
+msgstr "স্মার্টফোনে স্ক্যানযোগ্য নিরাপদ HMAC-ভেরিফাইড QR কোড সহ চমৎকার PDF বোর্ডিং পাস তৈরি করুন।"
+
+msgid "Customer Account Dashboard [tourivo_customer_dashboard]"
+msgstr "কাস্টমার ফ্রন্টএন্ড অ্যাকাউন্ট ড্যাশবোর্ড [tourivo_customer_dashboard]"
+
+msgid "Dedicated traveler portal displaying upcoming trips, past itineraries, 1-click PDF vouchers, and guest lookup form."
+msgstr "ভ্রমণকারীদের নিজস্ব পোর্টাল যেখানে আসন্ন ট্রিপ, অতীত ভ্রমণ ইতিহাস, ১-ক্লিক পিডিএফ ভাউচার ও অতিথি অনুসন্ধান সুবিধা রয়েছে।"
+
+msgid "Tiered Passenger & Group Discounts"
+msgstr "শ্রেণীভিত্তিক যাত্রী ও গ্রুপ ডিসকাউন্ট"
+
+msgid "Independent rates for Adults, Children, and Infants + automated volume discounts (e.g. 5+ travelers get 10% off)."
+msgstr "প্রাপ্তবয়স্ক, শিশু ও নবজাতকদের জন্য আলাদা রেট এবং গ্রুপ বুকিংয়ে স্বয়ংক্রিয় ছাড়ের ব্যবস্থা।"
+
+msgid "How to Create & Configure Tour Packages"
+msgstr "কীভাবে ট্যুর প্যাকেজ তৈরি ও কনফিগার করবেন"
+
+msgid "Navigate to Tours -> Add New Tour in your WordPress admin menu. Tourivo uses a structured tabbed interface:"
+msgstr "আপনার ওয়ার্ডপ্রেস অ্যাডমিন মেনু থেকে ট্যুর -> নতুন ট্যুর যোগ করুন-এ যান। ট্যুরিতো একটি গোছানো ট্যাব ইন্টারফেস ব্যবহার করে:"
+
+msgid "1. Pricing & General Tab"
+msgstr "১. মূল্য ও সাধারণ ট্যাব"
+
+msgid "Tour Type:"
+msgstr "ট্যুরের ধরন:"
+
+msgid "Single-Day, Multi-Day, Hourly Activity, or Fixed Departure."
+msgstr "একদিনের, একাধিক দিনের, ঘন্টায় অ্যাক্টিভিটি বা নির্দিষ্ট যাত্রার ট্যুর।"
+
+msgid "Base Price & Sale Price:"
+msgstr "মূল দাম ও অফার মূল্য:"
+
+msgid "Set regular price and optional discounted sale price."
+msgstr "সাধারণ মূল্য এবং ডিসকাউন্টের অফার মূল্য নির্ধারণ করুন।"
+
+msgid "Duration Text:"
+msgstr "সময়সীমার বিবরণ:"
+
+msgid "E.g. \"3 Days / 2 Nights\" or \"4 Hours\"."
+msgstr "যেমন \"৩ দিন / ২ রাত\" অথবা \"৪ ঘন্টা\"।"
+
+msgid "Passenger Caps:"
+msgstr "যাত্রী ধারণক্ষমতা:"
+
+msgid "Set minimum and maximum travelers per booking."
+msgstr "প্রতি বুকিংয়ে সর্বনিম্ন ও সর্বোচ্চ যাত্রীর সংখ্যা নির্ধারণ করুন।"
+
+msgid "2. Itinerary Builder Tab"
+msgstr "২. ভ্রমণ পরিকল্পনা বিল্ডার ট্যাব"
+
+msgid "Click \"+ Add Day / Stage\" to build a timeline:"
+msgstr "একটি টাইমলাইন তৈরি করতে \"+ দিন / ধাপ যোগ করুন\"-এ ক্লিক করুন:"
+
+msgid "Day Title:"
+msgstr "দিনের শিরোনাম:"
+
+msgid "E.g. \"Day 1: Arrival & Sunset Beach Dinner\"."
+msgstr "যেমন \"১ম দিন: আগমন ও সমুদ্র সৈকতে সূর্যাস্তকালীন ডিনার\"।"
+
+msgid "Included Meals:"
+msgstr "অন্তর্ভুক্ত খাবার:"
+
+msgid "E.g. \"Breakfast, Dinner\"."
+msgstr "যেমন \"সকালের নাস্তা, রাতের খাবার\"।"
+
+msgid "Stage Description:"
+msgstr "ধাপের বিবরণ:"
+
+msgid "Detailed activities for that day."
+msgstr "সেই দিনের বিস্তারিত কার্যক্রম।"
+
+msgid "3. Inclusions & Exclusions Tab"
+msgstr "৩. অন্তর্ভুক্তি ও বহির্ভুক্তি ট্যাব"
+
+msgid "Clearly outline what travelers get with their ticket:"
+msgstr "যাত্রীরা তাদের টিকিটের সাথে কী কী সুবিধা পাবেন তা স্পষ্ট করে উল্লেখ করুন:"
+
+msgid "Inclusions:"
+msgstr "অন্তর্ভুক্ত সুবিধাসমূহ:"
+
+msgid "Hotel pickup, English-speaking guide, Entry tickets."
+msgstr "হোটেল থেকে পিকআপ, গাইড, প্রবেশ টিকিট ইত্যাদি।"
+
+msgid "Exclusions:"
+msgstr "বহির্ভূত বিষয়সমূহ:"
+
+msgid "Personal expenses, International flights, Visa fees."
+msgstr "ব্যক্তিগত খরচ, বিমান ভাড়া, ভিসা ফি ইত্যাদি।"
+
+msgid "4. Map & FAQs Tab"
+msgstr "৪. ম্যাপ ও প্রশ্নোত্তর (FAQ) ট্যাব"
+
+msgid "Pickup & Drop-off Points:"
+msgstr "পিকআপ ও ড্রপ-অফ পয়েন্ট:"
+
+msgid "Meeting point instructions."
+msgstr "সাক্ষাতের স্থান ও দিকনির্দেশনা।"
+
+msgid "GPS Coordinates:"
+msgstr "জিপিএস কোঅর্ডিনেট:"
+
+msgid "Latitude and Longitude for map markers."
+msgstr "ম্যাপ মার্কারের জন্য অক্ষাংশ ও দ্রাঘিমাংশ।"
+
+msgid "FAQs Accordion:"
+msgstr "প্রশ্নোত্তর অ্যাকর্ডিয়ন:"
+
+msgid "Common questions answered directly on the page."
+msgstr "সচরাচর জিজ্ঞাসিত প্রশ্নাবলীর সরাসরি উত্তর।"
+
+msgid "Understanding the 2-Level Hotel Structure"
+msgstr "২-স্তরের হোটেল কাঠামো বুঝুন"
+
+msgid "Tourivo handles accommodation in an industry-standard 2-level hierarchy: 1. Hotel Property (the building / resort) and 2. Room Types (the bookable units)."
+msgstr "ট্যুরিতো আন্তর্জাতিক মানসম্মত ২-স্তরের কাঠামোতে হোটেল পরিচালনা করে: ১. হোটেল প্রপার্টি (মূল রিসোর্ট বা ভবন) এবং ২. রুমের ধরন (বুকিংযোগ্য রুমসমূহ)।"
+
+msgid "Step 1: Create the Hotel Property"
+msgstr "ধাপ ১: হোটেল প্রপার্টি তৈরি করুন"
+
+msgid "Go to Hotels -> Add New Hotel:"
+msgstr "হোটেল -> নতুন হোটেল যোগ করুন-এ যান:"
+
+msgid "Enter Hotel Title (e.g. \"Grand Ocean Resort & Spa\")."
+msgstr "হোটেলের নাম লিখুন (যেমন \"গ্র্যান্ড ওশান রিসোর্ট অ্যান্ড স্পা\")।"
+
+msgid "Set Star Rating (1 to 5 Stars)."
+msgstr "স্টার রেটিং নির্ধারণ করুন (১ থেকে ৫ স্টার)।"
+
+msgid "Enter Street Address, City, Phone, and Email."
+msgstr "ঠিকানা, শহর, ফোন নম্বর এবং ইমেল লিখুন।"
+
+msgid "Assign Amenities (Pool, Free WiFi, Spa, Gym)."
+msgstr "সুযোগ-সুবিধাসমূহ নির্ধারণ করুন (পুল, ফ্রি ওয়াইফাই, স্পা, জিম)।"
+
+msgid "Set Check-in and Check-out standard times."
+msgstr "চেক-ইন এবং চেক-আউটের সময় নির্ধারণ করুন।"
+
+msgid "Step 2: Add Room Units to that Hotel"
+msgstr "ধাপ ২: সেই হোটেলের অধীনে রুম যুক্ত করুন"
+
+msgid "Go to Rooms -> Add New Room:"
+msgstr "রুম -> নতুন রুম যোগ করুন-এ যান:"
+
+msgid "Enter Room Title (e.g. \"Deluxe Sea View Suite\")."
+msgstr "রুমের নাম লিখুন (যেমন \"ডিলাক্স সি ভিউ সুইট\")।"
+
+msgid "Select the Parent Hotel from the dropdown."
+msgstr "ড্রপডাউন থেকে মূল হোটেলটি নির্বাচন করুন।"
+
+msgid "Set the Base Nightly Price (e.g., $180/night)."
+msgstr "রাতপ্রতি মূল ভাড়া নির্ধারণ করুন (যেমন $১৮০/রাত)।"
+
+msgid "Set Maximum Adults & Children capacity."
+msgstr "সর্বোচ্চ প্রাপ্তবয়স্ক ও শিশু ধারণক্ষমতা নির্ধারণ করুন।"
+
+msgid "Set Total Units Available (e.g. 10 suites)."
+msgstr "মোট কতটি রুম উপলভ্য রয়েছে তা নির্ধারণ করুন।"
+
+msgid "How Travelers Experience Your Hotel Page:"
+msgstr "ভ্রমণকারীরা কীভাবে আপনার হোটেল পেজ দেখতে পাবেন:"
+
+msgid "When travelers open any Hotel page, Tourivo displays all linked room types with their nightly prices, specs, bed styles, and an interactive \"Reserve Room\" dropdown for each room."
+msgstr "ভ্রমণকারীরা যেকোনো হোটেল পেজ খুললে ট্যুরিতো তাদের সমস্ত লিঙ্কযুক্ত রুমের ধরন, প্রতি রাতের মূল্য, সাইজ, বেডের ধরন এবং প্রতিটি রুমের জন্য বুকিং অপশন প্রদর্শন করে।"
+
+msgid "Displaying Tours, Hotels & Search Bars on Your Pages"
+msgstr "আপনার পেজে ট্যুর, হোটেল এবং সার্চ বার প্রদর্শন"
+
+msgid "You can embed Tourivo elements on your Homepage, Destination pages, or any Custom page using Gutenberg, Elementor, or simple Shortcodes."
+msgstr "আপনি গুটেনবার্গ, এলিমেন্টর বা সহজ শর্টকোড ব্যবহার করে হোমপেজ, গন্তব্য পেজ বা যেকোনো কাস্টম পেজে ট্যুরিতো উপাদানগুলো যুক্ত করতে পারেন।"
+
+msgid "1. Copy-and-Paste Shortcodes"
+msgstr "১. কপি ও পেস্ট শর্টকোডসমূহ"
+
+msgid "Element / Purpose"
+msgstr "উপাদান / উদ্দেশ্য"
+
+msgid "Shortcode"
+msgstr "শর্টকোড"
+
+msgid "Action"
+msgstr "অ্যাকশন"
+
+msgid "Travel Search Bar"
+msgstr "ভ্রমণ সার্চ বার"
+
+msgid "Destination dropdown, date picker, and traveler counter bar."
+msgstr "গন্তব্য ড্রপডাউন, তারিখ নির্বাচন এবং যাত্রী কাউন্টার বার।"
+
+msgid "Copy"
+msgstr "কপি করুন"
+
+msgid "All Tours Grid (3 Columns)"
+msgstr "সকল ট্যুর গ্রিড (৩ কলাম)"
+
+msgid "Displays 6 latest tours in a 3-column responsive card grid."
+msgstr "৩-কলামের রেসপন্সিভ কার্ড গ্রিডে ৬টি সর্বশেষ ট্যুর প্রদর্শন করে।"
+
+msgid "Tours by Destination (e.g. Bali)"
+msgstr "গন্তব্য অনুযায়ী ট্যুর (যেমন কক্সবাজার)"
+
+msgid "Filters tours belonging only to a specific destination slug."
+msgstr "শুধুমাত্র একটি নির্দিষ্ট গন্তব্যের ট্যুরগুলো ফিল্টার করে দেখায়।"
+
+msgid "All Hotels & Stays Grid"
+msgstr "সকল হোটেল ও স্টে গ্রিড"
+
+msgid "Displays your luxury hotels with star ratings and starting prices."
+msgstr "স্টার রেটিং এবং প্রারম্ভিক মূল্য সহ আপনার লাক্সারি হোটেলগুলো প্রদর্শন করে।"
+
+msgid "Live AJAX Filter & Search Grid"
+msgstr "লাইভ AJAX ফিল্টার ও সার্চ গ্রিড"
+
+msgid "Instant no-reload live search with destination, budget slider & duration filters."
+msgstr "গন্তব্য, বাজেট স্লাইডার এবং সময়কাল ফিল্টার সহ তাৎক্ষণিক লাইভ সার্চ।"
+
+msgid "Traveler Wishlist & Favorites Page"
+msgstr "ভ্রমণকারীদের উইশলিস্ট ও প্রিয় তালিকা পেজ"
+
+msgid "Displays all saved tours and hotels stored in traveler wishlist."
+msgstr "উইশলিস্টে সংরক্ষিত সমস্ত ট্যুর এবং হোটেল প্রদর্শন করে।"
+
+msgid "Track My Booking & Voucher Portal"
+msgstr "বুকিং ট্র্যাকিং ও ভাউচার পোর্টাল"
+
+msgid "Self-service portal for travelers to track status & download printable vouchers."
+msgstr "ভ্রমণকারীদের জন্য বুকিং স্ট্যাটাস ট্র্যাক এবং প্রিন্টযোগ্য ভাউচার ডাউনলোডের পোর্টাল।"
+
+msgid "Multi-Currency Dropdown Switcher"
+msgstr "মাল্টি-কারেন্সি ড্রপডাউন সুইচার"
+
+msgid "Allows travelers to toggle and convert pricing into USD, EUR, GBP, BDT, INR, AUD, CAD, AED."
+msgstr "ভ্রমণকারীদের USD, EUR, GBP, BDT, INR, AUD, CAD, AED-তে দাম পরিবর্তন ও রূপান্তরের সুযোগ দেয়।"
+
+msgid "Customer Frontend Account Dashboard"
+msgstr "কাস্টমার ফ্রন্টএন্ড অ্যাকাউন্ট ড্যাশবোর্ড"
+
+msgid "Self-service portal for travelers: past bookings, itinerary lookup, PDF tickets & invoices."
+msgstr "ভ্রমণকারীদের নিজস্ব পোর্টাল: অতীত বুকিং, ভ্রমণসূচি অনুসন্ধান, পিডিএফ টিকিট ও ইনভয়েস।"
+
+msgid "Elementor Page Builder"
+msgstr "এলিমেন্টর পেজ বিল্ডার"
+
+msgid "If you use Elementor, simply open the Elementor editor and search for \"Tourivo\" in the widget panel. You will find:"
+msgstr "আপনি যদি এলিমেন্টর ব্যবহার করেন, তবে এলিমেন্টর এডিটর খুলে উইজেট প্যানেলে \"Tourivo\" লিখে খুঁজুন। আপনি পাবেন:"
+
+msgid "Tour Grid:"
+msgstr "ট্যুর গ্রিড:"
+
+msgid "Visual count, column selector, and destination filter."
+msgstr "সংখ্যা নির্ধারণ, কলাম সিলেক্টর এবং গন্তব্য ফিল্টার।"
+
+msgid "Hotel Grid:"
+msgstr "হোটেল গ্রিড:"
+
+msgid "Responsive card styling and star badges."
+msgstr "রেসপন্সিভ কার্ড স্টাইলিং ও স্টার ব্যাজ।"
+
+msgid "Search Bar:"
+msgstr "সার্চ বার:"
+
+msgid "Instant traveler search widget."
+msgstr "তাৎক্ষণিক ট্রাভেলার সার্চ উইজেট।"
+
+msgid "Booking Panel:"
+msgstr "বুকিং প্যানেল:"
+
+msgid "Embed a direct booking box anywhere."
+msgstr "যেকোনো জায়গায় সরাসরি বুকিং বক্স যুক্ত করুন।"
+
+msgid "Gutenberg Block Editor"
+msgstr "গুটেনবার্গ ব্লক এডিটর"
+
+msgid "In the WordPress standard block editor, click (+) and search for \"Tourivo\" blocks:"
+msgstr "ওয়ার্ডপ্রেস স্ট্যান্ডার্ড ব্লক এডিটরে (+) চিহ্নে ক্লিক করুন এবং \"Tourivo\" ব্লক খুঁজুন:"
+
+msgid "Tourivo Tour Grid:"
+msgstr "ট্যুরিতো ট্যুর গ্রিড:"
+
+msgid "Live preview grid block."
+msgstr "লাইভ প্রিভিউ গ্রিড ব্লক।"
+
+msgid "Tourivo Hotel Grid:"
+msgstr "ট্যুরিতো হোটেল গ্রিড:"
+
+msgid "Hotel showcase block."
+msgstr "হোটেল শোকেস ব্লক।"
+
+msgid "Tourivo Search Bar:"
+msgstr "ট্যুরিতো সার্চ বার:"
+
+msgid "Traveler destination lookup block."
+msgstr "গন্তব্য অনুসন্ধান ব্লক।"
+
+msgid "Tourivo Booking Panel:"
+msgstr "ট্যুরিতো বুকিং প্যানেল:"
+
+msgid "Instant checkout block."
+msgstr "তাৎক্ষণিক চেকআউট ব্লক।"
+
+msgid "Managing Traveler Bookings & Inquiries"
+msgstr "ভ্রমণকারীদের বুকিং ও অনুসন্ধান পরিচালনা"
+
+msgid "Tourivo gives your front desk and agency administrators full control over customer reservations and pre-sale inquiries."
+msgstr "ট্যুরিতো আপনার ফ্রন্ট ডেস্ক এবং এজেন্সি অ্যাডমিনিস্ট্রেটরদের কাস্টমার বুকিং এবং প্রাক-বিক্রয় অনুসন্ধানের উপর পূর্ণ নিয়ন্ত্রণ প্রদান করে।"
+
+msgid "Orders & Bookings Table"
+msgstr "অর্ডার ও বুকিং টেবিল"
+
+msgid "Open Tourivo -> Bookings:"
+msgstr "ট্যুরিতো -> বুকিংস-এ যান:"
+
+msgid "Booking Code:"
+msgstr "বুকিং কোড:"
+
+msgid "Unique code generated for every reservation (e.g. #TRV-2026-X9A21B)."
+msgstr "প্রতিটি বুকিংয়ের জন্য তৈরি অনন্য কোড (যেমন #TRV-2026-X9A21B)।"
+
+msgid "1-Click Confirm / Cancel:"
+msgstr "১-ক্লিক কনফার্ম / বাতিল:"
+
+msgid "Update status instantly with Ajax without page refreshes."
+msgstr "পেজ রিফ্রেশ ছাড়াই তাৎক্ষণিকভাবে এজাক্স দিয়ে স্ট্যাটাস আপডেট করুন।"
+
+msgid "Activity Timeline & Notes:"
+msgstr "কার্যক্রমের টাইমলাইন ও নোট:"
+
+msgid "Click \"👁️ Details\" to read history and record staff notes."
+msgstr "হিস্ট্রি দেখতে এবং কর্মীদের নোট সংরক্ষণ করতে \"👁️ Details\"-এ ক্লিক করুন।"
+
+msgid "CSV Export:"
+msgstr "সিএসভি এক্সপোর্ট:"
+
+msgid "Click \"📥 Export to CSV\" to generate passenger manifests."
+msgstr "প্যাসেঞ্জার ম্যানিফেস্ট তৈরি করতে \"📥 Export to CSV\"-এ ক্লিক করুন।"
+
+msgid "Trip Inquiries & Leads Table"
+msgstr "ট্রিপ অনুসন্ধান ও লিডস টেবিল"
+
+msgid "Open Tourivo -> Inquiries:"
+msgstr "ট্যুরিতো -> ইনকোয়ারিজ-এ যান:"
+
+msgid "Pre-sale Leads:"
+msgstr "প্রাক-বিক্রয় লিডস:"
+
+msgid "View traveler questions, dates, and pax counts before they book."
+msgstr "বুকিং করার আগে ভ্রমণকারীদের প্রশ্ন, তারিখ এবং যাত্রী সংখ্যা দেখুন।"
+
+msgid "1-Click Email Reply:"
+msgstr "১-ক্লিক ইমেল উত্তর:"
+
+msgid "Click \"✉️ Reply\" to open pre-filled email client."
+msgstr "প্রি-ফিল্ড ইমেল ক্লায়েন্ট খুলতে \"✉️ Reply\"-এ ক্লিক করুন।"
+
+msgid "Status Pipeline:"
+msgstr "স্ট্যাটাস পাইপলাইন:"
+
+msgid "Filter by New, Replied, or Closed."
+msgstr "নতুন, উত্তর দেওয়া হয়েছে, বা সম্পন্ন অনুযায়ী ফিল্টার করুন।"
+
+msgid "Unlock the Full Potential with Tourivo Pro"
+msgstr "ট্যুরিতো প্রো দিয়ে সম্পূর্ণ সক্ষমতা উন্মোচন করুন"
+
+msgid "Tourivo Pro upgrades your booking engine into a fully automated travel marketplace with WooCommerce payments, calendar sync, and ticket check-in."
+msgstr "ট্যুরিতো প্রো আপনার বুকিং ইঞ্জিনকে উকমার্স পেমেন্ট, ক্যালেন্ডার সিঙ্ক এবং টিকিট চেক-ইন সহ একটি সম্পূর্ণ স্বয়ংক্রিয় ট্রাভেল মার্কেটপ্লেসে রূপান্তর করে।"
+
+msgid "1. WooCommerce Payment Gateway Bridge"
+msgstr "১. উকমার্স পেমেন্ট গেটওয়ে ব্রিজ"
+
+msgid "Seamlessly checkout via 100+ gateways: Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, COD, and direct bank transfers."
+msgstr "১০০+ গেটওয়ের মাধ্যমে নির্বিঘ্ন চেকআউট: স্ট্রাইপ, পেপাল, বিকাশ, নগদ, মলি, রেজরপে, ক্যাশ অন ডেলিভারি এবং সরাসরি ব্যাংক ট্রান্সফার।"
+
+msgid "2. Bookable Extra Add-ons & Upsells"
+msgstr "২. বুকিংযোগ্য অতিরিক্ত অ্যাড-অন ও আপসেল"
+
+msgid "Sell optional extras like Airport Transfer, Private Tour Guide, Breakfast Buffet, and Extra Beds with per-person and per-night calculation options."
+msgstr "জনপ্রতি ও রাতপ্রতি গণনার সুবিধাসহ এয়ারপোর্ট ট্রান্সফার, প্রাইভেট ট্যুর গাইড, বুফে ব্রেকফাস্ট এবং অতিরিক্ত বেডের মতো ঐচ্ছিক সেবা বিক্রি করুন।"
+
+msgid "3. Passenger Pricing Tiers & Group Discounts"
+msgstr "৩. যাত্রী মূল্য স্তর ও গ্রুপ ডিসকাউন্ট"
+
+msgid "Set different rates for Adults, Children, and Infants, plus automatic volume discounts when booking for 5+ travelers."
+msgstr "প্রাপ্তবয়স্ক, শিশু এবং নবজাতকদের জন্য আলাদা রেট নির্ধারণ করুন, সাথে ৫+ জনের গ্রুপ বুকিংয়ে স্বয়ংক্রিয় ছাড়।"
+
+msgid "4. PDF Tickets & QR Code Mobile Check-in"
+msgstr "৪. পিডিএফ টিকিট ও কিউআর কোড মোবাইল চেক-ইন"
+
+msgid "Automated PDF boarding vouchers with cryptographically signed QR codes that staff can scan at boarding with any mobile camera."
+msgstr "স্বয়ংক্রিয় পিডিএফ বোর্ডিং ভাউচার সাথে ক্রিপ্টোগ্রাফিক কিউআর কোড যা যেকোনো মোবাইল ক্যামেরা দিয়ে স্ক্যান করা যায়।"
+
+msgid "5. Two-Way iCal Calendar Sync (Airbnb, Booking.com)"
+msgstr "৫. দুই-মুখী iCal ক্যালেন্ডার সিঙ্ক (Airbnb, Booking.com)"
+
+msgid "Export and auto-import iCal feeds to sync room and tour availability with Airbnb, Booking.com, VRBO, and Google Calendar."
+msgstr "Airbnb, Booking.com, VRBO, এবং Google Calendar-এর সাথে রুম ও ট্যুরের বুকিং সিঙ্ক করতে iCal ফিড ব্যবহার করুন।"
+
+msgid "6. Customer Frontend Dashboard & Guest Lookup"
+msgstr "৬. কাস্টমার ফ্রন্টএন্ড ড্যাশবোর্ড ও গেস্ট লুকআপ"
+
+msgid "Shortcode [tourivo_customer_dashboard] gives travelers a self-service portal to view upcoming trips, order history, and download PDF tickets."
+msgstr "শর্টকোড [tourivo_customer_dashboard] ভ্রমণকারীদের একটি নিজস্ব পোর্টাল প্রদান করে যেখান থেকে তারা আসন্ন ভ্রমণ, অর্ডারের হিস্ট্রি দেখতে এবং পিডিএফ টিকিট ডাউনলোড করতে পারে।"
 
 msgid "Tour Package & Booking Settings"
 msgstr "ট্যুর প্যাকেজ ও বুকিং সেটিংস"
@@ -408,113 +927,125 @@ msgstr "রুমের পরিমাপ / সাইজ"
 msgid "e.g. 35 m² / 376 ft²"
 msgstr "যেমন ৩৫০ বর্গফুট / ৩৫ বর্গমিটার"
 
-msgid "The Complete Agency Guide & Feature Showcase"
-msgstr "পরিপূর্ণ এজেন্সি গাইড ও ফিচার পরিচিতি"
+msgid "Tours"
+msgstr "ট্যুরসমূহ"
 
-msgid "Tourivo Docs & Features Hub"
-msgstr "ট্যুরিতো ডকুমেন্টেশন ও ফিচার হাব"
+msgid "All Tours"
+msgstr "সকল ট্যুর"
 
-msgid "Tourivo is your all-in-one travel booking engine and tour management powerhouse for WordPress. Explore our complete feature catalog, step-by-step guides, and copyable shortcodes to launch your booking website effortlessly—no coding required!"
-msgstr "ট্যুরিতো হল ওয়ার্ডপ্রেসের জন্য একটি অল-ইন-ওয়ান ট্রাভেল বুকিং ইঞ্জিন ও ট্যুর ম্যানেজমেন্ট পাওয়ারহাউস। কোনো কোডিং ছাড়াই সহজে আপনার বুকিং ওয়েবসাইট চালু করতে আমাদের সম্পূর্ণ ফিচার ক্যাটালগ, নির্দেশিকা ও শর্টকোডগুলো দেখুন!"
+msgid "Hotels"
+msgstr "হোটেলসমূহ"
 
-msgid "Go to Dashboard"
-msgstr "ড্যাশবোর্ডে যান"
+msgid "All Hotels"
+msgstr "সকল হোটেল"
 
-msgid "Configure Settings"
-msgstr "সেটিংস কনফিগার করুন"
+msgid "Rooms"
+msgstr "রুম / কক্ষসমূহ"
 
-msgid "1. Introduction & Quick Start"
-msgstr "১. পরিচিতি ও দ্রুত শুরু"
+msgid "All Rooms"
+msgstr "সকল রুম"
 
-msgid "2. ✨ All Features Catalog"
-msgstr "২. ✨ সকল ফিচারের তালিকা"
+msgid "Bookings"
+msgstr "বুকিং তালিকা"
 
-msgid "3. Creating Tour Packages"
-msgstr "৩. ট্যুর প্যাকেজ তৈরি"
+msgid "Inquiries"
+msgstr "জিজ্ঞাসা / ইনকোয়ারি"
 
-msgid "4. Hotels & Room Listings"
-msgstr "৪. হোটেল ও রুম লিস্টিং"
+msgid "Customer Inquiries"
+msgstr "কাস্টমার ইনকোয়ারি"
 
-msgid "5. Page Builders & Shortcodes"
-msgstr "৫. পেজ বিল্ডার ও শর্টকোড"
+msgid "Destinations"
+msgstr "গন্তব্যসমূহ"
 
-msgid "6. Managing Orders & Bookings"
-msgstr "৬. অর্ডার ও বুকিং পরিচালনা"
+msgid "Destination"
+msgstr "গন্তব্য"
 
-msgid "7. Tourivo Pro Features"
-msgstr "৭. ট্যুরিতো প্রো ফিচারসমূহ"
+msgid "Activities"
+msgstr "কার্যক্রম / অ্যাক্টিভিটি"
 
-msgid "What is Tourivo and How Does it Work?"
-msgstr "ট্যুরিতো কী এবং এটি কীভাবে কাজ করে?"
+msgid "Activity"
+msgstr "অ্যাক্টিভিটি"
 
-msgid "Think of Tourivo as your private booking engine (similar to Booking.com, Airbnb, or Viator) operating directly inside your own WordPress website."
-msgstr "ট্যুরিতোকে আপনার নিজস্ব প্রাইভেট বুকিং ইঞ্জিন (যেমন Booking.com, Airbnb, বা Viator) হিসেবে বিবেচনা করুন যা সরাসরি আপনার ওয়ার্ডপ্রেস ওয়েবসাইটের ভেতর কাজ করে।"
+msgid "Amenities"
+msgstr "সুযোগ-সুবিধাসমূহ"
 
-msgid "Tour Packages & Day Trips"
-msgstr "ট্যুর প্যাকেজ ও ডে ট্রিপ"
+msgid "Amenity"
+msgstr "সুযোগ-সুবিধা"
 
-msgid "Sell single-day adventures or multi-day guided trips with day-by-day itineraries, included meals, pickup locations, and passenger caps."
-msgstr "একদিনের রোমাঞ্চকর ভ্রমণ বা একাধিক দিনের গাইডেড ট্যুর বিক্রি করুন বিস্তারিত আইটিনারারি, খাবার, পিকআপ লোকেশন ও যাত্রী সীমা সহ।"
+msgid "Setup Wizard"
+msgstr "সেটআপ উইজার্ড"
 
-msgid "Hotels, Resorts & Rooms"
-msgstr "হোটেল, রিসোর্ট ও রুম"
+msgid "Settings"
+msgstr "সেটিংস"
 
-msgid "List hotels, resorts, or guest houses. Attach multiple room units with specific bed styles, guest capacities, and per-night rates."
-msgstr "হোটেল, রিসোর্ট বা গেস্ট হাউস যুক্ত করুন। নির্দিষ্ট বেড স্টাইল, অতিথি ধারণক্ষমতা ও রাতপ্রতি রেট সহ একাধিক রুম যুক্ত করুন।"
+msgid "Tourivo Settings"
+msgstr "ট্যুরিতো সেটিংস"
 
-msgid "Anti-Double-Booking Protection"
-msgstr "ডাবল-বুকিং প্রতিরোধ সুরক্ষা"
+msgid "Docs & Features"
+msgstr "ডকুমেন্টেশন ও ফিচার"
 
-msgid "Our smart inventory engine automatically prevents two travelers from booking the same room or seat at the same time."
-msgstr "আমাদের স্মার্ট ইনভেন্টরি ইঞ্জিন একই সময়ে একাধিক ভ্রমণকারী কর্তৃক একই রুম বা সিট বুকিং হওয়া স্বয়ংক্রিয়ভাবে প্রতিহত করে।"
+msgid "Documentation"
+msgstr "ডকুমেন্টেশন ও গাইড"
 
-msgid "🚀 4-Step Quick Launch Checklist"
-msgstr "🚀 ৪-ধাপের দ্রুত চালুকরণ চেকলিস্ট"
+msgid "Active Tours"
+msgstr "সক্রিয় ট্যুর"
 
-msgid "Set Your Currency & Details"
-msgstr "আপনার মুদ্রা ও তথ্য নির্ধারণ করুন"
+msgid "ACTIVE TOURS"
+msgstr "সক্রিয় ট্যুর"
 
-msgid "Go to Tourivo -> Settings. Select your currency code (e.g. USD $, EUR €, BDT ৳), symbol position, and sender email."
-msgstr "ট্যুরিতো -> সেটিংস-এ যান। আপনার মুদ্রার কোড (যেমন USD $, EUR €, BDT ৳), প্রতীকের অবস্থান এবং প্রেরক ইমেল নির্বাচন করুন।"
+msgid "Hotels & Stays"
+msgstr "হোটেল ও স্টে"
 
-msgid "Open Settings"
-msgstr "সেটিংস খুলুন"
+msgid "HOTELS & STAYS"
+msgstr "হোটেল ও স্টে"
 
-msgid "Import Starter Demo Data (Recommended for Beginners)"
-msgstr "স্টার্টার ডেমো ডাটা ইমপোর্ট করুন (নতুনদের জন্য সুপারিশকৃত)"
+msgid "Room Types"
+msgstr "রুমের ধরন"
 
-msgid "Instantly create complete starter packages: 3 guided tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to see full itineraries, rooms, and booking forms in action."
-msgstr "সম্পূর্ণ স্টার্টার প্যাকেজ তৈরি করুন: ৩টি আকর্ষণীয় ট্যুর (কক্সবাজার, সাজেক ভ্যালি, শ্রীমঙ্গল) এবং ২টি বুটিক হোটেল ও ৪টি রুম।"
+msgid "ROOM TYPES"
+msgstr "রুমের ধরন"
 
-msgid "⚡ Import Starter Demo Content Now"
-msgstr "⚡ এখনই স্টার্টার ডেমো কন্টেন্ট ইমপোর্ট করুন"
+msgid "Total Bookings"
+msgstr "মোট বুকিং"
 
-msgid "Create or Edit Your Tours & Hotels"
-msgstr "আপনার ট্যুর ও হোটেল তৈরি বা সম্পাদনা করুন"
+msgid "TOTAL BOOKINGS"
+msgstr "মোট বুকিং"
 
-msgid "Add your trip prices, itineraries, photos, room quantities, and pickup points using our beginner-friendly tabbed editor."
-msgstr "আমাদের সহজ ট্যাব এডিটর ব্যবহার করে আপনার ট্রিপের মূল্য, ভ্রমণ পরিকল্পনা, ছবি, রুমের সংখ্যা এবং পিকআপ পয়েন্ট যুক্ত করুন।"
+msgid "Total Revenue"
+msgstr "মোট রেভিনিউ"
 
-msgid "Publish on Pages via Shortcode or Elementor"
-msgstr "শর্টকোড বা এলিমেন্টরের মাধ্যমে পেজে প্রকাশ করুন"
+msgid "TOTAL REVENUE"
+msgstr "মোট রেভিনিউ"
 
-msgid "Paste shortcodes like [tourivo_tours] or [tourivo_filter_search] on any page or drag Tourivo widgets into Elementor."
-msgstr "যেকোনো পেজে [tourivo_tours] বা [tourivo_filter_search]-এর মতো শর্টকোড বসান অথবা এলিমেন্টরে ট্যুরিতো উইজেট ড্র্যাগ করুন।"
+msgid "Recent Bookings"
+msgstr "সাম্প্রতিক বুকিং"
 
-msgid "View Shortcodes Table"
-msgstr "শর্টকোড টেবিল দেখুন"
+msgid "View All Bookings &rarr;"
+msgstr "সকল বুকিং দেখুন &rarr;"
 
-msgid "FREE CORE"
-msgstr "ফ্রি কোর"
+msgid "View All Bookings"
+msgstr "সকল বুকিং দেখুন"
 
-msgid "PRO ADDON"
-msgstr "প্রো অ্যাড-অন"
+msgid "No bookings recorded yet. Start sharing your tours and hotels with travelers!"
+msgstr "এখনও কোনো বুকিং রেকর্ড নেই। ভ্রমণকারীদের সাথে আপনার ট্যুর ও হোটেল শেয়ার করা শুরু করুন!"
 
-msgid "PRO"
-msgstr "প্রো"
+msgid "1-Click Demo Travel & Hotel Data"
+msgstr "১-ক্লিক ডেমো ট্যুর ও হোটেল ডাটা"
 
-msgid "ENTERPRISE EXTENSIONS"
-msgstr "এন্টারপ্রাইজ এক্সটেনশন"
+msgid "Import Demo Data"
+msgstr "ডেমো ডাটা ইমপোর্ট করুন"
+
+msgid "Useful Shortcodes"
+msgstr "প্রয়োজনীয় শর্টকোডসমূহ"
+
+msgid "Search filter bar"
+msgstr "সার্চ ও ফিল্টার বার"
+
+msgid "Tours grid"
+msgstr "ট্যুর গ্রিড"
+
+msgid "Hotels grid"
+msgstr "হোটেল গ্রিড"
 
 msgid "General"
 msgstr "সাধারণ"
