@@ -432,6 +432,14 @@ class DocumentationPage
                                 </tr>
                                 <tr>
                                     <td>
+                                        <strong><?php esc_html_e('Track My Booking & Voucher Portal', 'tourivo'); ?></strong>
+                                        <br><small><?php esc_html_e('Self-service portal for travelers to track status & download printable vouchers.', 'tourivo'); ?></small>
+                                    </td>
+                                    <td><code>[tourivo_booking_lookup]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_booking_lookup]'><?php esc_html_e('Copy', 'tourivo'); ?></button></td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <strong><?php esc_html_e('Multi-Currency Dropdown Switcher', 'tourivo'); ?></strong>
                                         <br><small><?php esc_html_e('Allows travelers to toggle and convert pricing into USD, EUR, GBP, BDT, INR, AUD, CAD, AED.', 'tourivo'); ?></small>
                                     </td>

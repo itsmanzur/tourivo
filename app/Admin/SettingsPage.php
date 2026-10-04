@@ -280,6 +280,15 @@ class SettingsPage
                             </tr>
                         </table>
 
+                        <h2><?php esc_html_e('Setup Wizard & Demo Tools', 'tourivo'); ?></h2>
+                        <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 16px; margin-bottom: 20px; max-width: 600px;">
+                            <h4 style="margin: 0 0 6px; color: #0f766e;"><?php esc_html_e('Quick Onboarding & Sample Data', 'tourivo'); ?></h4>
+                            <p style="margin: 0 0 12px; font-size: 13px; color: #115e59;"><?php esc_html_e('Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?', 'tourivo'); ?></p>
+                            <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button button-secondary">
+                                🪄 <?php esc_html_e('Launch Setup Wizard', 'tourivo'); ?>
+                            </a>
+                        </div>
+
                         <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
 
                         <h2><?php esc_html_e('System Information', 'tourivo'); ?></h2>

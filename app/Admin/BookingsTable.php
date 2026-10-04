@@ -179,6 +179,9 @@ class BookingsTable
                                     <button type="button" class="button button-small open-timeline-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-name="<?php echo esc_attr($b->customer_name); ?>" data-email="<?php echo esc_attr($b->customer_email); ?>" data-phone="<?php echo esc_attr($b->customer_phone); ?>" data-item="<?php echo esc_attr($b->item_title ?? ''); ?>" data-checkin="<?php echo esc_attr($b->check_in ?? ''); ?>" data-checkout="<?php echo esc_attr($b->check_out ?? ''); ?>" data-amount="<?php echo esc_attr(\Tourivo\Support\Money::format((float)$b->total_amount)); ?>" data-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_timeline_nonce')); ?>" title="<?php esc_attr_e('View Booking Details & Timeline Notes', 'tourivo'); ?>">
                                         👁️ <?php esc_html_e('Details', 'tourivo'); ?>
                                     </button>
+                                    <a href="<?php echo esc_url(add_query_arg(['action' => 'tourivo_print_voucher', 'code' => $b->booking_code], admin_url('admin-post.php'))); ?>" target="_blank" rel="noopener" class="button button-small" title="<?php esc_attr_e('Print Booking Voucher', 'tourivo'); ?>">
+                                        🖨️ <?php esc_html_e('Voucher', 'tourivo'); ?>
+                                    </a>
                                     <?php if ($b->booking_status !== 'confirmed') : ?>
                                         <button type="button" class="button button-small button-primary change-status-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-status="confirmed" data-nonce="<?php echo esc_attr($nonce); ?>">✓ <?php esc_html_e('Confirm', 'tourivo'); ?></button>
                                     <?php endif; ?>

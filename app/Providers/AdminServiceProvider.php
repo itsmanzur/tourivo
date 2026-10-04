@@ -9,6 +9,7 @@ use Tourivo\Admin\BookingsTable;
 use Tourivo\Admin\DocumentationPage;
 use Tourivo\Admin\InquiriesTable;
 use Tourivo\Admin\SettingsPage;
+use Tourivo\Admin\SetupWizard;
 use Tourivo\Common\Abstracts\ServiceProvider;
 use Tourivo\Common\Container;
 use Tourivo\Database\Seeder;
@@ -18,6 +19,7 @@ use Tourivo\Services\BookingService;
 use Tourivo\Services\EmailService;
 use Tourivo\Services\InquiryService;
 use Tourivo\Services\LogService;
+use Tourivo\Shortcodes\BookingLookupShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -43,6 +45,10 @@ class AdminServiceProvider extends ServiceProvider
         add_action('wp_ajax_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
         add_action('wp_ajax_nopriv_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
 
+        // Printable Voucher Handler (Admin & Public with token)
+        add_action('admin_post_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
+        add_action('admin_post_nopriv_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
+
         if (!is_admin()) {
             return;
         }
@@ -64,6 +70,11 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('wp_ajax_tourivo_send_test_email', [$this, 'handleSendTestEmail']);
         $this->addAction('wp_ajax_tourivo_get_booking_timeline', [$this, 'handleGetBookingTimeline']);
         $this->addAction('wp_ajax_tourivo_add_booking_note', [$this, 'handleAddBookingNote']);
+
+        // Setup Wizard AJAX Handlers
+        $this->addAction('wp_ajax_tourivo_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
+        $this->addAction('wp_ajax_tourivo_wizard_create_pages', [SetupWizard::class, 'handleCreatePages']);
+        $this->addAction('wp_ajax_tourivo_wizard_import_demo', [SetupWizard::class, 'handleImportDemo']);
     }
 
     /**
@@ -117,6 +128,15 @@ class AdminServiceProvider extends ServiceProvider
             'manage_tourivo',
             'tourivo-docs',
             [$this, 'renderDocumentationPage']
+        );
+
+        add_submenu_page(
+            'tourivo',
+            __('Setup Wizard', 'tourivo'),
+            __('Setup Wizard', 'tourivo'),
+            'manage_tourivo_settings',
+            'tourivo-setup-wizard',
+            [SetupWizard::class, 'render']
         );
 
         add_submenu_page(
@@ -667,6 +687,58 @@ class AdminServiceProvider extends ServiceProvider
         } else {
             wp_send_json_error(['message' => __('Failed to record note.', 'tourivo')]);
         }
+    }
+
+    /**
+     * Handle public and admin printable booking voucher rendering.
+     *
+     * @return void
+     */
+    public function handlePrintVoucher(): void
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $code  = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
+
+        if (empty($code)) {
+            wp_die(esc_html__('Invalid or missing booking reference code.', 'tourivo'), 400);
+        }
+
+        global $wpdb;
+        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $tourivoBooking = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$bookingsTable} WHERE booking_code = %s LIMIT 1",
+            $code
+        ));
+
+        if (!$tourivoBooking) {
+            wp_die(esc_html__('Booking not found.', 'tourivo'), 404);
+        }
+
+        // Security verification: Either valid HMAC token OR logged-in administrator with capability
+        $expectedToken = BookingLookupShortcode::generateVoucherToken((int) $tourivoBooking->id, (string) $tourivoBooking->customer_email);
+        $hasValidToken = hash_equals($expectedToken, $token);
+        $isAdmin       = current_user_can('manage_tourivo_bookings');
+
+        if (!$hasValidToken && !$isAdmin) {
+            wp_die(esc_html__('Access denied. Invalid voucher security token.', 'tourivo'), 403);
+        }
+
+        $tourivoItems = (array) $wpdb->get_results($wpdb->prepare(
+            "SELECT * FROM {$itemsTable} WHERE booking_id = %d",
+            $tourivoBooking->id
+        ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        $tourivoCurrencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
+        $tourivoSiteName       = get_bloginfo('name');
+
+        include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/booking-voucher.php';
+        exit;
     }
 }
 

@@ -6,6 +6,7 @@ namespace Tourivo\Providers;
 
 use Tourivo\Blocks\BlockManager;
 use Tourivo\Common\Abstracts\ServiceProvider;
+use Tourivo\Shortcodes\BookingLookupShortcode;
 use Tourivo\Shortcodes\BookingPanelShortcode;
 use Tourivo\Shortcodes\CurrencySwitcherShortcode;
 use Tourivo\Shortcodes\FilterSearchShortcode;
@@ -36,6 +37,7 @@ class BlockServiceProvider extends ServiceProvider
     {
         // 1. Register Shortcodes
         BookingPanelShortcode::register();
+        BookingLookupShortcode::register();
         TourGridShortcode::register();
         HotelGridShortcode::register();
         SearchBarShortcode::register();
@@ -45,7 +47,6 @@ class BlockServiceProvider extends ServiceProvider
 
         // 2. Register Gutenberg Blocks on init
         $this->addAction('init', [BlockManager::class, 'registerBlocks'], 20);
-
     }
 }
 
