@@ -178,6 +178,15 @@ class TemplateServiceProvider extends ServiceProvider
             TOURIVO_VERSION
         );
 
+        if (function_exists('tourivo_current_locale') && tourivo_current_locale() === 'bn_BD') {
+            wp_enqueue_style(
+                'tourivo-bengali-font',
+                TOURIVO_PLUGIN_URL . 'assets/css/tourivo-bengali-font.css',
+                [],
+                TOURIVO_VERSION
+            );
+        }
+
         $primaryColor = (string) \Tourivo\Config\Config::get('primary_color', '#0d9488');
         $primaryHover = (string) \Tourivo\Config\Config::get('primary_hover', '#0f766e');
         $accentColor  = (string) \Tourivo\Config\Config::get('accent_color', '#f59e0b');

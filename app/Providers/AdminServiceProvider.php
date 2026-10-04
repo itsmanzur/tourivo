@@ -213,6 +213,15 @@ class AdminServiceProvider extends ServiceProvider
             $cssVer
         );
 
+        if (function_exists('tourivo_current_locale') && tourivo_current_locale() === 'bn_BD') {
+            wp_enqueue_style(
+                'tourivo-bengali-font',
+                TOURIVO_PLUGIN_URL . 'assets/css/tourivo-bengali-font.css',
+                [],
+                TOURIVO_VERSION
+            );
+        }
+
         wp_enqueue_script(
             'tourivo-admin-js',
             TOURIVO_PLUGIN_URL . 'assets/js/admin.js',
