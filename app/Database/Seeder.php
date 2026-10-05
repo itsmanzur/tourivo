@@ -22,12 +22,41 @@ if (!defined('ABSPATH')) {
 class Seeder
 {
     /**
+     * Check if demo data already exists in database.
+     *
+     * @return bool
+     */
+    public static function hasExistingDemoData(): bool
+    {
+        $existing = get_posts([
+            'post_type'      => [TourPostType::POST_TYPE, HotelPostType::POST_TYPE],
+            'meta_key'       => '_tourivo_demo',
+            'meta_value'     => '1',
+            'posts_per_page' => 1,
+            'post_status'    => 'any',
+            'fields'         => 'ids',
+        ]);
+
+        return !empty($existing);
+    }
+
+    /**
      * Run the sample data seeder.
      *
-     * @return array{tours_created: int, hotels_created: int, rooms_created: int}
+     * @return array{tours_created: int, hotels_created: int, rooms_created: int, skipped?: bool, message?: string}
      */
     public static function run(): array
     {
+        if (self::hasExistingDemoData()) {
+            return [
+                'tours_created'  => 0,
+                'hotels_created' => 0,
+                'rooms_created'  => 0,
+                'skipped'        => true,
+                'message'        => __('Demo content is already imported. Skipping duplicate generation.', 'tourivo'),
+            ];
+        }
+
         // 1. Create Taxonomies
         $destBali   = self::ensureTerm('Bali', TourPostType::TAX_DESTINATION);
         $destSwiss  = self::ensureTerm('Switzerland', TourPostType::TAX_DESTINATION);
@@ -51,7 +80,7 @@ class Seeder
 
         // 2. Seed Tours
         // Tour 1: Bali
-        $tour1Id = wp_insert_post([
+        $tour1Id = self::insertDemoPost([
             'post_title'   => 'Bali Tropical Beach & Temple Explorer',
             'post_content' => 'Experience the magic of Bali with our 5-day guided tropical adventure. Visit sacred water temples, relax on pristine sandy beaches, explore lush rice terraces in Ubud, and enjoy unforgettable ocean sunset dinners.',
             'post_status'  => 'publish',
@@ -96,7 +125,7 @@ class Seeder
         }
 
         // Tour 2: Swiss Alps
-        $tour2Id = wp_insert_post([
+        $tour2Id = self::insertDemoPost([
             'post_title'   => 'Swiss Alps Glacier & Panorama Trek',
             'post_content' => 'An exhilarating 4-day alpine journey across the Swiss Alps. Experience glacier viewpoints, cable car rides to peak summits, tranquil mountain lakes, and cozy alpine chalets in Interlaken and Zermatt.',
             'post_status'  => 'publish',
@@ -129,7 +158,7 @@ class Seeder
         }
 
         // Tour 3: Dubai City & Safari
-        $tour3Id = wp_insert_post([
+        $tour3Id = self::insertDemoPost([
             'post_title'   => 'Dubai Luxury Desert Safari & Dhow Cruise',
             'post_content' => 'The ultimate 1-day Dubai experience featuring 4x4 red dune bashing, camel riding, sandboarding, BBQ dinner under desert stars with Tanoura dance, and luxury city transfers.',
             'post_status'  => 'publish',
@@ -156,7 +185,7 @@ class Seeder
         }
 
         // Tour 4: Cox's Bazar Beach & Marine Drive (Bangladesh)
-        $tour4Id = wp_insert_post([
+        $tour4Id = self::insertDemoPost([
             'post_title'   => "কক্সবাজার ৩ দিন ২ রাত বিচ ট্যুর ও মেরিন ড্রাইভ (Cox's Bazar Beach Tour)",
             'post_content' => 'বিশ্বের দীর্ঘতম প্রাকৃতিক সমুদ্র সৈকত কক্সবাজারে ৩ দিন ২ রাতের প্রিমিয়াম হলিডে ট্যুর। ইনানী বিচ, হিমছড়ি ঝরনা, মেরিন ড্রাইভ সূর্যাস্ত এবং কলাতলী সৈকতের এক্সক্লুসিভ সি-ফুড ডিনারের দারুণ অভিজ্ঞতা।',
             'post_status'  => 'publish',
@@ -199,7 +228,7 @@ class Seeder
         }
 
         // Tour 5: Sajek Valley & Cloud Kingdom (Bangladesh)
-        $tour5Id = wp_insert_post([
+        $tour5Id = self::insertDemoPost([
             'post_title'   => 'সাজেক ভ্যালি ও মেঘের রাজ্য ৩ দিন ২ রাত প্রিমিয়াম ট্যুর (Sajek Valley Tour)',
             'post_content' => 'পাহাড়ের চূড়ায় মেঘের দেশে হারিয়ে যাওয়ার রোমাঞ্চকর ৩ দিন ২ রাতের সফর। খোলা চাঁদের গাড়িতে পাহাড়ি আঁকাবাঁকা পথ ভ্রমণ, কংলাক পাহাড় ট্র্যাকিং, রুইলুই পাড়ার ঐতিহ্যবাহী জীবন এবং পাহাড়ি ব্যাম্বু চিকেন ডিনার।',
             'post_status'  => 'publish',
@@ -243,7 +272,7 @@ class Seeder
 
         // 3. Seed Hotels & Rooms
         // Hotel 1: Ocean Paradise Resort (Bali)
-        $hotel1Id = wp_insert_post([
+        $hotel1Id = self::insertDemoPost([
             'post_title'   => 'Ocean Paradise Resort & Spa',
             'post_content' => 'Set directly along the pristine golden sands of Seminyak Beach, Ocean Paradise Resort & Spa offers 5-star luxury accommodations with panoramic Indian Ocean views, 3 infinity swimming pools, and an award-winning wellness sanctuary.',
             'post_status'  => 'publish',
@@ -266,7 +295,7 @@ class Seeder
             update_post_meta($hotel1Id, '_tourivo_policy', 'Children of all ages welcome. Valid passport or national ID required at check-in.');
 
             // Room 1.1: Deluxe Sea View Suite
-            $room1 = wp_insert_post([
+            $room1 = self::insertDemoPost([
                 'post_title'   => 'Deluxe Sea View Suite',
                 'post_content' => 'Spacious 45m² ocean-facing suite featuring a private balcony, king-size canopy bed, marble bathroom with deep soaking tub, and espresso machine.',
                 'post_status'  => 'publish',
@@ -285,7 +314,7 @@ class Seeder
             }
 
             // Room 1.2: Two-Bedroom Pool Villa
-            $room2 = wp_insert_post([
+            $room2 = self::insertDemoPost([
                 'post_title'   => 'Two-Bedroom Private Pool Villa',
                 'post_content' => 'Ultimate tropical luxury featuring a private 8-meter infinity plunge pool, lush private sun deck, separate living pavilion, and butler service.',
                 'post_status'  => 'publish',
@@ -306,7 +335,7 @@ class Seeder
         }
 
         // Hotel 2: Alpine Panorama Lodge (Switzerland)
-        $hotel2Id = wp_insert_post([
+        $hotel2Id = self::insertDemoPost([
             'post_title'   => 'Alpine Panorama Grand Lodge',
             'post_content' => 'Nestled in the heart of Interlaken with direct views of the Eiger and Jungfrau peaks. Combining traditional Swiss woodwork with modern alpine comforts.',
             'post_status'  => 'publish',
@@ -325,7 +354,7 @@ class Seeder
             update_post_meta($hotel2Id, '_tourivo_check_out_time', '11:00');
 
             // Room 2.1: Mountain View Double
-            $room3 = wp_insert_post([
+            $room3 = self::insertDemoPost([
                 'post_title'   => 'Mountain View Double Room',
                 'post_content' => 'Cozy wooden-furnished room with private balcony offering direct views of the Swiss Alps.',
                 'post_status'  => 'publish',
@@ -344,7 +373,7 @@ class Seeder
             }
 
             // Room 2.2: Junior Alpine Suite
-            $room4 = wp_insert_post([
+            $room4 = self::insertDemoPost([
                 'post_title'   => 'Junior Alpine Suite',
                 'post_content' => 'Spacious alpine suite with panoramic terrace overlooking the Eiger glacier, fireplace, and whirlpool bath.',
                 'post_status'  => 'publish',
@@ -365,7 +394,7 @@ class Seeder
         }
 
         // Hotel 3: Sayeman Beach Resort (Cox's Bazar, Bangladesh)
-        $hotel3Id = wp_insert_post([
+        $hotel3Id = self::insertDemoPost([
             'post_title'   => "সায়মন বিচ রিসোর্ট - কক্সবাজার (Sayeman Beach Resort)",
             'post_content' => 'কলাতলী সমুদ্র সৈকতে সরাসরি ওশান-ভিউ সহ কক্সবাজারের অন্যতম ঐতিহ্যবাহী ও লাক্সারি ৫-স্টার রিসোর্ট। ইনফিনিটি সুইমিং পুল, বিশ্বমানের স্পা ও সি-ফুড ডাইনিংয়ের সেরা অভিজ্ঞতা।',
             'post_status'  => 'publish',
@@ -384,7 +413,7 @@ class Seeder
             update_post_meta($hotel3Id, '_tourivo_check_out_time', '12:00');
 
             // Room 3.1: Sea View Deluxe Room
-            $room5 = wp_insert_post([
+            $room5 = self::insertDemoPost([
                 'post_title'   => 'সি ভিউ ডিলাক্স রুম (Sea View Deluxe)',
                 'post_content' => 'সরাসরি বঙ্গোপসাগরের ঢেউ দেখার মতো প্রাইভেট বারান্দা, এসি, বাথটাব এবং কিং বেড সমৃদ্ধ প্রিমিয়াম রুম।',
                 'post_status'  => 'publish',
@@ -403,7 +432,7 @@ class Seeder
             }
 
             // Room 3.2: Ocean Front Presidential Suite
-            $room6 = wp_insert_post([
+            $room6 = self::insertDemoPost([
                 'post_title'   => 'ওশান ফ্রন্ট প্যানোরামিক স্যুইট (Ocean Suite)',
                 'post_content' => 'বিশাল লিভিং রুম, ডাইনিং স্পেস ও ১৮০ ডিগ্রি সমুদ্রের দৃশ্য সহ সর্বাধুনিক লাক্সারি স্যুইট।',
                 'post_status'  => 'publish',
@@ -424,7 +453,7 @@ class Seeder
         }
 
         // Hotel 4: Meghpolli Resort (Sajek Valley, Bangladesh)
-        $hotel4Id = wp_insert_post([
+        $hotel4Id = self::insertDemoPost([
             'post_title'   => 'মেঘপল্লী রিসোর্ট - সাজেক ভ্যালি (Meghpolli Resort Sajek)',
             'post_content' => 'সাজেক ভ্যালির সর্বোচ্চ চূড়ায় অবস্থিত প্রিমিয়াম ইকো-রিসোর্ট। প্রতিটি রুমের সুবিশাল ব্যালকনি থেকে মেঘের ভেলা স্পর্শ করার এবং সূর্যোদয়ের মায়াবী দৃশ্য অবলোকনের অনন্য অভিজ্ঞতা।',
             'post_status'  => 'publish',
@@ -443,7 +472,7 @@ class Seeder
             update_post_meta($hotel4Id, '_tourivo_check_out_time', '11:00');
 
             // Room 4.1: Cloud View Wooden Cottage
-            $room7 = wp_insert_post([
+            $room7 = self::insertDemoPost([
                 'post_title'   => 'ক্লাউড ভিউ উডেন কটেজ (Cloud View Cottage)',
                 'post_content' => 'সেগুন ও বাঁশের প্রাকৃতিক নকশায় নির্মিত প্রিমিয়াম কাপল কটেজ। সাথে রয়েছে মেঘের প্যানোরামিক ভিউ সহ প্রাইভেট বারান্দা।',
                 'post_status'  => 'publish',
@@ -462,7 +491,7 @@ class Seeder
             }
 
             // Room 4.2: VIP Family Cloud Suite
-            $room8 = wp_insert_post([
+            $room8 = self::insertDemoPost([
                 'post_title'   => 'ভিআইপি ফ্যামিলি ক্লাউড স্যুইট (VIP Family Suite)',
                 'post_content' => 'পাহাড় ও মেঘের ১৮০ ডিগ্রি ভিউ সহ বিশাল পারিবারিক কটেজ স্যুইট। একসাথে ৪-৫ জনের আরামদায়ক থাকার সুবিধা।',
                 'post_status'  => 'publish',
@@ -505,5 +534,21 @@ class Seeder
 
         $inserted = wp_insert_term($termName, $taxonomy);
         return is_array($inserted) ? (int) $inserted['term_id'] : 0;
+    }
+
+    /**
+     * Insert a demo post and tag it with _tourivo_demo=1.
+     *
+     * @param array<string, mixed> $args
+     * @return int Post ID or 0 on failure.
+     */
+    protected static function insertDemoPost(array $args): int
+    {
+        $postId = wp_insert_post($args);
+        if ($postId && !is_wp_error($postId)) {
+            update_post_meta((int) $postId, '_tourivo_demo', '1');
+            return (int) $postId;
+        }
+        return 0;
     }
 }

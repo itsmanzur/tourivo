@@ -78,6 +78,17 @@ Tourivo uses custom relational database tables (`wp_tourivo_inventories`) with M
 
 ---
 
+== External Services ==
+
+Tourivo contains an optional Outbound Webhook Integration feature that connects to user-configured external endpoints (e.g. Zapier, Make.com, n8n, custom CRMs, Slack).
+
+* **What data is sent:** Traveler full name, email address, phone number, booked tour or room item details (title, dates, guest counts), booking reference code, payment status, financial totals, and inquiry message content.
+* **Where data is sent:** Exclusively to the HTTPS endpoint URL configured by the site administrator in Tourivo Settings.
+* **When data is sent:** Automatically when a new booking is created (`booking.created`), when a booking status changes (`booking.status_changed`), or when a traveler inquiry is submitted (`inquiry.created`), as well as manually when clicking "Send Test Ping Payload" in settings.
+* **Privacy & Control:** This service is completely **optional and disabled by default**. No data is transmitted to external endpoints unless a webhook URL is explicitly configured and enabled in plugin settings.
+
+---
+
 == Screenshots ==
 
 1. Tourivo Admin Dashboard with Live Booking KPIs and Quick Actions.
@@ -116,3 +127,8 @@ Security hardening for client IP resolution and booking inventory state manageme
 
 = 1.0.0 =
 Initial release of Tourivo.
+
+== Credits ==
+
+* **Hind Siliguri Font** by Indian Type Foundry (https://github.com/itfoundry/hind-siliguri), licensed under SIL Open Font License 1.1 (assets/fonts/OFL.txt).
+

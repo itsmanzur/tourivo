@@ -24,6 +24,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         // Core application bindings
+        $this->container->singleton(\Tourivo\Services\WebhookService::class, fn () => new \Tourivo\Services\WebhookService());
     }
 
     public function boot(): void
@@ -32,7 +33,8 @@ class AppServiceProvider extends ServiceProvider
         new ReviewService();
 
         // Initialize Webhook Dispatcher
-        new \Tourivo\Services\WebhookService();
+        $webhookService = $this->container->get(\Tourivo\Services\WebhookService::class);
+        $webhookService->register();
 
         // Register WP-CLI command if CLI environment
         if (defined('WP_CLI') && WP_CLI && class_exists('\WP_CLI')) {

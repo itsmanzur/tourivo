@@ -104,18 +104,7 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         $locale = ('bn' === $lang) ? 'bn_BD' : 'en_US';
-
-        if (function_exists('switch_to_locale')) {
-            switch_to_locale($locale);
-        }
-
-        unload_textdomain('tourivo');
-        if ('en_US' !== $locale && 'en' !== $locale) {
-            $bundledFile = TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo';
-            if (file_exists($bundledFile)) {
-                load_textdomain('tourivo', $bundledFile);
-            }
-        }
+        tourivo_load_plugin_textdomain($locale);
     }
 
     /**
@@ -213,7 +202,7 @@ class AdminServiceProvider extends ServiceProvider
             $cssVer
         );
 
-        if (function_exists('tourivo_current_locale') && tourivo_current_locale() === 'bn_BD') {
+        if (function_exists('tourivo_is_bengali') && tourivo_is_bengali()) {
             wp_enqueue_style(
                 'tourivo-bengali-font',
                 TOURIVO_PLUGIN_URL . 'assets/css/tourivo-bengali-font.css',
@@ -376,133 +365,14 @@ class AdminServiceProvider extends ServiceProvider
             wp_send_json_error(['message' => __('Invalid booking ID or status.', 'tourivo')], 400);
         }
 
-        global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $oldBooking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
+        $bookingService = Container::getInstance()->get(\Tourivo\Services\BookingService::class);
+        $result = $bookingService->changeStatus($bookingId, $status, ['source' => 'admin_ajax']);
 
-        if (!$oldBooking) {
-            wp_send_json_error(['message' => __('Booking not found.', 'tourivo')], 404);
+        if (!$result['success']) {
+            wp_send_json_error(['message' => $result['message']], 400);
         }
 
-        $oldStatus = (string) $oldBooking->booking_status;
-
-        if ($oldStatus === $status) {
-            wp_send_json_success(['message' => __('Booking status unchanged.', 'tourivo')]);
-        }
-
-        $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
-        $lineItems = (array) $wpdb->get_results($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $inventoryService = Container::getInstance()->get(\Tourivo\Services\InventoryService::class);
-
-        // Case 1: Reactivating from cancelled -> Try to commit inventory first
-        if ($oldStatus === 'cancelled' && $status !== 'cancelled') {
-            $committedItems = [];
-            $allCommitted = true;
-
-            if (!empty($lineItems)) {
-                foreach ($lineItems as $item) {
-                    $committed = $inventoryService->commitBooking(
-                        (int) $item->item_id,
-                        (string) $item->item_type,
-                        substr((string) $item->check_in, 0, 10),
-                        !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
-                        (string) ($item->time_slot ?: 'all_day'),
-                        (int) $item->quantity
-                    );
-
-                    if (!$committed) {
-                        $allCommitted = false;
-                        break;
-                    }
-                    $committedItems[] = $item;
-                }
-            }
-
-            if (!$allCommitted) {
-                // Rollback any successfully committed items in this loop
-                foreach ($committedItems as $cItem) {
-                    $inventoryService->releaseBookingInventory(
-                        (int) $cItem->item_id,
-                        (string) $cItem->item_type,
-                        substr((string) $cItem->check_in, 0, 10),
-                        !empty($cItem->check_out) ? substr((string) $cItem->check_out, 0, 10) : null,
-                        (string) ($cItem->time_slot ?: 'all_day'),
-                        (int) $cItem->quantity
-                    );
-                }
-                wp_send_json_error(['message' => __('Cannot reactivate booking. Required inventory spots are no longer available.', 'tourivo')], 409);
-            }
-
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-            $updated = $wpdb->update(
-                $bookingsTable,
-                ['booking_status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')],
-                ['id' => $bookingId],
-                ['%s', '%s'],
-                ['%d']
-            );
-
-            if ($updated === false) {
-                // Revert committed inventory on DB error
-                foreach ($committedItems as $cItem) {
-                    $inventoryService->releaseBookingInventory(
-                        (int) $cItem->item_id,
-                        (string) $cItem->item_type,
-                        substr((string) $cItem->check_in, 0, 10),
-                        !empty($cItem->check_out) ? substr((string) $cItem->check_out, 0, 10) : null,
-                        (string) ($cItem->time_slot ?: 'all_day'),
-                        (int) $cItem->quantity
-                    );
-                }
-                wp_send_json_error(['message' => __('Database update error.', 'tourivo')]);
-            }
-        } else {
-            // Case 2: Standard transition or Cancelling
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-            $updated = $wpdb->update(
-                $bookingsTable,
-                ['booking_status' => $status, 'updated_at' => gmdate('Y-m-d H:i:s')],
-                ['id' => $bookingId],
-                ['%s', '%s'],
-                ['%d']
-            );
-
-            if ($updated === false) {
-                wp_send_json_error(['message' => __('Database update error.', 'tourivo')]);
-            }
-
-            // If cancelled, release inventory once
-            if ($status === 'cancelled' && $oldStatus !== 'cancelled') {
-                if (!empty($lineItems)) {
-                    foreach ($lineItems as $item) {
-                        $inventoryService->releaseBookingInventory(
-                            (int) $item->item_id,
-                            (string) $item->item_type,
-                            substr((string) $item->check_in, 0, 10),
-                            !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
-                            (string) ($item->time_slot ?: 'all_day'),
-                            (int) $item->quantity
-                        );
-                    }
-                }
-            }
-        }
-
-        LogService::log(
-            $bookingId,
-            'status_changed',
-            sprintf(
-                /* translators: 1: Old status, 2: New status */
-                __('Booking status changed from %1$s to %2$s', 'tourivo'),
-                ucfirst($oldStatus),
-                ucfirst($status)
-            )
-        );
-        do_action('tourivo/booking_status_changed', $bookingId, $oldStatus, $status);
-
-        wp_send_json_success(['message' => __('Booking status updated successfully.', 'tourivo')]);
+        wp_send_json_success(['message' => $result['message']]);
     }
 
     /**
@@ -674,7 +544,7 @@ class AdminServiceProvider extends ServiceProvider
         $url    = isset($_POST['url']) ? esc_url_raw(wp_unslash($_POST['url'])) : '';
         $secret = isset($_POST['secret']) ? sanitize_text_field(wp_unslash($_POST['secret'])) : '';
 
-        $webhookService = new \Tourivo\Services\WebhookService();
+        $webhookService = Container::getInstance()->get(\Tourivo\Services\WebhookService::class);
         $res = $webhookService->sendTestWebhook($url, $secret);
 
         if ($res['success']) {

@@ -115,6 +115,8 @@ class SetupWizard
                                 <select id="wz_currency_pos" name="currency_position" class="wizard-select">
                                     <option value="left" <?php selected($currencyPos, 'left'); ?>><?php esc_html_e('Left ($100)', 'tourivo'); ?></option>
                                     <option value="right" <?php selected($currencyPos, 'right'); ?>><?php esc_html_e('Right (100$)', 'tourivo'); ?></option>
+                                    <option value="left_space" <?php selected($currencyPos, 'left_space'); ?>><?php esc_html_e('Left with space ($ 100)', 'tourivo'); ?></option>
+                                    <option value="right_space" <?php selected($currencyPos, 'right_space'); ?>><?php esc_html_e('Right with space (100 $)', 'tourivo'); ?></option>
                                 </select>
                             </div>
                         </div>
@@ -687,9 +689,15 @@ class SetupWizard
 
         $agencyName     = isset($_POST['agency_name']) ? sanitize_text_field(wp_unslash((string) $_POST['agency_name'])) : get_bloginfo('name');
         $notifyEmail    = isset($_POST['notify_email']) ? sanitize_email(wp_unslash((string) $_POST['notify_email'])) : get_option('admin_email');
-        $currency       = isset($_POST['currency']) ? sanitize_text_field(wp_unslash((string) $_POST['currency'])) : 'USD';
+        
+        $rawCurrency    = isset($_POST['currency']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['currency']))) : 'USD';
+        $currency       = preg_match('/^[A-Z]{3}$/', $rawCurrency) ? $rawCurrency : 'USD';
+
         $currencySymbol = isset($_POST['currency_symbol']) ? sanitize_text_field(wp_unslash((string) $_POST['currency_symbol'])) : '$';
-        $currencyPos    = isset($_POST['currency_position']) ? sanitize_text_field(wp_unslash((string) $_POST['currency_position'])) : 'left';
+
+        $allowedPositions = ['left', 'right', 'left_space', 'right_space'];
+        $rawPosition      = isset($_POST['currency_position']) ? sanitize_text_field(wp_unslash((string) $_POST['currency_position'])) : 'left';
+        $currencyPos      = in_array($rawPosition, $allowedPositions, true) ? $rawPosition : 'left';
 
         $currentSettings = get_option('tourivo_settings', Config::getDefaults());
         $merged = array_merge($currentSettings, [
@@ -749,7 +757,16 @@ class SetupWizard
             ],
         ];
 
+        $pageSettingMap = [
+            'track'    => 'lookup_page_id',
+            'wishlist' => 'wishlist_page_id',
+            'tours'    => 'tours_page_id',
+            'hotels'   => 'hotels_page_id',
+        ];
+
+        $currentSettings = get_option('tourivo_settings', Config::getDefaults());
         $created = [];
+
         foreach ($requested as $key) {
             if (!isset($pageDefinitions[$key])) {
                 continue;
@@ -768,12 +785,19 @@ class SetupWizard
                 ]);
                 if ($pageId && !is_wp_error($pageId)) {
                     $created[$key] = get_permalink($pageId);
+                    if (isset($pageSettingMap[$key])) {
+                        $currentSettings[$pageSettingMap[$key]] = (int) $pageId;
+                    }
                 }
             } else {
                 $created[$key] = get_permalink($existing->ID);
+                if (isset($pageSettingMap[$key])) {
+                    $currentSettings[$pageSettingMap[$key]] = (int) $existing->ID;
+                }
             }
         }
 
+        update_option('tourivo_settings', $currentSettings);
         wp_send_json_success(['pages' => $created]);
     }
 

@@ -154,18 +154,18 @@ class BookingLookupShortcode
         $createdFormatted = gmdate('M d, Y H:i', strtotime((string) $booking->created_at));
 
         wp_send_json_success([
-            'booking_code'    => esc_html($booking->booking_code),
-            'customer_name'   => esc_html($booking->customer_name),
-            'customer_email'  => esc_html($booking->customer_email),
-            'created_at'      => esc_html($createdFormatted),
-            'booking_status'  => esc_html(ucfirst($bookingStatus)),
+            'booking_code'    => (string) $booking->booking_code,
+            'customer_name'   => (string) $booking->customer_name,
+            'customer_email'  => (string) $booking->customer_email,
+            'created_at'      => $createdFormatted,
+            'booking_status'  => ucfirst($bookingStatus),
             'status_color'    => $statusColors[$bookingStatus] ?? '#64748b',
-            'payment_status'  => esc_html(ucfirst($paymentStatus)),
+            'payment_status'  => ucfirst($paymentStatus),
             'payment_color'   => $paymentColors[$paymentStatus] ?? '#64748b',
-            'payment_method'  => esc_html(ucwords(str_replace('_', ' ', (string) $booking->payment_method))),
-            'total_amount'    => esc_html(Money::format((float) $booking->total_amount, $currencySymbol)),
+            'payment_method'  => ucwords(str_replace('_', ' ', (string) $booking->payment_method)),
+            'total_amount'    => Money::format((float) $booking->total_amount, $currencySymbol),
             'items_html'      => $itemsHtml,
-            'voucher_url'     => esc_url($voucherUrl),
+            'voucher_url'     => esc_url_raw($voucherUrl),
         ]);
     }
 

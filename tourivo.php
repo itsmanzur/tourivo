@@ -107,23 +107,7 @@ add_filter(
 );
 
 add_action('init', static function (): void {
-    $locale = tourivo_current_locale();
-
-    if ('en_US' === $locale || 'en' === $locale) {
-        return;
-    }
-
-    $wporgFile   = WP_LANG_DIR . '/plugins/tourivo-' . $locale . '.mo';
-    $bundledFile = TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo';
-
-    if (!file_exists($wporgFile) && file_exists($bundledFile)) {
-        load_textdomain('tourivo', $bundledFile);
-    } elseif (file_exists($wporgFile)) {
-        load_textdomain('tourivo', $wporgFile);
-    } else {
-        // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
-        load_plugin_textdomain('tourivo', false, dirname(plugin_basename(__FILE__)) . '/languages');
-    }
+    tourivo_load_plugin_textdomain();
 }, 1);
 
 // 8. Bootstrap Plugin on plugins_loaded

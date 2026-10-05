@@ -391,3 +391,35 @@ if (!function_exists('tourivo_is_bengali')) {
     }
 }
 
+if (!function_exists('tourivo_load_plugin_textdomain')) {
+    /**
+     * Centralized loader for Tourivo textdomain with language switcher & WP.org fallback.
+     *
+     * @param string|null $customLocale Optional specific locale to load.
+     * @return void
+     */
+    function tourivo_load_plugin_textdomain(?string $customLocale = null): void
+    {
+        $locale = $customLocale ?: tourivo_current_locale();
+
+        unload_textdomain('tourivo');
+
+        if ('en_US' === $locale || 'en' === $locale) {
+            return;
+        }
+
+        $wporgFile   = WP_LANG_DIR . '/plugins/tourivo-' . $locale . '.mo';
+        $bundledFile = TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo';
+
+        if (file_exists($bundledFile)) {
+            load_textdomain('tourivo', $bundledFile);
+        } elseif (file_exists($wporgFile)) {
+            load_textdomain('tourivo', $wporgFile);
+        } else {
+            // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
+            load_plugin_textdomain('tourivo', false, dirname(plugin_basename(TOURIVO_PLUGIN_FILE)) . '/languages');
+        }
+    }
+}
+
+

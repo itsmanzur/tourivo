@@ -151,30 +151,13 @@ class TourivoCli extends WP_CLI_Command
                     return;
                 }
 
-                $validStatuses = ['pending', 'confirmed', 'completed', 'cancelled', 'on_hold'];
-                if (!in_array($newStatus, $validStatuses, true)) {
-                    /* translators: 1: Invalid status string, 2: Comma-separated list of valid statuses */
-                    WP_CLI::error(sprintf(__('Invalid status "%1$s". Valid statuses are: %2$s', 'tourivo'), $newStatus, implode(', ', $validStatuses)));
-                    return;
-                }
+                $bookingService = \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\BookingService::class);
+                $result = $bookingService->changeStatus($id, $newStatus, ['source' => 'wp_cli']);
 
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $old = $wpdb->get_var($wpdb->prepare("SELECT booking_status FROM {$wpdb->prefix}tourivo_bookings WHERE id = %d", $id));
-                if (!$old) {
-                    /* translators: %d: Numeric booking ID */
-                    WP_CLI::error(sprintf(__('Booking #%d not found.', 'tourivo'), $id));
-                    return;
-                }
-
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-                $updated = $wpdb->update($table, ['booking_status' => $newStatus, 'updated_at' => current_time('mysql', 1)], ['id' => $id], ['%s', '%s'], ['%d']);
-
-                if ($updated !== false) {
-                    do_action('tourivo/booking_status_changed', $id, $old, $newStatus);
-                    /* translators: 1: Booking ID, 2: Old status, 3: New status */
-                    WP_CLI::success(sprintf(__('Booking #%1$d status updated from "%2$s" to "%3$s".', 'tourivo'), $id, $old, $newStatus));
+                if ($result['success']) {
+                    WP_CLI::success($result['message']);
                 } else {
-                    WP_CLI::error(__('Failed to update booking status in database.', 'tourivo'));
+                    WP_CLI::error($result['message']);
                 }
                 break;
 

@@ -35,6 +35,19 @@ class SeoService
     }
 
     /**
+     * Check if a third-party SEO plugin is active (Yoast, Rank Math, AIOSEO).
+     *
+     * @return bool
+     */
+    public function hasThirdPartySeoPlugin(): bool
+    {
+        return defined('WPSEO_VERSION')
+            || defined('RANK_MATH_VERSION')
+            || defined('AIOSEO_VERSION')
+            || defined('AIOSEO_DIR');
+    }
+
+    /**
      * Render Schema.org JSON-LD structured data in <head>.
      *
      * @return void
@@ -45,7 +58,10 @@ class SeoService
             return;
         }
 
-        if (!apply_filters('tourivo/enable_schema', true)) {
+        $defaultEnable = !$this->hasThirdPartySeoPlugin();
+        $enableSchema  = (bool) apply_filters('tourivo/enable_schema', $defaultEnable);
+
+        if (!$enableSchema) {
             return;
         }
 
@@ -66,7 +82,7 @@ class SeoService
 
         echo "\n<!-- Tourivo Schema.org JSON-LD Structured Data -->\n";
         echo '<script type="application/ld+json">' . "\n";
-        echo wp_json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n";
+        echo wp_json_encode($schema, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT) . "\n";
         echo "</script>\n<!-- /Tourivo Schema -->\n\n";
     }
 
@@ -84,12 +100,10 @@ class SeoService
             return [];
         }
 
-        $currency = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
-        $siteName = get_bloginfo('name');
-        $siteUrl  = home_url();
-
-        $destinations = $tour->getDestinations();
-        $destNames    = !empty($destinations) ? array_map(static fn ($t) => $t->name, $destinations) : [];
+        $currency    = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
+        $siteName    = get_bloginfo('name');
+        $siteUrl     = home_url();
+        $touristType = (string) apply_filters('tourivo/seo/tourist_type', 'Leisure', $postId, $tour);
 
         $schema = [
             '@context'      => 'https://schema.org',
@@ -98,7 +112,7 @@ class SeoService
             'name'          => get_the_title($postId),
             'description'   => wp_strip_all_tags($post->post_excerpt ?: wp_trim_words($post->post_content, 35)),
             'url'           => get_permalink($postId),
-            'touristType'   => !empty($destNames) ? implode(', ', $destNames) : 'Leisure',
+            'touristType'   => $touristType,
             'provider'      => [
                 '@type' => 'Organization',
                 'name'  => $siteName,
@@ -122,19 +136,25 @@ class SeoService
             }
         }
 
-        // Itinerary Days
+        // Itinerary ItemList of TouristAttraction
         $itinerary = $tour->getItinerary();
         if (!empty($itinerary)) {
             $itineraryList = [];
+            $pos = 1;
             foreach ($itinerary as $step) {
                 $itineraryList[] = [
-                    '@type'       => 'Day',
-                    'name'        => $step['title'] ?? 'Day ' . ($step['day'] ?? ''),
-                    'description' => $step['desc'] ?? '',
+                    '@type'       => 'ListItem',
+                    'position'    => $pos++,
+                    'item'        => [
+                        '@type'       => 'TouristAttraction',
+                        'name'        => $step['title'] ?? ('Day ' . ($step['day'] ?? '')),
+                        'description' => $step['desc'] ?? '',
+                    ],
                 ];
             }
             $schema['itinerary'] = [
                 '@type'           => 'ItemList',
+                'numberOfItems'   => count($itineraryList),
                 'itemListElement' => $itineraryList,
             ];
         }
@@ -268,7 +288,10 @@ class SeoService
             return;
         }
 
-        if (!apply_filters('tourivo/enable_opengraph', true)) {
+        $defaultEnable = !$this->hasThirdPartySeoPlugin();
+        $enableOg      = (bool) apply_filters('tourivo/enable_og', apply_filters('tourivo/enable_opengraph', $defaultEnable));
+
+        if (!$enableOg) {
             return;
         }
 

@@ -373,4 +373,170 @@ class BookingService
             'message'      => sprintf(__('Booking created successfully! Your booking code is #%s.', 'tourivo'), $bookingCode),
         ];
     }
+
+    /**
+     * Change booking status with atomic inventory transitions, logging, and hooks.
+     *
+     * @param int                  $bookingId
+     * @param string               $newStatus
+     * @param array<string, mixed> $context
+     * @return array{success: bool, message: string}
+     */
+    public function changeStatus(int $bookingId, string $newStatus, array $context = []): array
+    {
+        if ($bookingId <= 0) {
+            return ['success' => false, 'message' => __('Invalid booking ID.', 'tourivo')];
+        }
+
+        $validStatuses = ['pending', 'confirmed', 'completed', 'cancelled', 'on_hold'];
+        if (!in_array($newStatus, $validStatuses, true)) {
+            /* translators: 1: Invalid status string, 2: Comma-separated list of valid statuses */
+            return ['success' => false, 'message' => sprintf(__('Invalid status "%1$s". Valid statuses are: %2$s', 'tourivo'), $newStatus, implode(', ', $validStatuses))];
+        }
+
+        if (!$this->db) {
+            return ['success' => false, 'message' => __('Database connection not available.', 'tourivo')];
+        }
+
+        $bookingsTable = $this->db->prefix . 'tourivo_bookings';
+        $itemsTable    = $this->db->prefix . 'tourivo_booking_items';
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $booking = $this->db->get_row($this->db->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if (!$booking) {
+            return ['success' => false, 'message' => __('Booking not found.', 'tourivo')];
+        }
+
+        $oldStatus = (string) $booking->booking_status;
+
+        // If old and new status are the same, return early (no-op)
+        if ($oldStatus === $newStatus) {
+            return ['success' => true, 'message' => __('Booking status unchanged.', 'tourivo')];
+        }
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $lineItems = (array) $this->db->get_results($this->db->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        // Case 1: Reactivating from cancelled -> Try to commit inventory first
+        if ($oldStatus === 'cancelled' && $newStatus !== 'cancelled') {
+            $committedItems = [];
+            $allCommitted = true;
+
+            if (!empty($lineItems)) {
+                foreach ($lineItems as $item) {
+                    $committed = $this->inventoryService->commitBooking(
+                        (int) $item->item_id,
+                        (string) $item->item_type,
+                        substr((string) $item->check_in, 0, 10),
+                        !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
+                        (string) ($item->time_slot ?: 'all_day'),
+                        (int) $item->quantity
+                    );
+
+                    if (!$committed) {
+                        $allCommitted = false;
+                        break;
+                    }
+                    $committedItems[] = $item;
+                }
+            }
+
+            if (!$allCommitted) {
+                // Rollback any successfully committed items in this loop
+                foreach ($committedItems as $cItem) {
+                    $this->inventoryService->releaseBookingInventory(
+                        (int) $cItem->item_id,
+                        (string) $cItem->item_type,
+                        substr((string) $cItem->check_in, 0, 10),
+                        !empty($cItem->check_out) ? substr((string) $cItem->check_out, 0, 10) : null,
+                        (string) ($cItem->time_slot ?: 'all_day'),
+                        (int) $cItem->quantity
+                    );
+                }
+                return ['success' => false, 'message' => __('Cannot reactivate booking. Required inventory spots are no longer available.', 'tourivo')];
+            }
+
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $updated = $this->db->update(
+                $bookingsTable,
+                ['booking_status' => $newStatus, 'updated_at' => gmdate('Y-m-d H:i:s')],
+                ['id' => $bookingId],
+                ['%s', '%s'],
+                ['%d']
+            );
+
+            if ($updated === false) {
+                // Revert committed inventory on DB error
+                foreach ($committedItems as $cItem) {
+                    $this->inventoryService->releaseBookingInventory(
+                        (int) $cItem->item_id,
+                        (string) $cItem->item_type,
+                        substr((string) $cItem->check_in, 0, 10),
+                        !empty($cItem->check_out) ? substr((string) $cItem->check_out, 0, 10) : null,
+                        (string) ($cItem->time_slot ?: 'all_day'),
+                        (int) $cItem->quantity
+                    );
+                }
+                return ['success' => false, 'message' => __('Database update error while changing booking status.', 'tourivo')];
+            }
+        } else {
+            // Case 2: Standard transition or Cancelling
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+            $updated = $this->db->update(
+                $bookingsTable,
+                ['booking_status' => $newStatus, 'updated_at' => gmdate('Y-m-d H:i:s')],
+                ['id' => $bookingId],
+                ['%s', '%s'],
+                ['%d']
+            );
+
+            if ($updated === false) {
+                return ['success' => false, 'message' => __('Database update error while changing booking status.', 'tourivo')];
+            }
+
+            // If cancelling from an active state, release inventory once
+            if ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
+                if (!empty($lineItems)) {
+                    foreach ($lineItems as $item) {
+                        $this->inventoryService->releaseBookingInventory(
+                            (int) $item->item_id,
+                            (string) $item->item_type,
+                            substr((string) $item->check_in, 0, 10),
+                            !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
+                            (string) ($item->time_slot ?: 'all_day'),
+                            (int) $item->quantity
+                        );
+                    }
+                }
+            }
+        }
+
+        // Invalidate cache
+        wp_cache_delete('booking_' . $bookingId, 'tourivo');
+        if (!empty($booking->booking_code)) {
+            wp_cache_delete('booking_code_' . $booking->booking_code, 'tourivo');
+        }
+
+        LogService::log(
+            $bookingId,
+            'status_changed',
+            sprintf(
+                /* translators: 1: Old status, 2: New status */
+                __('Booking status changed from %1$s to %2$s', 'tourivo'),
+                ucfirst($oldStatus),
+                ucfirst($newStatus)
+            )
+        );
+
+        do_action('tourivo/booking_status_changed', $bookingId, $oldStatus, $newStatus);
+
+        return [
+            'success' => true,
+            /* translators: 1: Old status, 2: New status */
+            'message' => sprintf(__('Booking status changed from %1$s to %2$s successfully.', 'tourivo'), ucfirst($oldStatus), ucfirst($newStatus)),
+        ];
+    }
 }

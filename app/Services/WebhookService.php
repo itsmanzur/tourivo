@@ -21,14 +21,38 @@ if (!defined('ABSPATH')) {
 class WebhookService
 {
     /**
-     * WebhookService constructor.
+     * Register lifecycle event hooks and retry cron action.
+     *
+     * @return void
      */
-    public function __construct()
+    public function register(): void
     {
-        // Hook into core lifecycle events
         add_action('tourivo/booking_created', [$this, 'onBookingCreated'], 20, 2);
         add_action('tourivo/booking_status_changed', [$this, 'onBookingStatusChanged'], 20, 3);
         add_action('tourivo/inquiry_created', [$this, 'onInquiryCreated'], 20, 2);
+        add_action('tourivo_process_webhook_retry', [$this, 'handleRetryCron'], 10, 4);
+    }
+
+    /**
+     * Validate webhook URL to ensure HTTPS scheme (HTTP allowed only via filter).
+     *
+     * @param string $url
+     * @return bool
+     */
+    public function isValidUrl(string $url): bool
+    {
+        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
+            return false;
+        }
+
+        $scheme = (string) wp_parse_url($url, PHP_URL_SCHEME);
+        $allowHttp = (bool) apply_filters('tourivo/webhook_allow_http', false, $url);
+
+        if ($scheme === 'https' || ($scheme === 'http' && $allowHttp)) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -112,16 +136,17 @@ class WebhookService
     }
 
     /**
-     * Dispatch an outbound webhook event.
+     * Dispatch an outbound webhook event with logging and exponential retry.
      *
-     * @param string               $event Event name (e.g. 'booking.created').
-     * @param array<string, mixed> $data  Event payload data.
-     * @return bool True if dispatched or false if skipped/disabled.
+     * @param string               $event   Event name (e.g. 'booking.created').
+     * @param array<string, mixed> $data    Event payload data.
+     * @param int                  $attempt Current delivery attempt counter (1-3).
+     * @return bool True if successfully delivered, false otherwise.
      */
-    public function dispatch(string $event, array $data): bool
+    public function dispatch(string $event, array $data, int $attempt = 1): bool
     {
         $webhookUrl = trim((string) Config::get('webhook_url', ''));
-        if (empty($webhookUrl) || !filter_var($webhookUrl, FILTER_VALIDATE_URL)) {
+        if (!$this->isValidUrl($webhookUrl)) {
             return false;
         }
 
@@ -154,25 +179,107 @@ class WebhookService
         $signature = !empty($secret) ? hash_hmac('sha256', $jsonPayload, $secret) : '';
 
         $headers = [
-            'Content-Type'        => 'application/json; charset=utf-8',
-            'X-Tourivo-Event'     => $event,
-            'User-Agent'          => 'Tourivo-Webhook/' . TOURIVO_VERSION,
+            'Content-Type'    => 'application/json; charset=utf-8',
+            'X-Tourivo-Event' => $event,
+            'User-Agent'      => 'Tourivo-Webhook/' . TOURIVO_VERSION,
         ];
 
         if (!empty($signature)) {
             $headers['X-Tourivo-Signature'] = $signature;
         }
 
-        // Non-blocking async POST for seamless traveler checkout speed
-        wp_remote_post($webhookUrl, [
-            'timeout'     => 5,
-            'blocking'    => false,
+        $bookingId = (int) ($data['booking_id'] ?? 0);
+
+        // Safe remote post for security
+        $response = wp_safe_remote_post($webhookUrl, [
+            'timeout'     => 10,
+            'blocking'    => true,
             'headers'     => $headers,
             'body'        => $jsonPayload,
             'data_format' => 'body',
         ]);
 
-        return true;
+        $isSuccess = false;
+        $statusCode = 0;
+        $errorMsg   = '';
+
+        if (is_wp_error($response)) {
+            $errorMsg = $response->get_error_message();
+        } else {
+            $statusCode = (int) wp_remote_retrieve_response_code($response);
+            $isSuccess  = ($statusCode >= 200 && $statusCode < 300);
+            if (!$isSuccess) {
+                $errorMsg = 'HTTP ' . $statusCode;
+            }
+        }
+
+        // Log dispatch outcome in LogService
+        if ($bookingId > 0) {
+            if ($isSuccess) {
+                LogService::log(
+                    $bookingId,
+                    'webhook_dispatched',
+                    sprintf(
+                        /* translators: 1: Webhook event name, 2: HTTP status code, 3: Delivery attempt number */
+                        __('Webhook [%1$s] delivered successfully (HTTP %2$d, attempt %3$d).', 'tourivo'),
+                        $event,
+                        $statusCode,
+                        $attempt
+                    )
+                );
+            } else {
+                LogService::log(
+                    $bookingId,
+                    'webhook_failed',
+                    sprintf(
+                        /* translators: 1: Webhook event name, 2: Error message, 3: Delivery attempt number */
+                        __('Webhook [%1$s] delivery failed (Reason: %2$s, attempt %3$d).', 'tourivo'),
+                        $event,
+                        $errorMsg,
+                        $attempt
+                    )
+                );
+            }
+        }
+
+        // Handle exponential retry up to 3 attempts
+        if (!$isSuccess && $attempt < 3) {
+            $nextAttempt = $attempt + 1;
+            // Delay: 120s for attempt 2, 300s for attempt 3
+            $delay = ($nextAttempt === 2) ? 120 : 300;
+
+            if (function_exists('as_schedule_single_action')) {
+                as_schedule_single_action(time() + $delay, 'tourivo_process_webhook_retry', [
+                    'event'     => $event,
+                    'data'      => $data,
+                    'attempt'   => $nextAttempt,
+                    'targetUrl' => $webhookUrl,
+                ]);
+            } else {
+                wp_schedule_single_event(time() + $delay, 'tourivo_process_webhook_retry', [
+                    $event,
+                    $data,
+                    $nextAttempt,
+                    $webhookUrl,
+                ]);
+            }
+        }
+
+        return $isSuccess;
+    }
+
+    /**
+     * Cron handler for webhook exponential retries.
+     *
+     * @param string               $event
+     * @param array<string, mixed> $data
+     * @param int                  $attempt
+     * @param string               $targetUrl
+     * @return void
+     */
+    public function handleRetryCron(string $event, array $data, int $attempt, string $targetUrl = ''): void
+    {
+        $this->dispatch($event, $data, $attempt);
     }
 
     /**
@@ -184,8 +291,8 @@ class WebhookService
      */
     public function sendTestWebhook(string $url, string $secret = ''): array
     {
-        if (empty($url) || !filter_var($url, FILTER_VALIDATE_URL)) {
-            return ['success' => false, 'message' => __('Invalid webhook URL format.', 'tourivo')];
+        if (!$this->isValidUrl($url)) {
+            return ['success' => false, 'message' => __('Invalid webhook URL format. HTTPS is required.', 'tourivo')];
         }
 
         $testPayload = [
@@ -212,7 +319,7 @@ class WebhookService
             $headers['X-Tourivo-Signature'] = $signature;
         }
 
-        $response = wp_remote_post($url, [
+        $response = wp_safe_remote_post($url, [
             'timeout'     => 10,
             'blocking'    => true,
             'headers'     => $headers,
@@ -237,3 +344,4 @@ class WebhookService
         ];
     }
 }
+
