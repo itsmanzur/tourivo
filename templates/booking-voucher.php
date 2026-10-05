@@ -350,14 +350,36 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
         <!-- Financial Summary -->
         <div class="financial-summary">
             <div class="summary-box">
-                <div class="summary-row">
-                    <span><?php esc_html_e('Subtotal:', 'tourivo'); ?></span>
-                    <span><?php echo esc_html(Money::format((float) $tourivoBooking->total_amount, $tourivoCurrency)); ?></span>
-                </div>
+                <?php
+                $subtotalAmt = (float) $tourivoBooking->total_amount - (float) ($tourivoBooking->tax_amount ?? 0) + (float) ($tourivoBooking->discount_amount ?? 0);
+                if ((float) ($tourivoBooking->discount_amount ?? 0) > 0 || (float) ($tourivoBooking->tax_amount ?? 0) > 0) : ?>
+                    <div class="summary-row">
+                        <span><?php esc_html_e('Subtotal:', 'tourivo'); ?></span>
+                        <span><?php echo esc_html(Money::format($subtotalAmt, $tourivoCurrency)); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if ((float) ($tourivoBooking->discount_amount ?? 0) > 0) : ?>
+                    <div class="summary-row" style="color: #15803d;">
+                        <span><?php esc_html_e('Discount:', 'tourivo'); ?></span>
+                        <span>-<?php echo esc_html(Money::format((float) $tourivoBooking->discount_amount, $tourivoCurrency)); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if ((float) ($tourivoBooking->tax_amount ?? 0) > 0) : ?>
+                    <div class="summary-row">
+                        <span><?php esc_html_e('Tax / VAT:', 'tourivo'); ?></span>
+                        <span><?php echo esc_html(Money::format((float) $tourivoBooking->tax_amount, $tourivoCurrency)); ?></span>
+                    </div>
+                <?php endif; ?>
                 <div class="summary-row total">
-                    <span><?php esc_html_e('Total Paid / Due:', 'tourivo'); ?></span>
+                    <span><?php esc_html_e('Total Amount:', 'tourivo'); ?></span>
                     <span><?php echo esc_html(Money::format((float) $tourivoBooking->total_amount, $tourivoCurrency)); ?></span>
                 </div>
+                <?php if ((float) ($tourivoBooking->due_amount ?? 0) > 0) : ?>
+                    <div class="summary-row" style="color: #b91c1c; font-weight: 600;">
+                        <span><?php esc_html_e('Amount Due:', 'tourivo'); ?></span>
+                        <span><?php echo esc_html(Money::format((float) $tourivoBooking->due_amount, $tourivoCurrency)); ?></span>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
 

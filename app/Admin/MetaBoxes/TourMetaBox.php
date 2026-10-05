@@ -47,6 +47,13 @@ class TourMetaBox extends MetaBox
         $latitude        = get_post_meta($post->ID, '_tourivo_latitude', true) ?: '';
         $longitude       = get_post_meta($post->ID, '_tourivo_longitude', true) ?: '';
 
+        // Child & Infant pricing fields
+        $childPriceType  = get_post_meta($post->ID, '_tourivo_child_price_type', true) ?: 'full';
+        $childPriceValue = get_post_meta($post->ID, '_tourivo_child_price_value', true) ?: '';
+        $childAgeLabel   = get_post_meta($post->ID, '_tourivo_child_age_label', true) ?: '';
+        $infantsFreeMeta = get_post_meta($post->ID, '_tourivo_infants_free', true);
+        $infantsFree     = ($infantsFreeMeta === '' || $infantsFreeMeta === false) ? 'yes' : $infantsFreeMeta;
+
         // Decode JSON fields
         $itinerary = json_decode((string) get_post_meta($post->ID, '_tourivo_itinerary', true), true) ?: [];
         $inclusions = json_decode((string) get_post_meta($post->ID, '_tourivo_inclusions', true), true) ?: [];
@@ -61,6 +68,10 @@ class TourMetaBox extends MetaBox
             'duration'        => $duration,
             'minGuests'       => $minGuests,
             'maxGuests'       => $maxGuests,
+            'childPriceType'  => $childPriceType,
+            'childPriceValue' => $childPriceValue,
+            'childAgeLabel'   => $childAgeLabel,
+            'infantsFree'     => $infantsFree,
             'badge'           => $badge,
             'pickupLocation'  => $pickupLocation,
             'dropoffLocation' => $dropoffLocation,
@@ -89,6 +100,10 @@ class TourMetaBox extends MetaBox
             '_tourivo_duration'         => 'sanitize_text_field',
             '_tourivo_min_guests'       => 'absint',
             '_tourivo_max_guests'       => 'absint',
+            '_tourivo_child_price_type' => static fn ($v) => in_array((string) $v, ['full', 'percent', 'fixed', 'free'], true) ? (string) $v : 'full',
+            '_tourivo_child_price_value'=> static fn ($v) => ($v !== '' && $v !== null) ? number_format(max(0.0, (float) str_replace(',', '', (string) $v)), 2, '.', '') : '',
+            '_tourivo_child_age_label'  => 'sanitize_text_field',
+            '_tourivo_infants_free'     => static fn ($v) => ($v === 'no') ? 'no' : 'yes',
             '_tourivo_badge'            => 'sanitize_text_field',
             '_tourivo_pickup_location'  => 'sanitize_text_field',
             '_tourivo_dropoff_location' => 'sanitize_text_field',

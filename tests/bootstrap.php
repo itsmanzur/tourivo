@@ -68,7 +68,10 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     });
 
     // Mock storage
-    $GLOBALS['tourivo_mock_options'] = [];
+    $GLOBALS['tourivo_mock_options'] = [
+        'admin_email' => 'admin@example.com',
+        'blogname'    => 'Tourivo Test Site',
+    ];
     $GLOBALS['tourivo_mock_transients'] = [];
     $GLOBALS['tourivo_mock_posts'] = [];
     $GLOBALS['tourivo_mock_postmeta'] = [];
@@ -105,6 +108,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             public array $bookings = [];
             public array $booking_items = [];
             public array $inventories = [];
+            public array $inquiries = [];
             public array $logs = [];
             public int $insert_id = 0;
             public int $rows_affected = 0;
@@ -282,6 +286,33 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
 
+                // 4. DELETE FROM wp_tourivo_inquiries
+                if (stripos($trimmed, 'DELETE FROM') !== false && stripos($trimmed, 'tourivo_inquiries') !== false) {
+                    if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $trimmed, $m)) {
+                        $targetEmail = $m[1];
+                        $cnt = 0;
+                        foreach ($this->inquiries as $id => $inq) {
+                            if (($inq['customer_email'] ?? '') === $targetEmail) {
+                                unset($this->inquiries[$id]);
+                                $cnt++;
+                            }
+                        }
+                        $this->rows_affected = $cnt;
+                        return $cnt;
+                    } elseif (preg_match('/id\s+IN\s*\(([^)]+)\)/i', $trimmed, $mIds)) {
+                        $ids = array_map('intval', explode(',', $mIds[1]));
+                        $cnt = 0;
+                        foreach ($ids as $id) {
+                            if (isset($this->inquiries[$id])) {
+                                unset($this->inquiries[$id]);
+                                $cnt++;
+                            }
+                        }
+                        $this->rows_affected = $cnt;
+                        return $cnt;
+                    }
+                }
+
                 $this->rows_affected = 1;
                 return 1;
             }
@@ -289,7 +320,45 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             public function get_var(?string $query = null, int $x = 0, int $y = 0): mixed {
                 if (!$query) return null;
                 if (stripos($query, 'COUNT(*)') !== false) {
+                    if (stripos($query, 'tourivo_inquiries') !== false) {
+                        if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
+                            $cnt = 0;
+                            foreach ($this->inquiries as $inq) {
+                                if (($inq['customer_email'] ?? '') === $mEmail[1]) $cnt++;
+                            }
+                            return $cnt;
+                        }
+                        if (preg_match("/created_at\s*<=\s*'([^']+)'/i", $query, $mDate)) {
+                            $cutoff = strtotime($mDate[1]);
+                            $cnt = 0;
+                            foreach ($this->inquiries as $inq) {
+                                if (strtotime((string)($inq['created_at'] ?? '')) <= $cutoff) $cnt++;
+                            }
+                            return $cnt;
+                        }
+                        return count($this->inquiries);
+                    }
                     if (stripos($query, 'tourivo_bookings') !== false) {
+                        if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
+                            $cnt = 0;
+                            foreach ($this->bookings as $b) {
+                                if (($b['customer_email'] ?? '') === $mEmail[1]) $cnt++;
+                            }
+                            return $cnt;
+                        }
+                        if (preg_match("/created_at\s*<=\s*'([^']+)'/i", $query, $mDate)) {
+                            $cutoff = strtotime($mDate[1]);
+                            $cnt = 0;
+                            foreach ($this->bookings as $b) {
+                                if (strtotime((string)($b['created_at'] ?? '')) <= $cutoff) {
+                                    if (stripos($query, "customer_name != 'Anonymized'") !== false && ($b['customer_name'] ?? '') === 'Anonymized') {
+                                        continue;
+                                    }
+                                    $cnt++;
+                                }
+                            }
+                            return $cnt;
+                        }
                         return count($this->bookings);
                     }
                 }
@@ -325,19 +394,63 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 return null;
             }
 
+            public function get_col(?string $query = null, int $x = 0): array {
+                if (!$query) return [];
+                if (stripos($query, 'tourivo_inquiries') !== false) {
+                    $res = [];
+                    $cutoff = null;
+                    if (preg_match("/created_at\s*<=\s*'([^']+)'/i", $query, $mDate)) {
+                        $cutoff = strtotime($mDate[1]);
+                    }
+                    foreach ($this->inquiries as $inq) {
+                        if ($cutoff !== null && strtotime((string)($inq['created_at'] ?? '')) > $cutoff) {
+                            continue;
+                        }
+                        $res[] = (int) $inq['id'];
+                    }
+                    return $res;
+                }
+                return [];
+            }
+
             public function get_row(?string $query = null, string $output = OBJECT, int $y = 0): mixed {
                 if (!$query) return null;
+
+                if (stripos($query, 'tourivo_inquiries') !== false) {
+                    if (preg_match('/id\s*=\s*(\d+)/i', $query, $m)) {
+                        $id = (int) $m[1];
+                        return isset($this->inquiries[$id]) ? (object) $this->inquiries[$id] : null;
+                    }
+                }
 
                 if (stripos($query, 'tourivo_bookings') !== false) {
                     if (preg_match('/id\s*=\s*(\d+)/i', $query, $m)) {
                         $id = (int) $m[1];
                         return isset($this->bookings[$id]) ? (object) $this->bookings[$id] : null;
                     }
-                    if (preg_match("/booking_code\s*=\s*'([^']+)'/i", $query, $m)) {
-                        $code = $m[1];
+                    if (preg_match("/booking_code\s*=\s*'([^']+)'/i", $query, $mCode)) {
+                        $code = $mCode[1];
+                        $email = null;
+                        if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
+                            $email = $mEmail[1];
+                        }
                         foreach ($this->bookings as $b) {
                             if (($b['booking_code'] ?? '') === $code) {
+                                if ($email !== null && ($b['customer_email'] ?? '') !== $email) {
+                                    continue;
+                                }
                                 return (object) $b;
+                            }
+                        }
+                    }
+                }
+
+                if (stripos($query, 'tourivo_booking_items') !== false) {
+                    if (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
+                        $bookingId = (int) $m[1];
+                        foreach ($this->booking_items as $item) {
+                            if ((int)$item['booking_id'] === $bookingId) {
+                                return (object) $item;
                             }
                         }
                     }
@@ -365,6 +478,59 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function get_results(?string $query = null, string $output = OBJECT): array {
                 if (!$query) return [];
+
+                if (stripos($query, 'tourivo_inquiries') !== false) {
+                    $matched = [];
+                    $targetEmail = null;
+                    if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
+                        $targetEmail = $mEmail[1];
+                    }
+                    foreach ($this->inquiries as $inq) {
+                        if ($targetEmail !== null && ($inq['customer_email'] ?? '') !== $targetEmail) {
+                            continue;
+                        }
+                        $matched[] = ($output === ARRAY_A) ? $inq : (object) $inq;
+                    }
+                    $limit = 0; $offset = 0;
+                    if (preg_match('/LIMIT\s+(\d+)\s+OFFSET\s+(\d+)/i', $query, $mLim)) {
+                        $limit  = (int) $mLim[1];
+                        $offset = (int) $mLim[2];
+                        return array_slice($matched, $offset, $limit);
+                    }
+                    return $matched;
+                }
+
+                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'tourivo_booking_items') === false) {
+                    $matched = [];
+                    $targetEmail = null;
+                    $cutoff = null;
+                    if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
+                        $targetEmail = $mEmail[1];
+                    }
+                    if (preg_match("/created_at\s*<=\s*'([^']+)'/i", $query, $mDate)) {
+                        $cutoff = strtotime($mDate[1]);
+                    }
+                    foreach ($this->bookings as $b) {
+                        if ($targetEmail !== null && ($b['customer_email'] ?? '') !== $targetEmail) {
+                            continue;
+                        }
+                        if ($cutoff !== null) {
+                            if (strtotime((string)($b['created_at'] ?? '')) > $cutoff) continue;
+                            if (stripos($query, "customer_name != 'Anonymized'") !== false && ($b['customer_name'] ?? '') === 'Anonymized') continue;
+                        }
+                        $matched[] = ($output === ARRAY_A) ? $b : (object) $b;
+                    }
+                    if (preg_match('/LIMIT\s+(\d+)\s+OFFSET\s+(\d+)/i', $query, $mLim)) {
+                        $limit  = (int) $mLim[1];
+                        $offset = (int) $mLim[2];
+                        return array_slice($matched, $offset, $limit);
+                    }
+                    if (preg_match('/LIMIT\s+(\d+)/i', $query, $mLimOnly)) {
+                        return array_slice($matched, 0, (int) $mLimOnly[1]);
+                    }
+                    return $matched;
+                }
+
                 if (stripos($query, 'tourivo_booking_items') !== false) {
                     if (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
                         $bookingId = (int) $m[1];
@@ -411,6 +577,49 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         return $res;
                     }
                 }
+
+                if (stripos($query, 'tourivo_logs') !== false) {
+                    if (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
+                        $bookingId = (int) $m[1];
+                        $res = [];
+                        foreach ($this->logs as $log) {
+                            if ((int)($log['booking_id'] ?? 0) === $bookingId) {
+                                $res[] = ($output === ARRAY_A) ? $log : (object) $log;
+                            }
+                        }
+                        return array_reverse($res);
+                    }
+                }
+
+                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'tourivo_booking_items') !== false) {
+                    if (preg_match("/DATE\(i\.check_in\)\s*=\s*'([^']+)'/i", $query, $mDate)) {
+                        $targetDate = $mDate[1];
+                        $res = [];
+                        foreach ($this->bookings as $b) {
+                            if (($b['booking_status'] ?? '') !== 'confirmed') {
+                                continue;
+                            }
+                            foreach ($this->booking_items as $item) {
+                                if ((int)($item['booking_id'] ?? 0) === (int)($b['id'] ?? 0)) {
+                                    $itemDate = substr((string)($item['check_in'] ?? ''), 0, 10);
+                                    if ($itemDate === $targetDate) {
+                                        $row = array_merge($b, [
+                                             'item_title'     => $item['item_title'] ?? '',
+                                             'check_in'       => $item['check_in'] ?? '',
+                                             'check_out'      => $item['check_out'] ?? '',
+                                             'adults_count'   => $item['adults_count'] ?? 1,
+                                             'children_count' => $item['children_count'] ?? 0,
+                                             'infants_count'  => $item['infants_count'] ?? 0,
+                                        ]);
+                                        $res[] = ($output === ARRAY_A) ? $row : (object) $row;
+                                    }
+                                }
+                            }
+                        }
+                        return $res;
+                    }
+                }
+
                 return [];
             }
 
@@ -420,6 +629,15 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $data['id'] = $id;
                     $data['created_at'] = $data['created_at'] ?? gmdate('Y-m-d H:i:s');
                     $this->bookings[$id] = $data;
+                    $this->insert_id = $id;
+                    $this->rows_affected = 1;
+                    return 1;
+                }
+                if (stripos($table, 'tourivo_inquiries') !== false) {
+                    $id = count($this->inquiries) + 1;
+                    $data['id'] = $id;
+                    $data['created_at'] = $data['created_at'] ?? gmdate('Y-m-d H:i:s');
+                    $this->inquiries[$id] = $data;
                     $this->insert_id = $id;
                     $this->rows_affected = 1;
                     return 1;
@@ -465,6 +683,14 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         return 1;
                     }
                 }
+                if (stripos($table, 'tourivo_inquiries') !== false) {
+                    $id = (int) ($where['id'] ?? 0);
+                    if (isset($this->inquiries[$id])) {
+                        $this->inquiries[$id] = array_merge($this->inquiries[$id], $data);
+                        $this->rows_affected = 1;
+                        return 1;
+                    }
+                }
                 if (stripos($table, 'tourivo_inventories') !== false) {
                     $id = (int) ($where['id'] ?? 0);
                     foreach ($this->inventories as $k => $inv) {
@@ -494,10 +720,27 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 $this->method = $method;
                 $this->route = $route;
             }
-            public function set_body_params(array $params): void { $this->params = $params; }
+            public function set_body_params(array $params): void { $this->params = array_merge($this->params, $params); }
+            public function set_json_params(array $params): void { $this->params = array_merge($this->params, $params); }
+            public function set_query_params(array $params): void { $this->params = array_merge($this->params, $params); }
+            public function set_param(string $key, mixed $value): void { $this->params[$key] = $value; }
+            public function get_param(string $key): mixed { return $this->params[$key] ?? null; }
             public function get_params(): array { return $this->params; }
             public function get_json_params(): array { return $this->params; }
         }
+    }
+
+    if (!function_exists('__return_true')) {
+        function __return_true(): bool { return true; }
+    }
+    if (!function_exists('__return_false')) {
+        function __return_false(): bool { return false; }
+    }
+    if (!function_exists('__return_null')) {
+        function __return_null(): mixed { return null; }
+    }
+    if (!function_exists('__return_empty_array')) {
+        function __return_empty_array(): array { return []; }
     }
 
     if (!class_exists('WP_REST_Response')) {
@@ -559,6 +802,11 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     }
     if (!function_exists('_e')) {
         function _e(string $text, string $domain = 'default'): void { echo $text; }
+    }
+    if (!function_exists('_n')) {
+        function _n(string $single, string $plural, int $number, string $domain = 'default'): string {
+            return $number === 1 ? $single : $plural;
+        }
     }
     if (!function_exists('esc_attr')) {
         function esc_attr(string $text): string { return htmlspecialchars($text, ENT_QUOTES, 'UTF-8'); }
@@ -667,14 +915,57 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             $tourivo_mock_filters[$hook_name][] = $callback;
         }
     }
-    if (!function_exists('do_action')) {
-        function do_action(string $hook_name, ...$args): void {
-            global $tourivo_mock_actions;
-            $tourivo_mock_actions[] = ['hook' => $hook_name, 'args' => $args];
+    if (!function_exists('remove_filter')) {
+        function remove_filter(string $hook_name, callable $callback, int $priority = 10): bool {
+            global $tourivo_mock_filters;
+            if (isset($tourivo_mock_filters[$hook_name])) {
+                foreach ($tourivo_mock_filters[$hook_name] as $idx => $cb) {
+                    if ($cb === $callback) {
+                        unset($tourivo_mock_filters[$hook_name][$idx]);
+                        return true;
+                    }
+                }
+            }
+            return true;
         }
     }
     if (!function_exists('add_action')) {
-        function add_action(string $hook_name, callable $callback, int $priority = 10, int $accepted_args = 1): void {}
+        function add_action(string $hook_name, callable $callback, int $priority = 10, int $accepted_args = 1): void {
+            global $tourivo_mock_action_callbacks;
+            $tourivo_mock_action_callbacks[$hook_name][] = [
+                'callback'      => $callback,
+                'priority'      => $priority,
+                'accepted_args' => $accepted_args,
+            ];
+        }
+    }
+    if (!function_exists('remove_action')) {
+        function remove_action(string $hook_name, callable $callback, int $priority = 10): bool {
+            global $tourivo_mock_action_callbacks;
+            if (isset($tourivo_mock_action_callbacks[$hook_name])) {
+                foreach ($tourivo_mock_action_callbacks[$hook_name] as $idx => $entry) {
+                    if ($entry['callback'] === $callback) {
+                        unset($tourivo_mock_action_callbacks[$hook_name][$idx]);
+                        return true;
+                    }
+                }
+            }
+            return true;
+        }
+    }
+    if (!function_exists('do_action')) {
+        function do_action(string $hook_name, ...$args): void {
+            global $tourivo_mock_actions, $tourivo_mock_action_callbacks;
+            $tourivo_mock_actions[] = ['hook' => $hook_name, 'args' => $args];
+            if (!empty($tourivo_mock_action_callbacks[$hook_name])) {
+                foreach ($tourivo_mock_action_callbacks[$hook_name] as $entry) {
+                    $cb = $entry['callback'];
+                    $accepted = $entry['accepted_args'] ?? count($args);
+                    $passed = array_slice($args, 0, $accepted);
+                    $cb(...$passed);
+                }
+            }
+        }
     }
     if (!function_exists('get_option')) {
         function get_option(string $option, mixed $default = false): mixed {
@@ -751,8 +1042,134 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             return (object) ['ID' => 1, 'user_email' => 'user@example.com', 'display_name' => 'Test User'];
         }
     }
+    if (!class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
+        class MockPHPMailer {
+            public string $AltBody = '';
+            public string $Body = '';
+            public string $Subject = '';
+            public array $to = [];
+            public array $headers = [];
+        }
+    }
+
+    $GLOBALS['tourivo_mock_sent_emails'] = [];
+    $GLOBALS['tourivo_mock_scheduled_events'] = [];
+
     if (!function_exists('wp_mail')) {
-        function wp_mail(mixed ...$args): bool { return true; }
+        function wp_mail(mixed ...$args): bool {
+            $to          = $args[0] ?? '';
+            $subject     = $args[1] ?? '';
+            $message     = $args[2] ?? '';
+            $headers     = $args[3] ?? '';
+            $attachments = $args[4] ?? [];
+
+            $mockMailer = new MockPHPMailer();
+            $mockMailer->Subject = is_string($subject) ? $subject : '';
+            $mockMailer->Body    = is_string($message) ? $message : '';
+            do_action('phpmailer_init', $mockMailer);
+
+            $atts = [
+                'to'          => $to,
+                'subject'     => $subject,
+                'message'     => $message,
+                'headers'     => $headers,
+                'attachments' => $attachments,
+                'alt_body'    => $mockMailer->AltBody,
+            ];
+
+            $pre = apply_filters('pre_wp_mail', null, $atts);
+            if (null !== $pre) {
+                if ($pre === false) {
+                    do_action('wp_mail_failed', new WP_Error('wp_mail_failed', 'Simulated mail failure'));
+                    return false;
+                }
+                $GLOBALS['tourivo_mock_sent_emails'][] = $atts;
+                return (bool) $pre;
+            }
+
+            $GLOBALS['tourivo_mock_sent_emails'][] = $atts;
+            return true;
+        }
+    }
+
+    if (!function_exists('wp_schedule_single_event')) {
+        function wp_schedule_single_event(int $timestamp, string $hook, array $args = [], bool $wp_error = false): bool {
+            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+                'type'      => 'single',
+                'timestamp' => $timestamp,
+                'hook'      => $hook,
+                'args'      => $args,
+            ];
+            return true;
+        }
+    }
+
+    if (!function_exists('wp_schedule_event')) {
+        function wp_schedule_event(int $timestamp, string $recurrence, string $hook, array $args = [], bool $wp_error = false): bool {
+            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+                'type'       => 'recurring',
+                'recurrence' => $recurrence,
+                'timestamp'  => $timestamp,
+                'hook'       => $hook,
+                'args'       => $args,
+            ];
+            return true;
+        }
+    }
+
+    if (!function_exists('wp_next_scheduled')) {
+        function wp_next_scheduled(string $hook, array $args = []): int|false {
+            foreach ($GLOBALS['tourivo_mock_scheduled_events'] ?? [] as $ev) {
+                if ($ev['hook'] === $hook) {
+                    return $ev['timestamp'] ?? time();
+                }
+            }
+            return false;
+        }
+    }
+
+    if (!function_exists('wp_clear_scheduled_hook')) {
+        function wp_clear_scheduled_hook(string $hook, array $args = [], bool $wp_error = false): int|false {
+            $count = 0;
+            if (isset($GLOBALS['tourivo_mock_scheduled_events'])) {
+                foreach ($GLOBALS['tourivo_mock_scheduled_events'] as $k => $ev) {
+                    if ($ev['hook'] === $hook) {
+                        unset($GLOBALS['tourivo_mock_scheduled_events'][$k]);
+                        $count++;
+                    }
+                }
+            }
+            return $count;
+        }
+    }
+
+    if (!function_exists('spawn_cron')) {
+        function spawn_cron(int $gmt_time = 0): bool { return true; }
+    }
+
+    if (!function_exists('as_enqueue_async_action')) {
+        function as_enqueue_async_action(string $hook, array $args = [], string $group = ''): int {
+            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+                'type'  => 'action_scheduler_async',
+                'hook'  => $hook,
+                'args'  => $args,
+                'group' => $group,
+            ];
+            return count($GLOBALS['tourivo_mock_scheduled_events']);
+        }
+    }
+
+    if (!function_exists('as_schedule_single_action')) {
+        function as_schedule_single_action(int $timestamp, string $hook, array $args = [], string $group = ''): int {
+            $GLOBALS['tourivo_mock_scheduled_events'][] = [
+                'type'      => 'action_scheduler_single',
+                'timestamp' => $timestamp,
+                'hook'      => $hook,
+                'args'      => $args,
+                'group'     => $group,
+            ];
+            return count($GLOBALS['tourivo_mock_scheduled_events']);
+        }
     }
 
     // Mock Posts and PostMeta
@@ -927,6 +1344,85 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 'status' => $status_code ?: 400,
                 'body'   => $response,
             ];
+        }
+    }
+
+    if (!function_exists('nocache_headers')) {
+        function nocache_headers(): array { return []; }
+    }
+
+    $GLOBALS['tourivo_mock_shortcodes'] = [];
+    if (!function_exists('add_shortcode')) {
+        function add_shortcode(string $tag, callable $callback): void {
+            global $tourivo_mock_shortcodes;
+            $tourivo_mock_shortcodes[$tag] = $callback;
+        }
+    }
+    if (!function_exists('do_shortcode')) {
+        function do_shortcode(string $content, bool $ignore_html = false): string {
+            global $tourivo_mock_shortcodes;
+            foreach ($tourivo_mock_shortcodes as $tag => $cb) {
+                if (str_contains($content, "[{$tag}")) {
+                    $content = (string) preg_replace_callback("/\\[{$tag}(?:\\s+([^\\]]*))?\\]/", function ($matches) use ($cb) {
+                        $attrStr = $matches[1] ?? '';
+                        $atts = [];
+                        if (!empty($attrStr)) {
+                            preg_match_all('/(\\w+)=["\']?([^"\']+)["\']?/', $attrStr, $attrMatches, PREG_SET_ORDER);
+                            foreach ($attrMatches as $m) {
+                                $atts[$m[1]] = $m[2];
+                            }
+                        }
+                        return (string) $cb($atts);
+                    }, $content);
+                }
+            }
+            return $content;
+        }
+    }
+    $GLOBALS['tourivo_mock_usermeta'] = [];
+
+    if (!function_exists('update_user_meta')) {
+        function update_user_meta(int $userId, string $key, mixed $value): bool {
+            global $tourivo_mock_usermeta;
+            $tourivo_mock_usermeta[$userId][$key] = $value;
+            return true;
+        }
+    }
+
+    if (!function_exists('get_user_meta')) {
+        function get_user_meta(int $userId, string $key = '', bool $single = false): mixed {
+            global $tourivo_mock_usermeta;
+            if (empty($key)) return $tourivo_mock_usermeta[$userId] ?? [];
+            $val = $tourivo_mock_usermeta[$userId][$key] ?? '';
+            return $single ? $val : [$val];
+        }
+    }
+
+    if (!function_exists('delete_user_meta')) {
+        function delete_user_meta(int $userId, string $key, mixed $value = ''): bool {
+            global $tourivo_mock_usermeta;
+            if (isset($tourivo_mock_usermeta[$userId][$key])) {
+                unset($tourivo_mock_usermeta[$userId][$key]);
+            }
+            return true;
+        }
+    }
+
+    if (!function_exists('get_privacy_policy_url')) {
+        function get_privacy_policy_url(): string {
+            return 'http://localhost/privacy-policy';
+        }
+    }
+
+    if (!function_exists('wp_add_privacy_policy_content')) {
+        function wp_add_privacy_policy_content(string $plugin_name, string $policy_text): void {
+            $GLOBALS['tourivo_mock_privacy_policy_content'][$plugin_name] = $policy_text;
+        }
+    }
+
+    if (!function_exists('wp_kses_post')) {
+        function wp_kses_post(string $data): string {
+            return $data;
         }
     }
 

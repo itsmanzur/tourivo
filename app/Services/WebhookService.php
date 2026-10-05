@@ -102,14 +102,19 @@ class WebhookService
      */
     public function onBookingCreated(int $bookingId, array $bookingData): void
     {
+        $includePhone = (bool) Config::get('webhook_include_phone', true);
+        $customer = [
+            'name'  => $bookingData['customer_name'] ?? '',
+            'email' => $bookingData['customer_email'] ?? '',
+        ];
+        if ($includePhone) {
+            $customer['phone'] = $bookingData['customer_phone'] ?? '';
+        }
+
         $this->enqueue('booking.created', [
             'booking_id'   => $bookingId,
             'booking_code' => $bookingData['booking_code'] ?? '',
-            'customer'     => [
-                'name'  => $bookingData['customer_name'] ?? '',
-                'email' => $bookingData['customer_email'] ?? '',
-                'phone' => $bookingData['customer_phone'] ?? '',
-            ],
+            'customer'     => $customer,
             'item'         => [
                 'id'    => $bookingData['item_id'] ?? 0,
                 'type'  => $bookingData['item_type'] ?? 'tour',
@@ -163,14 +168,25 @@ class WebhookService
      */
     public function onInquiryCreated(int $inquiryId, array $inquiryData): void
     {
-        $this->enqueue('inquiry.created', [
+        $includePhone   = (bool) Config::get('webhook_include_phone', true);
+        $includeMessage = (bool) Config::get('webhook_include_message', true);
+
+        $payloadData = [
             'inquiry_id' => $inquiryId,
             'name'       => $inquiryData['name'] ?? '',
             'email'      => $inquiryData['email'] ?? '',
-            'phone'      => $inquiryData['phone'] ?? '',
             'item_id'    => $inquiryData['item_id'] ?? 0,
-            'message'    => $inquiryData['message'] ?? '',
-        ]);
+        ];
+
+        if ($includePhone) {
+            $payloadData['phone'] = $inquiryData['phone'] ?? '';
+        }
+
+        if ($includeMessage) {
+            $payloadData['message'] = $inquiryData['message'] ?? '';
+        }
+
+        $this->enqueue('inquiry.created', $payloadData);
     }
 
     /**

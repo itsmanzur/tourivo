@@ -365,59 +365,75 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 8. Test Email Dispatcher
     const sendTestEmailBtn = document.getElementById('tourivo-send-test-email-btn');
+    const testEmailTypeSelect = document.getElementById('tourivo_test_email_type');
     const testEmailInput = document.getElementById('tourivo_test_email_recipient');
     const testEmailAlert = document.getElementById('tourivo-test-email-alert');
+
+    function performTestEmailSend(btn, email, emailType, nonce) {
+        if (!email) {
+            alert('Please enter an email address.');
+            return;
+        }
+
+        const origHtml = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="dashicons dashicons-update spin"></span> Sending...';
+        if (testEmailAlert) testEmailAlert.style.display = 'none';
+
+        const formData = new FormData();
+        formData.append('action', 'tourivo_send_test_email');
+        formData.append('email', email);
+        formData.append('email_type', emailType);
+        formData.append('_wpnonce', nonce);
+
+        fetch(ajaxurl, {
+            method: 'POST',
+            body: formData,
+        })
+            .then(res => res.json())
+            .then(data => {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+
+                if (testEmailAlert) {
+                    if (data.success) {
+                        testEmailAlert.style.color = '#15803d';
+                        testEmailAlert.innerHTML = `✓ ${data.data ? data.data.message : 'Test email sent!'}`;
+                    } else {
+                        testEmailAlert.style.color = '#b91c1c';
+                        testEmailAlert.innerHTML = `✕ ${data.data ? data.data.message : 'Failed to send.'}`;
+                    }
+                    testEmailAlert.style.display = 'block';
+                }
+            })
+            .catch(() => {
+                btn.disabled = false;
+                btn.innerHTML = origHtml;
+                if (testEmailAlert) {
+                    testEmailAlert.style.color = '#b91c1c';
+                    testEmailAlert.innerHTML = '✕ Network error while sending test email.';
+                    testEmailAlert.style.display = 'block';
+                }
+            });
+    }
 
     if (sendTestEmailBtn && testEmailInput) {
         sendTestEmailBtn.addEventListener('click', function () {
             const email = testEmailInput.value.trim();
+            const emailType = testEmailTypeSelect ? testEmailTypeSelect.value : 'customer_booking_confirmed';
             const nonce = this.dataset.nonce;
-
-            if (!email) {
-                alert('Please enter an email address.');
-                return;
-            }
-
-            sendTestEmailBtn.disabled = true;
-            sendTestEmailBtn.innerHTML = '<span class="dashicons dashicons-update spin"></span> Sending...';
-            if (testEmailAlert) testEmailAlert.style.display = 'none';
-
-            const formData = new FormData();
-            formData.append('action', 'tourivo_send_test_email');
-            formData.append('email', email);
-            formData.append('_wpnonce', nonce);
-
-            fetch(ajaxurl, {
-                method: 'POST',
-                body: formData,
-            })
-                .then(res => res.json())
-                .then(data => {
-                    sendTestEmailBtn.disabled = false;
-                    sendTestEmailBtn.innerHTML = '✉️ Send Test Email';
-
-                    if (testEmailAlert) {
-                        if (data.success) {
-                            testEmailAlert.style.color = '#15803d';
-                            testEmailAlert.innerHTML = `✓ ${data.data ? data.data.message : 'Test email sent!'}`;
-                        } else {
-                            testEmailAlert.style.color = '#b91c1c';
-                            testEmailAlert.innerHTML = `✕ ${data.data ? data.data.message : 'Failed to send.'}`;
-                        }
-                        testEmailAlert.style.display = 'block';
-                    }
-                })
-                .catch(() => {
-                    sendTestEmailBtn.disabled = false;
-                    sendTestEmailBtn.innerHTML = '✉️ Send Test Email';
-                    if (testEmailAlert) {
-                        testEmailAlert.style.color = '#b91c1c';
-                        testEmailAlert.innerHTML = '✕ Network error while sending test email.';
-                        testEmailAlert.style.display = 'block';
-                    }
-                });
+            performTestEmailSend(sendTestEmailBtn, email, emailType, nonce);
         });
     }
+
+    document.querySelectorAll('.tourivo-send-single-test-email-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const emailType = this.dataset.emailType;
+            const nonce = this.dataset.nonce;
+            const email = testEmailInput ? testEmailInput.value.trim() : '';
+            performTestEmailSend(this, email, emailType, nonce);
+        });
+    });
 
     // 8b. Webhook Secret Generator
     const genSecretBtn = document.getElementById('tourivo-gen-secret-btn');
@@ -595,6 +611,50 @@ document.addEventListener('DOMContentLoaded', function () {
                     submitBtn.disabled = false;
                     submitBtn.textContent = '➕ Add Note';
                     alert('Network error while adding note.');
+                });
+        });
+    }
+
+    // 10. Privacy & GDPR Retention Dry-Run Button
+    const retentionDryRunBtn = document.getElementById('tourivo-retention-dry-run-btn');
+    const retentionDryRunResult = document.getElementById('tourivo-retention-dry-run-result');
+
+    if (retentionDryRunBtn && retentionDryRunResult) {
+        retentionDryRunBtn.addEventListener('click', function () {
+            const nonce = this.dataset.nonce || (window.tourivoAdminConfig ? window.tourivoAdminConfig.nonce : '');
+            retentionDryRunBtn.disabled = true;
+            retentionDryRunBtn.textContent = 'Calculating...';
+            retentionDryRunResult.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('action', 'tourivo_retention_dry_run');
+            formData.append('nonce', nonce);
+
+            fetch(ajaxurl, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(res => res.json())
+                .then(data => {
+                    retentionDryRunBtn.disabled = false;
+                    retentionDryRunBtn.textContent = '🔍 Check Eligible Records Count';
+
+                    if (data.success && data.data) {
+                        retentionDryRunResult.style.color = '#0f766e';
+                        retentionDryRunResult.innerHTML = `📊 <strong>Dry-Run Scan Results:</strong> ${data.data.bookings_to_anonymize} completed/cancelled booking(s) eligible for anonymization, and ${data.data.inquiries_to_delete} inquiry/inquiries eligible for deletion.`;
+                        retentionDryRunResult.style.display = 'block';
+                    } else {
+                        retentionDryRunResult.style.color = '#b91c1c';
+                        retentionDryRunResult.textContent = 'Failed to calculate retention counts.';
+                        retentionDryRunResult.style.display = 'block';
+                    }
+                })
+                .catch(() => {
+                    retentionDryRunBtn.disabled = false;
+                    retentionDryRunBtn.textContent = '🔍 Check Eligible Records Count';
+                    retentionDryRunResult.style.color = '#b91c1c';
+                    retentionDryRunResult.textContent = 'Network error during dry-run scan.';
+                    retentionDryRunResult.style.display = 'block';
                 });
         });
     }

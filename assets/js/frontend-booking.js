@@ -19,8 +19,17 @@ document.addEventListener('DOMContentLoaded', function () {
         const roomsInput = panel.querySelector('#rooms-count');
         const adultsInput = panel.querySelector('#adults-count');
         const childrenInput = panel.querySelector('#children-count');
+        const infantsInput = panel.querySelector('#infants-count');
+        const breakdownItems = panel.querySelector('#tourivo-breakdown-items');
         const calcLabel = panel.querySelector('#breakdown-calc-label');
         const breakdownTotalVal = panel.querySelector('#breakdown-total-val');
+        const subtotalRow = panel.querySelector('#breakdown-subtotal-row');
+        const subtotalVal = panel.querySelector('#breakdown-subtotal-val');
+        const discountRow = panel.querySelector('#breakdown-discount-row');
+        const discountVal = panel.querySelector('#breakdown-discount-val');
+        const taxRow = panel.querySelector('#breakdown-tax-row');
+        const taxLabel = panel.querySelector('#breakdown-tax-label');
+        const taxVal = panel.querySelector('#breakdown-tax-val');
         const grandTotalVal = panel.querySelector('#live-grand-total');
         const statusBadge = panel.querySelector('#tourivo-avail-status');
         const bookingForm = panel.querySelector('#tourivo-booking-form');
@@ -76,14 +85,15 @@ document.addEventListener('DOMContentLoaded', function () {
             checkOutInput.addEventListener('change', recalculatePrice);
         }
 
-        // 3. Recalculate Live Price & Availability
+        // 3. Recalculate Live Price, Breakdown & Availability
         function recalculatePrice() {
             const currentUnitPrice = parseFloat(panel.dataset.convertedUnitPrice) || baseUnitPrice;
             const currencySymbol = panel.dataset.currency || '$';
             const adults = parseInt(adultsInput ? adultsInput.value : 1, 10) || 1;
             const children = parseInt(childrenInput ? childrenInput.value : 0, 10) || 0;
+            const infants = parseInt(infantsInput ? infantsInput.value : 0, 10) || 0;
             const rooms = parseInt(roomsInput ? roomsInput.value : 1, 10) || 1;
-            const totalGuests = adults + children;
+            const totalGuests = adults + children + infants;
             const checkIn = checkInInput ? checkInInput.value : '';
             const checkOut = checkOutInput ? checkOutInput.value : '';
 
@@ -103,9 +113,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     calcLabel.textContent = `${formatPrice(currentUnitPrice, currencySymbol)} × ${rooms} Room(s) × ${nightsCount} Night(s)`;
                 }
             } else {
-                estimatedTotal = currentUnitPrice * totalGuests;
+                estimatedTotal = currentUnitPrice * (adults + children);
                 if (calcLabel) {
-                    calcLabel.textContent = `${formatPrice(currentUnitPrice, currencySymbol)} × ${totalGuests} Guest(s)`;
+                    calcLabel.textContent = `${formatPrice(currentUnitPrice, currencySymbol)} × ${adults + children} Guest(s)`;
                 }
             }
 
@@ -117,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 grandTotalVal.innerHTML = '<strong>' + formatPrice(estimatedTotal, currencySymbol) + '</strong>';
             }
 
-            // Real-time backend verification with debounce & AbortController
+            // Real-time backend quote & availability verification with debounce (~250ms) & AbortController
             if (window.tourivoData && window.tourivoData.restUrl && checkIn) {
                 clearTimeout(checkDebounceTimer);
                 checkDebounceTimer = setTimeout(function () {
@@ -126,12 +136,86 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                     checkAbortController = new AbortController();
 
+                    // 1. Fetch Authoritative Price Quote
+                    const quoteUrl = new URL(window.tourivoData.restUrl + 'tourivo/v1/pricing/quote');
+                    quoteUrl.searchParams.set('item_id', itemId);
+                    quoteUrl.searchParams.set('item_type', itemType);
+                    quoteUrl.searchParams.set('check_in', checkIn);
+                    if (checkOut) quoteUrl.searchParams.set('check_out', checkOut);
+                    quoteUrl.searchParams.set('adults', adults);
+                    quoteUrl.searchParams.set('children', children);
+                    quoteUrl.searchParams.set('infants', infants);
+                    quoteUrl.searchParams.set('rooms', rooms);
+
+                    fetch(quoteUrl.toString(), { signal: checkAbortController.signal })
+                        .then(res => res.json())
+                        .then(quote => {
+                            if (quote && quote.success) {
+                                const symbol = quote.currency_symbol || currencySymbol;
+
+                                // Render itemized lines
+                                if (breakdownItems && Array.isArray(quote.lines) && quote.lines.length > 0) {
+                                    breakdownItems.innerHTML = '';
+                                    quote.lines.forEach(line => {
+                                        const row = document.createElement('div');
+                                        row.className = 'breakdown-row';
+                                        row.innerHTML = `<span class="breakdown-desc">${line.title} (${line.quantity} × ${formatPrice(line.rate, symbol)})</span><span class="breakdown-val">${formatPrice(line.total, symbol)}</span>`;
+                                        breakdownItems.appendChild(row);
+                                    });
+                                }
+
+                                // Subtotal
+                                if (subtotalRow && subtotalVal) {
+                                    if (quote.discount > 0 || quote.tax > 0) {
+                                        subtotalRow.style.display = 'flex';
+                                        subtotalVal.textContent = formatPrice(quote.subtotal, symbol);
+                                    } else {
+                                        subtotalRow.style.display = 'none';
+                                    }
+                                }
+
+                                // Discount
+                                if (discountRow && discountVal) {
+                                    if (quote.discount > 0) {
+                                        discountRow.style.display = 'flex';
+                                        discountVal.textContent = '-' + formatPrice(quote.discount, symbol);
+                                    } else {
+                                        discountRow.style.display = 'none';
+                                    }
+                                }
+
+                                // Tax
+                                if (taxRow && taxVal) {
+                                    if (quote.tax > 0) {
+                                        taxRow.style.display = 'flex';
+                                        taxVal.textContent = formatPrice(quote.tax, symbol);
+                                        if (taxLabel && quote.tax_label) {
+                                            taxLabel.textContent = quote.tax_label + (quote.tax_rate > 0 ? ` (${quote.tax_rate}%)` : '');
+                                        }
+                                    } else {
+                                        taxRow.style.display = 'none';
+                                    }
+                                }
+
+                                // Total
+                                if (grandTotalVal) {
+                                    grandTotalVal.innerHTML = '<strong>' + formatPrice(quote.total, symbol) + '</strong>';
+                                }
+                            }
+                        })
+                        .catch(err => {
+                            if (err.name !== 'AbortError') {
+                                // Ignore network aborts
+                            }
+                        });
+
+                    // 2. Availability Check
                     const checkUrl = new URL(window.tourivoData.restUrl + 'tourivo/v1/availability/check');
                     checkUrl.searchParams.set('item_id', itemId);
                     checkUrl.searchParams.set('item_type', itemType);
                     checkUrl.searchParams.set('start_date', checkIn);
                     if (checkOut) checkUrl.searchParams.set('end_date', checkOut);
-                    checkUrl.searchParams.set('guests', totalGuests);
+                    checkUrl.searchParams.set('guests', adults + children);
                     checkUrl.searchParams.set('rooms', rooms);
 
                     fetch(checkUrl.toString(), { signal: checkAbortController.signal })
@@ -160,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function () {
                                 // Request failed silently on network issue
                             }
                         });
-                }, 300);
+                }, 250);
             }
         }
 
@@ -183,10 +267,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     rooms: formData.get('rooms') || 1,
                     adults: formData.get('adults') || 1,
                     children: formData.get('children') || 0,
+                    infants: formData.get('infants') || 0,
                     customer_name: formData.get('customer_name'),
                     customer_email: formData.get('customer_email'),
                     customer_phone: formData.get('customer_phone'),
                     customer_notes: formData.get('customer_notes') || '',
+                    consent: formData.get('consent') ? 1 : 0,
                     tourivo_hp_check: formData.get('tourivo_hp_check') || '',
                 };
 
@@ -211,6 +297,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         submitBtn.innerHTML = '<span class="dashicons dashicons-lock"></span> Book Now (Pay Offline)';
 
                         if (data.success) {
+                            if (data.redirect_mode === 'thankyou' && data.redirect_url) {
+                                window.location.href = data.redirect_url;
+                                return;
+                            }
                             if (alertBox) {
                                 alertBox.className = 'panel-alert alert-success';
                                 alertBox.textContent = 'Success! ' + (data.message || 'Your booking has been received.');

@@ -45,7 +45,7 @@ class InquiryService
         }
 
         // 2. IP Rate Limiting (5 inquiries per 10 minutes)
-        $ip = sanitize_text_field(wp_unslash($_SERVER['REMOTE_ADDR'] ?? '127.0.0.1'));
+        $ip = \Tourivo\Support\ClientIp::get();
         $rateLimitKey = 'trv_rl_inq_' . md5($ip);
         $attempts = (int) get_transient($rateLimitKey);
 
@@ -66,6 +66,15 @@ class InquiryService
         $rawDate   = !empty($data['travel_date']) ? sanitize_text_field(wp_unslash((string) $data['travel_date'])) : null;
         $guests    = isset($data['guests']) ? max(1, min(50, (int) $data['guests'])) : 1;
         $message   = isset($data['message']) ? sanitize_textarea_field(wp_unslash((string) $data['message'])) : '';
+
+        // Consent verification
+        $requireConsent = (bool) \Tourivo\Config\Config::get('require_consent', false);
+        if ($requireConsent && empty($data['consent'])) {
+            return [
+                'success' => false,
+                'message' => __('You must agree to the terms and privacy policy before submitting an inquiry.', 'tourivo'),
+            ];
+        }
 
         // 4. Validate Travel Date (strict Y-m-d and not in the past)
         $travelDate = null;
@@ -93,23 +102,31 @@ class InquiryService
             ];
         }
 
-        $nowGmt = gmdate('Y-m-d H:i:s');
+        $nowGmt         = gmdate('Y-m-d H:i:s');
+        $storeIp        = (bool) \Tourivo\Config\Config::get('store_ip', true);
+        $storedIp       = $storeIp ? $ip : '';
+        $hasConsent     = !empty($data['consent']);
+        $consentAt      = $hasConsent ? $nowGmt : null;
+        $consentVersion = $hasConsent ? \Tourivo\Support\Privacy::getConsentVersion() : null;
+
         // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery
         $inserted = $wpdb->insert(
             $table,
             [
-                'item_id'        => $itemId,
-                'item_type'      => ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour',
-                'customer_name'  => $name,
-                'customer_email' => $email,
-                'customer_phone' => $phone,
-                'travel_date'    => $travelDate,
-                'guests'         => $guests,
-                'message'        => $message,
-                'status'         => 'new',
-                'ip_address'     => $ip,
-                'created_at'     => $nowGmt,
-                'updated_at'     => $nowGmt,
+                'item_id'         => $itemId,
+                'item_type'       => ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour',
+                'customer_name'   => $name,
+                'customer_email'  => $email,
+                'customer_phone'  => $phone,
+                'travel_date'     => $travelDate,
+                'guests'          => $guests,
+                'message'         => $message,
+                'status'          => 'new',
+                'consent_at'      => $consentAt,
+                'consent_version' => $consentVersion,
+                'ip_address'      => $storedIp,
+                'created_at'      => $nowGmt,
+                'updated_at'      => $nowGmt,
             ]
         );
         // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery
@@ -123,31 +140,8 @@ class InquiryService
 
         $inquiryId = (int) $wpdb->insert_id;
 
-        // Dispatch admin notification email
         $itemPost = get_post($itemId);
         $itemTitle = $itemPost ? $itemPost->post_title : __('General Travel Inquiry', 'tourivo');
-        $adminEmail = (string) \Tourivo\Config\Config::get('email_notification_address', get_option('admin_email'));
-
-        /* translators: 1: Site name, 2: Item title */
-        $subject = sprintf(__('[%1$s] New Trip Inquiry for: %2$s', 'tourivo'), get_bloginfo('name'), $itemTitle);
-        $body  = "<h2>" . esc_html__('New Traveler Inquiry Received', 'tourivo') . "</h2>\n";
-        $body .= "<p><strong>" . esc_html__('Trip / Stay:', 'tourivo') . "</strong> " . esc_html($itemTitle) . "</p>\n";
-        $body .= "<p><strong>" . esc_html__('Traveler Name:', 'tourivo') . "</strong> " . esc_html($name) . "</p>\n";
-        $body .= "<p><strong>" . esc_html__('Email:', 'tourivo') . "</strong> <a href=\"mailto:" . esc_attr($email) . "\">" . esc_html($email) . "</a></p>\n";
-        $body .= "<p><strong>" . esc_html__('Phone / WhatsApp:', 'tourivo') . "</strong> " . esc_html($phone ?: 'N/A') . "</p>\n";
-        if ($travelDate) {
-            $body .= "<p><strong>" . esc_html__('Expected Travel Date:', 'tourivo') . "</strong> " . esc_html($travelDate) . "</p>\n";
-        }
-        $body .= "<p><strong>" . esc_html__('Travelers:', 'tourivo') . "</strong> " . esc_html((string) $guests) . "</p>\n";
-        $body .= "<p><strong>" . esc_html__('Question / Request:', 'tourivo') . "</strong><br>" . nl2br(esc_html($message)) . "</p>\n";
-        $body .= "<hr><p><small>" . esc_html__('Manage inquiries in WP Admin -> Tourivo -> Inquiries', 'tourivo') . "</small></p>";
-
-        $headers = [
-            'Content-Type: text/html; charset=UTF-8',
-            'Reply-To: ' . $name . ' <' . $email . '>',
-        ];
-
-        wp_mail($adminEmail, $subject, $body, $headers);
 
         do_action('tourivo/inquiry_created', $inquiryId, [
             'inquiry_id'  => $inquiryId,

@@ -91,6 +91,19 @@ Tourivo contains an optional Outbound Webhook Integration feature that connects 
 
 ---
 
+== Privacy & GDPR Compliance ==
+
+Tourivo is engineered from the ground up for strict privacy regulations (GDPR, CCPA, and statutory accounting rules):
+
+* **User Consent (Opt-in):** Optional explicit consent checkboxes on frontend booking panels and inquiry forms with automated versioning (SHA-256 hash) and timestamp audit tracking (`consent_at`, `consent_version`).
+* **WordPress Privacy Tools Integration:**
+  * **Personal Data Exporter:** Integrated with WordPress Core Export Personal Data tool with 50-item batched pagination for customer bookings and inquiries.
+  * **Personal Data Eraser:** Integrated with WordPress Core Erase Personal Data tool. Anonymizes customer identifiers (`customer_name`, `customer_email`, `customer_phone`, `billing_address`, `customer_notes`, `ip_address`) while legally retaining financial transaction lines for statutory tax accounting obligations. Deletes inquiries and traveler wishlist metadata.
+* **Data Minimization & IP Collection Control:** Configurable `store_ip` setting allowing operators to disable IP address storage entirely. Endpoint rate limits continue to operate using temporary, hashed transients without persisting raw IP addresses.
+* **Scheduled Data Retention:** Built-in automated retention crons (`tourivo_daily_privacy_retention`) to automatically anonymize completed bookings after *N* months and purge old inquiries after *N* months.
+
+---
+
 == Screenshots ==
 
 1. Tourivo Admin Dashboard with Live Booking KPIs and Quick Actions.

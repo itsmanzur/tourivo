@@ -144,12 +144,13 @@ class InventoryService
         string $startDate,
         ?string $endDate = null,
         string $timeSlot = 'all_day',
-        int $requestedCount = 1
+        int $requestedCount = 1,
+        bool $enforceFuture = true
     ): array {
         $timeSlot = self::normalizeTimeSlot($timeSlot);
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
         $defaultCapacity = $this->getDefaultCapacity($itemId, $itemType);
-        $dates = $this->generateDateList($startDate, $endDate);
+        $dates = $this->generateDateList($startDate, $endDate, $enforceFuture);
 
         if (empty($dates)) {
             return [
@@ -288,11 +289,12 @@ class InventoryService
         ?string $endDate = null,
         string $timeSlot = 'all_day',
         int $count = 1,
-        int $ttlMinutes = 15
+        int $ttlMinutes = 15,
+        bool $enforceFuture = true
     ): string|false {
         $timeSlot = self::normalizeTimeSlot($timeSlot);
         $itemType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour';
-        $dates = $this->generateDateList($startDate, $endDate);
+        $dates = $this->generateDateList($startDate, $endDate, $enforceFuture);
         if (empty($dates)) {
             return false;
         }
@@ -338,6 +340,7 @@ class InventoryService
      * @param string      $timeSlot
      * @param int         $count
      * @param string|null $holdToken
+     * @param bool        $enforceFuture
      * @return bool
      */
     public function commitBooking(
@@ -347,11 +350,12 @@ class InventoryService
         ?string $endDate = null,
         string $timeSlot = 'all_day',
         int $count = 1,
-        ?string $holdToken = null
+        ?string $holdToken = null,
+        bool $enforceFuture = true
     ): bool {
         $timeSlot = self::normalizeTimeSlot($timeSlot);
         $itemType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour';
-        $dates = $this->generateDateList($startDate, $endDate);
+        $dates = $this->generateDateList($startDate, $endDate, $enforceFuture);
         if (empty($dates)) {
             return false;
         }

@@ -21,6 +21,7 @@ use Tourivo\Services\InquiryService;
 use Tourivo\Services\InventoryService;
 use Tourivo\Services\LogService;
 use Tourivo\Shortcodes\BookingLookupShortcode;
+use Tourivo\Shortcodes\ThankYouShortcode;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -46,9 +47,11 @@ class AdminServiceProvider extends ServiceProvider
         add_action('wp_ajax_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
         add_action('wp_ajax_nopriv_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
 
-        // Printable Voucher Handler (Admin & Public with token)
+        // Printable Voucher & Calendar .ics handlers (Admin & Public with token)
         add_action('admin_post_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
         add_action('admin_post_nopriv_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
+        add_action('admin_post_tourivo_download_ics', [$this, 'handleDownloadIcs']);
+        add_action('admin_post_nopriv_tourivo_download_ics', [$this, 'handleDownloadIcs']);
 
         if (!is_admin()) {
             return;
@@ -75,6 +78,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('wp_ajax_tourivo_add_booking_note', [$this, 'handleAddBookingNote']);
         $this->addAction('wp_ajax_tourivo_get_admin_calendar', [$this, 'handleGetAdminCalendar']);
         $this->addAction('wp_ajax_tourivo_update_availability', [$this, 'handleUpdateAvailability']);
+        $this->addAction('wp_ajax_tourivo_retention_dry_run', [$this, 'handleRetentionDryRun']);
 
         // Setup Wizard AJAX Handlers
         $this->addAction('wp_ajax_tourivo_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
@@ -418,6 +422,7 @@ class AdminServiceProvider extends ServiceProvider
         $customerPhone = isset($_POST['customer_phone']) ? sanitize_text_field(wp_unslash($_POST['customer_phone'])) : '';
         $paymentStatus = isset($_POST['payment_status']) ? sanitize_text_field(wp_unslash($_POST['payment_status'])) : 'paid';
         $customerNotes = isset($_POST['customer_notes']) ? sanitize_textarea_field(wp_unslash($_POST['customer_notes'])) : '';
+        $sendCustomerEmail = isset($_POST['send_customer_email']) && ($_POST['send_customer_email'] === '1' || $_POST['send_customer_email'] === 'true' || $_POST['send_customer_email'] === true);
 
         if ($itemId <= 0 || empty($checkIn) || empty($customerName) || empty($customerEmail)) {
             wp_send_json_error(['message' => __('Please fill in all required fields.', 'tourivo')], 400);
@@ -431,22 +436,23 @@ class AdminServiceProvider extends ServiceProvider
 
         $bookingService = Container::getInstance()->get(BookingService::class);
         $result = $bookingService->createBooking([
-            'item_id'        => $itemId,
-            'item_type'      => $itemType,
-            'check_in'       => $checkIn,
-            'check_out'      => $checkOut,
-            'adults'         => $adults,
-            'children'       => $children,
-            'rooms'          => $rooms,
-            'total_amount'   => $totalAmount,
-            'customer_id'    => $customerId,
-            'customer_name'  => $customerName,
-            'customer_email' => $customerEmail,
-            'customer_phone' => $customerPhone,
-            'customer_notes' => $customerNotes,
-            'payment_method' => 'manual_admin',
-            'payment_status' => $paymentStatus,
-            'booking_status' => 'confirmed',
+            'item_id'             => $itemId,
+            'item_type'           => $itemType,
+            'check_in'            => $checkIn,
+            'check_out'           => $checkOut,
+            'adults'              => $adults,
+            'children'            => $children,
+            'rooms'               => $rooms,
+            'total_amount'        => $totalAmount,
+            'customer_id'         => $customerId,
+            'customer_name'       => $customerName,
+            'customer_email'      => $customerEmail,
+            'customer_phone'      => $customerPhone,
+            'customer_notes'      => $customerNotes,
+            'payment_method'      => 'manual_admin',
+            'payment_status'      => $paymentStatus,
+            'booking_status'      => 'confirmed',
+            'send_customer_email' => $sendCustomerEmail,
         ], true);
 
         if (!empty($result['success'])) {
@@ -532,12 +538,14 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         $email = isset($_POST['email']) ? sanitize_email(wp_unslash($_POST['email'])) : '';
+        $emailType = isset($_POST['email_type']) ? sanitize_key(wp_unslash($_POST['email_type'])) : 'customer_booking_confirmed';
+
         if (empty($email) || !is_email($email)) {
             wp_send_json_error(['message' => __('Please enter a valid email address.', 'tourivo')], 400);
         }
 
         $emailService = new EmailService();
-        $sent = $emailService->sendTestEmail($email);
+        $sent = $emailService->sendTestEmail($email, $emailType);
 
         if ($sent) {
             wp_send_json_success([
@@ -705,6 +713,63 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
+     * Handle iCalendar (.ics) download for bookings.
+     *
+     * @return void
+     */
+    public function handleDownloadIcs(): void
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $code  = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
+
+        if (empty($code)) {
+            wp_die(esc_html__('Invalid or missing booking reference code.', 'tourivo'), 400);
+        }
+
+        global $wpdb;
+        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $tourivoBooking = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$bookingsTable} WHERE booking_code = %s LIMIT 1",
+            $code
+        ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        if (!$tourivoBooking) {
+            wp_die(esc_html__('Booking not found.', 'tourivo'), 404);
+        }
+
+        $bookingId            = (int) $tourivoBooking->id;
+        $isValidThankYou      = ThankYouShortcode::verifyThankYouToken($bookingId, $token);
+        $expectedVoucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $tourivoBooking->customer_email);
+        $isValidVoucher       = hash_equals($expectedVoucherToken, $token);
+        $isAdmin              = current_user_can('manage_tourivo_bookings');
+
+        if (!$isValidThankYou && !$isValidVoucher && !$isAdmin) {
+            wp_die(esc_html__('Access denied. Invalid calendar security token.', 'tourivo'), 403);
+        }
+
+        $ics = ThankYouShortcode::generateIcsContent($bookingId);
+        if (empty($ics)) {
+            wp_die(esc_html__('Could not generate calendar file.', 'tourivo'), 500);
+        }
+
+        $filename = 'booking-' . sanitize_file_name((string) $tourivoBooking->booking_code) . '.ics';
+
+        header('Content-Type: text/calendar; charset=utf-8');
+        header('Content-Disposition: attachment; filename="' . $filename . '"');
+        header('Cache-Control: no-cache, no-store, must-revalidate');
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+        echo $ics;
+        exit;
+    }
+
+    /**
      * AJAX handler to fetch admin monthly availability calendar grid.
      *
      * @return void
@@ -794,6 +859,23 @@ class AdminServiceProvider extends ServiceProvider
         } else {
             wp_send_json_error(['message' => $result['message'] ?? __('Failed to update availability.', 'tourivo')], 400);
         }
+    }
+
+    /**
+     * AJAX handler to calculate retention dry-run counts.
+     *
+     * @return void
+     */
+    public function handleRetentionDryRun(): void
+    {
+        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_tourivo_settings')) {
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+        }
+
+        $counts = \Tourivo\Services\PrivacyService::getRetentionDryRunCounts();
+        wp_send_json_success($counts);
     }
 }
 

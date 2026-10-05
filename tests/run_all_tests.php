@@ -25,6 +25,10 @@ require_once __DIR__ . '/Integration/LookupVoucherTest.php';
 require_once __DIR__ . '/Integration/WebhookTest.php';
 require_once __DIR__ . '/Integration/DataAndMiscTest.php';
 require_once __DIR__ . '/Integration/AdminAvailabilityManagerTest.php';
+require_once __DIR__ . '/Integration/PricingEngineTest.php';
+require_once __DIR__ . '/Integration/EmailSystemTest.php';
+require_once __DIR__ . '/Integration/PostBookingExperienceTest.php';
+require_once __DIR__ . '/Integration/PrivacyGdprTest.php';
 
 echo "=====================================================\n";
 echo "           Tourivo Automated Test Suite\n";
@@ -42,6 +46,10 @@ $testClasses = [
     \Tourivo\Tests\Integration\WebhookTest::class,
     \Tourivo\Tests\Integration\DataAndMiscTest::class,
     \Tourivo\Tests\Integration\AdminAvailabilityManagerTest::class,
+    \Tourivo\Tests\Integration\PricingEngineTest::class,
+    \Tourivo\Tests\Integration\EmailSystemTest::class,
+    \Tourivo\Tests\Integration\PostBookingExperienceTest::class,
+    \Tourivo\Tests\Integration\PrivacyGdprTest::class,
 ];
 
 $totalTests = 0;
@@ -58,6 +66,9 @@ class SimpleAssertionTrait {
     }
     public function assertEquals($expected, $actual, string $msg = ''): void {
         if ($expected !== $actual) throw new \Exception($msg ?: "Failed asserting that '$actual' equals '$expected'.");
+    }
+    public function assertNotEquals($expected, $actual, string $msg = ''): void {
+        if ($expected === $actual) throw new \Exception($msg ?: "Failed asserting that '$actual' does not equal '$expected'.");
     }
     public function assertNotEmpty($value, string $msg = ''): void {
         if (empty($value)) throw new \Exception($msg ?: 'Failed asserting that value is not empty.');

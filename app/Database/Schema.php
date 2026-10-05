@@ -32,7 +32,7 @@ class Schema
     /**
      * Current schema version.
      */
-    public const CURRENT_DB_VERSION = '1.2.0';
+    public const CURRENT_DB_VERSION = '1.3.0';
 
     /**
      * Get the registered migrations list.

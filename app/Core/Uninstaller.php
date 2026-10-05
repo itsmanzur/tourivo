@@ -48,6 +48,7 @@ class Uninstaller
         wp_clear_scheduled_hook('tourivo_daily_cleanup');
         wp_clear_scheduled_hook('tourivo_sync_ical_feeds');
         wp_clear_scheduled_hook('tourivo_cleanup_expired_holds');
+        wp_clear_scheduled_hook('tourivo_daily_privacy_retention');
 
         $settings = get_option('tourivo_settings', []);
         $eraseDataOnDelete = !empty($settings['erase_data_on_uninstall']);

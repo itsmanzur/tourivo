@@ -13,20 +13,22 @@ if (!defined('ABSPATH')) {
 }
 
 $tourivoTitle = !empty($tourivoLookupTitle) ? $tourivoLookupTitle : __('Track Your Booking', 'tourivo');
-$tourivoDesc  = !empty($tourivoLookupDesc) ? $tourivoLookupDesc : __('Enter your booking reference code and email to check your reservation status and download your voucher.', 'tourivo');
+$tourivoDesc  = !empty($tourivoLookupDesc) ? $tourivoLookupDesc : __('Enter your booking reference code and email to check your reservation status, download your voucher, or request cancellation.', 'tourivo');
 $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('tourivo_lookup_nonce');
 ?>
 
 <div class="tourivo-lookup-wrapper" id="tourivo-lookup-portal">
     <div class="tourivo-lookup-card">
         <div class="tourivo-lookup-header">
-            <div class="tourivo-lookup-icon">🎫</div>
-            <h3 class="tourivo-lookup-title"><?php echo esc_html($tourivoTitle); ?></h3>
+            <div class="tourivo-lookup-icon" aria-hidden="true">🎫</div>
+            <h2 class="tourivo-lookup-title"><?php echo esc_html($tourivoTitle); ?></h2>
             <p class="tourivo-lookup-desc"><?php echo esc_html($tourivoDesc); ?></p>
         </div>
 
         <form class="tourivo-lookup-form" id="tourivoLookupForm" onsubmit="return false;">
-            <input type="hidden" name="nonce" value="<?php echo esc_attr($tourivoLookupToken); ?>">
+            <input type="hidden" name="nonce" id="trv_lookup_nonce" value="<?php echo esc_attr($tourivoLookupToken); ?>">
+            <!-- Honeypot anti-spam -->
+            <input type="text" name="trv_hp_check" id="trv_hp_check" style="display:none;" tabindex="-1" autocomplete="off">
 
             <div class="tourivo-lookup-grid">
                 <div class="tourivo-lookup-field">
@@ -48,19 +50,22 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
             </div>
         </form>
 
-        <div id="tourivoLookupError" class="tourivo-lookup-alert error" style="display:none;"></div>
+        <div id="tourivoLookupError" class="tourivo-lookup-alert error" style="display:none;" aria-live="polite"></div>
 
-        <div id="tourivoLookupResult" class="tourivo-lookup-result" style="display:none;">
+        <div id="tourivoLookupResult" class="tourivo-lookup-result" style="display:none;" aria-live="polite">
             <div class="tourivo-result-card">
                 <div class="tourivo-result-header">
                     <div>
                         <span class="tourivo-result-label"><?php esc_html_e('Booking Reference', 'tourivo'); ?></span>
-                        <h4 class="tourivo-result-code" id="resBookingCode">#TRV-0000</h4>
+                        <h3 class="tourivo-result-code" id="resBookingCode">#TRV-0000</h3>
                         <small class="tourivo-result-date" id="resCreatedAt"></small>
                     </div>
                     <div class="tourivo-result-badges">
                         <span class="tourivo-badge" id="resBookingStatus"></span>
                         <span class="tourivo-badge" id="resPaymentStatus"></span>
+                        <span class="tourivo-badge" id="resCancelRequestedBadge" style="display:none; background:#fee2e2; color:#991b1b;">
+                            🚨 <?php esc_html_e('Cancel Requested', 'tourivo'); ?>
+                        </span>
                     </div>
                 </div>
 
@@ -70,7 +75,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
                 </div>
 
                 <div class="tourivo-result-items-box">
-                    <h5 style="margin: 0 0 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;"><?php esc_html_e('Booked Package / Stays', 'tourivo'); ?></h5>
+                    <h4 style="margin: 0 0 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;"><?php esc_html_e('Booked Package / Stays', 'tourivo'); ?></h4>
                     <div id="resItemsContainer"></div>
                 </div>
 
@@ -79,11 +84,34 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
                         <span><?php esc_html_e('Total Amount:', 'tourivo'); ?></span>
                         <strong id="resTotalAmount">$0.00</strong>
                     </div>
-                    <div class="tourivo-result-actions">
+                    <div class="tourivo-result-actions" style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
                         <a href="#" id="resVoucherBtn" target="_blank" rel="noopener" class="tourivo-btn tourivo-btn-success">
                             🖨️ <?php esc_html_e('Print Booking Voucher', 'tourivo'); ?>
                         </a>
+                        <button type="button" id="resCancelBtn" class="tourivo-btn tourivo-btn-cancel" style="display:none;">
+                            🚨 <?php esc_html_e('Cancel Booking', 'tourivo'); ?>
+                        </button>
                     </div>
+                </div>
+
+                <!-- Cancellation Request Box -->
+                <div id="tourivoCancelBox" style="display:none; margin-top:20px; padding:16px; background:#fff1f2; border:1px solid #fecdd3; border-radius:8px;">
+                    <h4 style="margin:0 0 8px; color:#9f1239; font-size:15px; font-weight:700;">
+                        <?php esc_html_e('Submit Cancellation Request', 'tourivo'); ?>
+                    </h4>
+                    <p style="margin:0 0 12px; font-size:13px; color:#881337;">
+                        <?php esc_html_e('Are you sure you wish to cancel this reservation? Please provide a reason below:', 'tourivo'); ?>
+                    </p>
+                    <textarea id="trv_cancel_reason" rows="3" class="tourivo-lookup-input" placeholder="<?php esc_attr_e('Reason for cancellation (optional)...', 'tourivo'); ?>" style="margin-bottom:12px; font-size:13px;"></textarea>
+                    <div style="display:flex; gap:10px;">
+                        <button type="button" id="tourivoConfirmCancelBtn" class="tourivo-btn tourivo-btn-danger">
+                            <?php esc_html_e('Confirm Cancellation', 'tourivo'); ?>
+                        </button>
+                        <button type="button" id="tourivoDismissCancelBtn" class="tourivo-btn" style="background:#f1f5f9; color:#334155;">
+                            <?php esc_html_e('Keep My Booking', 'tourivo'); ?>
+                        </button>
+                    </div>
+                    <div id="tourivoCancelAlert" style="display:none; margin-top:10px; font-size:13px; font-weight:600;"></div>
                 </div>
             </div>
         </div>
@@ -148,58 +176,79 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     border: 1px solid #cbd5e1;
     border-radius: 8px;
     font-size: 15px;
-    transition: all 0.2s ease;
-    background: #f8fafc;
+    transition: border-color 0.2s;
 }
 .tourivo-lookup-input:focus {
     outline: none;
     border-color: #0d9488;
-    background: #ffffff;
     box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
 }
 .tourivo-lookup-actions {
     text-align: center;
 }
-.tourivo-lookup-submit {
-    padding: 12px 28px;
-    font-size: 16px;
-    font-weight: 600;
-    border-radius: 8px;
+.tourivo-btn {
+    border: none;
     cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 8px;
+    transition: all 0.2s;
+}
+.tourivo-btn-primary {
     background: #0d9488;
     color: #ffffff;
-    border: none;
-    transition: background 0.2s ease;
 }
-.tourivo-lookup-submit:hover {
+.tourivo-btn-primary:hover {
     background: #0f766e;
 }
+.tourivo-btn-success {
+    background: #10b981;
+    color: #ffffff;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+.tourivo-btn-success:hover {
+    background: #059669;
+    color: #ffffff;
+}
+.tourivo-btn-cancel {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+.tourivo-btn-cancel:hover {
+    background: #fecdd3;
+}
+.tourivo-btn-danger {
+    background: #e11d48;
+    color: #ffffff;
+}
+.tourivo-btn-danger:hover {
+    background: #be123c;
+}
 .tourivo-lookup-alert {
-    margin-top: 20px;
-    padding: 12px 16px;
+    padding: 14px;
     border-radius: 8px;
+    margin-top: 20px;
     font-size: 14px;
-    text-align: center;
+    line-height: 1.5;
 }
 .tourivo-lookup-alert.error {
     background: #fef2f2;
-    color: #b91c1c;
-    border: 1px solid #fecaca;
+    color: #991b1b;
+    border: 1px solid #fee2e2;
 }
 .tourivo-lookup-result {
     margin-top: 28px;
-    animation: tourivoFadeIn 0.3s ease-in-out;
-}
-@keyframes tourivoFadeIn {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 .tourivo-result-card {
+    background: #ffffff;
     border: 1px solid #e2e8f0;
     border-radius: 12px;
     padding: 24px;
-    background: #ffffff;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
 }
 .tourivo-result-header {
     display: flex;
@@ -210,42 +259,42 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     margin-bottom: 16px;
 }
 .tourivo-result-label {
-    font-size: 12px;
+    display: block;
+    font-size: 11px;
     text-transform: uppercase;
     letter-spacing: 0.05em;
-    color: #94a3b8;
-    font-weight: 600;
+    color: #64748b;
 }
 .tourivo-result-code {
     font-size: 20px;
-    font-weight: 700;
     color: #0f172a;
-    margin: 2px 0 0;
+    margin: 2px 0 4px;
 }
 .tourivo-result-date {
-    font-size: 12px;
     color: #64748b;
 }
 .tourivo-result-badges {
     display: flex;
-    gap: 8px;
+    gap: 6px;
+    flex-wrap: wrap;
 }
 .tourivo-badge {
+    display: inline-block;
     padding: 4px 10px;
-    border-radius: 20px;
+    border-radius: 9999px;
     font-size: 12px;
     font-weight: 600;
-    color: #ffffff;
-    display: inline-block;
 }
 .tourivo-result-customer-info {
     font-size: 14px;
-    color: #475569;
+    color: #334155;
     margin-bottom: 16px;
-    line-height: 1.6;
 }
 .tourivo-result-customer-info p {
-    margin: 0 0 4px;
+    margin: 4px 0;
+}
+.tourivo-result-items-box {
+    margin-bottom: 20px;
 }
 .tourivo-result-footer {
     display: flex;
@@ -254,6 +303,8 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     border-top: 1px solid #f1f5f9;
     padding-top: 16px;
     margin-top: 16px;
+    flex-wrap: wrap;
+    gap: 12px;
 }
 .tourivo-result-total span {
     font-size: 13px;
@@ -264,22 +315,6 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     font-size: 22px;
     color: #0f172a;
 }
-.tourivo-btn-success {
-    background: #10b981;
-    color: #ffffff;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: background 0.2s;
-}
-.tourivo-btn-success:hover {
-    background: #059669;
-    color: #ffffff;
-}
 </style>
 
 <script>
@@ -288,6 +323,13 @@ document.addEventListener('DOMContentLoaded', function() {
     var btn = document.getElementById('tourivoLookupBtn');
     var errorBox = document.getElementById('tourivoLookupError');
     var resultBox = document.getElementById('tourivoLookupResult');
+    var cancelBtn = document.getElementById('resCancelBtn');
+    var cancelBox = document.getElementById('tourivoCancelBox');
+    var confirmCancelBtn = document.getElementById('tourivoConfirmCancelBtn');
+    var dismissCancelBtn = document.getElementById('tourivoDismissCancelBtn');
+    var cancelAlert = document.getElementById('tourivoCancelAlert');
+
+    var currentBooking = null;
 
     if (!form || !btn) return;
 
@@ -311,10 +353,12 @@ document.addEventListener('DOMContentLoaded', function() {
         btn.querySelector('.btn-spinner').style.display = 'inline';
         errorBox.style.display = 'none';
         resultBox.style.display = 'none';
+        if (cancelBox) cancelBox.style.display = 'none';
 
         var formData = new FormData();
         formData.append('action', 'tourivo_lookup_booking');
-        formData.append('nonce', form.querySelector('input[name="nonce"]').value);
+        formData.append('nonce', document.getElementById('trv_lookup_nonce').value);
+        formData.append('trv_hp_check', document.getElementById('trv_hp_check').value);
         formData.append('booking_code', code);
         formData.append('customer_email', email);
 
@@ -334,6 +378,7 @@ document.addEventListener('DOMContentLoaded', function() {
             btn.querySelector('.btn-spinner').style.display = 'none';
 
             if (data.success && data.data) {
+                currentBooking = data.data;
                 renderResult(data.data);
             } else {
                 showError((data.data && data.data.message) ? data.data.message : '<?php echo esc_js(__('Could not retrieve reservation details.', 'tourivo')); ?>');
@@ -346,6 +391,87 @@ document.addEventListener('DOMContentLoaded', function() {
             showError('<?php echo esc_js(__('Connection error. Please try again.', 'tourivo')); ?>');
         });
     });
+
+    if (cancelBtn && cancelBox) {
+        cancelBtn.addEventListener('click', function() {
+            cancelBox.style.display = cancelBox.style.display === 'none' ? 'block' : 'none';
+            if (cancelAlert) cancelAlert.style.display = 'none';
+        });
+    }
+
+    if (dismissCancelBtn && cancelBox) {
+        dismissCancelBtn.addEventListener('click', function() {
+            cancelBox.style.display = 'none';
+        });
+    }
+
+    if (confirmCancelBtn) {
+        confirmCancelBtn.addEventListener('click', function() {
+            if (!currentBooking) return;
+
+            var reasonInput = document.getElementById('trv_cancel_reason');
+            var reason = reasonInput ? reasonInput.value.trim() : '';
+
+            confirmCancelBtn.disabled = true;
+            confirmCancelBtn.textContent = '<?php echo esc_js(__('Processing...', 'tourivo')); ?>';
+            if (cancelAlert) cancelAlert.style.display = 'none';
+
+            var formData = new FormData();
+            formData.append('action', 'tourivo_request_booking_cancellation');
+            formData.append('booking_code', currentBooking.booking_code);
+            formData.append('customer_email', currentBooking.customer_email);
+            formData.append('reason', reason);
+            formData.append('trv_hp_check', document.getElementById('trv_hp_check').value);
+
+            var ajaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
+
+            fetch(ajaxUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(function(res) { return res.json(); })
+            .then(function(data) {
+                confirmCancelBtn.disabled = false;
+                confirmCancelBtn.textContent = '<?php echo esc_js(__('Confirm Cancellation', 'tourivo')); ?>';
+
+                if (cancelAlert) {
+                    cancelAlert.style.display = 'block';
+                    if (data.success) {
+                        cancelAlert.style.color = '#15803d';
+                        cancelAlert.textContent = '✓ ' + (data.data.message || '<?php echo esc_js(__('Request submitted successfully.', 'tourivo')); ?>');
+
+                        if (data.data.mode === 'cancelled') {
+                            var statusBadge = document.getElementById('resBookingStatus');
+                            if (statusBadge) {
+                                statusBadge.textContent = 'Cancelled';
+                                statusBadge.style.backgroundColor = '#ef4444';
+                            }
+                            if (cancelBtn) cancelBtn.style.display = 'none';
+                        } else {
+                            var reqBadge = document.getElementById('resCancelRequestedBadge');
+                            if (reqBadge) reqBadge.style.display = 'inline-block';
+                            if (cancelBtn) cancelBtn.disabled = true;
+                        }
+                    } else {
+                        cancelAlert.style.color = '#b91c1c';
+                        cancelAlert.textContent = '✕ ' + ((data.data && data.data.message) ? data.data.message : '<?php echo esc_js(__('Failed to submit cancellation request.', 'tourivo')); ?>');
+                    }
+                }
+            })
+            .catch(function() {
+                confirmCancelBtn.disabled = false;
+                confirmCancelBtn.textContent = '<?php echo esc_js(__('Confirm Cancellation', 'tourivo')); ?>';
+                if (cancelAlert) {
+                    cancelAlert.style.display = 'block';
+                    cancelAlert.style.color = '#b91c1c';
+                    cancelAlert.textContent = '✕ <?php echo esc_js(__('Connection error. Please try again.', 'tourivo')); ?>';
+                }
+            });
+        });
+    }
 
     function showError(msg) {
         if (!errorBox) return;
@@ -365,6 +491,11 @@ document.addEventListener('DOMContentLoaded', function() {
         payBadge.textContent = b.payment_status;
         payBadge.style.backgroundColor = b.payment_color;
 
+        var reqBadge = document.getElementById('resCancelRequestedBadge');
+        if (reqBadge) {
+            reqBadge.style.display = b.cancel_requested ? 'inline-block' : 'none';
+        }
+
         document.getElementById('resCustomerName').textContent = b.customer_name;
         document.getElementById('resCustomerEmail').textContent = b.customer_email;
         document.getElementById('resPaymentMethod').textContent = b.payment_method;
@@ -374,6 +505,13 @@ document.addEventListener('DOMContentLoaded', function() {
         var voucherBtn = document.getElementById('resVoucherBtn');
         if (voucherBtn && b.voucher_url) {
             voucherBtn.href = b.voucher_url;
+        }
+
+        if (cancelBtn) {
+            cancelBtn.style.display = (b.allow_cancel && b.booking_status !== 'Cancelled') ? 'inline-block' : 'none';
+            if (b.cancel_requested) {
+                cancelBtn.disabled = true;
+            }
         }
 
         resultBox.style.display = 'block';

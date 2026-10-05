@@ -91,6 +91,7 @@ class BookingController extends Controller
             'rooms'           => $rooms,
             'adults'          => $adults,
             'children'        => $children,
+            'infants'         => max(0, (int) ($rawParams['infants'] ?? 0)),
             'customer_name'   => isset($rawParams['customer_name']) ? sanitize_text_field((string) $rawParams['customer_name']) : '',
             'customer_email'  => isset($rawParams['customer_email']) ? sanitize_email((string) $rawParams['customer_email']) : '',
             'customer_phone'  => isset($rawParams['customer_phone']) ? sanitize_text_field((string) $rawParams['customer_phone']) : '',
@@ -98,6 +99,7 @@ class BookingController extends Controller
             'billing_address' => isset($rawParams['billing_address']) ? sanitize_textarea_field((string) $rawParams['billing_address']) : '',
             'time_slot'       => !empty($rawParams['time_slot']) ? sanitize_text_field((string) $rawParams['time_slot']) : 'all_day',
             'hold_token'      => !empty($rawParams['hold_token']) ? sanitize_text_field((string) $rawParams['hold_token']) : null,
+            'consent'         => !empty($rawParams['consent']) ? 1 : 0,
         ];
 
         // Public route: $trusted is false

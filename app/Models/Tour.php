@@ -90,6 +90,11 @@ class Tour extends Model
      *
      * @return int
      */
+    /**
+     * Get minimum group size.
+     *
+     * @return int
+     */
     public function getMinGuests(): int
     {
         return (int) ($this->getMeta('_tourivo_min_guests') ?: 1);
@@ -103,6 +108,51 @@ class Tour extends Model
     public function getMaxGuests(): int
     {
         return (int) ($this->getMeta('_tourivo_max_guests') ?: 20);
+    }
+
+    /**
+     * Get child pricing model ('full', 'percent', 'fixed', 'free').
+     *
+     * @return string
+     */
+    public function getChildPriceType(): string
+    {
+        $type = (string) $this->getMeta('_tourivo_child_price_type');
+        return in_array($type, ['full', 'percent', 'fixed', 'free'], true) ? $type : 'full';
+    }
+
+    /**
+     * Get child pricing value (percentage or fixed amount).
+     *
+     * @return float
+     */
+    public function getChildPriceValue(): float
+    {
+        return max(0.0, (float) ($this->getMeta('_tourivo_child_price_value') ?: 0.0));
+    }
+
+    /**
+     * Get custom child age label (e.g. "Ages 3-11").
+     *
+     * @return string
+     */
+    public function getChildAgeLabel(): string
+    {
+        return (string) ($this->getMeta('_tourivo_child_age_label') ?: '');
+    }
+
+    /**
+     * Check if infants are free of charge.
+     *
+     * @return bool
+     */
+    public function isInfantsFree(): bool
+    {
+        $val = $this->getMeta('_tourivo_infants_free');
+        if ($val === '' || $val === false || $val === null) {
+            return true;
+        }
+        return $val === 'yes' || $val === '1' || $val === 1 || $val === true;
     }
 
     /**

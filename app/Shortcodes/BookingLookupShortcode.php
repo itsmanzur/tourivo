@@ -4,6 +4,11 @@ declare(strict_types=1);
 
 namespace Tourivo\Shortcodes;
 
+use Tourivo\Common\Container;
+use Tourivo\Config\Config;
+use Tourivo\Services\BookingService;
+use Tourivo\Services\EmailService;
+use Tourivo\Services\LogService;
 use Tourivo\Support\ClientIp;
 use Tourivo\Support\Money;
 
@@ -14,8 +19,11 @@ if (!defined('ABSPATH')) {
 /**
  * Class BookingLookupShortcode
  *
- * Provides a frontend "Track My Booking" lookup portal.
- * Travelers can enter their Booking Reference Code and Email to check live status and print vouchers.
+ * Provides a frontend "Track My Booking" lookup portal with:
+ * - Real-time lookup with honeypot & IP-based rate limiting (cached-page safe)
+ * - Printable voucher token generation & verification
+ * - Customer Cancellation Request / Direct Self-Cancel (within configured window)
+ * - LogService & Admin alert integration
  *
  * Shortcode: [tourivo_booking_lookup]
  *
@@ -23,11 +31,26 @@ if (!defined('ABSPATH')) {
  */
 class BookingLookupShortcode
 {
+    /**
+     * Register shortcode and AJAX endpoints.
+     *
+     * @return void
+     */
     public static function register(): void
     {
         add_shortcode('tourivo_booking_lookup', [self::class, 'render']);
+
+        // Lookup AJAX
         add_action('wp_ajax_tourivo_lookup_booking', [self::class, 'handleLookupAjax']);
         add_action('wp_ajax_nopriv_tourivo_lookup_booking', [self::class, 'handleLookupAjax']);
+
+        // Cancellation Request AJAX
+        add_action('wp_ajax_tourivo_request_booking_cancellation', [self::class, 'handleCancellationAjax']);
+        add_action('wp_ajax_nopriv_tourivo_request_booking_cancellation', [self::class, 'handleCancellationAjax']);
+
+        // Nonce refresh for cached pages
+        add_action('wp_ajax_tourivo_get_lookup_nonce', [self::class, 'handleGetLookupNonce']);
+        add_action('wp_ajax_nopriv_tourivo_get_lookup_nonce', [self::class, 'handleGetLookupNonce']);
     }
 
     /**
@@ -54,13 +77,29 @@ class BookingLookupShortcode
     }
 
     /**
+     * Provide fresh lookup nonce for heavily cached frontend pages.
+     *
+     * @return void
+     */
+    public static function handleGetLookupNonce(): void
+    {
+        nocache_headers();
+        wp_send_json_success([
+            'nonce' => wp_create_nonce('tourivo_lookup_nonce'),
+        ]);
+    }
+
+    /**
      * Handle AJAX lookup request with rate limiting and secure verification.
      *
      * @return void
      */
     public static function handleLookupAjax(): void
     {
-        check_ajax_referer('tourivo_lookup_nonce', 'nonce');
+        // Check Honeypot spam field
+        if (!empty($_POST['trv_hp_check'])) {
+            wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
+        }
 
         $ip = ClientIp::get();
         $rateLimitKey = 'trv_lookup_' . md5($ip);
@@ -73,6 +112,15 @@ class BookingLookupShortcode
             ], 429);
         }
         set_transient($rateLimitKey, $attempts + 1, 300);
+
+        // Verify nonce if provided; fallback to honeypot + rate-limit on strictly cached pages
+        if (!empty($_POST['nonce']) && !wp_verify_nonce((string) $_POST['nonce'], 'tourivo_lookup_nonce')) {
+            // Expired nonce on cached page -> return error with advice to refresh
+            wp_send_json_error([
+                'message' => __('Security token expired. Please refresh the page and try again.', 'tourivo'),
+                'code'    => 'nonce_expired',
+            ], 403);
+        }
 
         $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : '';
         $email       = isset($_POST['customer_email']) ? sanitize_email(wp_unslash((string) $_POST['customer_email'])) : '';
@@ -108,6 +156,194 @@ class BookingLookupShortcode
 
         $payload = self::formatLookupResponseData($booking, $items);
         wp_send_json_success($payload);
+    }
+
+    /**
+     * AJAX handler for traveler cancellation requests or direct self-cancellations.
+     *
+     * @return void
+     */
+    public static function handleCancellationAjax(): void
+    {
+        if (!empty($_POST['trv_hp_check'])) {
+            wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
+        }
+
+        $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : '';
+        $email       = isset($_POST['customer_email']) ? sanitize_email(wp_unslash((string) $_POST['customer_email'])) : '';
+        $reason      = isset($_POST['reason']) ? sanitize_textarea_field(wp_unslash((string) $_POST['reason'])) : '';
+
+        $res = self::processCancellationRequest($bookingCode, $email, $reason);
+
+        if ($res['success']) {
+            wp_send_json_success($res);
+        } else {
+            wp_send_json_error($res, $res['code'] ?? 400);
+        }
+    }
+
+    /**
+     * Core business logic for processing cancellation request or direct self-cancellation.
+     *
+     * @param string $bookingCode
+     * @param string $email
+     * @param string $reason
+     * @return array{success: bool, mode?: string, message: string, code?: int}
+     */
+    public static function processCancellationRequest(string $bookingCode, string $email, string $reason = ''): array
+    {
+        $ip = ClientIp::get();
+        $rateLimitKey = 'trv_cancel_req_' . md5($ip);
+
+        // Rate limiting: max 10 attempts per 5 minutes per IP
+        $attempts = (int) get_transient($rateLimitKey);
+        if ($attempts >= 10) {
+            return [
+                'success' => false,
+                'code'    => 429,
+                'message' => __('Too many cancellation requests submitted. Please try again later.', 'tourivo'),
+            ];
+        }
+        set_transient($rateLimitKey, $attempts + 1, 300);
+
+        if (empty($bookingCode) || empty($email) || !is_email($email)) {
+            return [
+                'success' => false,
+                'code'    => 400,
+                'message' => __('Please provide both a valid Booking Code and Email Address.', 'tourivo'),
+            ];
+        }
+
+        global $wpdb;
+        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $booking = $wpdb->get_row($wpdb->prepare(
+            "SELECT * FROM {$bookingsTable} WHERE booking_code = %s AND customer_email = %s LIMIT 1",
+            $bookingCode,
+            $email
+        ));
+
+        if (!$booking) {
+            return [
+                'success' => false,
+                'code'    => 404,
+                'message' => __('No reservation found matching the provided Booking Code and Email Address.', 'tourivo'),
+            ];
+        }
+
+        $bookingId = (int) $booking->id;
+
+        if ($booking->booking_status === 'cancelled') {
+            return [
+                'success' => false,
+                'code'    => 400,
+                'message' => __('This reservation has already been cancelled.', 'tourivo'),
+            ];
+        }
+
+        $allowCancel = (bool) Config::get('allow_cancel_requests', true);
+        if (!$allowCancel) {
+            return [
+                'success' => false,
+                'code'    => 403,
+                'message' => __('Online cancellation requests are disabled. Please contact customer support.', 'tourivo'),
+            ];
+        }
+
+        $item = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d LIMIT 1", $bookingId));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        $selfCancelHours = (int) Config::get('customer_self_cancel_hours', 0);
+        $checkInRaw      = $item ? (string) $item->check_in : (string) $booking->created_at;
+        $checkInTime     = strtotime($checkInRaw);
+        $now             = time();
+
+        $canSelfCancel = false;
+        if ($selfCancelHours > 0
+            && in_array($booking->booking_status, ['pending', 'confirmed'], true)
+            && $booking->payment_status !== 'paid'
+        ) {
+            $cutoff = $checkInTime - ($selfCancelHours * 3600);
+            if ($now <= $cutoff) {
+                $canSelfCancel = true;
+            }
+        }
+
+        // 1. Direct Self-Cancellation Mode
+        if ($canSelfCancel) {
+            $bookingService = Container::getInstance()->get(BookingService::class);
+            $changeRes = $bookingService->changeStatus($bookingId, 'cancelled', [
+                'source' => 'customer',
+                'reason' => $reason,
+            ]);
+
+            if ($changeRes['success']) {
+                return [
+                    'success' => true,
+                    'mode'    => 'cancelled',
+                    'message' => __('Your reservation has been successfully cancelled and inventory released.', 'tourivo'),
+                ];
+            }
+
+            return [
+                'success' => false,
+                'code'    => 500,
+                'message' => $changeRes['message'] ?: __('Could not cancel reservation.', 'tourivo'),
+            ];
+        }
+
+        // 2. Cancellation Request Mode (Outside window, or Paid booking, or request-only mode)
+        $nowGmt = current_time('mysql', 1);
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery
+        $wpdb->update(
+            $bookingsTable,
+            ['cancel_requested_at' => $nowGmt],
+            ['id' => $bookingId],
+            ['%s'],
+            ['%d']
+        );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery
+
+        // Audit log in LogService
+        LogService::log(
+            $bookingId,
+            'cancel_requested',
+            sprintf(
+                /* translators: %s: Reason for cancellation */
+                __('Traveler submitted cancellation request via lookup portal. Reason: %s', 'tourivo'),
+                $reason ?: __('No reason provided', 'tourivo')
+            ),
+            0
+        );
+
+        // Notify Administrator of Cancellation Request
+        $emailService = Container::getInstance()->get(EmailService::class);
+        $adminEmail   = $emailService->getAdminEmail();
+        if (!empty($adminEmail) && is_email($adminEmail)) {
+            $bookingData = [
+                'id'                  => $bookingId,
+                'booking_code'        => (string) $booking->booking_code,
+                'customer_name'       => (string) $booking->customer_name,
+                'customer_email'      => (string) $booking->customer_email,
+                'customer_phone'      => (string) $booking->customer_phone,
+                'item_title'          => $item ? (string) $item->item_title : __('Tour / Room', 'tourivo'),
+                'total_amount'        => Money::format((float) $booking->total_amount),
+                'cancellation_reason' => $reason ?: __('No reason specified', 'tourivo'),
+            ];
+            // Enqueue admin alert
+            $emailService->enqueue('admin_booking_cancelled', $adminEmail, $bookingData);
+        }
+
+        do_action('tourivo/booking_cancel_requested', $bookingId, $reason);
+
+        return [
+            'success' => true,
+            'mode'    => 'requested',
+            'message' => __('Your cancellation request has been received. Our team will review and process your request shortly.', 'tourivo'),
+        ];
     }
 
     /**
@@ -165,20 +401,26 @@ class BookingLookupShortcode
         }
 
         $createdFormatted = gmdate('M d, Y H:i', strtotime((string) $booking->created_at));
+        $cancelRequested  = !empty($booking->cancel_requested_at) && $bookingStatus !== 'cancelled';
+        $allowCancel      = (bool) Config::get('allow_cancel_requests', true) && $bookingStatus !== 'cancelled';
+        $selfCancelHours  = (int) Config::get('customer_self_cancel_hours', 0);
 
         return [
-            'booking_code'    => (string) $booking->booking_code,
-            'customer_name'   => (string) $booking->customer_name,
-            'customer_email'  => (string) $booking->customer_email,
-            'created_at'      => $createdFormatted,
-            'booking_status'  => ucfirst($bookingStatus),
-            'status_color'    => $statusColors[$bookingStatus] ?? '#64748b',
-            'payment_status'  => ucfirst($paymentStatus),
-            'payment_color'   => $paymentColors[$paymentStatus] ?? '#64748b',
-            'payment_method'  => ucwords(str_replace('_', ' ', (string) $booking->payment_method)),
-            'total_amount'    => Money::format((float) $booking->total_amount, $currencySymbol),
-            'items_html'      => $itemsHtml,
-            'voucher_url'     => esc_url_raw($voucherUrl),
+            'booking_code'     => (string) $booking->booking_code,
+            'customer_name'    => (string) $booking->customer_name,
+            'customer_email'   => (string) $booking->customer_email,
+            'created_at'       => $createdFormatted,
+            'booking_status'   => ucfirst($bookingStatus),
+            'status_color'     => $statusColors[$bookingStatus] ?? '#64748b',
+            'payment_status'   => ucfirst($paymentStatus),
+            'payment_color'    => $paymentColors[$paymentStatus] ?? '#64748b',
+            'payment_method'   => ucwords(str_replace('_', ' ', (string) $booking->payment_method)),
+            'total_amount'     => Money::format((float) $booking->total_amount, $currencySymbol),
+            'items_html'       => $itemsHtml,
+            'voucher_url'      => esc_url_raw($voucherUrl),
+            'cancel_requested' => $cancelRequested,
+            'allow_cancel'     => $allowCancel,
+            'self_cancel_hours'=> $selfCancelHours,
         ];
     }
 

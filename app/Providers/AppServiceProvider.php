@@ -25,6 +25,7 @@ class AppServiceProvider extends ServiceProvider
     {
         // Core application bindings
         $this->container->singleton(\Tourivo\Services\WebhookService::class, fn () => new \Tourivo\Services\WebhookService());
+        $this->container->singleton(\Tourivo\Services\EmailService::class, fn () => new \Tourivo\Services\EmailService());
     }
 
     public function boot(): void
@@ -35,6 +36,19 @@ class AppServiceProvider extends ServiceProvider
         // Initialize Webhook Dispatcher
         $webhookService = $this->container->get(\Tourivo\Services\WebhookService::class);
         $webhookService->register();
+
+        // Initialize Email Dispatcher & Cron
+        $emailService = $this->container->get(\Tourivo\Services\EmailService::class);
+        $emailService->register();
+
+        // Initialize Privacy Tools & GDPR Compliance
+        \Tourivo\Support\Privacy::register();
+
+        // Register daily retention cron hook
+        add_action('tourivo_daily_privacy_retention', [\Tourivo\Services\PrivacyService::class, 'runDailyRetention']);
+        if (!wp_next_scheduled('tourivo_daily_privacy_retention')) {
+            wp_schedule_event(time(), 'daily', 'tourivo_daily_privacy_retention');
+        }
 
         // Register WP-CLI command if CLI environment
         if (defined('WP_CLI') && WP_CLI && class_exists('\WP_CLI')) {

@@ -42,6 +42,8 @@ class CreateInquiriesTable implements MigrationInterface
             guests int(11) NOT NULL DEFAULT 1,
             message text,
             status varchar(30) NOT NULL DEFAULT 'new',
+            consent_at datetime DEFAULT NULL,
+            consent_version varchar(64) DEFAULT NULL,
             ip_address varchar(45) NOT NULL DEFAULT '',
             created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
             updated_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,

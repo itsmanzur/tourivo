@@ -37,12 +37,24 @@ class RouteServiceProvider extends ServiceProvider
         );
         $this->container->singleton(EmailService::class, fn () => new EmailService());
         $this->container->singleton(
+            PricingService::class,
+            fn ($c) => new PricingService($c->get(InventoryService::class))
+        );
+        $this->container->singleton(
             InquiryService::class,
             fn ($c) => new \Tourivo\Services\InquiryService($c->get(EmailService::class))
         );
         $this->container->singleton(
             BookingService::class,
-            fn ($c) => new BookingService($c->get(InventoryService::class), $c->get(EmailService::class))
+            fn ($c) => new BookingService(
+                $c->get(InventoryService::class),
+                $c->get(EmailService::class),
+                $c->get(PricingService::class)
+            )
+        );
+        $this->container->singleton(
+            PricingController::class,
+            fn ($c) => new PricingController($c, $c->get(PricingService::class))
         );
         $this->container->singleton(
             AvailabilityController::class,
@@ -93,6 +105,16 @@ class RouteServiceProvider extends ServiceProvider
         register_rest_route(self::REST_NAMESPACE, '/availability/hold', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$controller, 'hold'],
+            'permission_callback' => '__return_true',
+        ]);
+
+        /** @var PricingController $pricingController */
+        $pricingController = $this->container->get(PricingController::class);
+
+        // GET /wp-json/tourivo/v1/pricing/quote
+        register_rest_route(self::REST_NAMESPACE, '/pricing/quote', [
+            'methods'             => WP_REST_Server::READABLE,
+            'callback'            => [$pricingController, 'quote'],
             'permission_callback' => '__return_true',
         ]);
 

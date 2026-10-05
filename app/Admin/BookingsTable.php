@@ -37,7 +37,9 @@ class BookingsTable
         $where = ['1=1'];
         $params = [];
 
-        if ($statusFilter !== 'all') {
+        if ($statusFilter === 'cancel_requested') {
+            $where[] = "cancel_requested_at IS NOT NULL AND booking_status != 'cancelled'";
+        } elseif ($statusFilter !== 'all') {
             $where[] = 'booking_status = %s';
             $params[] = $statusFilter;
         }
@@ -92,6 +94,7 @@ class BookingsTable
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=all')); ?>" class="<?php echo ($statusFilter === 'all') ? 'current' : ''; ?>"><?php esc_html_e('All', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=pending')); ?>" class="<?php echo ($statusFilter === 'pending') ? 'current' : ''; ?>"><?php esc_html_e('Pending', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=confirmed')); ?>" class="<?php echo ($statusFilter === 'confirmed') ? 'current' : ''; ?>"><?php esc_html_e('Confirmed', 'tourivo'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancel_requested')); ?>" class="<?php echo ($statusFilter === 'cancel_requested') ? 'current' : ''; ?>"><?php esc_html_e('🚨 Cancel Requested', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancelled')); ?>" class="<?php echo ($statusFilter === 'cancelled') ? 'current' : ''; ?>"><?php esc_html_e('Cancelled', 'tourivo'); ?></a></li>
             </ul>
 
@@ -173,6 +176,9 @@ class BookingsTable
                                 <span class="tourivo-badge tourivo-badge-<?php echo esc_attr($b->booking_status); ?>" id="status-badge-<?php echo esc_attr((string)$b->id); ?>">
                                     <?php echo esc_html(ucfirst($b->booking_status)); ?>
                                 </span>
+                                <?php if (!empty($b->cancel_requested_at) && $b->booking_status !== 'cancelled') : ?>
+                                    <br><span class="tourivo-badge" style="background:#fee2e2; color:#991b1b; margin-top:4px; display:inline-block; font-size:11px;">🚨 <?php esc_html_e('Cancel Requested', 'tourivo'); ?></span>
+                                <?php endif; ?>
                             </td>
                             <td>
                                 <div class="action-buttons-group">
@@ -368,7 +374,9 @@ class BookingsTable
         $where = '1=1';
         $params = [];
 
-        if ($statusFilter !== 'all') {
+        if ($statusFilter === 'cancel_requested') {
+            $where .= " AND b.cancel_requested_at IS NOT NULL AND b.booking_status != 'cancelled'";
+        } elseif ($statusFilter !== 'all') {
             $where .= ' AND b.booking_status = %s';
             $params[] = $statusFilter;
         }

@@ -86,6 +86,47 @@ if (!defined('ABSPATH')) {
                     </div>
                 </div>
             </div>
+
+            <hr style="border:0; border-top:1px solid #e5e7eb; margin: 20px 0;">
+            <h4 style="margin:0 0 12px; font-size:14px; font-weight:600;"><?php esc_html_e('Child & Infant Pricing', 'tourivo'); ?></h4>
+
+            <div class="tourivo-row">
+                <div class="tourivo-col">
+                    <div class="tourivo-form-group">
+                        <label for="_tourivo_child_price_type"><?php esc_html_e('Child Price Rule', 'tourivo'); ?></label>
+                        <select name="_tourivo_child_price_type" id="_tourivo_child_price_type">
+                            <option value="full" <?php selected($childPriceType, 'full'); ?>><?php esc_html_e('Full Adult Price (100%)', 'tourivo'); ?></option>
+                            <option value="percent" <?php selected($childPriceType, 'percent'); ?>><?php esc_html_e('Percentage of Adult Price (%)', 'tourivo'); ?></option>
+                            <option value="fixed" <?php selected($childPriceType, 'fixed'); ?>><?php esc_html_e('Fixed Price per Child', 'tourivo'); ?></option>
+                            <option value="free" <?php selected($childPriceType, 'free'); ?>><?php esc_html_e('Free for Children', 'tourivo'); ?></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="tourivo-col">
+                    <div class="tourivo-form-group">
+                        <label for="_tourivo_child_price_value"><?php esc_html_e('Child Value (% or Fixed $)', 'tourivo'); ?></label>
+                        <input type="number" step="0.01" min="0" name="_tourivo_child_price_value" id="_tourivo_child_price_value" value="<?php echo esc_attr($childPriceValue); ?>" placeholder="e.g. 50 (for 50%) or 35.00">
+                    </div>
+                </div>
+            </div>
+
+            <div class="tourivo-row">
+                <div class="tourivo-col">
+                    <div class="tourivo-form-group">
+                        <label for="_tourivo_child_age_label"><?php esc_html_e('Child Age Range Label', 'tourivo'); ?></label>
+                        <input type="text" name="_tourivo_child_age_label" id="_tourivo_child_age_label" value="<?php echo esc_attr($childAgeLabel); ?>" placeholder="<?php esc_attr_e('e.g. Age 2-11', 'tourivo'); ?>">
+                    </div>
+                </div>
+                <div class="tourivo-col">
+                    <div class="tourivo-form-group">
+                        <label for="_tourivo_infants_free"><?php esc_html_e('Infants Free of Charge?', 'tourivo'); ?></label>
+                        <select name="_tourivo_infants_free" id="_tourivo_infants_free">
+                            <option value="yes" <?php selected($infantsFree, 'yes'); ?>><?php esc_html_e('Yes (Free / No Seat Fee)', 'tourivo'); ?></option>
+                            <option value="no" <?php selected($infantsFree, 'no'); ?>><?php esc_html_e('No (Charge Adult Price)', 'tourivo'); ?></option>
+                        </select>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <!-- 2. Itinerary Builder Tab -->

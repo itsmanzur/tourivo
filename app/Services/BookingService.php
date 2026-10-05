@@ -8,6 +8,7 @@ use Exception;
 use Tourivo\Config\Config;
 use Tourivo\Models\Room;
 use Tourivo\Models\Tour;
+use Tourivo\Shortcodes\ThankYouShortcode;
 use Tourivo\Support\ClientIp;
 use Tourivo\Support\Money;
 use wpdb;
@@ -47,17 +48,29 @@ class BookingService
     protected EmailService $emailService;
 
     /**
+     * Pricing service.
+     *
+     * @var PricingService
+     */
+    protected PricingService $pricingService;
+
+    /**
      * BookingService constructor.
      *
-     * @param InventoryService $inventoryService
-     * @param EmailService     $emailService
+     * @param InventoryService    $inventoryService
+     * @param EmailService        $emailService
+     * @param PricingService|null $pricingService
      */
-    public function __construct(InventoryService $inventoryService, EmailService $emailService)
-    {
+    public function __construct(
+        InventoryService $inventoryService,
+        EmailService $emailService,
+        ?PricingService $pricingService = null
+    ) {
         global $wpdb;
         $this->db = $wpdb;
         $this->inventoryService = $inventoryService;
         $this->emailService = $emailService;
+        $this->pricingService = $pricingService ?? new PricingService($inventoryService);
     }
 
     /**
@@ -96,7 +109,8 @@ class BookingService
 
         $adultsCount   = max(1, (int) ($data['adults'] ?? 1));
         $childrenCount = max(0, (int) ($data['children'] ?? 0));
-        $totalGuests   = $adultsCount + $childrenCount;
+        $infantsCount  = max(0, (int) ($data['infants'] ?? 0));
+        $totalGuests   = $adultsCount + $childrenCount + $infantsCount;
         $roomsCount    = max(1, (int) ($data['rooms'] ?? 1));
         $holdToken     = !empty($data['hold_token']) ? sanitize_text_field((string) $data['hold_token']) : null;
 
@@ -110,17 +124,24 @@ class BookingService
             return ['success' => false, 'message' => __('Please provide all required traveler details (Name, Valid Email, Date).', 'tourivo')];
         }
 
-        // 3. Item-Specific Occupancy & Pricing Checks
+        // Consent verification for non-admin public bookings
+        $requireConsent = (bool) Config::get('require_consent', false);
+        if (!$trusted && $requireConsent && empty($data['consent'])) {
+            return ['success' => false, 'message' => __('You must agree to the terms and privacy policy before completing this booking.', 'tourivo')];
+        }
+
+        // 3. Item-Specific Occupancy Validation & Title Resolution
         $itemTitle = '';
-        $unitPrice = 0.0;
-        $baseTotal = 0.0;
-        $nightsCount = 1;
+        $inventoryQuantity = 1;
 
         if ($itemType === 'tour') {
             $tour = new Tour($itemId);
             $itemTitle = $tour->getTitle();
             $maxGuests = $tour->getMaxGuests();
-            if ($maxGuests > 0 && $totalGuests > $maxGuests) {
+            $infantsUseCapacity = (bool) apply_filters('tourivo/infants_use_capacity', false, $itemId, $itemType, $data);
+            $capacityGuests = $adultsCount + $childrenCount + ($infantsUseCapacity ? $infantsCount : 0);
+
+            if ($maxGuests > 0 && $capacityGuests > $maxGuests) {
                 return [
                     'success' => false,
                     /* translators: %d: Maximum allowed guests */
@@ -128,9 +149,7 @@ class BookingService
                 ];
             }
 
-            $unitPrice = $tour->getActivePrice();
-            $baseTotal = $unitPrice * $totalGuests;
-            $inventoryQuantity = $totalGuests;
+            $inventoryQuantity = $capacityGuests;
         } else {
             // Room
             if (empty($checkOut)) {
@@ -171,43 +190,38 @@ class BookingService
                 ];
             }
 
-            $dates = $this->inventoryService->generateDateList($checkIn, $checkOut, false);
-            $nightsCount = max(1, count($dates));
-            $unitPrice   = $room->getNightlyPrice();
-            $baseTotal   = $unitPrice * $roomsCount * $nightsCount;
             $inventoryQuantity = $roomsCount;
         }
 
-        // 4. Check Inventory Availability
-        $avail = $this->inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity);
-        if (!$avail['available']) {
-            return ['success' => false, 'message' => $avail['message']];
-        }
-
-        // 5. Pricing Pipeline Filter (Enables Pro Pricing Tiers, Seasonality, Extra Add-ons)
-        $unitPrice = (float) ($avail['unit_price'] ?? $unitPrice);
-        $baseTotal = (float) ($avail['total_price'] ?? $baseTotal);
-
-        $defaultCurrency = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
-        $pricingData = apply_filters('tourivo/booking_price', [
-            'unit_price'  => $unitPrice,
-            'total_price' => $baseTotal,
-            'base_price'  => $baseTotal,
-            'currency'    => $defaultCurrency,
-        ], [
+        // 4. Calculate Authoritative Price Quote from Pricing Engine
+        $quote = $this->pricingService->quote([
             'item_id'   => $itemId,
             'item_type' => $itemType,
             'check_in'  => $checkIn,
             'check_out' => $checkOut,
+            'time_slot' => $timeSlot,
             'adults'    => $adultsCount,
             'children'  => $childrenCount,
-            'guests'    => $totalGuests,
+            'infants'   => $infantsCount,
             'rooms'     => $roomsCount,
-            'nights'    => $nightsCount,
-            'data'      => $data,
         ]);
 
-        $totalPrice = (float) ($pricingData['total_price'] ?? $baseTotal);
+        if (!$quote['success']) {
+            return ['success' => false, 'message' => $quote['message'] ?? __('Failed to calculate price quote.', 'tourivo')];
+        }
+
+        // 5. Check Inventory Availability
+        $avail = $this->inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity, !$trusted);
+        if (!$avail['available']) {
+            return ['success' => false, 'message' => $avail['message']];
+        }
+
+        $unitPrice       = (float) $quote['unit_price'];
+        $subtotalPrice   = (float) $quote['subtotal'];
+        $taxAmount       = (float) $quote['tax'];
+        $discountAmount  = (float) $quote['discount'];
+        $totalPrice      = (float) $quote['total'];
+        $defaultCurrency = (string) ($quote['currency'] ?? Config::get('currency', 'USD'));
 
         // Allow explicit manual booking total override ONLY for trusted callers
         if ($trusted) {
@@ -254,14 +268,18 @@ class BookingService
         // 7. Generate unique booking code
         $bookingCode = 'TRV-' . gmdate('Y') . '-' . strtoupper(wp_generate_password(6, false));
 
-        $bookingsTable = $this->db->prefix . 'tourivo_bookings';
-        $itemsTable    = $this->db->prefix . 'tourivo_booking_items';
-        $logsTable     = $this->db->prefix . 'tourivo_logs';
-        $ipAddress     = ClientIp::get();
-        $nowGmt        = gmdate('Y-m-d H:i:s');
+        $bookingsTable  = $this->db->prefix . 'tourivo_bookings';
+        $itemsTable     = $this->db->prefix . 'tourivo_booking_items';
+        $logsTable      = $this->db->prefix . 'tourivo_logs';
+        $storeIp        = (bool) Config::get('store_ip', true);
+        $ipAddress      = $storeIp ? ClientIp::get() : '';
+        $nowGmt         = gmdate('Y-m-d H:i:s');
+        $hasConsent     = !empty($data['consent']);
+        $consentAt      = $hasConsent ? $nowGmt : null;
+        $consentVersion = $hasConsent ? \Tourivo\Support\Privacy::getConsentVersion() : null;
 
         // 8. Step 1: Commit Inventory First (atomic repository transaction)
-        $committed = $this->inventoryService->commitBooking($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity, $holdToken);
+        $committed = $this->inventoryService->commitBooking($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity, $holdToken, !$trusted);
         if (!$committed) {
             return ['success' => false, 'message' => __('Failed to commit inventory. Selected slots are no longer available.', 'tourivo')];
         }
@@ -276,8 +294,8 @@ class BookingService
                 'customer_phone'  => $customerPhone,
                 'billing_address' => $billingAddr,
                 'total_amount'    => $totalPrice,
-                'tax_amount'      => 0.00,
-                'discount_amount' => 0.00,
+                'tax_amount'      => $taxAmount,
+                'discount_amount' => $discountAmount,
                 'paid_amount'     => ($paymentStatus === 'paid') ? $totalPrice : 0.00,
                 'due_amount'      => ($paymentStatus === 'paid') ? 0.00 : $totalPrice,
                 'currency'        => $defaultCurrency,
@@ -285,11 +303,11 @@ class BookingService
                 'payment_status'  => $paymentStatus,
                 'booking_status'  => $bookingStatus,
                 'customer_notes'  => $notes,
+                'consent_at'      => $consentAt,
+                'consent_version' => $consentVersion,
                 'ip_address'      => $ipAddress,
-                'created_at'      => $nowGmt,
+                'created_at'      => ($trusted && !empty($data['created_at'])) ? sanitize_text_field((string) $data['created_at']) : $nowGmt,
                 'updated_at'      => $nowGmt,
-            ], [
-                '%s', '%d', '%s', '%s', '%s', '%s', '%f', '%f', '%f', '%f', '%f', '%s', '%s', '%s', '%s', '%s', '%s', '%s', '%s'
             ]);
 
             if (!$inserted) {
@@ -311,12 +329,13 @@ class BookingService
                 'time_slot'         => $timeSlot,
                 'adults_count'      => $adultsCount,
                 'children_count'    => $childrenCount,
+                'infants_count'     => $infantsCount,
                 'quantity'          => ($itemType === 'room') ? $roomsCount : $totalGuests,
                 'unit_price'        => $unitPrice,
                 'total_price'       => $totalPrice,
-                'pricing_breakdown' => wp_json_encode($avail, JSON_UNESCAPED_UNICODE),
+                'pricing_breakdown' => wp_json_encode($quote, JSON_UNESCAPED_UNICODE),
             ], [
-                '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%d', '%f', '%f', '%s'
+                '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%f', '%f', '%s'
             ]);
 
             if (!$itemInserted) {
@@ -357,23 +376,43 @@ class BookingService
             'check_out'       => $checkOut,
             'adults'          => $adultsCount,
             'children'        => $childrenCount,
+            'infants'         => $infantsCount,
             'rooms'           => $roomsCount,
+            'subtotal'        => Money::format($subtotalPrice),
+            'raw_subtotal'    => $subtotalPrice,
+            'tax_amount'      => Money::format($taxAmount),
+            'raw_tax'         => $taxAmount,
+            'discount_amount' => Money::format($discountAmount),
+            'raw_discount'    => $discountAmount,
             'total_amount'    => Money::format($totalPrice),
             'raw_total'       => $totalPrice,
-            'currency'        => $defaultCurrency,
-            'payment_status'  => $paymentStatus,
-            'booking_status'  => $bookingStatus,
+            'currency'            => $defaultCurrency,
+            'payment_status'      => $paymentStatus,
+            'booking_status'      => $bookingStatus,
+            'send_customer_email' => $data['send_customer_email'] ?? true,
         ];
 
         do_action('tourivo/booking_created', $bookingId, $bookingData);
-        $this->emailService->sendBookingConfirmation($bookingData);
+
+        $thankyouToken  = ThankYouShortcode::generateThankYouToken($bookingId);
+        $thankyouPageId = (int) Config::get('thankyou_page_id', 0);
+        $redirectMode   = (string) Config::get('redirect_after_booking', 'inline');
+
+        $thankyouBaseUrl = $thankyouPageId > 0 ? get_permalink($thankyouPageId) : home_url('/');
+        $redirectUrl     = add_query_arg([
+            'code'  => $bookingCode,
+            'token' => $thankyouToken,
+        ], $thankyouBaseUrl);
 
         return [
-            'success'      => true,
-            'booking_id'   => $bookingId,
-            'booking_code' => $bookingCode,
+            'success'        => true,
+            'booking_id'     => $bookingId,
+            'booking_code'   => $bookingCode,
+            'thankyou_token' => $thankyouToken,
+            'redirect_url'   => esc_url_raw($redirectUrl),
+            'redirect_mode'  => $redirectMode,
             /* translators: %s: Booking reference code */
-            'message'      => sprintf(__('Booking created successfully! Your booking code is #%s.', 'tourivo'), $bookingCode),
+            'message'        => sprintf(__('Booking created successfully! Your booking code is #%s.', 'tourivo'), $bookingCode),
         ];
     }
 

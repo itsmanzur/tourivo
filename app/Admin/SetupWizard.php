@@ -178,6 +178,14 @@ class SetupWizard
                                     <span><?php esc_html_e('Creates "/wishlist" allowing travelers to save favorite trips.', 'tourivo'); ?></span>
                                 </div>
                             </label>
+
+                            <label class="wizard-check-item">
+                                <input type="checkbox" name="pages[]" value="thankyou" checked>
+                                <div class="check-text">
+                                    <strong>🎉 <?php esc_html_e('Booking Confirmation / Thank You Page', 'tourivo'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/booking-confirmation" displaying booking summary, token-secured calendar .ics and vouchers.', 'tourivo'); ?></span>
+                                </div>
+                            </label>
                         </div>
 
                         <div class="wizard-footer">
@@ -726,7 +734,7 @@ class SetupWizard
         $rawPages = isset($_POST['pages']) ? sanitize_text_field(wp_unslash((string) $_POST['pages'])) : '[]';
         $requested = json_decode($rawPages, true);
         if (!is_array($requested)) {
-            $requested = ['tours', 'hotels', 'search', 'track', 'wishlist'];
+            $requested = ['tours', 'hotels', 'search', 'track', 'wishlist', 'thankyou'];
         }
 
         $pageDefinitions = [
@@ -755,6 +763,11 @@ class SetupWizard
                 'slug'    => 'wishlist',
                 'content' => '<!-- wp:shortcode -->[tourivo_wishlist]<!-- /wp:shortcode -->',
             ],
+            'thankyou' => [
+                'title'   => 'Booking Confirmation',
+                'slug'    => 'booking-confirmation',
+                'content' => '<!-- wp:shortcode -->[tourivo_thank_you]<!-- /wp:shortcode -->',
+            ],
         ];
 
         $pageSettingMap = [
@@ -762,6 +775,7 @@ class SetupWizard
             'wishlist' => 'wishlist_page_id',
             'tours'    => 'tours_page_id',
             'hotels'   => 'hotels_page_id',
+            'thankyou' => 'thankyou_page_id',
         ];
 
         $currentSettings = get_option('tourivo_settings', Config::getDefaults());
@@ -795,6 +809,10 @@ class SetupWizard
                     $currentSettings[$pageSettingMap[$key]] = (int) $existing->ID;
                 }
             }
+        }
+
+        if (in_array('thankyou', $requested, true)) {
+            $currentSettings['redirect_after_booking'] = 'thankyou';
         }
 
         update_option('tourivo_settings', $currentSettings);

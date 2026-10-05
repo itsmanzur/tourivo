@@ -29,6 +29,9 @@ abstract class TestCase extends BaseTestCaseParent
     public function assertEquals(mixed $expected, mixed $actual, string $msg = ''): void {
         if ($expected !== $actual) throw new \Exception($msg ?: "Failed asserting that " . var_export($actual, true) . " equals " . var_export($expected, true) . ".");
     }
+    public function assertNotEquals(mixed $expected, mixed $actual, string $msg = ''): void {
+        if ($expected === $actual) throw new \Exception($msg ?: "Failed asserting that " . var_export($actual, true) . " does not equal " . var_export($expected, true) . ".");
+    }
     public function assertNotEmpty(mixed $value, string $msg = ''): void {
         if (empty($value)) throw new \Exception($msg ?: 'Failed asserting that value is not empty.');
     }
@@ -46,6 +49,9 @@ abstract class TestCase extends BaseTestCaseParent
     }
     public function assertNotNull(mixed $value, string $msg = ''): void {
         if ($value === null) throw new \Exception($msg ?: 'Failed asserting that value is not null.');
+    }
+    public function assertNull(mixed $value, string $msg = ''): void {
+        if ($value !== null) throw new \Exception($msg ?: 'Failed asserting that value is null.');
     }
     public function assertArrayHasKey(string|int $key, mixed $array, string $msg = ''): void {
         if (!is_array($array) || !array_key_exists($key, $array)) throw new \Exception($msg ?: "Failed asserting array has key '$key'.");
@@ -173,13 +179,15 @@ abstract class TestCase extends BaseTestCaseParent
      */
     public function cleanDatabaseTables(): void
     {
-        global $wpdb;
+        global $wpdb, $tourivo_mock_usermeta;
         if ($wpdb) {
             $wpdb->bookings = [];
             $wpdb->booking_items = [];
             $wpdb->inventories = [];
+            $wpdb->inquiries = [];
             $wpdb->logs = [];
         }
+        $tourivo_mock_usermeta = [];
     }
 
     /**

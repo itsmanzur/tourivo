@@ -22,19 +22,25 @@ $tourivoItemType       = isset($tourivoItemType) ? (string) $tourivoItemType : (
 $tourivoCurrencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
 
 if ($tourivoItemType === 'tour') {
-    $tourivoTour      = new \Tourivo\Models\Tour($tourivoItemId);
-    $tourivoBasePrice = $tourivoTour->getActivePrice();
-    $tourivoMaxGuests = $tourivoTour->getMaxGuests() > 0 ? $tourivoTour->getMaxGuests() : 20;
-    $tourivoMaxRooms  = 1;
+    $tourivoTour          = new \Tourivo\Models\Tour($tourivoItemId);
+    $tourivoBasePrice     = $tourivoTour->getActivePrice();
+    $tourivoMinGuests     = $tourivoTour->getMinGuests();
+    $tourivoMaxGuests     = $tourivoTour->getMaxGuests() > 0 ? $tourivoTour->getMaxGuests() : 20;
+    $tourivoChildAgeLabel = $tourivoTour->getChildAgeLabel() ?: __('Age 2-11', 'tourivo');
+    $tourivoInfantsFree   = $tourivoTour->isInfantsFree();
+    $tourivoMaxRooms      = 1;
 } else {
-    $tourivoRoom      = new \Tourivo\Models\Room($tourivoItemId);
-    $tourivoBasePrice = $tourivoRoom->getNightlyPrice();
-    $tourivoMaxGuests = $tourivoRoom->getMaxGuests() > 0 ? $tourivoRoom->getMaxGuests() : 4;
-    $tourivoMaxRooms  = $tourivoRoom->getQuantity() > 0 ? $tourivoRoom->getQuantity() : 10;
+    $tourivoRoom          = new \Tourivo\Models\Room($tourivoItemId);
+    $tourivoBasePrice     = $tourivoRoom->getNightlyPrice();
+    $tourivoMinGuests     = 1;
+    $tourivoMaxGuests     = $tourivoRoom->getMaxGuests() > 0 ? $tourivoRoom->getMaxGuests() : 4;
+    $tourivoChildAgeLabel = __('Age 2-11', 'tourivo');
+    $tourivoInfantsFree   = true;
+    $tourivoMaxRooms      = $tourivoRoom->getQuantity() > 0 ? $tourivoRoom->getQuantity() : 10;
 }
 ?>
 
-<div class="tourivo-booking-panel" id="tourivo-booking-panel-<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-id="<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-type="<?php echo esc_attr($tourivoItemType); ?>" data-unit-price="<?php echo esc_attr((string) $tourivoBasePrice); ?>" data-currency="<?php echo esc_attr($tourivoCurrencySymbol); ?>">
+<div class="tourivo-booking-panel" id="tourivo-booking-panel-<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-id="<?php echo esc_attr((string) $tourivoItemId); ?>" data-item-type="<?php echo esc_attr($tourivoItemType); ?>" data-unit-price="<?php echo esc_attr((string) $tourivoBasePrice); ?>" data-currency="<?php echo esc_attr($tourivoCurrencySymbol); ?>" data-min-guests="<?php echo esc_attr((string) $tourivoMinGuests); ?>">
     <div class="panel-header">
         <div class="panel-price-box">
             <span class="price-label"><?php esc_html_e('Price:', 'tourivo'); ?></span>
@@ -108,7 +114,7 @@ if ($tourivoItemType === 'tour') {
                     </div>
                     <div class="counter-controls">
                         <button type="button" class="counter-btn minus-btn" data-target="adults-count">-</button>
-                        <input type="number" name="adults" id="adults-count" value="1" min="1" max="<?php echo esc_attr((string) $tourivoMaxGuests); ?>" readonly>
+                        <input type="number" name="adults" id="adults-count" value="<?php echo esc_attr((string) max(1, $tourivoMinGuests)); ?>" min="1" max="<?php echo esc_attr((string) $tourivoMaxGuests); ?>" readonly>
                         <button type="button" class="counter-btn plus-btn" data-target="adults-count">+</button>
                     </div>
                 </div>
@@ -116,12 +122,24 @@ if ($tourivoItemType === 'tour') {
                 <div class="guest-counter-item">
                     <div class="guest-type">
                         <strong><?php esc_html_e('Children', 'tourivo'); ?></strong>
-                        <small><?php esc_html_e('Age 2-11', 'tourivo'); ?></small>
+                        <small><?php echo esc_html($tourivoChildAgeLabel); ?></small>
                     </div>
                     <div class="counter-controls">
                         <button type="button" class="counter-btn minus-btn" data-target="children-count">-</button>
                         <input type="number" name="children" id="children-count" value="0" min="0" max="<?php echo esc_attr((string) $tourivoMaxGuests); ?>" readonly>
                         <button type="button" class="counter-btn plus-btn" data-target="children-count">+</button>
+                    </div>
+                </div>
+
+                <div class="guest-counter-item">
+                    <div class="guest-type">
+                        <strong><?php esc_html_e('Infants', 'tourivo'); ?></strong>
+                        <small><?php echo $tourivoInfantsFree ? esc_html__('Under 2 (Free)', 'tourivo') : esc_html__('Under 2', 'tourivo'); ?></small>
+                    </div>
+                    <div class="counter-controls">
+                        <button type="button" class="counter-btn minus-btn" data-target="infants-count">-</button>
+                        <input type="number" name="infants" id="infants-count" value="0" min="0" max="<?php echo esc_attr((string) $tourivoMaxGuests); ?>" readonly>
+                        <button type="button" class="counter-btn plus-btn" data-target="infants-count">+</button>
                     </div>
                 </div>
             </div>
@@ -130,10 +148,24 @@ if ($tourivoItemType === 'tour') {
         <?php do_action('tourivo_booking_panel_after_guests', $tourivoItemId, $tourivoItemType); ?>
 
         <!-- Live Price Breakdown -->
-        <div class="price-breakdown-box" id="tourivo-price-breakdown">
-            <div class="breakdown-row">
-                <span class="breakdown-desc" id="breakdown-calc-label"><?php echo esc_html(Money::format($tourivoBasePrice)); ?> &times; 1 <?php echo ($tourivoItemType === 'room') ? esc_html__('Night', 'tourivo') : esc_html__('Guest', 'tourivo'); ?></span>
-                <span class="breakdown-val" id="breakdown-total-val"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
+        <div class="price-breakdown-box" id="tourivo-price-breakdown" aria-live="polite">
+            <div class="breakdown-items" id="tourivo-breakdown-items">
+                <div class="breakdown-row">
+                    <span class="breakdown-desc" id="breakdown-calc-label"><?php echo esc_html(Money::format($tourivoBasePrice)); ?> &times; 1 <?php echo ($tourivoItemType === 'room') ? esc_html__('Night', 'tourivo') : esc_html__('Guest', 'tourivo'); ?></span>
+                    <span class="breakdown-val" id="breakdown-total-val"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
+                </div>
+            </div>
+            <div class="breakdown-row" id="breakdown-subtotal-row" style="display:none;">
+                <span class="breakdown-desc"><?php esc_html_e('Subtotal', 'tourivo'); ?></span>
+                <span class="breakdown-val" id="breakdown-subtotal-val"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
+            </div>
+            <div class="breakdown-row" id="breakdown-discount-row" style="display:none; color:#15803d;">
+                <span class="breakdown-desc"><?php esc_html_e('Discount', 'tourivo'); ?></span>
+                <span class="breakdown-val" id="breakdown-discount-val">-<?php echo esc_html(Money::format(0)); ?></span>
+            </div>
+            <div class="breakdown-row" id="breakdown-tax-row" style="display:none;">
+                <span class="breakdown-desc" id="breakdown-tax-label"><?php esc_html_e('Tax', 'tourivo'); ?></span>
+                <span class="breakdown-val" id="breakdown-tax-val"><?php echo esc_html(Money::format(0)); ?></span>
             </div>
             <div class="breakdown-row total-row">
                 <span><strong><?php esc_html_e('Total Amount', 'tourivo'); ?></strong></span>
@@ -156,6 +188,14 @@ if ($tourivoItemType === 'tour') {
             <div class="field-row">
                 <textarea name="customer_notes" rows="2" placeholder="<?php esc_attr_e('Special requests or notes...', 'tourivo'); ?>"></textarea>
             </div>
+            <?php if (\Tourivo\Config\Config::get('require_consent', false)) : ?>
+                <div class="field-row tourivo-consent-row" style="margin-top:10px; display:flex; align-items:flex-start; gap:8px;">
+                    <input type="checkbox" name="consent" id="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required style="margin-top:3px;">
+                    <label for="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" style="font-size:13px; line-height:1.4;">
+                        <?php echo \Tourivo\Support\Privacy::getRenderedConsentLabel(); ?> <span class="required" style="color:#ef4444;">*</span>
+                    </label>
+                </div>
+            <?php endif; ?>
         </div>
 
         <?php do_action('tourivo_booking_panel_before_submit', $tourivoItemId, $tourivoItemType); ?>
@@ -215,6 +255,14 @@ if ($tourivoItemType === 'tour') {
                     <div class="inquiry-field-row">
                         <textarea name="message" rows="3" placeholder="<?php esc_attr_e('Tell us about your questions or custom trip preferences...', 'tourivo'); ?>" required></textarea>
                     </div>
+                    <?php if (\Tourivo\Config\Config::get('require_consent', false)) : ?>
+                        <div class="inquiry-field-row tourivo-consent-row" style="display:flex; align-items:flex-start; gap:8px; margin-top:8px;">
+                            <input type="checkbox" name="consent" id="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required style="margin-top:3px;">
+                            <label for="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" style="font-size:13px; line-height:1.4;">
+                                <?php echo \Tourivo\Support\Privacy::getRenderedConsentLabel(); ?> <span class="required" style="color:#ef4444;">*</span>
+                            </label>
+                        </div>
+                    <?php endif; ?>
                     <div class="inquiry-alert" id="tourivo-inquiry-alert" style="display: none;"></div>
                 </div>
                 <div class="modal-footer">

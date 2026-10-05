@@ -98,6 +98,9 @@ $tourivoSiteName = isset($siteName) && is_string($siteName) ? $siteName : get_bl
                         <?php if (!empty($tourivoBooking['children'])) : ?>
                             , <?php echo esc_html((string)$tourivoBooking['children']); ?> <?php esc_html_e('Child(ren)', 'tourivo'); ?>
                         <?php endif; ?>
+                        <?php if (!empty($tourivoBooking['infants'])) : ?>
+                            , <?php echo esc_html((string)$tourivoBooking['infants']); ?> <?php esc_html_e('Infant(s)', 'tourivo'); ?>
+                        <?php endif; ?>
                     </span>
                 </div>
                 <?php if (!empty($tourivoBooking['customer_phone'])) : ?>
@@ -110,6 +113,18 @@ $tourivoSiteName = isset($siteName) && is_string($siteName) ? $siteName : get_bl
                     <div class="info-row">
                         <span class="info-label"><?php esc_html_e('Special Notes:', 'tourivo'); ?></span>
                         <span class="info-value" style="font-weight: 500;"><?php echo esc_html($tourivoBooking['customer_notes']); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if (!empty($tourivoBooking['raw_discount']) && (float)$tourivoBooking['raw_discount'] > 0) : ?>
+                    <div class="info-row" style="color: #15803d;">
+                        <span class="info-label"><?php esc_html_e('Discount:', 'tourivo'); ?></span>
+                        <span class="info-value">-<?php echo esc_html($tourivoBooking['discount_amount']); ?></span>
+                    </div>
+                <?php endif; ?>
+                <?php if (!empty($tourivoBooking['raw_tax']) && (float)$tourivoBooking['raw_tax'] > 0) : ?>
+                    <div class="info-row">
+                        <span class="info-label"><?php esc_html_e('Tax / VAT:', 'tourivo'); ?></span>
+                        <span class="info-value"><?php echo esc_html($tourivoBooking['tax_amount']); ?></span>
                     </div>
                 <?php endif; ?>
             </div>
