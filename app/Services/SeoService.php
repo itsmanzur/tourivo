@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Tourivo\Services;
 
-use DateTime;
 use Tourivo\Common\Container;
 use Tourivo\Config\Config;
 use Tourivo\Models\Hotel;
@@ -188,8 +187,9 @@ class SeoService
             return (string) $cached;
         }
 
-        $today = gmdate('Y-m-d');
-        $futureDate = gmdate('Y-m-d', strtotime('+90 days'));
+        // Use the site timezone so "today" matches what visitors see.
+        $today = wp_date('Y-m-d');
+        $futureDate = wp_date('Y-m-d', time() + (90 * DAY_IN_SECONDS));
         $hasAvailability = false;
 
         /** @var InventoryRepository $invRepo */
