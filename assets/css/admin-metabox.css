@@ -244,3 +244,410 @@
         padding: 18px 16px;
     }
 }
+
+/* ==========================================================================
+   Availability & Pricing Calendar Manager Styles
+   ========================================================================== */
+
+.tourivo-availability-app {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 16px;
+    margin: -6px -12px -12px -12px;
+}
+
+.tourivo-avail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tourivo-avail-nav-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tourivo-avail-current-month {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 700;
+    color: #0f172a;
+    min-width: 180px;
+    text-align: center;
+}
+
+.tourivo-avail-header-meta {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tourivo-avail-meta-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    color: #475569;
+}
+
+.tourivo-avail-meta-badge .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    color: #0284c7;
+}
+
+.tourivo-avail-body {
+    display: flex;
+    gap: 20px;
+    align-items: flex-start;
+}
+
+.tourivo-avail-calendar-wrap {
+    flex: 1;
+    min-width: 0;
+}
+
+.tourivo-avail-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    margin-bottom: 6px;
+    text-align: center;
+}
+
+.tourivo-avail-weekday {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #64748b;
+    padding: 6px 0;
+    background: #f1f5f9;
+    border-radius: 4px;
+}
+
+.tourivo-avail-weekday.tourivo-weekend {
+    color: #0284c7;
+}
+
+.tourivo-avail-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 6px;
+    outline: none;
+}
+
+.tourivo-avail-grid:focus {
+    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+    border-radius: 6px;
+}
+
+.tourivo-avail-day {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 82px;
+    padding: 6px 8px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: all 0.15s ease;
+}
+
+.tourivo-avail-day:hover {
+    border-color: #0284c7;
+    background: #f0f9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
+}
+
+.tourivo-avail-day:focus {
+    outline: 2px solid #0284c7;
+    outline-offset: 1px;
+}
+
+.tourivo-avail-day.is-selected,
+.tourivo-avail-day[aria-selected="true"] {
+    background: #e0f2fe !important;
+    border-color: #0284c7 !important;
+    box-shadow: 0 0 0 1px #0284c7;
+}
+
+.tourivo-avail-day.is-past {
+    background: #f8fafc;
+    opacity: 0.7;
+}
+
+.tourivo-avail-day.is-empty {
+    background: transparent;
+    border: 1px dashed #f1f5f9;
+    cursor: default;
+    min-height: 82px;
+}
+
+.tourivo-avail-day.is-empty:hover {
+    background: transparent;
+    border-color: #f1f5f9;
+    transform: none;
+    box-shadow: none;
+}
+
+.tourivo-avail-day-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.tourivo-day-num {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.tourivo-avail-day.is-today .tourivo-day-num {
+    background: #0284c7;
+    color: #ffffff;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+}
+
+.tourivo-day-badge {
+    font-size: 10px;
+    font-weight: 600;
+    padding: 1px 5px;
+    border-radius: 4px;
+    text-transform: uppercase;
+}
+
+.tourivo-avail-day.status-available .tourivo-day-badge {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.tourivo-avail-day.status-blocked .tourivo-day-badge {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.tourivo-avail-day.status-sold-out .tourivo-day-badge {
+    background: #ede9fe;
+    color: #6b21a8;
+}
+
+.tourivo-avail-day.status-blocked {
+    background: #fef2f2;
+    border-color: #fca5a5;
+}
+
+.tourivo-day-meta {
+    font-size: 11px;
+    color: #475569;
+    margin-top: 4px;
+    line-height: 1.3;
+}
+
+.tourivo-day-price {
+    font-weight: 700;
+    color: #0f172a;
+    font-size: 11.5px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tourivo-override-icon {
+    color: #d97706;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.tourivo-avail-legend {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 14px;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #f1f5f9;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.tourivo-legend-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.legend-dot.status-available { background: #22c55e; }
+.legend-dot.status-blocked   { background: #ef4444; }
+.legend-dot.status-sold-out  { background: #a855f7; }
+.legend-dot.status-override  { background: #d97706; }
+
+.tourivo-legend-hint {
+    margin-left: auto;
+    font-size: 11.5px;
+    color: #94a3b8;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tourivo-legend-hint .dashicons {
+    font-size: 14px;
+    width: 14px;
+    height: 14px;
+}
+
+/* Bulk Actions Side Panel */
+.tourivo-avail-panel {
+    width: 280px;
+    flex-shrink: 0;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.tourivo-panel-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.tourivo-selection-badge {
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 12px;
+}
+
+.tourivo-panel-section {
+    margin-bottom: 14px;
+}
+
+.tourivo-panel-label {
+    display: block;
+    font-size: 11.5px;
+    font-weight: 700;
+    color: #334155;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+}
+
+.tourivo-dow-checkboxes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+}
+
+.tourivo-dow-checkboxes label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    border-radius: 4px;
+    padding: 2px 6px;
+    font-size: 11px;
+    color: #475569;
+    cursor: pointer;
+}
+
+.tourivo-panel-select,
+.tourivo-panel-input {
+    width: 100% !important;
+    max-width: 100% !important;
+    background: #ffffff !important;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 6px !important;
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    color: #1e293b !important;
+}
+
+.tourivo-panel-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.tourivo-panel-actions .button-primary {
+    background: #0284c7 !important;
+    border-color: #0284c7 !important;
+    padding: 6px 14px !important;
+    height: auto !important;
+    font-weight: 700 !important;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.tourivo-panel-actions .button-secondary {
+    text-align: center;
+}
+
+.tourivo-panel-alert {
+    margin-top: 10px;
+    padding: 8px 10px;
+    border-radius: 6px;
+    font-size: 12px;
+    line-height: 1.4;
+}
+
+.tourivo-panel-alert.alert-success {
+    background: #dcfce7;
+    color: #15803d;
+    border: 1px solid #86efac;
+}
+
+.tourivo-panel-alert.alert-error {
+    background: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+
+@media (max-width: 960px) {
+    .tourivo-avail-body {
+        flex-direction: column;
+    }
+    .tourivo-avail-panel {
+        width: 100%;
+    }
+}
+

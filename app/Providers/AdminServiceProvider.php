@@ -18,6 +18,7 @@ use Tourivo\PostTypes\TourPostType;
 use Tourivo\Services\BookingService;
 use Tourivo\Services\EmailService;
 use Tourivo\Services\InquiryService;
+use Tourivo\Services\InventoryService;
 use Tourivo\Services\LogService;
 use Tourivo\Shortcodes\BookingLookupShortcode;
 
@@ -72,6 +73,8 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('wp_ajax_tourivo_send_test_webhook', [$this, 'handleSendTestWebhook']);
         $this->addAction('wp_ajax_tourivo_get_booking_timeline', [$this, 'handleGetBookingTimeline']);
         $this->addAction('wp_ajax_tourivo_add_booking_note', [$this, 'handleAddBookingNote']);
+        $this->addAction('wp_ajax_tourivo_get_admin_calendar', [$this, 'handleGetAdminCalendar']);
+        $this->addAction('wp_ajax_tourivo_update_availability', [$this, 'handleUpdateAvailability']);
 
         // Setup Wizard AJAX Handlers
         $this->addAction('wp_ajax_tourivo_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
@@ -699,6 +702,98 @@ class AdminServiceProvider extends ServiceProvider
 
         include untrailingslashit(TOURIVO_PLUGIN_DIR) . '/templates/booking-voucher.php';
         exit;
+    }
+
+    /**
+     * AJAX handler to fetch admin monthly availability calendar grid.
+     *
+     * @return void
+     */
+    public function handleGetAdminCalendar(): void
+    {
+        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+
+        $itemId   = isset($_POST['item_id']) ? absint($_POST['item_id']) : 0;
+        $itemType = isset($_POST['item_type']) ? sanitize_text_field(wp_unslash($_POST['item_type'])) : 'tour';
+        $year     = isset($_POST['year']) ? absint($_POST['year']) : (int) wp_date('Y');
+        $month    = isset($_POST['month']) ? absint($_POST['month']) : (int) wp_date('n');
+        $timeSlot = isset($_POST['time_slot']) ? sanitize_text_field(wp_unslash($_POST['time_slot'])) : 'all_day';
+
+        if ($itemId <= 0) {
+            wp_send_json_error(['message' => __('Invalid item ID.', 'tourivo')], 400);
+        }
+
+        if (!current_user_can('edit_post', $itemId) && !current_user_can('manage_tourivo_tours') && !current_user_can('manage_tourivo_hotels') && !current_user_can('manage_tourivo')) {
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+        }
+
+        $invService = Container::getInstance()->get(InventoryService::class);
+        $calendar   = $invService->getAdminCalendarAvailability($itemId, $itemType, $year, $month, $timeSlot);
+        $defaultCap = $invService->getDefaultCapacity($itemId, $itemType);
+        $unitPrice  = $invService->getUnitPrice($itemId, $itemType);
+
+        wp_send_json_success([
+            'year'             => $year,
+            'month'            => $month,
+            'days'             => $calendar,
+            'default_capacity' => $defaultCap,
+            'base_price'       => $unitPrice,
+            'currency_symbol'  => (string) apply_filters('tourivo/currency_symbol', '$'),
+        ]);
+    }
+
+    /**
+     * AJAX handler to update item availability, capacity, pricing and blocking status.
+     *
+     * @return void
+     */
+    public function handleUpdateAvailability(): void
+    {
+        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+
+        $itemId    = isset($_POST['item_id']) ? absint($_POST['item_id']) : 0;
+        $itemType  = isset($_POST['item_type']) ? sanitize_text_field(wp_unslash($_POST['item_type'])) : 'tour';
+        $startDate = isset($_POST['start_date']) ? sanitize_text_field(wp_unslash($_POST['start_date'])) : '';
+        $endDate   = (isset($_POST['end_date']) && !empty($_POST['end_date'])) ? sanitize_text_field(wp_unslash($_POST['end_date'])) : null;
+        $timeSlot  = isset($_POST['time_slot']) ? sanitize_text_field(wp_unslash($_POST['time_slot'])) : 'all_day';
+        $force     = !empty($_POST['force']) && ($_POST['force'] === '1' || $_POST['force'] === 'true' || $_POST['force'] === true);
+
+        if ($itemId <= 0 || empty($startDate)) {
+            wp_send_json_error(['message' => __('Please provide a valid item ID and date.', 'tourivo')], 400);
+        }
+
+        if (!current_user_can('edit_post', $itemId) && !current_user_can('manage_tourivo_tours') && !current_user_can('manage_tourivo_hotels') && !current_user_can('manage_tourivo')) {
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+        }
+
+        $changes = [];
+
+        if (isset($_POST['status']) && in_array($_POST['status'], ['available', 'blocked'], true)) {
+            $changes['status'] = sanitize_text_field(wp_unslash($_POST['status']));
+        }
+
+        if (isset($_POST['capacity']) && $_POST['capacity'] !== '') {
+            $changes['capacity'] = (int) $_POST['capacity'];
+        }
+
+        if (!empty($_POST['reset_price'])) {
+            $changes['reset_price'] = true;
+        } elseif (isset($_POST['price_override']) && $_POST['price_override'] !== '') {
+            $changes['price_override'] = (float) $_POST['price_override'];
+        }
+
+        if (isset($_POST['days_of_week']) && is_array($_POST['days_of_week'])) {
+            $changes['days_of_week'] = array_map('intval', wp_unslash($_POST['days_of_week']));
+        }
+
+        $invService = Container::getInstance()->get(InventoryService::class);
+        $result = $invService->updateAvailability($itemId, $itemType, $startDate, $endDate, $changes, $force, $timeSlot);
+
+        if (!empty($result['success'])) {
+            wp_send_json_success($result);
+        } else {
+            wp_send_json_error(['message' => $result['message'] ?? __('Failed to update availability.', 'tourivo')], 400);
+        }
     }
 }
 

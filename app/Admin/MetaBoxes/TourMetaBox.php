@@ -6,6 +6,7 @@ namespace Tourivo\Admin\MetaBoxes;
 
 use Tourivo\Common\Abstracts\MetaBox;
 use Tourivo\PostTypes\TourPostType;
+use Tourivo\Services\SeoService;
 use WP_Post;
 
 if (!defined('ABSPATH')) {
@@ -172,6 +173,9 @@ class TourMetaBox extends MetaBox
             update_post_meta($postId, '_tourivo_faqs', wp_slash(wp_json_encode([], JSON_UNESCAPED_UNICODE)));
         }
         // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+
+        // Invalidate SEO availability transient cache when max guests or pricing changes
+        SeoService::clearItemAvailabilityCache($postId, 'tour');
 
         do_action('tourivo_save_tour_meta', $postId, $post);
     }

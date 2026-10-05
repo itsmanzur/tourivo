@@ -185,6 +185,9 @@ class BookingService
         }
 
         // 5. Pricing Pipeline Filter (Enables Pro Pricing Tiers, Seasonality, Extra Add-ons)
+        $unitPrice = (float) ($avail['unit_price'] ?? $unitPrice);
+        $baseTotal = (float) ($avail['total_price'] ?? $baseTotal);
+
         $defaultCurrency = (string) apply_filters('tourivo/currency_code', Config::get('currency', 'USD'));
         $pricingData = apply_filters('tourivo/booking_price', [
             'unit_price'  => $unitPrice,

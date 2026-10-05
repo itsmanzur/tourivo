@@ -24,6 +24,7 @@ require_once __DIR__ . '/Integration/RestSecurityTest.php';
 require_once __DIR__ . '/Integration/LookupVoucherTest.php';
 require_once __DIR__ . '/Integration/WebhookTest.php';
 require_once __DIR__ . '/Integration/DataAndMiscTest.php';
+require_once __DIR__ . '/Integration/AdminAvailabilityManagerTest.php';
 
 echo "=====================================================\n";
 echo "           Tourivo Automated Test Suite\n";
@@ -40,6 +41,7 @@ $testClasses = [
     \Tourivo\Tests\Integration\LookupVoucherTest::class,
     \Tourivo\Tests\Integration\WebhookTest::class,
     \Tourivo\Tests\Integration\DataAndMiscTest::class,
+    \Tourivo\Tests\Integration\AdminAvailabilityManagerTest::class,
 ];
 
 $totalTests = 0;

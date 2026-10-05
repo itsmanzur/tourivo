@@ -57,7 +57,8 @@ class DocumentationPage
                         <li><a href="#doc-hotels"><span class="dashicons dashicons-building"></span> <?php esc_html_e('4. Hotels & Room Listings', 'tourivo'); ?></a></li>
                         <li><a href="#doc-embed"><span class="dashicons dashicons-shortcode"></span> <?php esc_html_e('5. Page Builders & Shortcodes', 'tourivo'); ?></a></li>
                         <li><a href="#doc-bookings"><span class="dashicons dashicons-calendar-alt"></span> <?php esc_html_e('6. Managing Orders & Bookings', 'tourivo'); ?></a></li>
-                        <li><a href="#doc-pro"><span class="dashicons dashicons-star-filled" style="color:#f59e0b;"></span> <?php esc_html_e('7. Tourivo Pro Features', 'tourivo'); ?></a></li>
+                        <li><a href="#doc-availability"><span class="dashicons dashicons-calendar" style="color:#0284c7;"></span> <strong><?php esc_html_e('7. 📅 Availability & Pricing Manager', 'tourivo'); ?></strong></a></li>
+                        <li><a href="#doc-pro"><span class="dashicons dashicons-star-filled" style="color:#f59e0b;"></span> <?php esc_html_e('8. Tourivo Pro Features', 'tourivo'); ?></a></li>
                     </ul>
                 </div>
 
@@ -516,7 +517,51 @@ class DocumentationPage
                         </div>
                     </div>
 
-                    <!-- TAB 7: Tourivo Pro Features -->
+                    <!-- TAB 7: Availability & Pricing Manager -->
+                    <div id="doc-availability" class="tourivo-doc-pane">
+                        <h2><?php esc_html_e('Availability & Pricing Calendar Manager', 'tourivo'); ?></h2>
+                        <p class="lead-paragraph">
+                            <?php esc_html_e('Take total control of your tour departures and hotel room availability with our visual monthly calendar grid. Block dates for maintenance or holidays, adjust seasonal capacities, and set custom date pricing with bulk actions.', 'tourivo'); ?>
+                        </p>
+
+                        <div class="tourivo-feature-cards-grid">
+                            <div class="feature-card">
+                                <div class="feature-card-icon icon-tour"><span class="dashicons dashicons-calendar-alt"></span></div>
+                                <h3><?php esc_html_e('Visual Monthly Grid', 'tourivo'); ?></h3>
+                                <p><?php esc_html_e('Found on every Tour and Room edit screen. Displays real-time capacity, booked spots, reserved holds, status, and active price.', 'tourivo'); ?></p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-card-icon icon-lock"><span class="dashicons dashicons-lock"></span></div>
+                                <h3><?php esc_html_e('Block & Unblock Dates', 'tourivo'); ?></h3>
+                                <p><?php esc_html_e('Instantly close dates from receiving new bookings. Use the Force Block option to close dates that already contain reservations without affecting existing guests.', 'tourivo'); ?></p>
+                            </div>
+                            <div class="feature-card">
+                                <div class="feature-card-icon icon-hotel"><span class="dashicons dashicons-tag"></span></div>
+                                <h3><?php esc_html_e('Seasonal Price Overrides', 'tourivo'); ?></h3>
+                                <p><?php esc_html_e('Charge peak holiday rates or offer off-season promotions on specific dates without altering the global base price.', 'tourivo'); ?></p>
+                            </div>
+                        </div>
+
+                        <hr class="doc-divider">
+
+                        <h3><?php esc_html_e('How to Use the Availability Manager', 'tourivo'); ?></h3>
+                        <ol style="line-height: 1.8; color: #334155; font-size: 14px; padding-left: 20px;">
+                            <li><strong><?php esc_html_e('Navigate to Tour or Room Edit Screen:', 'tourivo'); ?></strong> <?php esc_html_e('Open any published Tour or Room. Scroll down to the "Availability & Pricing Calendar" metabox.', 'tourivo'); ?></li>
+                            <li><strong><?php esc_html_e('Select Dates:', 'tourivo'); ?></strong> <?php esc_html_e('Click any date to select it. Hold Shift and click another date to select an entire date range. Use the weekday checkboxes (Mo-Su) to filter your selection.', 'tourivo'); ?></li>
+                            <li><strong><?php esc_html_e('Choose Actions to Apply:', 'tourivo'); ?></strong> <?php esc_html_e('In the right-hand panel, choose your Status action (Available or Blocked), adjust total capacity, or set a custom Price Override.', 'tourivo'); ?></li>
+                            <li><strong><?php esc_html_e('Apply Changes:', 'tourivo'); ?></strong> <?php esc_html_e('Click "Apply to Selected Dates". The system updates the inventory atomically in a transaction, invalidates SEO caches, and writes an audit log.', 'tourivo'); ?></li>
+                        </ol>
+
+                        <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 14px 18px; border-radius: 6px; margin-top: 16px;">
+                            <strong style="color: #0369a1;"><?php esc_html_e('💡 Developer Hook:', 'tourivo'); ?></strong>
+                            <p style="margin: 4px 0 0 0; font-size: 13px; color: #0c4a6e;">
+                                <?php esc_html_e('Listen to availability updates via:', 'tourivo'); ?>
+                                <code>do_action("tourivo/availability_updated", $itemId, $itemType, $startDate, $endDate, $changes);</code>
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- TAB 8: Tourivo Pro Features -->
                     <div id="doc-pro" class="tourivo-doc-pane">
                         <div class="pro-showcase-header">
                             <span class="pro-pill"><?php esc_html_e('ENTERPRISE EXTENSIONS', 'tourivo'); ?></span>

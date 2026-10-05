@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Tourivo\Providers;
 
+use Tourivo\Admin\MetaBoxes\AvailabilityMetaBox;
 use Tourivo\Admin\MetaBoxes\HotelMetaBox;
 use Tourivo\Admin\MetaBoxes\RoomMetaBox;
 use Tourivo\Admin\MetaBoxes\TourMetaBox;
 use Tourivo\Common\Abstracts\ServiceProvider;
+use Tourivo\Config\Config;
 use Tourivo\Models\Hotel;
 use Tourivo\Models\Room;
 use Tourivo\Models\Tour;
@@ -33,6 +35,7 @@ class MetaBoxServiceProvider extends ServiceProvider
         $this->container->singleton(TourMetaBox::class, fn () => new TourMetaBox());
         $this->container->singleton(HotelMetaBox::class, fn () => new HotelMetaBox());
         $this->container->singleton(RoomMetaBox::class, fn () => new RoomMetaBox());
+        $this->container->singleton(AvailabilityMetaBox::class, fn () => new AvailabilityMetaBox());
     }
 
     public function boot(): void
@@ -45,6 +48,7 @@ class MetaBoxServiceProvider extends ServiceProvider
         $this->container->get(TourMetaBox::class);
         $this->container->get(HotelMetaBox::class);
         $this->container->get(RoomMetaBox::class);
+        $this->container->get(AvailabilityMetaBox::class);
 
         // Assets
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueMetaBoxAssets']);
@@ -102,6 +106,47 @@ class MetaBoxServiceProvider extends ServiceProvider
             TOURIVO_VERSION,
             true
         );
+
+        wp_localize_script('tourivo-admin-metabox', 'tourivoAvailabilityConfig', [
+            'ajaxUrl'          => admin_url('admin-ajax.php'),
+            'nonce'            => wp_create_nonce('tourivo_admin_nonce'),
+            'isBengali'        => function_exists('tourivo_is_bengali') && tourivo_is_bengali(),
+            'useBengaliDigits' => (bool) Config::get('use_bangla_digits', false),
+            'monthNames'       => [
+                __('January', 'tourivo'),
+                __('February', 'tourivo'),
+                __('March', 'tourivo'),
+                __('April', 'tourivo'),
+                __('May', 'tourivo'),
+                __('June', 'tourivo'),
+                __('July', 'tourivo'),
+                __('August', 'tourivo'),
+                __('September', 'tourivo'),
+                __('October', 'tourivo'),
+                __('November', 'tourivo'),
+                __('December', 'tourivo'),
+            ],
+            'dayNamesShort'    => [
+                __('Mon', 'tourivo'),
+                __('Tue', 'tourivo'),
+                __('Wed', 'tourivo'),
+                __('Thu', 'tourivo'),
+                __('Fri', 'tourivo'),
+                __('Sat', 'tourivo'),
+                __('Sun', 'tourivo'),
+            ],
+            'i18n'             => [
+                'loading'         => __('Loading availability calendar...', 'tourivo'),
+                'applying'        => __('Applying changes...', 'tourivo'),
+                'noDatesSelected' => __('Please select at least one date from the calendar.', 'tourivo'),
+                'noChanges'       => __('Please specify at least one change to apply (Status, Capacity, or Price).', 'tourivo'),
+                'selectedCount'   => __('%d date(s) selected', 'tourivo'),
+                'statusAvailable' => __('Available', 'tourivo'),
+                'statusBlocked'   => __('Blocked', 'tourivo'),
+                'statusSoldOut'   => __('Sold Out', 'tourivo'),
+                'confirmForce'    => __('Selected dates contain active bookings. Are you sure you want to force block future bookings on these dates?', 'tourivo'),
+            ],
+        ]);
     }
 
     /**

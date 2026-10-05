@@ -490,4 +490,331 @@ class InventoryService
 
         return !empty($dates) ? $dates : [$start->format('Y-m-d')];
     }
+
+    /**
+     * Batch update inventory capacity, blocking status, and pricing overrides for an item.
+     *
+     * @param int                  $itemId
+     * @param string               $itemType 'tour' or 'room'
+     * @param string               $startDate (Y-m-d)
+     * @param string|null          $endDate   (Y-m-d)
+     * @param array<string, mixed> $changes   ['status' => 'available'|'blocked', 'capacity' => int, 'price_override' => float, 'reset_price' => bool, 'days_of_week' => array<int>]
+     * @param bool                 $force     Force-block dates with existing bookings without cancelling them
+     * @param string               $timeSlot
+     * @return array{success: bool, message: string, updated_count?: int, updated_dates?: array<string>}
+     */
+    public function updateAvailability(
+        int $itemId,
+        string $itemType,
+        string $startDate,
+        ?string $endDate = null,
+        array $changes = [],
+        bool $force = false,
+        string $timeSlot = 'all_day'
+    ): array {
+        $timeSlot = self::normalizeTimeSlot($timeSlot);
+        $itemType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : ($itemType === 'tour' ? 'tour' : '');
+
+        if (empty($itemType)) {
+            return [
+                'success' => false,
+                'message' => __('Invalid item type. Must be tour or room.', 'tourivo'),
+            ];
+        }
+
+        if ($itemId <= 0) {
+            return [
+                'success' => false,
+                'message' => __('Invalid item ID.', 'tourivo'),
+            ];
+        }
+
+        $post = get_post($itemId);
+        if (!$post) {
+            return [
+                'success' => false,
+                'message' => __('Selected item was not found.', 'tourivo'),
+            ];
+        }
+
+        // Validate capacity parameter if given
+        if (isset($changes['capacity']) && (!is_numeric($changes['capacity']) || (int) $changes['capacity'] < 0)) {
+            return [
+                'success' => false,
+                'message' => __('Capacity must be a non-negative whole number.', 'tourivo'),
+            ];
+        }
+
+        // Validate price override parameter if given
+        if (isset($changes['price_override']) && $changes['price_override'] !== '' && $changes['price_override'] !== null) {
+            if (!is_numeric($changes['price_override']) || (float) $changes['price_override'] < 0) {
+                return [
+                    'success' => false,
+                    'message' => __('Price override must be a non-negative number.', 'tourivo'),
+                ];
+            }
+        }
+
+        // Generate date list
+        $dates = $this->generateDateList($startDate, $endDate, false);
+        if (empty($dates)) {
+            return [
+                'success' => false,
+                'message' => __('Invalid date range specified. Range must be valid Y-m-d format and maximum 365 days.', 'tourivo'),
+            ];
+        }
+
+        // Apply day-of-week filter if provided
+        if (!empty($changes['days_of_week']) && is_array($changes['days_of_week'])) {
+            $allowedDays = array_map('intval', $changes['days_of_week']);
+            $dates = array_values(array_filter($dates, static function (string $d) use ($allowedDays): bool {
+                $dt = new DateTime($d);
+                $isoDay = (int) $dt->format('N'); // 1 (Mon) - 7 (Sun)
+                $wDay   = (int) $dt->format('w'); // 0 (Sun) - 6 (Sat)
+                return in_array($isoDay, $allowedDays, true) || in_array($wDay, $allowedDays, true);
+            }));
+        }
+
+        if (empty($dates)) {
+            return [
+                'success' => false,
+                'message' => __('No dates matched the day-of-week filter.', 'tourivo'),
+            ];
+        }
+
+        $defaultCapacity = $this->getDefaultCapacity($itemId, $itemType);
+        $recordsToUpdate = [];
+
+        // Pre-validate all dates against existing bookings and holds
+        foreach ($dates as $date) {
+            $record = $this->repository->getRecord($itemId, $itemType, $date, $timeSlot);
+
+            $curCapacity = $record ? (int) $record->total_capacity : $defaultCapacity;
+            $curBooked   = $record ? (int) $record->booked_count : 0;
+            $curReserved = $record ? (int) $record->reserved_count : 0;
+            $curStatus   = $record ? (string) $record->status : 'available';
+            $curPrice    = ($record && $record->price_override !== null) ? (float) $record->price_override : null;
+
+            $targetCapacity = isset($changes['capacity']) ? (int) $changes['capacity'] : $curCapacity;
+            $targetStatus   = (isset($changes['status']) && in_array($changes['status'], ['available', 'blocked'], true))
+                ? (string) $changes['status']
+                : $curStatus;
+
+            $targetPrice = $curPrice;
+            if (!empty($changes['reset_price'])) {
+                $targetPrice = null;
+            } elseif (isset($changes['price_override']) && $changes['price_override'] !== '' && $changes['price_override'] !== null) {
+                $targetPrice = (float) $changes['price_override'];
+            }
+
+            $activeSpots = $curBooked + $curReserved;
+
+            // 1. Cannot reduce capacity below active spots
+            if (isset($changes['capacity']) && $targetCapacity < $activeSpots) {
+                return [
+                    'success' => false,
+                    'message' => sprintf(
+                        /* translators: 1: Active booked count, 2: Date */
+                        __('Cannot set capacity below active bookings (%1$d booked/held on %2$s).', 'tourivo'),
+                        $activeSpots,
+                        $date
+                    ),
+                ];
+            }
+
+            // 2. Cannot block date with active bookings unless forced
+            if ($targetStatus === 'blocked' && $activeSpots > 0 && !$force) {
+                return [
+                    'success' => false,
+                    'message' => sprintf(
+                        /* translators: 1: Date, 2: Active booked count */
+                        __('Date %1$s has active bookings (%2$d booked/held). Use the "Force Block" option to block future bookings without cancelling existing ones.', 'tourivo'),
+                        $date,
+                        $activeSpots
+                    ),
+                ];
+            }
+
+            $recordsToUpdate[] = [
+                'date'           => $date,
+                'capacity'       => $targetCapacity,
+                'booked_count'   => $curBooked,
+                'reserved_count' => $curReserved,
+                'price_override' => $targetPrice,
+                'status'         => $targetStatus,
+            ];
+        }
+
+        // Execute batch upsert inside database transaction
+        global $wpdb;
+        if ($wpdb) {
+            $wpdb->query('START TRANSACTION');
+        }
+
+        $updatedCount = 0;
+        foreach ($recordsToUpdate as $r) {
+            $ok = $this->repository->upsert(
+                $itemId,
+                $itemType,
+                $r['date'],
+                $timeSlot,
+                $r['capacity'],
+                $r['booked_count'],
+                $r['reserved_count'],
+                $r['price_override'],
+                $r['status']
+            );
+
+            if (!$ok) {
+                if ($wpdb) {
+                    $wpdb->query('ROLLBACK');
+                }
+                return [
+                    'success' => false,
+                    /* translators: %s: Date */
+                    'message' => sprintf(__('Failed to save availability record for %s.', 'tourivo'), $r['date']),
+                ];
+            }
+            $updatedCount++;
+        }
+
+        if ($wpdb) {
+            $wpdb->query('COMMIT');
+        }
+
+        // 1. Invalidate SEO structured data cache
+        SeoService::clearItemAvailabilityCache($itemId, $itemType);
+
+        // 2. Audit log entry
+        $fromStr = $dates[0];
+        $toStr   = end($dates);
+        $summaryParts = [];
+        if (isset($changes['status'])) {
+            $summaryParts[] = "status: {$changes['status']}";
+        }
+        if (isset($changes['capacity'])) {
+            $summaryParts[] = "capacity: {$changes['capacity']}";
+        }
+        if (!empty($changes['reset_price'])) {
+            $summaryParts[] = 'price: reset to default';
+        } elseif (isset($changes['price_override']) && $changes['price_override'] !== '') {
+            $summaryParts[] = 'price override: ' . Money::format((float) $changes['price_override']);
+        }
+        if ($force) {
+            $summaryParts[] = 'force: true';
+        }
+        $changeSummary = implode(', ', $summaryParts);
+
+        $logMsg = sprintf(
+            'Updated availability for %s #%d (%s to %s, %d days): %s',
+            $itemType,
+            $itemId,
+            $fromStr,
+            $toStr,
+            $updatedCount,
+            $changeSummary
+        );
+        LogService::log(0, 'availability_update', $logMsg, get_current_user_id());
+
+        // 3. Fire developer action hook
+        do_action('tourivo/availability_updated', $itemId, $itemType, $fromStr, $toStr, $changes);
+
+        return [
+            'success'       => true,
+            'message'       => sprintf(
+                /* translators: %d: Number of updated days */
+                __('Availability successfully updated for %d date(s).', 'tourivo'),
+                $updatedCount
+            ),
+            'updated_count' => $updatedCount,
+            'updated_dates' => $dates,
+        ];
+    }
+
+    /**
+     * Get rich admin availability grid for calendar management.
+     *
+     * @param int    $itemId
+     * @param string $itemType
+     * @param int    $year
+     * @param int    $month
+     * @param string $timeSlot
+     * @return array<string, array<string, mixed>>
+     */
+    public function getAdminCalendarAvailability(
+        int $itemId,
+        string $itemType,
+        int $year,
+        int $month,
+        string $timeSlot = 'all_day'
+    ): array {
+        $timeSlot = self::normalizeTimeSlot($timeSlot);
+        $itemType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour';
+        $defaultCapacity = $this->getDefaultCapacity($itemId, $itemType);
+
+        $basePrice = 0.0;
+        if ($itemType === 'tour') {
+            $tour = new Tour($itemId);
+            $basePrice = $tour->getActivePrice();
+        } else {
+            $room = new Room($itemId);
+            $basePrice = $room->getNightlyPrice();
+        }
+
+        $currentYear = (int) wp_date('Y');
+        $year  = max($currentYear - 1, min($currentYear + 5, $year));
+        $month = max(1, min(12, $month));
+
+        $daysInMonth = (int) gmdate('t', strtotime(sprintf('%04d-%02d-01', $year, $month)));
+        $startDate = sprintf('%04d-%02d-01', $year, $month);
+        $endDate   = sprintf('%04d-%02d-%02d', $year, $month, $daysInMonth);
+
+        $records = $this->repository->getRecordsInRange($itemId, $itemType, $startDate, $endDate, $timeSlot);
+        $recordsByDate = [];
+        foreach ($records as $rec) {
+            $recordsByDate[$rec->event_date] = $rec;
+        }
+
+        $todayStr = wp_date('Y-m-d');
+        $calendar = [];
+        for ($day = 1; $day <= $daysInMonth; $day++) {
+            $dateStr = sprintf('%04d-%02d-%02d', $year, $month, $day);
+            $record = $recordsByDate[$dateStr] ?? null;
+
+            $capacity = $record ? (int) $record->total_capacity : $defaultCapacity;
+            $booked   = $record ? (int) $record->booked_count : 0;
+            $reserved = $record ? (int) $record->reserved_count : 0;
+            $status   = $record ? (string) $record->status : 'available';
+            $priceOverride = ($record && $record->price_override !== null) ? (float) $record->price_override : null;
+
+            $effectivePrice = $priceOverride !== null ? $priceOverride : $basePrice;
+            $spotsLeft = max(0, $capacity - $booked - $reserved);
+
+            if ($status === 'available' && $spotsLeft <= 0) {
+                $status = 'sold_out';
+            }
+
+            $dt = new DateTime($dateStr);
+            $dayOfWeek = (int) $dt->format('N'); // 1 = Monday, 7 = Sunday
+
+            $calendar[$dateStr] = [
+                'date'            => $dateStr,
+                'day'             => $day,
+                'day_of_week'     => $dayOfWeek,
+                'status'          => $status,
+                'total_capacity'  => $capacity,
+                'booked_count'    => $booked,
+                'reserved_count'  => $reserved,
+                'available_spots' => $spotsLeft,
+                'price_override'  => $priceOverride,
+                'base_price'      => $basePrice,
+                'effective_price' => $effectivePrice,
+                'formatted_price' => Money::format($effectivePrice),
+                'is_past'         => $dateStr < $todayStr,
+                'is_today'        => $dateStr === $todayStr,
+            ];
+        }
+
+        return $calendar;
+    }
 }

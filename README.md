@@ -14,7 +14,8 @@ Unlike traditional monolithic booking plugins, Tourivo is designed from the grou
 ## 🌟 Key Features
 
 - **Dual-Engine Architecture**: Manage Tour Packages (Single-day, Multi-day, Hourly, Fixed departure) and Accommodations (Hotels & Room Hierarchy) in one plugin.
-- **Concurrency-Safe Inventory Engine**: Custom relational tables (`wp_tourivo_inventories`) with row-level locks and transaction rollbacks to prevent race conditions and overbooking.
+- **Interactive Availability & Pricing Manager**: Monthly calendar grid on Tour and Room edit screens with bulk date blocking, capacity adjustment, and seasonal price overrides.
+- **Anti-Double-Booking Protection**: Custom relational tables (`wp_tourivo_inventories`) with row-level locks and transaction rollbacks to prevent race conditions and overbooking.
 - **Reactive Frontend Booking Panel**: Instant price calculation, date range picker, and guest breakdown (+ / - counters) built with pure vanilla JavaScript (Zero jQuery).
 - **Day-by-Day Itinerary Builder**: Dynamic repeater for structuring multi-day trip itineraries with meal plans and activity highlights.
 - **Inclusions & Exclusions Checklist**: Visual feature checklist for tour packages.
@@ -104,6 +105,11 @@ Tourivo maintains a comprehensive testing and static analysis pipeline:
 npm test
 # or directly via PHP runner:
 php tests/run_all_tests.php
+
+# Run manual real-MySQL database verification:
+php tests/manual/test_availability_real_mysql.php
+# Or with custom database credentials:
+DB_HOST=127.0.0.1 DB_NAME=your_database DB_USER=root DB_PASSWORD=root php tests/manual/test_availability_real_mysql.php
 ```
 
 ### Static Analysis (PHPStan)

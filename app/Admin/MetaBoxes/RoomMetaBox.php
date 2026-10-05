@@ -7,6 +7,7 @@ namespace Tourivo\Admin\MetaBoxes;
 use Tourivo\Common\Abstracts\MetaBox;
 use Tourivo\PostTypes\HotelPostType;
 use Tourivo\PostTypes\RoomPostType;
+use Tourivo\Services\SeoService;
 use WP_Post;
 use WP_Query;
 
@@ -115,10 +116,15 @@ class RoomMetaBox extends MetaBox
 
         if ($newParentHotelId > 0) {
             self::updateHotelMinPrice($newParentHotelId);
+            SeoService::clearItemAvailabilityCache($newParentHotelId, 'hotel');
         }
         if ($oldParentHotelId > 0 && $oldParentHotelId !== $newParentHotelId) {
             self::updateHotelMinPrice($oldParentHotelId);
+            SeoService::clearItemAvailabilityCache($oldParentHotelId, 'hotel');
         }
+
+        // Invalidate SEO availability transient cache for room
+        SeoService::clearItemAvailabilityCache($postId, 'room');
 
         do_action('tourivo_save_room_meta', $postId, $post);
     }

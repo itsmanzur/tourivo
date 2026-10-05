@@ -100,6 +100,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!class_exists('wpdb')) {
         class wpdb {
             public string $prefix = 'wp_';
+            public string $posts = 'wp_posts';
+            public string $postmeta = 'wp_postmeta';
             public array $bookings = [];
             public array $booking_items = [];
             public array $inventories = [];
@@ -130,7 +132,42 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
                 // 1. INSERT INTO wp_tourivo_inventories
                 if (stripos($trimmed, 'INSERT INTO') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
-                    if (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'/is", $trimmed, $m)) {
+                    if (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(NULL|'[^']*'|[0-9\.]+)\s*,\s*'([^']+)'/is", $trimmed, $m)) {
+                        $itemId   = (int) $m[1];
+                        $itemType = $m[2];
+                        $date     = $m[3];
+                        $slot     = $m[4];
+                        $totalCap = (int) $m[5];
+                        $booked   = (int) $m[6];
+                        $reserved = (int) $m[7];
+                        $priceRaw = trim($m[8], "'");
+                        $priceVal = (strtoupper($priceRaw) === 'NULL' || $priceRaw === '') ? null : (float) $priceRaw;
+                        $status   = $m[9];
+                        $key = "{$itemId}_{$date}";
+                        if (isset($this->inventories[$key])) {
+                            $this->inventories[$key]['total_capacity'] = $totalCap;
+                            $this->inventories[$key]['price_override'] = $priceVal;
+                            $this->inventories[$key]['status']         = $status;
+                        } else {
+                            $id = count($this->inventories) + 1;
+                            $this->inventories[$key] = [
+                                'id'              => $id,
+                                'item_id'         => $itemId,
+                                'item_type'       => $itemType,
+                                'event_date'      => $date,
+                                'time_slot'       => $slot,
+                                'total_capacity'  => $totalCap,
+                                'booked_capacity' => $booked,
+                                'booked_count'    => $booked,
+                                'reserved_count'  => $reserved,
+                                'price_override'  => $priceVal,
+                                'status'          => $status,
+                            ];
+                        }
+                        $this->insert_id = $this->inventories[$key]['id'] ?? 1;
+                        $this->rows_affected = 1;
+                        return 1;
+                    } elseif (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'/is", $trimmed, $m)) {
                         $itemId   = (int) $m[1];
                         $itemType = $m[2];
                         $date     = $m[3];
@@ -151,6 +188,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                             'booked_capacity' => $booked,
                             'booked_count'    => $booked,
                             'reserved_count'  => $reserved,
+                            'price_override'  => null,
                             'status'          => $status,
                         ];
                         $this->insert_id = $id;
@@ -671,8 +709,33 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             return true;
         }
     }
+    if (!function_exists('wp_cache_get')) {
+        function wp_cache_get(string|int $key, string $group = '', bool $force = false, bool &$found = null): mixed {
+            global $tourivo_mock_transients;
+            $k = 'cache_' . $group . '_' . $key;
+            if (isset($tourivo_mock_transients[$k])) {
+                $found = true;
+                return $tourivo_mock_transients[$k];
+            }
+            $found = false;
+            return false;
+        }
+    }
+    if (!function_exists('wp_cache_set')) {
+        function wp_cache_set(string|int $key, mixed $data, string $group = '', int $expire = 0): bool {
+            global $tourivo_mock_transients;
+            $k = 'cache_' . $group . '_' . $key;
+            $tourivo_mock_transients[$k] = $data;
+            return true;
+        }
+    }
     if (!function_exists('wp_cache_delete')) {
-        function wp_cache_delete(string $key, string $group = ''): bool { return true; }
+        function wp_cache_delete(string $key, string $group = ''): bool {
+            global $tourivo_mock_transients;
+            $k = 'cache_' . $group . '_' . $key;
+            unset($tourivo_mock_transients[$k]);
+            return true;
+        }
     }
     if (!function_exists('is_user_logged_in')) {
         function is_user_logged_in(): bool { return false; }
@@ -797,6 +860,15 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             return true;
         }
     }
+    if (!function_exists('delete_post_meta')) {
+        function delete_post_meta(int $postId, string $key, mixed $value = ''): bool {
+            global $tourivo_mock_postmeta;
+            if (isset($tourivo_mock_postmeta[$postId][$key])) {
+                unset($tourivo_mock_postmeta[$postId][$key]);
+            }
+            return true;
+        }
+    }
     if (!function_exists('wp_delete_post')) {
         function wp_delete_post(int $postId, bool $force = false): bool {
             global $tourivo_mock_posts, $tourivo_mock_postmeta;
@@ -810,8 +882,52 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('term_exists')) {
         function term_exists(string|int $term, string $taxonomy = ''): int|array|null { return 1; }
     }
-    if (!function_exists('wp_insert_term')) {
-        function wp_insert_term(string $term, string $taxonomy, array $args = []): array { return ['term_id' => 1]; }
+    if (!function_exists('wp_create_nonce')) {
+        function wp_create_nonce(string|int $action = -1): string {
+            return 'mock_nonce_' . md5((string) $action);
+        }
+    }
+    if (!function_exists('wp_verify_nonce')) {
+        function wp_verify_nonce(string $nonce, string|int $action = -1): int|bool {
+            return ($nonce === 'mock_nonce_' . md5((string) $action) || $nonce === 'valid_nonce' || $nonce === 'tourivo_test_nonce');
+        }
+    }
+    if (!function_exists('check_ajax_referer')) {
+        function check_ajax_referer(string|int $action = -1, string $query_arg = 'false', bool $die = true): int|bool {
+            $nonce = $_POST[$query_arg] ?? $_GET[$query_arg] ?? ($_POST['nonce'] ?? $_GET['nonce'] ?? '');
+            if (wp_verify_nonce((string)$nonce, $action)) {
+                return 1;
+            }
+            if ($die) {
+                wp_send_json_error(['message' => 'Invalid security token / nonce.'], 403);
+                throw new \Exception('check_ajax_referer_died');
+            }
+            return false;
+        }
+    }
+    if (!function_exists('wp_send_json_success')) {
+        function wp_send_json_success(mixed $data = null, ?int $status_code = null, int $options = 0): void {
+            $response = ['success' => true];
+            if ($data !== null) {
+                $response['data'] = $data;
+            }
+            $GLOBALS['tourivo_last_ajax_response'] = [
+                'status' => $status_code ?: 200,
+                'body'   => $response,
+            ];
+        }
+    }
+    if (!function_exists('wp_send_json_error')) {
+        function wp_send_json_error(mixed $data = null, ?int $status_code = null, int $options = 0): void {
+            $response = ['success' => false];
+            if ($data !== null) {
+                $response['data'] = $data;
+            }
+            $GLOBALS['tourivo_last_ajax_response'] = [
+                'status' => $status_code ?: 400,
+                'body'   => $response,
+            ];
+        }
     }
 
     require_once dirname(__DIR__) . '/app/Support/functions.php';
