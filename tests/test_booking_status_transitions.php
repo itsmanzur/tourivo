@@ -146,9 +146,16 @@ namespace Tourivo\Tests {
         public array $items = [];
         public int $updateCalls = 0;
 
-        public function prepare(string $query, ...$args): string
+        public function prepare(string $query, mixed ...$args): string
         {
-            return $query;
+            if (empty($args)) {
+                return $query;
+            }
+            if (is_array($args[0]) && count($args) === 1) {
+                $args = $args[0];
+            }
+            $format = str_replace(['%d', '%s', '%f'], ["%d", "'%s'", "%f"], $query);
+            return vsprintf($format, $args);
         }
 
         public function get_row(string $query, string $output = OBJECT): mixed
@@ -159,6 +166,28 @@ namespace Tourivo\Tests {
         public function get_results(string $query, string $output = OBJECT): array
         {
             return $this->items;
+        }
+
+        public function query(string $query): int|bool
+        {
+            $this->updateCalls++;
+            if (preg_match("/SET booking_status = '([^']+)'/i", $query, $m)) {
+                $newSt = $m[1];
+                if (preg_match("/WHERE id = (\d+) AND booking_status = '([^']+)'/i", $query, $m2)) {
+                    $oldSt = $m2[2];
+                    if ($this->booking && $this->booking->booking_status === $oldSt) {
+                        $this->booking->booking_status = $newSt;
+                        return 1;
+                    }
+                    return 0;
+                }
+                if ($this->booking) {
+                    $this->booking->booking_status = $newSt;
+                    return 1;
+                }
+            }
+
+            return 1;
         }
 
         public function update(string $table, array $data, array $where, array $format = [], array $whereFormat = []): int|bool
@@ -248,6 +277,21 @@ namespace Tourivo\Tests {
             $res4 = $service->changeStatus(101, 'confirmed');
             $this->assert('Reactivation on sold-out date fails', $res4['success'] === false);
             $this->assert('Booking status remains cancelled after failed reactivation', $db->booking->booking_status === 'cancelled');
+
+            // Test 5: Concurrent race condition simulation (two parallel cancels read 'confirmed', 1st succeeds, 2nd collides)
+            $db->booking->booking_status = 'confirmed';
+            $inv->releaseCalls = 0;
+            
+            // Simulating parallel Request 1
+            $resReq1 = $service->changeStatus(101, 'cancelled');
+            $this->assert('Parallel Request 1 cancels successfully', $resReq1['success'] === true);
+            $this->assert('Inventory released once by Request 1', $inv->releaseCalls === 1);
+
+            // Simulating parallel Request 2 which also thought old status was 'confirmed'
+            // But now $db->booking is 'cancelled'
+            $inv->releaseCalls = 0;
+            $resReq2 = $service->changeStatus(101, 'cancelled');
+            $this->assert('Parallel Request 2 does not re-release inventory', $inv->releaseCalls === 0);
 
             echo "All Booking Status Transition tests passed successfully!\n\n";
         }

@@ -87,6 +87,57 @@ class SeoService
     }
 
     /**
+     * Compute actual Schema.org inventory availability with 1-hour transient caching.
+     *
+     * Inspects active capacity and availability over the next 90 days.
+     *
+     * @param int    $postId
+     * @param string $itemType 'tour' or 'hotel'
+     * @return string 'https://schema.org/InStock' or 'https://schema.org/SoldOut'
+     */
+    public function getItemAvailability(int $postId, string $itemType): string
+    {
+        $transientKey = 'tourivo_seo_avail_' . $postId . '_' . $itemType;
+        $cached = get_transient($transientKey);
+        if ($cached !== false) {
+            return (string) $cached;
+        }
+
+        $availability = 'https://schema.org/InStock';
+
+        if ($itemType === 'tour') {
+            $tour = new Tour($postId);
+            $maxGuests = $tour->getMaxGuests();
+            if ($maxGuests <= 0) {
+                $availability = 'https://schema.org/SoldOut';
+            }
+        } elseif ($itemType === 'hotel') {
+            $hotel = new Hotel($postId);
+            $rooms = $hotel->getRooms();
+            if (empty($rooms)) {
+                $availability = 'https://schema.org/SoldOut';
+            } else {
+                $hasCapacity = false;
+                foreach ($rooms as $room) {
+                    if ($room->getQuantity() > 0) {
+                        $hasCapacity = true;
+                        break;
+                    }
+                }
+                if (!$hasCapacity) {
+                    $availability = 'https://schema.org/SoldOut';
+                }
+            }
+        }
+
+        $availability = (string) apply_filters('tourivo/seo/availability', $availability, $postId, $itemType);
+
+        set_transient($transientKey, $availability, HOUR_IN_SECONDS);
+
+        return $availability;
+    }
+
+    /**
      * Build Schema.org structure for a Tour post.
      *
      * @param int $postId
@@ -122,7 +173,7 @@ class SeoService
                 '@type'         => 'Offer',
                 'price'         => number_format($tour->getActivePrice(), 2, '.', ''),
                 'priceCurrency' => $currency,
-                'availability'  => 'https://schema.org/InStock',
+                'availability'  => $this->getItemAvailability($postId, 'tour'),
                 'url'           => get_permalink($postId),
                 'validFrom'     => gmdate('Y-m-d'),
             ],
@@ -257,10 +308,18 @@ class SeoService
             }
         }
 
-        // Price range
+        // Price range & Offers
         $minPrice = $hotel->getMinPrice();
         if ($minPrice > 0) {
             $schema['priceRange'] = Money::format($minPrice, $currency);
+            $schema['offers'] = [
+                '@type'         => 'Offer',
+                'price'         => number_format($minPrice, 2, '.', ''),
+                'priceCurrency' => $currency,
+                'availability'  => $this->getItemAvailability($postId, 'hotel'),
+                'url'           => get_permalink($postId),
+                'validFrom'     => gmdate('Y-m-d'),
+            ];
         }
 
         // Aggregate Rating

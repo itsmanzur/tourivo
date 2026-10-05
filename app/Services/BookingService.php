@@ -375,7 +375,11 @@ class BookingService
     }
 
     /**
-     * Change booking status with atomic inventory transitions, logging, and hooks.
+     * Atomically update booking status with concurrency protection and inventory synchronization.
+     *
+     * Uses conditional SQL update (WHERE id = %d AND booking_status = %s) to prevent race conditions
+     * during concurrent admin/CLI/AJAX actions. Releases or commits inventory only when the database
+     * row was genuinely updated (rows_affected === 1).
      *
      * @param int                  $bookingId
      * @param string               $newStatus
@@ -420,9 +424,10 @@ class BookingService
         $lineItems = (array) $this->db->get_results($this->db->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        // Case 1: Reactivating from cancelled -> Try to commit inventory first
+        $committedItems = [];
+
+        // Case 1: Reactivating from cancelled -> Pre-commit inventory before state change
         if ($oldStatus === 'cancelled' && $newStatus !== 'cancelled') {
-            $committedItems = [];
             $allCommitted = true;
 
             if (!empty($lineItems)) {
@@ -458,18 +463,24 @@ class BookingService
                 }
                 return ['success' => false, 'message' => __('Cannot reactivate booking. Required inventory spots are no longer available.', 'tourivo')];
             }
+        }
 
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-            $updated = $this->db->update(
-                $bookingsTable,
-                ['booking_status' => $newStatus, 'updated_at' => gmdate('Y-m-d H:i:s')],
-                ['id' => $bookingId],
-                ['%s', '%s'],
-                ['%d']
-            );
+        // Conditional atomic update matching $oldStatus to eliminate race condition collisions
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $rowsAffected = $this->db->query(
+            $this->db->prepare(
+                "UPDATE {$bookingsTable} SET booking_status = %s, updated_at = %s WHERE id = %d AND booking_status = %s",
+                $newStatus,
+                gmdate('Y-m-d H:i:s'),
+                $bookingId,
+                $oldStatus
+            )
+        );
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-            if ($updated === false) {
-                // Revert committed inventory on DB error
+        if ($rowsAffected !== 1) {
+            // Rollback pre-committed inventory if conditional update failed due to concurrent modification
+            if (!empty($committedItems)) {
                 foreach ($committedItems as $cItem) {
                     $this->inventoryService->releaseBookingInventory(
                         (int) $cItem->item_id,
@@ -480,36 +491,23 @@ class BookingService
                         (int) $cItem->quantity
                     );
                 }
-                return ['success' => false, 'message' => __('Database update error while changing booking status.', 'tourivo')];
-            }
-        } else {
-            // Case 2: Standard transition or Cancelling
-            // phpcs:ignore WordPress.DB.DirectDatabaseQuery
-            $updated = $this->db->update(
-                $bookingsTable,
-                ['booking_status' => $newStatus, 'updated_at' => gmdate('Y-m-d H:i:s')],
-                ['id' => $bookingId],
-                ['%s', '%s'],
-                ['%d']
-            );
-
-            if ($updated === false) {
-                return ['success' => false, 'message' => __('Database update error while changing booking status.', 'tourivo')];
             }
 
-            // If cancelling from an active state, release inventory once
-            if ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
-                if (!empty($lineItems)) {
-                    foreach ($lineItems as $item) {
-                        $this->inventoryService->releaseBookingInventory(
-                            (int) $item->item_id,
-                            (string) $item->item_type,
-                            substr((string) $item->check_in, 0, 10),
-                            !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
-                            (string) ($item->time_slot ?: 'all_day'),
-                            (int) $item->quantity
-                        );
-                    }
+            return ['success' => false, 'message' => __('Booking status has already changed or could not be updated.', 'tourivo')];
+        }
+
+        // If cancelling from an active state, release inventory once conditional update succeeded
+        if ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
+            if (!empty($lineItems)) {
+                foreach ($lineItems as $item) {
+                    $this->inventoryService->releaseBookingInventory(
+                        (int) $item->item_id,
+                        (string) $item->item_type,
+                        substr((string) $item->check_in, 0, 10),
+                        !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
+                        (string) ($item->time_slot ?: 'all_day'),
+                        (int) $item->quantity
+                    );
                 }
             }
         }

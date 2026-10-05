@@ -393,7 +393,10 @@ if (!function_exists('tourivo_is_bengali')) {
 
 if (!function_exists('tourivo_load_plugin_textdomain')) {
     /**
-     * Centralized loader for Tourivo textdomain with language switcher & WP.org fallback.
+     * Centralized loader for Tourivo textdomain with language switcher & WP.org priority.
+     *
+     * Prioritizes WordPress.org translation files (/wp-content/languages/plugins/tourivo-{locale}.mo)
+     * so community updates take precedence, falling back to bundled .mo files in the plugin directory.
      *
      * @param string|null $customLocale Optional specific locale to load.
      * @return void
@@ -408,14 +411,17 @@ if (!function_exists('tourivo_load_plugin_textdomain')) {
             return;
         }
 
-        $wporgFile   = WP_LANG_DIR . '/plugins/tourivo-' . $locale . '.mo';
-        $bundledFile = TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo';
+        $wporgFile   = defined('WP_LANG_DIR') ? WP_LANG_DIR . '/plugins/tourivo-' . $locale . '.mo' : '';
+        $bundledFile = defined('TOURIVO_PLUGIN_DIR') ? TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo' : '';
 
-        if (file_exists($bundledFile)) {
-            load_textdomain('tourivo', $bundledFile);
-        } elseif (file_exists($wporgFile)) {
-            load_textdomain('tourivo', $wporgFile);
+        // 1. Prioritize WP.org translation updates if available
+        if (!empty($wporgFile) && file_exists($wporgFile)) {
+            load_textdomain('tourivo', $wporgFile, $locale);
+        } elseif (!empty($bundledFile) && file_exists($bundledFile)) {
+            // 2. Fallback to bundled plugin translation file
+            load_textdomain('tourivo', $bundledFile, $locale);
         } else {
+            // 3. Fallback standard loader
             // phpcs:ignore PluginCheck.CodeAnalysis.DiscouragedFunctions.load_plugin_textdomainFound
             load_plugin_textdomain('tourivo', false, dirname(plugin_basename(TOURIVO_PLUGIN_FILE)) . '/languages');
         }

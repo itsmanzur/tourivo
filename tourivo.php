@@ -3,7 +3,7 @@
  * Plugin Name:       Tourivo
  * Plugin URI:        https://tourivo.com
  * Description:       The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress.
- * Version:           1.2.0
+ * Version:           1.3.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
  * Author:            Tourivo Team
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // 1. Define Global Constants
-define('TOURIVO_VERSION', '1.2.0');
+define('TOURIVO_VERSION', '1.3.0');
 define('TOURIVO_MIN_PHP_VER', '8.0');
 define('TOURIVO_PLUGIN_FILE', __FILE__);
 define('TOURIVO_PLUGIN_DIR', plugin_dir_path(__FILE__));

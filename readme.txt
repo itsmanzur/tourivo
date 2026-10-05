@@ -4,7 +4,7 @@ Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.2.0
+Stable tag: 1.3.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,6 +86,8 @@ Tourivo contains an optional Outbound Webhook Integration feature that connects 
 * **Where data is sent:** Exclusively to the HTTPS endpoint URL configured by the site administrator in Tourivo Settings.
 * **When data is sent:** Automatically when a new booking is created (`booking.created`), when a booking status changes (`booking.status_changed`), or when a traveler inquiry is submitted (`inquiry.created`), as well as manually when clicking "Send Test Ping Payload" in settings.
 * **Privacy & Control:** This service is completely **optional and disabled by default**. No data is transmitted to external endpoints unless a webhook URL is explicitly configured and enabled in plugin settings.
+* **Local & Intranet Webhook Endpoints:** Tourivo uses `wp_safe_remote_post()` which protects against SSRF attacks by blocking local IP ranges. If you are developing locally or testing with a local n8n/webhook server (e.g., `http://127.0.0.1:5678`), allow local requests via WordPress's native filter:
+  `add_filter('http_request_host_is_external', function($is_external, $host) { return $host === 'localhost' || $host === '127.0.0.1' ? true : $is_external; }, 10, 2);`
 
 ---
 
@@ -100,6 +102,14 @@ Tourivo contains an optional Outbound Webhook Integration feature that connects 
 ---
 
 == Changelog ==
+
+= 1.3.0 =
+* **Asynchronous Webhook Delivery:** Webhooks now queue asynchronously via Action Scheduler or WP-Cron with exponential backoff retries and SHA256 HMAC signature verification.
+* **Atomic Booking Status Transitions:** Unified `BookingService::changeStatus()` with atomic conditional SQL updates and concurrency-safe inventory rollback across Admin AJAX, WP-CLI, and REST APIs.
+* **Dynamic Schema & SEO Availability:** Real-time 90-day inventory calculation for Schema.org (`InStock` / `SoldOut`) with transient caching and Yoast/Rank Math compatibility.
+* **Lookup & Voucher URL Fixes:** Clean raw URL parsing and client-side safe XSS-immune rendering for booking lookup and vouchers.
+* **Seeder Robustness & Rollback:** Demo seeder now supports clean rollbacks on insertion failure and smart metadata backfilling.
+* **100% Complete Bengali Localization:** Bundled complete Bengali translation (1,017 strings) with self-hosted Hind Siliguri WOFF2 typography and WP.org translation precedence.
 
 = 1.2.0 =
 * Hardened ClientIp anti-spoofing logic for Cloudflare edge verification and reverse proxies.
@@ -121,6 +131,9 @@ Tourivo contains an optional Outbound Webhook Integration feature that connects 
 * 1-Click Sample Travel & Accommodation Data Seeder.
 
 == Upgrade Notice ==
+
+= 1.3.0 =
+Important update with async webhook queueing, atomic booking transitions, and enhanced internationalization.
 
 = 1.2.0 =
 Security hardening for client IP resolution and booking inventory state management.

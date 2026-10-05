@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 class WebhookService
 {
     /**
-     * Register lifecycle event hooks and retry cron action.
+     * Register lifecycle event hooks and delivery action.
      *
      * @return void
      */
@@ -30,7 +30,7 @@ class WebhookService
         add_action('tourivo/booking_created', [$this, 'onBookingCreated'], 20, 2);
         add_action('tourivo/booking_status_changed', [$this, 'onBookingStatusChanged'], 20, 3);
         add_action('tourivo/inquiry_created', [$this, 'onInquiryCreated'], 20, 2);
-        add_action('tourivo_process_webhook_retry', [$this, 'handleRetryCron'], 10, 4);
+        add_action('tourivo_process_webhook_delivery', [$this, 'dispatch'], 10, 3);
     }
 
     /**
@@ -56,6 +56,44 @@ class WebhookService
     }
 
     /**
+     * Enqueue asynchronous webhook delivery via Action Scheduler or WP-Cron.
+     *
+     * Guarantees non-blocking execution so checkout / booking requests return within <500ms
+     * even if external webhook endpoints (Zapier, n8n, Make) are slow or offline.
+     *
+     * @param string               $event   Event name (e.g. 'booking.created').
+     * @param array<string, mixed> $data    Event payload data.
+     * @param int                  $attempt Delivery attempt count.
+     * @return void
+     */
+    public function enqueue(string $event, array $data, int $attempt = 1): void
+    {
+        $webhookUrl = trim((string) Config::get('webhook_url', ''));
+        if (!$this->isValidUrl($webhookUrl)) {
+            return;
+        }
+
+        $enabledEvents = (array) Config::get('webhook_events', [
+            'booking.created',
+            'booking.status_changed',
+            'inquiry.created',
+        ]);
+
+        if (!in_array($event, $enabledEvents, true)) {
+            return;
+        }
+
+        if (function_exists('as_enqueue_async_action')) {
+            as_enqueue_async_action('tourivo_process_webhook_delivery', [$event, $data, $attempt], 'tourivo-webhooks');
+        } else {
+            wp_schedule_single_event(time(), 'tourivo_process_webhook_delivery', [$event, $data, $attempt]);
+            if (function_exists('spawn_cron')) {
+                spawn_cron();
+            }
+        }
+    }
+
+    /**
      * Triggered when a new booking is created.
      *
      * @param int                  $bookingId
@@ -64,7 +102,7 @@ class WebhookService
      */
     public function onBookingCreated(int $bookingId, array $bookingData): void
     {
-        $this->dispatch('booking.created', [
+        $this->enqueue('booking.created', [
             'booking_id'   => $bookingId,
             'booking_code' => $bookingData['booking_code'] ?? '',
             'customer'     => [
@@ -102,7 +140,7 @@ class WebhookService
     {
         $booking = function_exists('tourivo_get_booking') ? tourivo_get_booking($bookingId) : null;
 
-        $this->dispatch('booking.status_changed', [
+        $this->enqueue('booking.status_changed', [
             'booking_id'   => $bookingId,
             'booking_code' => $booking ? $booking->booking_code : '',
             'old_status'   => $oldStatus,
@@ -125,7 +163,7 @@ class WebhookService
      */
     public function onInquiryCreated(int $inquiryId, array $inquiryData): void
     {
-        $this->dispatch('inquiry.created', [
+        $this->enqueue('inquiry.created', [
             'inquiry_id' => $inquiryId,
             'name'       => $inquiryData['name'] ?? '',
             'email'      => $inquiryData['email'] ?? '',
@@ -136,7 +174,7 @@ class WebhookService
     }
 
     /**
-     * Dispatch an outbound webhook event with logging and exponential retry.
+     * Dispatch an outbound webhook event worker with logging and exponential retry.
      *
      * @param string               $event   Event name (e.g. 'booking.created').
      * @param array<string, mixed> $data    Event payload data.
@@ -242,44 +280,24 @@ class WebhookService
             }
         }
 
-        // Handle exponential retry up to 3 attempts
+        // Handle exponential retry up to 3 attempts (Positional array across AS & WP-Cron)
         if (!$isSuccess && $attempt < 3) {
             $nextAttempt = $attempt + 1;
             // Delay: 120s for attempt 2, 300s for attempt 3
             $delay = ($nextAttempt === 2) ? 120 : 300;
 
             if (function_exists('as_schedule_single_action')) {
-                as_schedule_single_action(time() + $delay, 'tourivo_process_webhook_retry', [
-                    'event'     => $event,
-                    'data'      => $data,
-                    'attempt'   => $nextAttempt,
-                    'targetUrl' => $webhookUrl,
-                ]);
+                as_schedule_single_action(time() + $delay, 'tourivo_process_webhook_delivery', [$event, $data, $nextAttempt], 'tourivo-webhooks');
             } else {
-                wp_schedule_single_event(time() + $delay, 'tourivo_process_webhook_retry', [
+                wp_schedule_single_event(time() + $delay, 'tourivo_process_webhook_delivery', [
                     $event,
                     $data,
                     $nextAttempt,
-                    $webhookUrl,
                 ]);
             }
         }
 
         return $isSuccess;
-    }
-
-    /**
-     * Cron handler for webhook exponential retries.
-     *
-     * @param string               $event
-     * @param array<string, mixed> $data
-     * @param int                  $attempt
-     * @param string               $targetUrl
-     * @return void
-     */
-    public function handleRetryCron(string $event, array $data, int $attempt, string $targetUrl = ''): void
-    {
-        $this->dispatch($event, $data, $attempt);
     }
 
     /**
