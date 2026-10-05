@@ -100,7 +100,7 @@ class InventoryService
         // 1. Check if custom price override exists in DB for this date
         if (!empty($date)) {
             $record = $this->repository->getRecord($itemId, $itemType, $date, $timeSlot);
-            if ($record && $record->price_override !== null && (float) $record->price_override > 0) {
+            if ($record && isset($record->price_override) && $record->price_override !== null && (float) $record->price_override > 0) {
                 return (float) $record->price_override;
             }
         }

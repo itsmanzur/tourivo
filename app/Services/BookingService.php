@@ -206,8 +206,8 @@ class BookingService
 
         $totalPrice = (float) ($pricingData['total_price'] ?? $baseTotal);
 
-        // Allow explicit manual booking total override ONLY for trusted callers or authorized admins
-        if ($trusted || current_user_can('manage_tourivo_bookings')) {
+        // Allow explicit manual booking total override ONLY for trusted callers
+        if ($trusted) {
             if (isset($data['total_amount']) && is_numeric($data['total_amount']) && (float) $data['total_amount'] >= 0) {
                 $totalPrice = (float) $data['total_amount'];
             }
@@ -245,7 +245,7 @@ class BookingService
         } else {
             $bookingStatus = (string) apply_filters('tourivo/default_booking_status', 'pending');
             $paymentStatus = 'pending';
-            $paymentMethod = sanitize_text_field((string) ($data['payment_method'] ?? 'offline'));
+            $paymentMethod = 'offline';
         }
 
         // 7. Generate unique booking code

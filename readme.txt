@@ -105,9 +105,9 @@ Tourivo contains an optional Outbound Webhook Integration feature that connects 
 
 = 1.3.0 =
 * **Asynchronous Webhook Delivery:** Webhooks now queue asynchronously via Action Scheduler or WP-Cron with exponential backoff retries and SHA256 HMAC signature verification.
-* **Atomic Booking Status Transitions:** Unified `BookingService::changeStatus()` with atomic conditional SQL updates and concurrency-safe inventory rollback across Admin AJAX, WP-CLI, and REST APIs.
+* **Atomic Booking Status Transitions:** Unified `BookingService::changeStatus()` with atomic conditional SQL updates and concurrency-safe inventory rollback across Admin AJAX and WP-CLI.
 * **Dynamic Schema & SEO Availability:** Real-time 90-day inventory calculation for Schema.org (`InStock` / `SoldOut`) with transient caching and Yoast/Rank Math compatibility.
-* **Lookup & Voucher URL Fixes:** Clean raw URL parsing and client-side safe XSS-immune rendering for booking lookup and vouchers.
+* **Lookup & Voucher URL Fixes:** Clean raw URL parsing and safe client-side textContent rendering for booking lookup and vouchers.
 * **Seeder Robustness & Rollback:** Demo seeder now supports clean rollbacks on insertion failure and smart metadata backfilling.
 * **100% Complete Bengali Localization:** Bundled complete Bengali translation (1,017 strings) with self-hosted Hind Siliguri WOFF2 typography and WP.org translation precedence.
 

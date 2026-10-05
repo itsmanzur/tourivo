@@ -1,0 +1,35 @@
+# Development and Git Files
+.git
+.github
+.gitignore
+.gitattributes
+.distignore
+
+# Tests and Test Artifacts
+tests
+phpunit.xml.dist
+phpunit.xml
+
+# Code Quality & Static Analysis Configs
+phpcs.xml.dist
+phpcs.xml
+phpstan.neon
+phpstan-baseline.neon
+.wp-env.json
+
+# Dependencies & Build Scripts
+composer.lock
+package.json
+package-lock.json
+node_modules
+vendor
+bin
+dist
+
+# Temporary and Documentation Files
+*.tmp
+*.log
+*.sql
+tourivo_project_roadmap.md
+.DS_Store
+Thumbs.db

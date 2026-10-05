@@ -813,6 +813,13 @@ class SetupWizard
         }
 
         $result = Seeder::run();
+
+        if (empty($result['success'])) {
+            wp_send_json_error([
+                'message' => $result['message'] ?? __('Failed to import demo data. Please check logs.', 'tourivo'),
+            ], 500);
+        }
+
         wp_send_json_success($result);
     }
 }

@@ -106,6 +106,19 @@ class BookingLookupShortcode
         ));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
+        $payload = self::formatLookupResponseData($booking, $items);
+        wp_send_json_success($payload);
+    }
+
+    /**
+     * Format booking record and items for lookup AJAX JSON response.
+     *
+     * @param object $booking
+     * @param array<object> $items
+     * @return array<string, mixed>
+     */
+    public static function formatLookupResponseData(object $booking, array $items): array
+    {
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
         $voucherToken   = self::generateVoucherToken((int) $booking->id, (string) $booking->customer_email);
         $voucherUrl     = add_query_arg([
@@ -153,7 +166,7 @@ class BookingLookupShortcode
 
         $createdFormatted = gmdate('M d, Y H:i', strtotime((string) $booking->created_at));
 
-        wp_send_json_success([
+        return [
             'booking_code'    => (string) $booking->booking_code,
             'customer_name'   => (string) $booking->customer_name,
             'customer_email'  => (string) $booking->customer_email,
@@ -166,7 +179,7 @@ class BookingLookupShortcode
             'total_amount'    => Money::format((float) $booking->total_amount, $currencySymbol),
             'items_html'      => $itemsHtml,
             'voucher_url'     => esc_url_raw($voucherUrl),
-        ]);
+        ];
     }
 
     /**

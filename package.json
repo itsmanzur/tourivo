@@ -4,8 +4,14 @@
   "description": "Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress",
   "scripts": {
     "build": "php bin/build-package.php",
-    "test": "php tests/test_booking_lookup.php && php tests/test_booking_status_transitions.php && php tests/test_client_ip.php",
+    "test": "php tests/run_all_tests.php",
+    "test:php": "phpunit",
+    "env:start": "wp-env start",
+    "env:stop": "wp-env stop",
     "bump": "bash bin/bump-version.sh"
+  },
+  "devDependencies": {
+    "@wordpress/env": "^10.0.0"
   },
   "keywords": [
     "wordpress",
@@ -14,6 +20,6 @@
     "hotel-booking",
     "booking-engine"
   ],
-  "author": "Tourivo Team",
+  "author": "Manzur Shehab <manzurishehab@gmail.com>",
   "license": "GPL-2.0-or-later"
 }

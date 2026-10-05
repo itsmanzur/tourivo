@@ -5,21 +5,45 @@
     "license": "GPL-2.0-or-later",
     "authors": [
         {
-            "name": "Tourivo Team",
-            "email": "support@tourivo.com"
+            "name": "Manzur Shehab",
+            "email": "manzurishehab@gmail.com",
+            "homepage": "https://github.com/itsmanzur"
         }
     ],
     "minimum-stability": "stable",
     "require": {
         "php": ">=8.0"
     },
+    "require-dev": {
+        "phpunit/phpunit": "^9.6",
+        "yoast/phpunit-polyfills": "^2.0",
+        "wp-coding-standards/wpcs": "^3.1",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.0",
+        "phpcompatibility/phpcompatibility-wp": "^2.1",
+        "phpstan/phpstan": "^1.11",
+        "szepeviktor/phpstan-wordpress": "^1.3"
+    },
     "autoload": {
         "psr-4": {
             "Tourivo\\": "app/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Tourivo\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "optimize-autoloader": true,
-        "sort-packages": true
+        "sort-packages": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "test": "phpunit",
+        "lint": "phpcs",
+        "lint:fix": "phpcbf",
+        "analyse": "phpstan analyse"
     }
 }

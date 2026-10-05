@@ -35,7 +35,11 @@ sed -i -E "s/(define\('TOURIVO_VERSION',[[:space:]]*')[0-9]+\.[0-9]+\.[0-9]+(-[a
 # 3. Update readme.txt Stable tag
 sed -i -E "s/(Stable tag:[[:space:]]+)[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?/\1$NEW_VERSION/" "$ROOT_DIR/readme.txt"
 
+# 4. Update README.md version badge
+sed -i -E "s/(badge\/version-)[0-9]+\.[0-9]+\.[0-9]+(-[a-zA-Z0-9.]+)?(-blue\.svg)/\1$NEW_VERSION\3/" "$ROOT_DIR/README.md"
+
 echo "==> Successfully updated version strings in:"
 echo "    - tourivo.php (Plugin Header & TOURIVO_VERSION constant)"
 echo "    - readme.txt (Stable tag)"
+echo "    - README.md (Version badge)"
 echo "==> Done!"

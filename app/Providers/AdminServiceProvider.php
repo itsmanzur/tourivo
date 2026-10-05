@@ -333,7 +333,20 @@ class AdminServiceProvider extends ServiceProvider
 
         $res = Seeder::run();
 
-        // Mark welcome notice dismissed since demo data is now imported
+        if (empty($res['success'])) {
+            wp_send_json_error([
+                'message' => $res['message'] ?? __('Failed to import sample demo data. Please check server logs.', 'tourivo'),
+            ], 500);
+        }
+
+        if (!empty($res['skipped'])) {
+            wp_send_json_success([
+                'message' => $res['message'] ?? __('Demo content is already imported.', 'tourivo'),
+                'skipped' => true,
+            ]);
+        }
+
+        // Mark welcome notice dismissed only on genuine new demo data import
         update_user_meta(get_current_user_id(), 'tourivo_dismiss_welcome_notice', 1);
 
         wp_send_json_success([
@@ -344,6 +357,9 @@ class AdminServiceProvider extends ServiceProvider
                 $res['hotels_created'],
                 $res['rooms_created']
             ),
+            'tours_created'  => $res['tours_created'],
+            'hotels_created' => $res['hotels_created'],
+            'rooms_created'  => $res['rooms_created'],
         ]);
     }
 

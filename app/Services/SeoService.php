@@ -4,11 +4,14 @@ declare(strict_types=1);
 
 namespace Tourivo\Services;
 
+use DateTime;
+use Tourivo\Common\Container;
 use Tourivo\Config\Config;
 use Tourivo\Models\Hotel;
 use Tourivo\Models\Tour;
 use Tourivo\PostTypes\HotelPostType;
 use Tourivo\PostTypes\TourPostType;
+use Tourivo\Repositories\InventoryRepository;
 use Tourivo\Support\Money;
 
 if (!defined('ABSPATH')) {
@@ -103,29 +106,80 @@ class SeoService
             return (string) $cached;
         }
 
-        $availability = 'https://schema.org/InStock';
+        $today = gmdate('Y-m-d');
+        $futureDate = gmdate('Y-m-d', strtotime('+90 days'));
+        $availability = 'https://schema.org/SoldOut';
+
+        /** @var InventoryRepository $invRepo */
+        $invRepo = Container::getInstance()->get(InventoryRepository::class);
 
         if ($itemType === 'tour') {
             $tour = new Tour($postId);
             $maxGuests = $tour->getMaxGuests();
-            if ($maxGuests <= 0) {
-                $availability = 'https://schema.org/SoldOut';
+            if ($maxGuests > 0) {
+                $records = $invRepo->getRecordsInRange($postId, 'tour', $today, $futureDate);
+                $recordsByDate = [];
+                foreach ($records as $rec) {
+                    $recordsByDate[$rec->event_date] = $rec;
+                }
+
+                $startDt = new DateTime($today);
+                $endDt = new DateTime($futureDate);
+                while ($startDt <= $endDt) {
+                    $dateStr = $startDt->format('Y-m-d');
+                    if (isset($recordsByDate[$dateStr])) {
+                        $rec = $recordsByDate[$dateStr];
+                        $cap = (int) ($rec->total_capacity ?? $maxGuests);
+                        $booked = (int) ($rec->booked_capacity ?? 0);
+                        $isClosed = (int) ($rec->is_closed ?? 0);
+                        if ($isClosed === 0 && ($cap - $booked) > 0) {
+                            $availability = 'https://schema.org/InStock';
+                            break;
+                        }
+                    } else {
+                        // Open date inheriting default capacity
+                        $availability = 'https://schema.org/InStock';
+                        break;
+                    }
+                    $startDt->modify('+1 day');
+                }
             }
         } elseif ($itemType === 'hotel') {
             $hotel = new Hotel($postId);
             $rooms = $hotel->getRooms();
-            if (empty($rooms)) {
-                $availability = 'https://schema.org/SoldOut';
-            } else {
-                $hasCapacity = false;
+            if (!empty($rooms)) {
                 foreach ($rooms as $room) {
-                    if ($room->getQuantity() > 0) {
-                        $hasCapacity = true;
-                        break;
+                    $roomId = $room->getId();
+                    $qty = $room->getQuantity();
+                    if ($qty <= 0) {
+                        continue;
                     }
-                }
-                if (!$hasCapacity) {
-                    $availability = 'https://schema.org/SoldOut';
+
+                    $records = $invRepo->getRecordsInRange($roomId, 'room', $today, $futureDate);
+                    $recordsByDate = [];
+                    foreach ($records as $rec) {
+                        $recordsByDate[$rec->event_date] = $rec;
+                    }
+
+                    $startDt = new DateTime($today);
+                    $endDt = new DateTime($futureDate);
+                    while ($startDt <= $endDt) {
+                        $dateStr = $startDt->format('Y-m-d');
+                        if (isset($recordsByDate[$dateStr])) {
+                            $rec = $recordsByDate[$dateStr];
+                            $cap = (int) ($rec->total_capacity ?? $qty);
+                            $booked = (int) ($rec->booked_capacity ?? 0);
+                            $isClosed = (int) ($rec->is_closed ?? 0);
+                            if ($isClosed === 0 && ($cap - $booked) > 0) {
+                                $availability = 'https://schema.org/InStock';
+                                break 2;
+                            }
+                        } else {
+                            $availability = 'https://schema.org/InStock';
+                            break 2;
+                        }
+                        $startDt->modify('+1 day');
+                    }
                 }
             }
         }

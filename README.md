@@ -1,6 +1,6 @@
 # Tourivo – Travel, Tour & Hotel Booking Engine for WordPress
 
-[![Version](https://img.shields.io/badge/version-1.2.0-blue.svg)](https://tourivo.com)
+[![Version](https://img.shields.io/badge/version-1.3.0-blue.svg)](https://tourivo.com)
 [![PHP](https://img.shields.io/badge/PHP-%3E%3D8.0-8892BF.svg)](https://php.net)
 [![WordPress](https://img.shields.io/badge/WordPress-%3E%3D6.0-21759B.svg)](https://wordpress.org)
 [![License](https://img.shields.io/badge/license-GPLv2-green.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
@@ -35,20 +35,27 @@ Tourivo follows clean modern PHP best practices:
 tourivo/
 ├── app/
 │   ├── Admin/              # Admin menus, meta boxes, settings page, and booking tables
-│   ├── Api/                # REST API controllers & routes (Availability, Checkout, Search)
+│   ├── Cli/                # WP-CLI commands (status, stats, cleanup, demo management)
 │   ├── Common/             # Abstract base classes, contracts, traits, and exceptions
-│   ├── Config/             # Configuration management
-│   ├── Database/           # Schema migration runner and table migrations
+│   ├── Config/             # Configuration management & environment settings
+│   ├── Controllers/        # Request controllers
+│   │   └── Api/            # REST API controllers & routes (Availability, Checkout, Search)
+│   ├── Database/           # Schema migration runner, tables, and demo seeders
 │   ├── Integrations/       # Elementor and Gutenberg blocks integrations
 │   ├── Models/             # Domain models (Tour, Hotel, Room, Booking, Inventory, Inquiry)
 │   ├── Providers/          # Service providers (Admin, API, Database, Routing, Shortcodes)
-│   ├── Services/           # Business logic (Booking, Availability, Inventory, Email, Seeder)
-│   └── Support/            # Utilities (ClientIp anti-spoofing, Date helpers, Formatting)
+│   ├── Repositories/       # Database query repositories with atomic locking
+│   ├── Services/           # Business logic (Booking, Availability, Inventory, Email, SEO, Webhook)
+│   ├── Shortcodes/         # Frontend shortcode handlers & lookup widgets
+│   └── Support/            # Utilities (ClientIp anti-spoofing, Money format, Date helpers)
 ├── assets/                 # Minified frontend & admin CSS / JS
-├── languages/              # Translation files & POT template
+├── bin/                    # Release packaging and version bump scripts
+├── languages/              # Translation files (.pot, .po, .mo)
 ├── templates/              # Public frontend theme templates
 ├── views/                  # Admin dashboard & settings views
-├── tests/                  # Automated unit test suite
+├── tests/                  # Automated unit and integration test suites
+│   ├── Unit/               # Isolated unit tests (Money, ClientIp, DateValidation)
+│   └── Integration/        # Integration tests (BookingEngine, Transitions, Security, Webhooks)
 ├── tourivo.php             # Main plugin bootstrap file
 ├── readme.txt              # Official WordPress.org plugin directory readme
 └── uninstall.php           # Cleanup routine on deletion
@@ -83,15 +90,50 @@ Embed Tourivo components anywhere on your website:
 | `[tourivo_hotels]` | Responsive grid of hotels & resorts | `[tourivo_hotels columns="3" count="6" destination="maldives"]` |
 | `[tourivo_search_bar]` | Destination, date, and traveler search bar | `[tourivo_search_bar]` |
 | `[tourivo_booking_panel]` | Interactive booking sidebar for an item | `[tourivo_booking_panel item_id="123" item_type="tour"]` |
+| `[tourivo_booking_lookup]` | Guest booking lookup & voucher generator | `[tourivo_booking_lookup]` |
 
 ---
 
-## 🧪 Testing
+## 🧪 Automated Testing & Quality Infrastructure
 
-Run the automated test suite locally:
+Tourivo maintains a comprehensive testing and static analysis pipeline:
 
+### Running Tests Locally
 ```bash
-php tests/test_client_ip.php
+# Run the complete test suite (Unit & Integration)
+npm test
+# or directly via PHP runner:
+php tests/run_all_tests.php
+```
+
+### Static Analysis (PHPStan)
+Tourivo enforces PHPStan Level 5 static analysis:
+```bash
+composer analyse
+# or
+vendor/bin/phpstan analyse
+```
+*Roadmap*: Moving toward PHPStan Level 6-8 in upcoming releases with generic template annotations on all repositories.
+
+### Code Style & Standards (PHPCS)
+```bash
+# Check code against WordPress & PHPCompatibility standards
+composer lint
+
+# Automatically fix formatting issues
+composer lint:fix
+```
+
+### Dockerized WordPress Environment (`@wordpress/env`)
+```bash
+# Start local WordPress test environment
+npm run env:start
+
+# Run PHPUnit tests inside the docker container
+npm run test:php
+
+# Stop local environment
+npm run env:stop
 ```
 
 ---

@@ -1,0 +1,17 @@
+includes:
+    - phpstan-baseline.neon
+
+parameters:
+    level: 5
+    paths:
+        - app
+        - tourivo.php
+        - uninstall.php
+    excludePaths:
+        - tests/*
+        - vendor/*
+        - node_modules/*
+        - dist/*
+        - bin/*
+    checkMissingIterableValueType: false
+    checkGenericClassInNonGenericObjectType: false

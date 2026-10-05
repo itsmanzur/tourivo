@@ -23,33 +23,34 @@ class Seeder
 {
     /**
      * Backfill _tourivo_demo=1 meta on legacy demo posts imported before meta tagging was introduced.
+     * Verifies both exact demo titles and Tourivo-specific demo meta attributes to avoid tagging user posts.
      *
      * @return int Number of legacy posts backfilled.
      */
     public static function backfillDemoMeta(): int
     {
-        $demoTitles = [
-            'Bali Tropical Beach & Temple Explorer',
-            'Swiss Alps Glacier & Panorama Trek',
-            'Dubai Luxury Desert Safari & Dhow Cruise',
-            "কক্সবাজার ৩ দিন ২ রাত বিচ ট্যুর ও মেরিন ড্রাইভ (Cox's Bazar Beach Tour)",
-            'সাজেক ভ্যালি ও মেঘের রাজ্য ৩ দিন ২ রাত প্রিমিয়াম ট্যুর (Sajek Valley Tour)',
-            'Ocean Paradise Resort & Spa',
-            'Alpine Panorama Grand Lodge',
-            "সায়মন বিচ রিসোর্ট - কক্সবাজার (Sayeman Beach Resort)",
-            'মেঘপল্লী রিসোর্ট - সাজেক ভ্যালি (Meghpolli Resort Sajek)',
-            'Deluxe Sea View Suite',
-            'Two-Bedroom Private Pool Villa',
-            'Mountain View Double Room',
-            'Junior Alpine Suite',
-            'সি ভিউ ডিলাক্স রুম (Sea View Deluxe)',
-            'ওশান ফ্রন্ট প্যানোরামিক স্যুইট (Ocean Suite)',
-            'ক্লাউড ভিউ উডেন কটেজ (Cloud View Cottage)',
-            'ভিআইপি ফ্যামিলি ক্লাউড স্যুইট (VIP Family Suite)',
+        $demoSignatures = [
+            'Bali Tropical Beach & Temple Explorer'                                => ['_tourivo_duration' => '5 Days / 4 Nights', '_tourivo_base_price' => '349.00'],
+            'Swiss Alps Glacier & Panorama Trek'                                   => ['_tourivo_duration' => '4 Days / 3 Nights', '_tourivo_base_price' => '599.00'],
+            'Dubai Luxury Desert Safari & Dhow Cruise'                             => ['_tourivo_duration' => '3 Days / 2 Nights', '_tourivo_base_price' => '399.00'],
+            "কক্সবাজার ৩ দিন ২ রাত বিচ ট্যুর ও মেরিন ড্রাইভ (Cox's Bazar Beach Tour)" => ['_tourivo_duration' => '3 দিন / ২ রাত', '_tourivo_base_price' => '6500.00'],
+            'সাজেক ভ্যালি ও মেঘের রাজ্য ৩ দিন ২ রাত প্রিমিয়াম ট্যুর (Sajek Valley Tour)' => ['_tourivo_duration' => '3 দিন / ২ রাত', '_tourivo_base_price' => '8500.00'],
+            'Ocean Paradise Resort & Spa'                                          => ['_tourivo_hotel_star_rating' => 5],
+            'Alpine Panorama Grand Lodge'                                          => ['_tourivo_hotel_star_rating' => 4],
+            "সায়মন বিচ রিসোর্ট - কক্সবাজার (Sayeman Beach Resort)"                  => ['_tourivo_hotel_star_rating' => 5],
+            'মেঘপল্লী রিসোর্ট - সাজেক ভ্যালি (Meghpolli Resort Sajek)'              => ['_tourivo_hotel_star_rating' => 4],
+            'Deluxe Sea View Suite'                                                => ['_tourivo_room_base_price' => '180.00'],
+            'Two-Bedroom Private Pool Villa'                                       => ['_tourivo_room_base_price' => '320.00'],
+            'Mountain View Double Room'                                            => ['_tourivo_room_base_price' => '220.00'],
+            'Junior Alpine Suite'                                                  => ['_tourivo_room_base_price' => '310.00'],
+            'সি ভিউ ডিলাক্স রুম (Sea View Deluxe)'                                => ['_tourivo_room_base_price' => '5500.00'],
+            'ওশান ফ্রন্ট প্যানোরামিক স্যুইট (Ocean Suite)'                          => ['_tourivo_room_base_price' => '9500.00'],
+            'ক্লাউড ভিউ উডেন কটেজ (Cloud View Cottage)'                           => ['_tourivo_room_base_price' => '6000.00'],
+            'ভিআইপি ফ্যামিলি ক্লাউড স্যুইট (VIP Family Suite)'                     => ['_tourivo_room_base_price' => '11000.00'],
         ];
 
         $updated = 0;
-        foreach ($demoTitles as $title) {
+        foreach ($demoSignatures as $title => $metaChecks) {
             $posts = get_posts([
                 'post_type'      => [TourPostType::POST_TYPE, HotelPostType::POST_TYPE, RoomPostType::POST_TYPE],
                 'title'          => $title,
@@ -59,8 +60,23 @@ class Seeder
             ]);
             if (!empty($posts)) {
                 foreach ($posts as $postId) {
-                    if (!get_post_meta((int) $postId, '_tourivo_demo', true)) {
-                        update_post_meta((int) $postId, '_tourivo_demo', '1');
+                    $intId = (int) $postId;
+                    if (get_post_meta($intId, '_tourivo_demo', true)) {
+                        continue;
+                    }
+
+                    // Verify meta signature matches sample demo data
+                    $matchesSignature = true;
+                    foreach ($metaChecks as $metaKey => $expectedVal) {
+                        $actualVal = get_post_meta($intId, $metaKey, true);
+                        if ((string) $actualVal !== (string) $expectedVal) {
+                            $matchesSignature = false;
+                            break;
+                        }
+                    }
+
+                    if ($matchesSignature) {
+                        update_post_meta($intId, '_tourivo_demo', '1');
                         $updated++;
                     }
                 }
@@ -76,8 +92,6 @@ class Seeder
      */
     public static function hasExistingDemoData(): bool
     {
-        self::backfillDemoMeta();
-
         $existing = get_posts([
             'post_type'      => [TourPostType::POST_TYPE, HotelPostType::POST_TYPE],
             'meta_key'       => '_tourivo_demo',
@@ -114,6 +128,7 @@ class Seeder
     {
         if (self::hasExistingDemoData()) {
             return [
+                'success'        => true,
                 'tours_created'  => 0,
                 'hotels_created' => 0,
                 'rooms_created'  => 0,
@@ -630,9 +645,17 @@ class Seeder
         update_post_meta($hotel4Id, '_tourivo_min_price', 4500.00);
 
         return [
+            'success'        => true,
             'tours_created'  => $toursCount,
             'hotels_created' => $hotelsCount,
             'rooms_created'  => $roomsCount,
+            'message'        => sprintf(
+                /* translators: 1: Tours count, 2: Hotels count, 3: Rooms count */
+                __('Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms.', 'tourivo'),
+                $toursCount,
+                $hotelsCount,
+                $roomsCount
+            ),
         ];
     }
 
