@@ -96,6 +96,80 @@ class InventoryRepository
     }
 
     /**
+     * Check whether an item or list of items (e.g. rooms for a hotel) has available capacity in a date range.
+     *
+     * Evaluates in a single efficient query strategy:
+     * 1. If any unrecorded date exists within the range, it is open with default capacity.
+     * 2. If all dates are recorded, checks if any row has status='available' AND (total_capacity - booked_count - reserved_count) > 0.
+     *
+     * @param int|array<int> $itemIds Single ID or array of IDs
+     * @param string         $itemType 'tour' or 'room'
+     * @param string         $from Y-m-d
+     * @param string         $to Y-m-d
+     * @param int            $defaultCapacity
+     * @return bool
+     */
+    public function hasAvailabilityInRange(int|array $itemIds, string $itemType, string $from, string $to, int $defaultCapacity): bool
+    {
+        $ids = array_values(array_filter(array_map('intval', (array) $itemIds), fn($id) => $id > 0));
+        if (empty($ids)) {
+            return false;
+        }
+
+        $fromDt = new \DateTime($from);
+        $toDt   = new \DateTime($to);
+        if ($fromDt > $toDt) {
+            return false;
+        }
+        $totalDays = (int) $fromDt->diff($toDt)->days + 1;
+
+        $idPlaceholders = implode(',', array_fill(0, count($ids), '%d'));
+
+        // 1. If defaultCapacity > 0, check if any item in $ids has fewer recorded dates than total range days
+        if ($defaultCapacity > 0) {
+            // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+            $countsQuery = $this->db->prepare(
+                "SELECT item_id, COUNT(DISTINCT event_date) as recorded_days 
+                 FROM {$this->table} 
+                 WHERE item_id IN ($idPlaceholders) AND item_type = %s AND event_date >= %s AND event_date <= %s 
+                 GROUP BY item_id",
+                ...array_merge($ids, [$itemType, $from, $to])
+            );
+            $recordedRows = (array) $this->db->get_results($countsQuery);
+            // phpcs:enable
+
+            $recordedMap = [];
+            foreach ($recordedRows as $row) {
+                $recordedMap[(int) $row->item_id] = (int) $row->recorded_days;
+            }
+
+            foreach ($ids as $id) {
+                $recordedDays = $recordedMap[$id] ?? 0;
+                if ($recordedDays < $totalDays) {
+                    // Open date with default capacity exists
+                    return true;
+                }
+            }
+        }
+
+        // 2. Check if ANY recorded row within range is available with remaining spots
+        // phpcs:disable WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $availQuery = $this->db->prepare(
+            "SELECT 1 FROM {$this->table} 
+             WHERE item_id IN ($idPlaceholders) AND item_type = %s 
+               AND event_date >= %s AND event_date <= %s 
+               AND status = 'available' 
+               AND (total_capacity - booked_count - reserved_count) > 0 
+             LIMIT 1",
+            ...array_merge($ids, [$itemType, $from, $to])
+        );
+        $hasSpot = $this->db->get_var($availQuery);
+        // phpcs:enable
+
+        return !empty($hasSpot);
+    }
+
+    /**
      * Insert or update an inventory capacity record.
      *
      * @param int         $itemId

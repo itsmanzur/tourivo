@@ -81,10 +81,8 @@ $includedEntries = [
     'views',
     'tourivo.php',
     'readme.txt',
-    'README.md',
     'LICENSE',
     'uninstall.php',
-    'composer.json',
 ];
 
 $excludedPatterns = [
@@ -95,6 +93,16 @@ $excludedPatterns = [
     '/node_modules(\/|\\\\|$)/i',
     '/\.idea(\/|\\\\|$)/i',
     '/\.vscode(\/|\\\\|$)/i',
+    '/^composer\.json$/i',
+    '/^README\.md$/i',
+    '/^composer\.lock$/i',
+    '/^package\.json$/i',
+    '/^package-lock\.json$/i',
+    '/^phpcs\.xml(\.dist)?$/i',
+    '/^phpstan(\.neon|-baseline\.neon)?$/i',
+    '/^phpunit\.xml(\.dist)?$/i',
+    '/^\.wp-env\.json$/i',
+    '/^\.distignore$/i',
     '/\.DS_Store$/i',
     '/Thumbs\.db$/i',
     '/\.log$/i',

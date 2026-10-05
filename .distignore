@@ -18,6 +18,7 @@ phpstan-baseline.neon
 .wp-env.json
 
 # Dependencies & Build Scripts
+composer.json
 composer.lock
 package.json
 package-lock.json
@@ -27,6 +28,7 @@ bin
 dist
 
 # Temporary and Documentation Files
+README.md
 *.tmp
 *.log
 *.sql

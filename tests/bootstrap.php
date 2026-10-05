@@ -161,7 +161,22 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
                 // 2. UPDATE wp_tourivo_inventories
                 if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
-                    if (preg_match('/SET\s+booked_count\s*=\s*(\d+)\s*,\s*reserved_count\s*=\s*(\d+)\s*,\s*status\s*=\s*\'([^\']+)\'.*WHERE\s+id\s*=\s*(\d+)/is', $trimmed, $m)) {
+                    if (preg_match('/SET\s+booked_count\s*=\s*(\d+)\s*,\s*reserved_count\s*=\s*(\d+)\s*,\s*status\s*=\s*\'([^\']+)\'.*WHERE\s+item_id\s*=\s*(\d+).*event_date\s*=\s*\'([^\']+)\'/is', $trimmed, $m)) {
+                        $booked   = (int) $m[1];
+                        $reserved = (int) $m[2];
+                        $status   = $m[3];
+                        $itemId   = (int) $m[4];
+                        $date     = $m[5];
+                        $key      = "{$itemId}_{$date}";
+                        if (isset($this->inventories[$key])) {
+                            $this->inventories[$key]['booked_count']    = $booked;
+                            $this->inventories[$key]['booked_capacity'] = $booked;
+                            $this->inventories[$key]['reserved_count']  = $reserved;
+                            $this->inventories[$key]['status']          = $status;
+                            $this->rows_affected = 1;
+                            return 1;
+                        }
+                    } elseif (preg_match('/SET\s+booked_count\s*=\s*(\d+)\s*,\s*reserved_count\s*=\s*(\d+)\s*,\s*status\s*=\s*\'([^\']+)\'.*WHERE\s+id\s*=\s*(\d+)/is', $trimmed, $m)) {
                         $booked   = (int) $m[1];
                         $reserved = (int) $m[2];
                         $status   = $m[3];
@@ -247,6 +262,28 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 if (stripos($query, 'SHOW TABLES') !== false) {
                     return 'wp_tourivo_bookings';
                 }
+                if (stripos($query, 'tourivo_inventories') !== false && stripos($query, 'SELECT 1') !== false) {
+                    $itemIds = [];
+                    if (preg_match('/item_id\s+IN\s*\(([^)]+)\)/i', $query, $mIds)) {
+                        $itemIds = array_map('intval', explode(',', $mIds[1]));
+                    } elseif (preg_match('/item_id\s*=\s*(\d+)/i', $query, $mId)) {
+                        $itemIds = [(int) $mId[1]];
+                    }
+
+                    foreach ($this->inventories as $inv) {
+                        if (!empty($itemIds) && !in_array((int) $inv['item_id'], $itemIds, true)) {
+                            continue;
+                        }
+                        $cap = (int) ($inv['total_capacity'] ?? 0);
+                        $booked = (int) ($inv['booked_count'] ?? 0);
+                        $reserved = (int) ($inv['reserved_count'] ?? 0);
+                        $status = (string) ($inv['status'] ?? 'available');
+                        if ($status === 'available' && ($cap - $booked - $reserved) > 0) {
+                            return 1;
+                        }
+                    }
+                    return null;
+                }
                 return null;
             }
 
@@ -303,6 +340,28 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     }
                 }
                 if (stripos($query, 'tourivo_inventories') !== false) {
+                    if (stripos($query, 'recorded_days') !== false) {
+                        $itemIds = [];
+                        if (preg_match('/item_id\s+IN\s*\(([^)]+)\)/i', $query, $mIds)) {
+                            $itemIds = array_map('intval', explode(',', $mIds[1]));
+                        } elseif (preg_match('/item_id\s*=\s*(\d+)/i', $query, $mId)) {
+                            $itemIds = [(int) $mId[1]];
+                        }
+
+                        $counts = [];
+                        foreach ($this->inventories as $inv) {
+                            $itemId = (int) ($inv['item_id'] ?? 0);
+                            if (!empty($itemIds) && !in_array($itemId, $itemIds, true)) {
+                                continue;
+                            }
+                            $counts[$itemId] = ($counts[$itemId] ?? 0) + 1;
+                        }
+                        $res = [];
+                        foreach ($counts as $itemId => $cnt) {
+                            $res[] = (object) ['item_id' => $itemId, 'recorded_days' => $cnt];
+                        }
+                        return $res;
+                    }
                     if (preg_match('/item_id\s*=\s*(\d+)/i', $query, $mItem)) {
                         $itemId = (int) $mItem[1];
                         $res = [];
@@ -707,12 +766,18 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $pts = (array) $args['post_type'];
                     if (!in_array($post->post_type, $pts, true)) continue;
                 }
+                if (isset($args['title']) && !empty($args['title'])) {
+                    if ($post->post_title !== $args['title']) continue;
+                }
                 if (isset($args['meta_key']) && isset($args['meta_value'])) {
                     if (($tourivo_mock_postmeta[$id][$args['meta_key']] ?? null) != $args['meta_value']) {
                         continue;
                     }
                 }
                 $res[] = ($args['fields'] ?? '') === 'ids' ? $id : $post;
+                if (isset($args['posts_per_page']) && $args['posts_per_page'] > 0 && count($res) >= $args['posts_per_page']) {
+                    break;
+                }
             }
             return $res;
         }

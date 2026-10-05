@@ -35,6 +35,8 @@ class SeoService
     {
         add_action('wp_head', [$this, 'renderJsonLdSchema'], 20);
         add_action('wp_head', [$this, 'renderOpenGraphMeta'], 25);
+        add_action('tourivo/booking_created', [__CLASS__, 'onBookingCreated'], 10, 2);
+        add_action('tourivo/booking_status_changed', [__CLASS__, 'onBookingStatusChanged'], 10, 3);
     }
 
     /**
@@ -90,9 +92,89 @@ class SeoService
     }
 
     /**
+     * Invalidate SEO availability transient cache when a new booking is created.
+     *
+     * @param int                  $bookingId
+     * @param array<string, mixed> $bookingData
+     * @return void
+     */
+    public static function onBookingCreated(int $bookingId, array $bookingData = []): void
+    {
+        $itemId = (int) ($bookingData['item_id'] ?? 0);
+        $itemType = (string) ($bookingData['item_type'] ?? '');
+        if ($itemId > 0) {
+            self::clearItemAvailabilityCache($itemId, $itemType);
+        }
+    }
+
+    /**
+     * Invalidate SEO availability transient cache when a booking status changes.
+     *
+     * @param int    $bookingId
+     * @param string $oldStatus
+     * @param string $newStatus
+     * @return void
+     */
+    public static function onBookingStatusChanged(int $bookingId, string $oldStatus, string $newStatus): void
+    {
+        global $wpdb;
+        if (!$wpdb || $bookingId <= 0) {
+            return;
+        }
+
+        $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $items = $wpdb->get_results($wpdb->prepare("SELECT item_id, item_type FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
+        // phpcs:enable
+
+        if (!empty($items)) {
+            foreach ($items as $item) {
+                self::clearItemAvailabilityCache((int) $item->item_id, (string) $item->item_type);
+            }
+        }
+    }
+
+    /**
+     * Clear SEO availability transient cache for an item (and its parent hotel if room).
+     *
+     * @param int         $itemId
+     * @param string|null $itemType 'tour', 'room', or 'hotel'
+     * @return void
+     */
+    public static function clearItemAvailabilityCache(int $itemId, ?string $itemType = null): void
+    {
+        if ($itemId <= 0) {
+            return;
+        }
+
+        if (empty($itemType)) {
+            $postType = get_post_type($itemId);
+            if ($postType === 'tourivo_tour') {
+                $itemType = 'tour';
+            } elseif ($postType === 'tourivo_room') {
+                $itemType = 'room';
+            } elseif ($postType === 'tourivo_hotel') {
+                $itemType = 'hotel';
+            }
+        }
+
+        if ($itemType === 'tour') {
+            delete_transient('tourivo_seo_avail_' . $itemId . '_tour');
+        } elseif ($itemType === 'hotel') {
+            delete_transient('tourivo_seo_avail_' . $itemId . '_hotel');
+        } elseif ($itemType === 'room') {
+            delete_transient('tourivo_seo_avail_' . $itemId . '_room');
+            $parentHotelId = (int) get_post_meta($itemId, '_tourivo_parent_hotel_id', true);
+            if ($parentHotelId > 0) {
+                delete_transient('tourivo_seo_avail_' . $parentHotelId . '_hotel');
+            }
+        }
+    }
+
+    /**
      * Compute actual Schema.org inventory availability with 1-hour transient caching.
      *
-     * Inspects active capacity and availability over the next 90 days.
+     * Inspects active capacity and availability over the next 90 days via hasAvailabilityInRange.
      *
      * @param int    $postId
      * @param string $itemType 'tour' or 'hotel'
@@ -108,82 +190,40 @@ class SeoService
 
         $today = gmdate('Y-m-d');
         $futureDate = gmdate('Y-m-d', strtotime('+90 days'));
-        $availability = 'https://schema.org/SoldOut';
+        $hasAvailability = false;
 
         /** @var InventoryRepository $invRepo */
-        $invRepo = Container::getInstance()->get(InventoryRepository::class);
+        $invRepo = Container::getInstance()->has(InventoryRepository::class)
+            ? Container::getInstance()->get(InventoryRepository::class)
+            : new InventoryRepository();
 
         if ($itemType === 'tour') {
             $tour = new Tour($postId);
             $maxGuests = $tour->getMaxGuests();
             if ($maxGuests > 0) {
-                $records = $invRepo->getRecordsInRange($postId, 'tour', $today, $futureDate);
-                $recordsByDate = [];
-                foreach ($records as $rec) {
-                    $recordsByDate[$rec->event_date] = $rec;
-                }
-
-                $startDt = new DateTime($today);
-                $endDt = new DateTime($futureDate);
-                while ($startDt <= $endDt) {
-                    $dateStr = $startDt->format('Y-m-d');
-                    if (isset($recordsByDate[$dateStr])) {
-                        $rec = $recordsByDate[$dateStr];
-                        $cap = (int) ($rec->total_capacity ?? $maxGuests);
-                        $booked = (int) ($rec->booked_capacity ?? 0);
-                        $isClosed = (int) ($rec->is_closed ?? 0);
-                        if ($isClosed === 0 && ($cap - $booked) > 0) {
-                            $availability = 'https://schema.org/InStock';
-                            break;
-                        }
-                    } else {
-                        // Open date inheriting default capacity
-                        $availability = 'https://schema.org/InStock';
-                        break;
-                    }
-                    $startDt->modify('+1 day');
-                }
+                $hasAvailability = $invRepo->hasAvailabilityInRange($postId, 'tour', $today, $futureDate, $maxGuests);
             }
         } elseif ($itemType === 'hotel') {
             $hotel = new Hotel($postId);
             $rooms = $hotel->getRooms();
             if (!empty($rooms)) {
+                $roomIds = [];
+                $maxRoomQty = 0;
                 foreach ($rooms as $room) {
                     $roomId = $room->getId();
                     $qty = $room->getQuantity();
-                    if ($qty <= 0) {
-                        continue;
+                    if ($roomId > 0 && $qty > 0) {
+                        $roomIds[] = $roomId;
+                        $maxRoomQty = max($maxRoomQty, $qty);
                     }
-
-                    $records = $invRepo->getRecordsInRange($roomId, 'room', $today, $futureDate);
-                    $recordsByDate = [];
-                    foreach ($records as $rec) {
-                        $recordsByDate[$rec->event_date] = $rec;
-                    }
-
-                    $startDt = new DateTime($today);
-                    $endDt = new DateTime($futureDate);
-                    while ($startDt <= $endDt) {
-                        $dateStr = $startDt->format('Y-m-d');
-                        if (isset($recordsByDate[$dateStr])) {
-                            $rec = $recordsByDate[$dateStr];
-                            $cap = (int) ($rec->total_capacity ?? $qty);
-                            $booked = (int) ($rec->booked_capacity ?? 0);
-                            $isClosed = (int) ($rec->is_closed ?? 0);
-                            if ($isClosed === 0 && ($cap - $booked) > 0) {
-                                $availability = 'https://schema.org/InStock';
-                                break 2;
-                            }
-                        } else {
-                            $availability = 'https://schema.org/InStock';
-                            break 2;
-                        }
-                        $startDt->modify('+1 day');
-                    }
+                }
+                if (!empty($roomIds)) {
+                    $hasAvailability = $invRepo->hasAvailabilityInRange($roomIds, 'room', $today, $futureDate, $maxRoomQty);
                 }
             }
         }
 
+        $availability = $hasAvailability ? 'https://schema.org/InStock' : 'https://schema.org/SoldOut';
         $availability = (string) apply_filters('tourivo/seo/availability', $availability, $postId, $itemType);
 
         set_transient($transientKey, $availability, HOUR_IN_SECONDS);
