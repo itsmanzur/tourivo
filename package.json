@@ -1,0 +1,19 @@
+{
+  "name": "tourivo",
+  "version": "1.3.0",
+  "description": "Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress",
+  "scripts": {
+    "build": "php bin/build-package.php",
+    "test": "php tests/test_booking_lookup.php && php tests/test_booking_status_transitions.php && php tests/test_client_ip.php",
+    "bump": "bash bin/bump-version.sh"
+  },
+  "keywords": [
+    "wordpress",
+    "travel",
+    "tour-booking",
+    "hotel-booking",
+    "booking-engine"
+  ],
+  "author": "Tourivo Team",
+  "license": "GPL-2.0-or-later"
+}
