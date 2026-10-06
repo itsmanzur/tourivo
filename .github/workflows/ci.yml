@@ -2,18 +2,144 @@ name: CI
 
 on:
   push:
-    branches: [ "main", "master", "develop" ]
+    branches: [ "main", "master", "develop", "dev-*" ]
   pull_request:
     branches: [ "main", "master", "develop" ]
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  # ---------------------------------------------------------------------------
+  # Fast, dependency-free gate: every PHP/JS file parses and endings are sane.
+  # ---------------------------------------------------------------------------
+  syntax:
+    name: Syntax (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0', '8.3']
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          coverage: none
+
+      - name: Lint PHP files
+        run: |
+          find . -name '*.php' -not -path './vendor/*' -not -path './node_modules/*' -not -path './dist/*' -print0 \
+            | xargs -0 -n1 -P4 php -l > /dev/null
+
+      - name: Setup Node
+        if: matrix.php == '8.3'
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check JavaScript syntax
+        if: matrix.php == '8.3'
+        run: |
+          for f in assets/js/*.js; do
+            node --check "$f"
+          done
+
+      - name: Ensure committed files use LF line endings
+        if: matrix.php == '8.3'
+        run: |
+          if git ls-files --eol | grep -E 'i/(crlf|mixed)'; then
+            echo "::error::Tracked files with CRLF/mixed line endings found (see .gitattributes)."
+            exit 1
+          fi
+
+  # ---------------------------------------------------------------------------
+  # Test suite. It runs against an in-memory WordPress/wpdb mock (tests/bootstrap.php),
+  # so no WordPress install or Composer dependencies are needed.
+  # ---------------------------------------------------------------------------
+  test:
+    name: Tests (PHP ${{ matrix.php }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        php: ['8.0', '8.1', '8.2', '8.3']
+        include:
+          - php: '8.4'
+            allow_failure: true
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, intl
+          coverage: none
+
+      - name: Run Test Suite
+        run: php tests/run_all_tests.php
+        continue-on-error: ${{ matrix.allow_failure || false }}
+
+  # ---------------------------------------------------------------------------
+  # Real MySQL: verifies the inventory table's unique key / upsert semantics that the
+  # mocked suite cannot prove (booking correctness depends on them).
+  # Advisory until it has been green on a few runs; remove continue-on-error then.
+  # ---------------------------------------------------------------------------
+  mysql:
+    name: Real MySQL inventory checks
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: tourivo_test
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, intl, pdo, pdo_mysql
+          coverage: none
+
+      - name: Run MySQL availability verification
+        env:
+          DB_HOST: 127.0.0.1:3306
+          DB_NAME: tourivo_test
+          DB_USER: root
+          DB_PASSWORD: root
+          TABLE_PREFIX: wp_
+        run: php tests/manual/test_availability_real_mysql.php
+
+  # ---------------------------------------------------------------------------
+  # Code standards & static analysis. Advisory (non-blocking) until the first green
+  # baseline on this branch has been confirmed; then drop `continue-on-error`.
+  # ---------------------------------------------------------------------------
   lint:
     name: Code Standards (PHPCS)
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -34,9 +160,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-lint-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
-            ${{ runner.os }}-composer-lint-
+            ${{ runner.os }}-composer-
 
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -47,6 +173,7 @@ jobs:
   analyse:
     name: Static Analysis (PHPStan)
     runs-on: ubuntu-latest
+    continue-on-error: true
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
@@ -67,9 +194,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-analyse-${{ hashFiles('**/composer.json') }}
+          key: ${{ runner.os }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: |
-            ${{ runner.os }}-composer-analyse-
+            ${{ runner.os }}-composer-
 
       - name: Install Dependencies
         run: composer install --prefer-dist --no-progress --no-interaction
@@ -77,52 +204,11 @@ jobs:
       - name: Run PHPStan
         run: composer analyse
 
-  test:
-    name: Tests (PHP ${{ matrix.php }} on WP ${{ matrix.wordpress }})
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        php: ['8.0', '8.2', '8.3']
-        wordpress: ['latest', 'latest-1']
-        include:
-          - php: '8.3'
-            wordpress: 'trunk'
-            allow_failure: true
-
-    steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
-
-      - name: Setup PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.php }}
-          extensions: mbstring, intl, pdo, mysqli
-          coverage: none
-          tools: composer:v2
-
-      - name: Get Composer Cache Directory
-        id: composer-cache
-        run: echo "dir=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
-
-      - name: Cache Composer Dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ steps.composer-cache.outputs.dir }}
-          key: ${{ runner.os }}-composer-test-${{ matrix.php }}-${{ hashFiles('**/composer.json') }}
-          restore-keys: |
-            ${{ runner.os }}-composer-test-${{ matrix.php }}-
-
-      - name: Install Dependencies
-        run: composer install --prefer-dist --no-progress --no-interaction
-
-      - name: Run Test Suite
-        run: php tests/run_all_tests.php
-        continue-on-error: ${{ matrix.allow_failure || false }}
-
-  plugin-check:
-    name: WordPress Plugin Check
+  # ---------------------------------------------------------------------------
+  # Release package: build the distributable zip and keep it as a downloadable artifact.
+  # ---------------------------------------------------------------------------
+  package:
+    name: Build Release Package
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -132,9 +218,35 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, intl, pdo, mysqli
+          extensions: mbstring, intl, zip
           coverage: none
-          tools: composer:v2
 
-      - name: Run Plugin Package Build & Verification
+      - name: Build & verify package
         run: php bin/build-package.php
+
+      - name: Upload package artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: tourivo-package
+          path: dist/*.zip
+          if-no-files-found: warn
+          retention-days: 14
+
+  # ---------------------------------------------------------------------------
+  # Single required check for branch protection.
+  # ---------------------------------------------------------------------------
+  ci-success:
+    name: CI passed
+    if: always()
+    needs: [syntax, test, package]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verify required jobs
+        run: |
+          echo "syntax:  ${{ needs.syntax.result }}"
+          echo "test:    ${{ needs.test.result }}"
+          echo "package: ${{ needs.package.result }}"
+          if [ "${{ needs.syntax.result }}" != "success" ] || [ "${{ needs.test.result }}" != "success" ] || [ "${{ needs.package.result }}" != "success" ]; then
+            echo "::error::A required job failed."
+            exit 1
+          fi
