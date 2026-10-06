@@ -1,4 +1,5 @@
 includes:
+    - vendor/szepeviktor/phpstan-wordpress/extension.neon
     - phpstan-baseline.neon
 
 parameters:
@@ -15,3 +16,6 @@ parameters:
         - bin/*
     checkMissingIterableValueType: false
     checkGenericClassInNonGenericObjectType: false
+    # Constants defined by the plugin bootstrap / WordPress at runtime.
+    bootstrapFiles:
+        - tests/phpstan-bootstrap.php
