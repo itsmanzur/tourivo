@@ -797,7 +797,7 @@ class SetupWizard
                     'post_status'  => 'publish',
                     'post_type'    => 'page',
                 ]);
-                if ($pageId && !is_wp_error($pageId)) {
+                if ($pageId > 0) {
                     $created[$key] = get_permalink($pageId);
                     if (isset($pageSettingMap[$key])) {
                         $currentSettings[$pageSettingMap[$key]] = (int) $pageId;

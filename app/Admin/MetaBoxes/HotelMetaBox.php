@@ -88,7 +88,7 @@ class HotelMetaBox extends MetaBox
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
-                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field((string)$val);
+                $cleanVal = $sanitizer($val);
                 update_post_meta($postId, $field, $cleanVal);
             }
         }

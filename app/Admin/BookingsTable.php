@@ -168,6 +168,7 @@ class BookingsTable
                     </tr>
                 </thead>
                 <tbody>
+                    <?php /** @var array<int, \stdClass> $bookings */ ?>
                     <?php if (!empty($bookings)) : foreach ($bookings as $b) : 
                         $lineItem = $itemsByBooking[(int) $b->id] ?? null;
                         if ($lineItem) {

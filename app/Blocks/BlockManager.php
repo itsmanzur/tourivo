@@ -58,6 +58,7 @@ class BlockManager
         add_filter('block_categories_all', [self::class, 'registerBlockCategory']);
 
         // 1. Tour Grid Block
+        // @phpstan-ignore-next-line WP stubs type register_block_type() args narrower than the keys WordPress accepts.
         register_block_type('tourivo/tour-grid', [
             'api_version'     => 2,
             'title'           => __('Tourivo Tour Grid', 'tourivo'),
@@ -74,6 +75,7 @@ class BlockManager
         ]);
 
         // 2. Hotel Grid Block
+        // @phpstan-ignore-next-line WP stubs type register_block_type() args narrower than the keys WordPress accepts.
         register_block_type('tourivo/hotel-grid', [
             'api_version'     => 2,
             'title'           => __('Tourivo Hotel Grid', 'tourivo'),

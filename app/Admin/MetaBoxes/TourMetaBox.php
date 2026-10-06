@@ -120,7 +120,7 @@ class TourMetaBox extends MetaBox
         foreach ($fields as $field => $sanitizer) {
             if (isset($_POST[$field])) {
                 $val = wp_unslash($_POST[$field]);
-                $cleanVal = is_callable($sanitizer) ? $sanitizer($val) : sanitize_text_field((string)$val);
+                $cleanVal = $sanitizer($val);
                 update_post_meta($postId, $field, $cleanVal);
             }
         }
@@ -165,7 +165,7 @@ class TourMetaBox extends MetaBox
                     if (is_array($item) && !empty($item['title'])) {
                         $cleanItinerary[] = [
                             'day'   => sanitize_text_field($item['day'] ?? ''),
-                            'title' => sanitize_text_field($item['title'] ?? ''),
+                            'title' => sanitize_text_field($item['title']),
                             'desc'  => sanitize_textarea_field($item['desc'] ?? ''),
                             'meals' => sanitize_text_field($item['meals'] ?? ''),
                         ];
@@ -185,7 +185,7 @@ class TourMetaBox extends MetaBox
                 foreach ($rawFaqs as $faq) {
                     if (is_array($faq) && !empty($faq['question'])) {
                         $cleanFaqs[] = [
-                            'question' => sanitize_text_field($faq['question'] ?? ''),
+                            'question' => sanitize_text_field($faq['question']),
                             'answer'   => sanitize_textarea_field($faq['answer'] ?? ''),
                         ];
                     }
