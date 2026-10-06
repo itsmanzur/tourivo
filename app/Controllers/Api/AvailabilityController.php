@@ -8,6 +8,7 @@ use Tourivo\Common\Abstracts\Controller;
 use Tourivo\Common\Container;
 use Tourivo\Services\InventoryService;
 use Tourivo\Support\ClientIp;
+use Tourivo\Support\RateLimiter;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -25,6 +26,11 @@ if (!defined('ABSPATH')) {
  */
 class AvailabilityController extends Controller
 {
+    /**
+     * Maximum simultaneously active checkout holds per client.
+     */
+    public const MAX_ACTIVE_HOLDS_PER_CLIENT = 3;
+
     /**
      * Inventory service.
      *
@@ -116,10 +122,7 @@ class AvailabilityController extends Controller
     {
         // Rate Limiting (Max 10 holds per 10 minutes per IP)
         $ip = ClientIp::get();
-        $rateLimitKey = 'trv_rl_hold_' . md5($ip);
-        $attempts = (int) get_transient($rateLimitKey);
-
-        if ($attempts >= 10) {
+        if (!RateLimiter::hit('trv_rl_hold_' . md5($ip), 10, 600)) {
             return new WP_Error(
                 'too_many_holds',
                 __('Too many hold requests initiated. Please complete your existing reservation.', 'tourivo'),
@@ -127,7 +130,22 @@ class AvailabilityController extends Controller
             );
         }
 
-        set_transient($rateLimitKey, $attempts + 1, 600);
+        // Cap concurrently active holds per client so one visitor cannot lock the whole calendar.
+        $ownerKey  = md5($ip);
+        $activeKey = 'trv_hold_active_' . $ownerKey;
+        $stored    = get_transient($activeKey);
+        $active    = array_values(array_filter(
+            is_array($stored) ? $stored : [],
+            fn ($token): bool => $this->inventoryService->getHold((string) $token) !== null
+        ));
+
+        if (count($active) >= self::MAX_ACTIVE_HOLDS_PER_CLIENT) {
+            return new WP_Error(
+                'too_many_holds',
+                __('Too many hold requests initiated. Please complete your existing reservation.', 'tourivo'),
+                ['status' => 429]
+            );
+        }
 
         $itemId    = (int) $request->get_param('item_id');
         $itemType  = sanitize_text_field((string) ($request->get_param('item_type') ?: 'tour'));
@@ -146,7 +164,10 @@ class AvailabilityController extends Controller
             $startDate,
             !empty($endDate) ? $endDate : null,
             $timeSlot,
-            $count
+            $count,
+            InventoryService::HOLD_TTL_MINUTES,
+            true,
+            $ownerKey
         );
 
         if (!$holdToken) {
@@ -157,10 +178,13 @@ class AvailabilityController extends Controller
             );
         }
 
+        $active[] = $holdToken;
+        set_transient($activeKey, $active, (InventoryService::HOLD_TTL_MINUTES + 1) * 60);
+
         return new WP_REST_Response([
             'success'    => true,
             'hold_token' => $holdToken,
-            'expires_in' => 900, // 15 minutes
+            'expires_in' => InventoryService::HOLD_TTL_MINUTES * 60,
         ], 200);
     }
 }

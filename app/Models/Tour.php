@@ -111,6 +111,16 @@ class Tour extends Model
     }
 
     /**
+     * Total seats that can be sold per departure date across all bookings (0 = not set, use group size).
+     *
+     * @return int
+     */
+    public function getDailyCapacity(): int
+    {
+        return max(0, (int) $this->getMeta('_tourivo_daily_capacity'));
+    }
+
+    /**
      * Get child pricing model ('full', 'percent', 'fixed', 'free').
      *
      * @return string

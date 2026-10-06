@@ -183,6 +183,10 @@ document.addEventListener('DOMContentLoaded', function () {
     const clearBtn = document.getElementById('tourivo-bulk-clear-btn');
     const alertBox = document.getElementById('tourivo-panel-alert');
 
+    function escapeHtml(value) {
+        return String(value ?? '').replace(/[&<>"']/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]));
+    }
+
     function formatNumber(num) {
         if (!config.useBengaliDigits) return String(num);
         const bnDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
@@ -242,7 +246,10 @@ document.addEventListener('DOMContentLoaded', function () {
         .then(response => {
             if (!response.success || !response.data) {
                 showAlert(response.data?.message || 'Failed to load availability calendar.', true);
-                gridEl.innerHTML = `<div style="grid-column: 1 / -1; text-align: center; padding: 30px; color: #ef4444;">${response.data?.message || 'Error loading calendar.'}</div>`;
+                const errorBox = document.createElement('div');
+                errorBox.style.cssText = 'grid-column: 1 / -1; text-align: center; padding: 30px; color: #ef4444;';
+                errorBox.textContent = response.data?.message || 'Error loading calendar.';
+                gridEl.replaceChildren(errorBox);
                 return;
             }
 
@@ -312,7 +319,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     <div>Cap: <strong>${formatNumber(dayData.total_capacity)}</strong> | Booked: <strong>${formatNumber(dayData.booked_count)}</strong></div>
                 </div>
                 <div class="tourivo-day-price">
-                    <span>${dayData.formatted_price}</span>
+                    <span>${escapeHtml(dayData.formatted_price)}</span>
                     ${priceOverrideIcon}
                 </div>
             `;

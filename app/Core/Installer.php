@@ -25,7 +25,48 @@ class Installer
      *
      * @return void
      */
-    public static function activate(): void
+    public static function activate(bool $networkWide = false): void
+    {
+        if ($networkWide && function_exists('is_multisite') && is_multisite()) {
+            foreach (get_sites(['fields' => 'ids', 'number' => 0]) as $blogId) {
+                switch_to_blog((int) $blogId);
+                self::activateSite();
+                restore_current_blog();
+            }
+
+            return;
+        }
+
+        self::activateSite();
+    }
+
+    /**
+     * Provision a site that is created after a network-wide activation (tables, defaults, capabilities).
+     *
+     * @param \WP_Site $site
+     * @return void
+     */
+    public static function onNewSite($site): void
+    {
+        if (!function_exists('is_plugin_active_for_network')) {
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
+        }
+
+        if (!is_plugin_active_for_network(plugin_basename(TOURIVO_PLUGIN_FILE))) {
+            return;
+        }
+
+        switch_to_blog((int) $site->blog_id);
+        self::activateSite();
+        restore_current_blog();
+    }
+
+    /**
+     * Run the installation for the current site.
+     *
+     * @return void
+     */
+    public static function activateSite(): void
     {
         // 1. Run custom table migrations
         Schema::migrate();

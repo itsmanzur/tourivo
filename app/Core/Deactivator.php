@@ -26,6 +26,7 @@ class Deactivator
     {
         // Clear any scheduled cron hooks
         wp_clear_scheduled_hook('tourivo_cleanup_expired_holds');
+        wp_clear_scheduled_hook('tourivo_expire_stale_bookings');
         wp_clear_scheduled_hook('tourivo_daily_reminders');
         wp_clear_scheduled_hook('tourivo_process_email_delivery');
         wp_clear_scheduled_hook('tourivo_daily_privacy_retention');

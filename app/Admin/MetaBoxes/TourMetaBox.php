@@ -41,6 +41,8 @@ class TourMetaBox extends MetaBox
         $duration        = get_post_meta($post->ID, '_tourivo_duration', true) ?: '';
         $minGuests       = get_post_meta($post->ID, '_tourivo_min_guests', true) ?: '1';
         $maxGuests       = get_post_meta($post->ID, '_tourivo_max_guests', true) ?: '20';
+        $dailyCapacity   = get_post_meta($post->ID, '_tourivo_daily_capacity', true) ?: '';
+        $allowFree       = get_post_meta($post->ID, '_tourivo_allow_free_booking', true) === '1';
         $badge           = get_post_meta($post->ID, '_tourivo_badge', true) ?: '';
         $pickupLocation  = get_post_meta($post->ID, '_tourivo_pickup_location', true) ?: '';
         $dropoffLocation = get_post_meta($post->ID, '_tourivo_dropoff_location', true) ?: '';
@@ -68,6 +70,8 @@ class TourMetaBox extends MetaBox
             'duration'        => $duration,
             'minGuests'       => $minGuests,
             'maxGuests'       => $maxGuests,
+            'dailyCapacity'   => $dailyCapacity,
+            'allowFree'       => $allowFree,
             'childPriceType'  => $childPriceType,
             'childPriceValue' => $childPriceValue,
             'childAgeLabel'   => $childAgeLabel,
@@ -100,6 +104,7 @@ class TourMetaBox extends MetaBox
             '_tourivo_duration'         => 'sanitize_text_field',
             '_tourivo_min_guests'       => 'absint',
             '_tourivo_max_guests'       => 'absint',
+            '_tourivo_daily_capacity'   => 'absint',
             '_tourivo_child_price_type' => static fn ($v) => in_array((string) $v, ['full', 'percent', 'fixed', 'free'], true) ? (string) $v : 'full',
             '_tourivo_child_price_value'=> static fn ($v) => ($v !== '' && $v !== null) ? number_format(max(0.0, (float) str_replace(',', '', (string) $v)), 2, '.', '') : '',
             '_tourivo_child_age_label'  => 'sanitize_text_field',
@@ -119,6 +124,9 @@ class TourMetaBox extends MetaBox
                 update_post_meta($postId, $field, $cleanVal);
             }
         }
+
+        // Checkbox: absent from the request when unticked, so persist an explicit "0".
+        update_post_meta($postId, '_tourivo_allow_free_booking', isset($_POST['_tourivo_allow_free_booking']) ? '1' : '0');
 
         // 1.1 Compute _tourivo_duration_days for search filter queries (supports English and Bengali digits/keywords)
         $durationStr = isset($_POST['_tourivo_duration']) ? sanitize_text_field(wp_unslash($_POST['_tourivo_duration'])) : '';

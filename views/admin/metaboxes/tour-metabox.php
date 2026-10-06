@@ -83,8 +83,23 @@ if (!defined('ABSPATH')) {
                     <div class="tourivo-form-group">
                         <label for="_tourivo_max_guests"><?php esc_html_e('Max Group Size', 'tourivo'); ?></label>
                         <input type="number" min="1" name="_tourivo_max_guests" id="_tourivo_max_guests" value="<?php echo esc_attr($maxGuests); ?>">
+                        <p class="description"><?php esc_html_e('Maximum travelers in a single booking.', 'tourivo'); ?></p>
                     </div>
                 </div>
+                <div class="tourivo-col">
+                    <div class="tourivo-form-group">
+                        <label for="_tourivo_daily_capacity"><?php esc_html_e('Seats per Departure', 'tourivo'); ?></label>
+                        <input type="number" min="0" name="_tourivo_daily_capacity" id="_tourivo_daily_capacity" value="<?php echo esc_attr($dailyCapacity); ?>" placeholder="<?php esc_attr_e('Same as group size', 'tourivo'); ?>">
+                        <p class="description"><?php esc_html_e('Total seats sold per date across all bookings. Leave empty to use the group size.', 'tourivo'); ?></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tourivo-form-group" style="margin-top: 8px;">
+                <label for="_tourivo_allow_free_booking">
+                    <input type="checkbox" name="_tourivo_allow_free_booking" id="_tourivo_allow_free_booking" value="1" <?php checked($allowFree); ?>>
+                    <?php esc_html_e('Free / no-charge tour (allow bookings with a total of 0)', 'tourivo'); ?>
+                </label>
             </div>
 
             <hr style="border:0; border-top:1px solid #e5e7eb; margin: 20px 0;">

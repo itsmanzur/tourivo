@@ -48,6 +48,7 @@ class Uninstaller
         wp_clear_scheduled_hook('tourivo_daily_cleanup');
         wp_clear_scheduled_hook('tourivo_sync_ical_feeds');
         wp_clear_scheduled_hook('tourivo_cleanup_expired_holds');
+        wp_clear_scheduled_hook('tourivo_expire_stale_bookings');
         wp_clear_scheduled_hook('tourivo_daily_privacy_retention');
 
         $settings = get_option('tourivo_settings', []);
@@ -69,6 +70,14 @@ class Uninstaller
                 "DELETE FROM {$wpdb->options} 
                  WHERE option_name LIKE '_transient_trv_%' 
                     OR option_name LIKE '_transient_timeout_trv_%'"
+            );
+
+            // Purge checkout hold records
+            $wpdb->query(
+                $wpdb->prepare(
+                    "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s",
+                    $wpdb->esc_like('tourivo_hold_') . '%'
+                )
             );
 
             // Purge Tourivo user meta

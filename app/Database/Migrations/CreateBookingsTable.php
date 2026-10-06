@@ -53,6 +53,8 @@ class CreateBookingsTable implements MigrationInterface
             customer_notes text,
             admin_notes text,
             cancel_requested_at datetime DEFAULT NULL,
+            email_verified_at datetime DEFAULT NULL,
+            access_key varchar(64) DEFAULT NULL,
             consent_at datetime DEFAULT NULL,
             consent_version varchar(64) DEFAULT NULL,
             ip_address varchar(45) NOT NULL DEFAULT '',
@@ -66,7 +68,8 @@ class CreateBookingsTable implements MigrationInterface
             KEY payment_status (payment_status),
             KEY transaction_id (transaction_id),
             KEY check_in_status (check_in_status),
-            KEY created_at (created_at)
+            KEY created_at (created_at),
+            KEY expiry_scan (booking_status, created_at)
         ) {$charsetCollate};";
     }
 

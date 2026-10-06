@@ -67,6 +67,7 @@ if (file_exists(TOURIVO_PLUGIN_DIR . 'vendor/autoload.php')) {
 // 4. Register Activation & Deactivation Hooks
 register_activation_hook(TOURIVO_PLUGIN_FILE, ['Tourivo\\Core\\Installer', 'activate']);
 register_deactivation_hook(TOURIVO_PLUGIN_FILE, ['Tourivo\\Core\\Deactivator', 'deactivate']);
+add_action('wp_initialize_site', ['Tourivo\\Core\\Installer', 'onNewSite'], 900);
 
 // 5. Load Public Developer Functions & Template Engine API
 require_once TOURIVO_PLUGIN_DIR . 'app/Support/functions.php';

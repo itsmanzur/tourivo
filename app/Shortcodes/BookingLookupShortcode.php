@@ -10,6 +10,7 @@ use Tourivo\Services\BookingService;
 use Tourivo\Services\EmailService;
 use Tourivo\Services\LogService;
 use Tourivo\Support\ClientIp;
+use Tourivo\Support\RateLimiter;
 use Tourivo\Support\Money;
 
 if (!defined('ABSPATH')) {
@@ -90,6 +91,29 @@ class BookingLookupShortcode
     }
 
     /**
+     * Require a valid lookup nonce. Cached pages obtain a fresh one through `tourivo_get_lookup_nonce`,
+     * so a missing or stale token is always rejected with the machine-readable `nonce_expired` code.
+     *
+     * @return bool True when the request carries a valid nonce; otherwise an error response was already sent.
+     */
+    protected static function hasValidNonce(): bool
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash((string) $_POST['nonce'])) : '';
+
+        if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_lookup_nonce')) {
+            return true;
+        }
+
+        wp_send_json_error([
+            'message' => __('Security token expired. Please refresh the page and try again.', 'tourivo'),
+            'code'    => 'nonce_expired',
+        ], 403);
+
+        return false;
+    }
+
+    /**
      * Handle AJAX lookup request with rate limiting and secure verification.
      *
      * @return void
@@ -102,24 +126,16 @@ class BookingLookupShortcode
         }
 
         $ip = ClientIp::get();
-        $rateLimitKey = 'trv_lookup_' . md5($ip);
-
         // Rate limiting: max 10 lookup attempts per 5 minutes per IP
-        $attempts = (int) get_transient($rateLimitKey);
-        if ($attempts >= 10) {
+        if (!RateLimiter::hit('trv_lookup_' . md5($ip), 10, 300)) {
             wp_send_json_error([
                 'message' => __('Too many lookup attempts. Please wait a few minutes before trying again.', 'tourivo'),
             ], 429);
+            return;
         }
-        set_transient($rateLimitKey, $attempts + 1, 300);
 
-        // Verify nonce if provided; fallback to honeypot + rate-limit on strictly cached pages
-        if (!empty($_POST['nonce']) && !wp_verify_nonce((string) $_POST['nonce'], 'tourivo_lookup_nonce')) {
-            // Expired nonce on cached page -> return error with advice to refresh
-            wp_send_json_error([
-                'message' => __('Security token expired. Please refresh the page and try again.', 'tourivo'),
-                'code'    => 'nonce_expired',
-            ], 403);
+        if (!self::hasValidNonce()) {
+            return;
         }
 
         $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : '';
@@ -167,6 +183,11 @@ class BookingLookupShortcode
     {
         if (!empty($_POST['trv_hp_check'])) {
             wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
+            return;
+        }
+
+        if (!self::hasValidNonce()) {
+            return;
         }
 
         $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : '';
@@ -193,18 +214,15 @@ class BookingLookupShortcode
     public static function processCancellationRequest(string $bookingCode, string $email, string $reason = ''): array
     {
         $ip = ClientIp::get();
-        $rateLimitKey = 'trv_cancel_req_' . md5($ip);
 
         // Rate limiting: max 10 attempts per 5 minutes per IP
-        $attempts = (int) get_transient($rateLimitKey);
-        if ($attempts >= 10) {
+        if (!RateLimiter::hit('trv_cancel_req_' . md5($ip), 10, 300)) {
             return [
                 'success' => false,
                 'code'    => 429,
                 'message' => __('Too many cancellation requests submitted. Please try again later.', 'tourivo'),
             ];
         }
-        set_transient($rateLimitKey, $attempts + 1, 300);
 
         if (empty($bookingCode) || empty($email) || !is_email($email)) {
             return [
@@ -263,7 +281,7 @@ class BookingLookupShortcode
         $canSelfCancel = false;
         if ($selfCancelHours > 0
             && in_array($booking->booking_status, ['pending', 'confirmed'], true)
-            && $booking->payment_status !== 'paid'
+            && ($booking->payment_status !== 'paid' || (float) $booking->total_amount <= 0.0)
         ) {
             $cutoff = $checkInTime - ($selfCancelHours * 3600);
             if ($now <= $cutoff) {
@@ -295,6 +313,15 @@ class BookingLookupShortcode
         }
 
         // 2. Cancellation Request Mode (Outside window, or Paid booking, or request-only mode)
+        // A request already on file within the last 24h is acknowledged without re-alerting the administrator.
+        if (!empty($booking->cancel_requested_at) && strtotime((string) $booking->cancel_requested_at . ' UTC') > (time() - 86400)) {
+            return [
+                'success' => true,
+                'mode'    => 'requested',
+                'message' => __('Your cancellation request has already been received. Our team will review and process it shortly.', 'tourivo'),
+            ];
+        }
+
         $nowGmt = current_time('mysql', 1);
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery
@@ -356,7 +383,7 @@ class BookingLookupShortcode
     public static function formatLookupResponseData(object $booking, array $items): array
     {
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
-        $voucherToken   = self::generateVoucherToken((int) $booking->id, (string) $booking->customer_email);
+        $voucherToken   = self::generateVoucherToken((int) $booking->id, (string) $booking->customer_email, $booking->access_key ?? null);
         $voucherUrl     = add_query_arg([
             'action' => 'tourivo_print_voucher',
             'code'   => $booking->booking_code,
@@ -429,11 +456,19 @@ class BookingLookupShortcode
      *
      * @param int $bookingId
      * @param string $email
+     * @param string|null $accessKey Per-booking random secret. When present the token depends on it (not on the
+     *                               guessable email) and dies as soon as the key is rotated; bookings created
+     *                               before access keys existed keep the legacy email-derived token.
      * @return string
      */
-    public static function generateVoucherToken(int $bookingId, string $email): string
+    public static function generateVoucherToken(int $bookingId, string $email, ?string $accessKey = null): string
     {
         $salt = wp_salt('nonce');
+
+        if ($accessKey !== null && $accessKey !== '') {
+            return hash_hmac('sha256', "tourivo_voucher_{$bookingId}_key_{$accessKey}", $salt);
+        }
+
         return hash_hmac('sha256', "tourivo_voucher_{$bookingId}_{$email}", $salt);
     }
 }

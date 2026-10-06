@@ -46,16 +46,12 @@ class InquiryService
 
         // 2. IP Rate Limiting (5 inquiries per 10 minutes)
         $ip = \Tourivo\Support\ClientIp::get();
-        $rateLimitKey = 'trv_rl_inq_' . md5($ip);
-        $attempts = (int) get_transient($rateLimitKey);
-
-        if ($attempts >= 5) {
+        if (!\Tourivo\Support\RateLimiter::hit('trv_rl_inq_' . md5($ip), 5, 600)) {
             return [
                 'success' => false,
                 'message' => __('Too many inquiries submitted. Please wait a few minutes before trying again.', 'tourivo'),
             ];
         }
-        set_transient($rateLimitKey, $attempts + 1, 600);
 
         // 3. Unslash and Sanitize
         $itemId    = isset($data['item_id']) ? (int) $data['item_id'] : 0;

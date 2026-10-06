@@ -111,6 +111,8 @@ class PrivacyService
                     ['id' => $row->id]
                 );
 
+                LogService::redactPersonalData((int) $row->id);
+
                 $anonymizedBookings++;
             }
         }

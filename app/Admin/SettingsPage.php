@@ -21,114 +21,177 @@ if (!defined('ABSPATH')) {
 class SettingsPage
 {
     /**
+     * Read a whitelisted choice field from $_POST, falling back to $default when absent or not allowed.
+     *
+     * @param array<int, string> $allowed
+     */
+    protected static function choice(string $field, array $allowed, string $default): string
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Missing, WordPress.Security.ValidatedSanitizedInput.InputNotSanitized
+        $raw = isset($_POST[$field]) ? (string) wp_unslash($_POST[$field]) : '';
+
+        // Exact match first (separators such as "," or " " cannot survive sanitize_key()), then the key-normalized form.
+        if (in_array($raw, $allowed, true)) {
+            return $raw;
+        }
+
+        $normalized = sanitize_key($raw);
+
+        return in_array($normalized, $allowed, true) ? $normalized : $default;
+    }
+
+    /**
+     * Keep a three-letter ISO-style code, otherwise fall back to the previously saved value.
+     */
+    protected static function sanitizeCurrencyCode(string $raw, string $fallback): string
+    {
+        $code = strtoupper(preg_replace('/[^A-Za-z]/', '', sanitize_text_field($raw)) ?? '');
+
+        return strlen($code) === 3 ? $code : ($fallback !== '' ? $fallback : 'USD');
+    }
+
+    /**
+     * admin-post handler: verify, persist, then redirect (Post/Redirect/Get) so a browser refresh cannot
+     * resubmit the form.
+     *
+     * @return void
+     */
+    public static function handleSave(): void
+    {
+        check_admin_referer('tourivo_settings_action', 'tourivo_settings_nonce');
+
+        if (!current_user_can('manage_tourivo_settings')) {
+            wp_die(esc_html__('Unauthorized access.', 'tourivo'));
+        }
+
+        self::saveSettings();
+
+        wp_safe_redirect(add_query_arg('settings-updated', '1', admin_url('admin.php?page=tourivo-settings')));
+        exit;
+    }
+
+    /**
+     * Sanitize the submitted settings form ($_POST) and persist it. Caller must have verified nonce and capability.
+     *
+     * @return void
+     */
+    public static function saveSettings(): void
+    {
+        // phpcs:disable WordPress.Security.NonceVerification.Missing
+        $currentSettings = get_option('tourivo_settings', Config::getDefaults());
+
+        $newSettings = [
+            'currency'                => self::sanitizeCurrencyCode(wp_unslash($_POST['currency'] ?? ''), (string) ($currentSettings['currency'] ?? 'USD')),
+            'currency_symbol'         => sanitize_text_field(wp_unslash($_POST['currency_symbol'] ?? '$')),
+            'currency_position'       => self::choice('currency_position', ['left', 'right', 'left_space', 'right_space'], 'left'),
+            'number_of_decimals'      => min(4, absint($_POST['number_of_decimals'] ?? 2)),
+            'decimal_separator'       => self::choice('decimal_separator', ['.', ','], '.'),
+            'thousand_separator'      => self::choice('thousand_separator', [',', '.', ' ', ''], ','),
+            'plugin_language'         => self::choice('plugin_language', ['default', 'en', 'bn'], 'default'),
+            'use_bangla_digits'       => isset($_POST['use_bangla_digits']) ? 1 : 0,
+            'tax_enabled'             => isset($_POST['tax_enabled']) ? 1 : 0,
+            'tax_label'               => sanitize_text_field(wp_unslash($_POST['tax_label'] ?? 'Tax')),
+            'tax_rate'                => min(100.0, max(0.0, (float) sanitize_text_field(wp_unslash($_POST['tax_rate'] ?? '0')))),
+            'tax_mode'                => self::choice('tax_mode', ['exclusive', 'inclusive'], 'exclusive'),
+            'tax_applies_to'          => self::choice('tax_applies_to', ['all', 'tours', 'rooms'], 'all'),
+            'default_booking_status'     => self::choice('default_booking_status', ['pending', 'confirmed'], 'pending'),
+            'redirect_after_booking'     => self::choice('redirect_after_booking', ['inline', 'thankyou'], 'inline'),
+            'thankyou_page_id'           => absint($_POST['thankyou_page_id'] ?? 0),
+            'enable_datalayer'           => isset($_POST['enable_datalayer']) ? 1 : 0,
+            'allow_cancel_requests'      => isset($_POST['allow_cancel_requests']) ? 1 : 0,
+            'customer_self_cancel_hours' => absint($_POST['customer_self_cancel_hours'] ?? 0),
+            'pending_expiry_hours'       => min(8760, absint($_POST['pending_expiry_hours'] ?? 0)),
+            'require_email_verification' => isset($_POST['require_email_verification']) ? 1 : 0,
+            'unverified_expiry_minutes'  => max(5, min(1440, absint($_POST['unverified_expiry_minutes'] ?? 60))),
+            'email_from_name'            => sanitize_text_field(wp_unslash($_POST['email_from_name'] ?? get_bloginfo('name'))),
+            'email_from_address'         => sanitize_email(wp_unslash($_POST['email_from_address'] ?? get_option('admin_email'))),
+            'email_notification_address' => sanitize_email(wp_unslash($_POST['email_notification_address'] ?? get_option('admin_email'))),
+            'reminder_days_before'       => max(0, min(30, (int) sanitize_text_field(wp_unslash($_POST['reminder_days_before'] ?? '2')))),
+            'lookup_page_id'             => absint($_POST['lookup_page_id'] ?? 0),
+            'offline_payment_instructions' => sanitize_textarea_field(wp_unslash($_POST['offline_payment_instructions'] ?? '')),
+            // 1. Customer: Booking Received
+            'email_customer_booking_received_enabled'            => isset($_POST['email_customer_booking_received_enabled']) ? 1 : 0,
+            'email_customer_booking_received_subject'            => sanitize_text_field(wp_unslash($_POST['email_customer_booking_received_subject'] ?? '')),
+            'email_customer_booking_received_heading'            => sanitize_text_field(wp_unslash($_POST['email_customer_booking_received_heading'] ?? '')),
+            'email_customer_booking_received_additional_content' => wp_kses_post(wp_unslash($_POST['email_customer_booking_received_additional_content'] ?? '')),
+            // 2. Customer: Booking Confirmed
+            'email_customer_booking_confirmed_enabled'           => isset($_POST['email_customer_booking_confirmed_enabled']) ? 1 : 0,
+            'email_customer_booking_confirmed_subject'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_confirmed_subject'] ?? '')),
+            'email_customer_booking_confirmed_heading'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_confirmed_heading'] ?? '')),
+            'email_customer_booking_confirmed_additional_content'=> wp_kses_post(wp_unslash($_POST['email_customer_booking_confirmed_additional_content'] ?? '')),
+            // 3. Customer: Booking Cancelled
+            'email_customer_booking_cancelled_enabled'           => isset($_POST['email_customer_booking_cancelled_enabled']) ? 1 : 0,
+            'email_customer_booking_cancelled_subject'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_cancelled_subject'] ?? '')),
+            'email_customer_booking_cancelled_heading'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_cancelled_heading'] ?? '')),
+            'email_customer_booking_cancelled_additional_content'=> wp_kses_post(wp_unslash($_POST['email_customer_booking_cancelled_additional_content'] ?? '')),
+            // 4. Customer: Trip Reminder
+            'email_customer_trip_reminder_enabled'               => isset($_POST['email_customer_trip_reminder_enabled']) ? 1 : 0,
+            'email_customer_trip_reminder_subject'               => sanitize_text_field(wp_unslash($_POST['email_customer_trip_reminder_subject'] ?? '')),
+            'email_customer_trip_reminder_heading'               => sanitize_text_field(wp_unslash($_POST['email_customer_trip_reminder_heading'] ?? '')),
+            'email_customer_trip_reminder_additional_content'    => wp_kses_post(wp_unslash($_POST['email_customer_trip_reminder_additional_content'] ?? '')),
+            // 5. Admin: New Booking Alert
+            'email_admin_new_booking_enabled'                    => isset($_POST['email_admin_new_booking_enabled']) ? 1 : 0,
+            'email_admin_new_booking_subject'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_booking_subject'] ?? '')),
+            'email_admin_new_booking_heading'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_booking_heading'] ?? '')),
+            'email_admin_new_booking_additional_content'         => wp_kses_post(wp_unslash($_POST['email_admin_new_booking_additional_content'] ?? '')),
+            // 6. Admin: Booking Cancelled Alert
+            'email_admin_booking_cancelled_enabled'              => isset($_POST['email_admin_booking_cancelled_enabled']) ? 1 : 0,
+            'email_admin_booking_cancelled_subject'              => sanitize_text_field(wp_unslash($_POST['email_admin_booking_cancelled_subject'] ?? '')),
+            'email_admin_booking_cancelled_heading'              => sanitize_text_field(wp_unslash($_POST['email_admin_booking_cancelled_heading'] ?? '')),
+            'email_admin_booking_cancelled_additional_content'   => wp_kses_post(wp_unslash($_POST['email_admin_booking_cancelled_additional_content'] ?? '')),
+            // 7. Admin: New Inquiry Alert
+            'email_admin_new_inquiry_enabled'                    => isset($_POST['email_admin_new_inquiry_enabled']) ? 1 : 0,
+            'email_admin_new_inquiry_subject'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_inquiry_subject'] ?? '')),
+            'email_admin_new_inquiry_heading'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_inquiry_heading'] ?? '')),
+            'email_admin_new_inquiry_additional_content'         => wp_kses_post(wp_unslash($_POST['email_admin_new_inquiry_additional_content'] ?? '')),
+            'primary_color'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_color'] ?? '#0d9488'))) ?: '#0d9488',
+            'primary_hover'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_hover'] ?? '#0f766e'))) ?: '#0f766e',
+            'accent_color'               => sanitize_hex_color(wp_unslash((string)($_POST['accent_color'] ?? '#f59e0b'))) ?: '#f59e0b',
+            'border_radius'              => preg_match('/^\d{1,3}(?:px|rem|em|%)$/', trim((string) wp_unslash($_POST['border_radius'] ?? ''))) ? trim((string) wp_unslash($_POST['border_radius'])) : '8px',
+            'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
+            'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
+            'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
+            'webhook_url'                => esc_url_raw(wp_unslash($_POST['webhook_url'] ?? '')),
+            'webhook_secret'             => sanitize_text_field(wp_unslash($_POST['webhook_secret'] ?? '')),
+            'webhook_events'             => isset($_POST['webhook_events']) && is_array($_POST['webhook_events']) ? array_map('sanitize_text_field', wp_unslash($_POST['webhook_events'])) : [],
+            'webhook_include_phone'      => isset($_POST['webhook_include_phone']) ? 1 : 0,
+            'webhook_include_message'    => isset($_POST['webhook_include_message']) ? 1 : 0,
+            'require_consent'            => isset($_POST['require_consent']) ? 1 : 0,
+            'privacy_policy_page_id'     => absint($_POST['privacy_policy_page_id'] ?? 0),
+            'terms_page_id'              => absint($_POST['terms_page_id'] ?? 0),
+            'consent_label'              => sanitize_text_field(wp_unslash($_POST['consent_label'] ?? 'I agree to the {privacy} and {terms}')),
+            'store_ip'                   => isset($_POST['store_ip']) ? 1 : 0,
+            'anonymize_after_months'     => max(0, (int) sanitize_text_field(wp_unslash($_POST['anonymize_after_months'] ?? '0'))),
+            'delete_inquiries_after_months' => max(0, (int) sanitize_text_field(wp_unslash($_POST['delete_inquiries_after_months'] ?? '0'))),
+            'proxy_mode'                 => in_array(sanitize_text_field(wp_unslash($_POST['proxy_mode'] ?? '')), ['cloudflare', 'reverse_proxy'], true) ? sanitize_text_field(wp_unslash($_POST['proxy_mode'])) : 'disabled',
+            'trusted_proxies'            => sanitize_textarea_field(wp_unslash($_POST['trusted_proxies'] ?? '')),
+            'trust_proxy_headers'        => (isset($_POST['proxy_mode']) && in_array($_POST['proxy_mode'], ['cloudflare', 'reverse_proxy'], true)) ? 1 : 0,
+            'erase_data_on_uninstall'    => isset($_POST['erase_data_on_uninstall']) ? 1 : 0,
+        ];
+
+        $merged = array_merge($currentSettings, $newSettings);
+        update_option('tourivo_settings', $merged);
+        // phpcs:enable WordPress.Security.NonceVerification.Missing
+    }
+
+    /**
      * Render the settings page view.
      *
      * @return void
      */
     public static function render(): void
     {
-        // Handle form save
-        if (isset($_POST['tourivo_save_settings'])) {
-            check_admin_referer('tourivo_settings_action', 'tourivo_settings_nonce');
-
-            if (!current_user_can('manage_tourivo_settings')) {
-                wp_die(esc_html__('Unauthorized access.', 'tourivo'));
-            }
-
-            $currentSettings = get_option('tourivo_settings', Config::getDefaults());
-
-            $newSettings = [
-                'currency'                => sanitize_text_field(wp_unslash($_POST['currency'] ?? 'USD')),
-                'currency_symbol'         => sanitize_text_field(wp_unslash($_POST['currency_symbol'] ?? '$')),
-                'currency_position'       => sanitize_text_field(wp_unslash($_POST['currency_position'] ?? 'left')),
-                'plugin_language'         => in_array(sanitize_key(wp_unslash($_POST['plugin_language'] ?? 'default')), ['default', 'en', 'bn'], true) ? sanitize_key(wp_unslash($_POST['plugin_language'])) : 'default',
-                'use_bangla_digits'       => isset($_POST['use_bangla_digits']) ? 1 : 0,
-                'tax_enabled'             => isset($_POST['tax_enabled']) ? 1 : 0,
-                'tax_label'               => sanitize_text_field(wp_unslash($_POST['tax_label'] ?? 'Tax')),
-                'tax_rate'                => max(0.0, (float) sanitize_text_field(wp_unslash($_POST['tax_rate'] ?? '0'))),
-                'tax_mode'                => in_array(sanitize_key(wp_unslash($_POST['tax_mode'] ?? 'exclusive')), ['exclusive', 'inclusive'], true) ? sanitize_key(wp_unslash($_POST['tax_mode'])) : 'exclusive',
-                'tax_applies_to'          => in_array(sanitize_key(wp_unslash($_POST['tax_applies_to'] ?? 'all')), ['all', 'tours', 'rooms'], true) ? sanitize_key(wp_unslash($_POST['tax_applies_to'])) : 'all',
-                'default_booking_status'     => sanitize_text_field(wp_unslash($_POST['default_booking_status'] ?? 'pending')),
-                'redirect_after_booking'     => in_array(sanitize_key(wp_unslash($_POST['redirect_after_booking'] ?? 'inline')), ['inline', 'thankyou'], true) ? sanitize_key(wp_unslash($_POST['redirect_after_booking'])) : 'inline',
-                'thankyou_page_id'           => absint($_POST['thankyou_page_id'] ?? 0),
-                'enable_datalayer'           => isset($_POST['enable_datalayer']) ? 1 : 0,
-                'allow_cancel_requests'      => isset($_POST['allow_cancel_requests']) ? 1 : 0,
-                'customer_self_cancel_hours' => absint($_POST['customer_self_cancel_hours'] ?? 0),
-                'email_from_name'            => sanitize_text_field(wp_unslash($_POST['email_from_name'] ?? get_bloginfo('name'))),
-                'email_from_address'         => sanitize_email(wp_unslash($_POST['email_from_address'] ?? get_option('admin_email'))),
-                'email_notification_address' => sanitize_email(wp_unslash($_POST['email_notification_address'] ?? get_option('admin_email'))),
-                'reminder_days_before'       => max(0, min(30, (int) sanitize_text_field(wp_unslash($_POST['reminder_days_before'] ?? '2')))),
-                'lookup_page_id'             => absint($_POST['lookup_page_id'] ?? 0),
-                'offline_payment_instructions' => sanitize_textarea_field(wp_unslash($_POST['offline_payment_instructions'] ?? '')),
-                // 1. Customer: Booking Received
-                'email_customer_booking_received_enabled'            => isset($_POST['email_customer_booking_received_enabled']) ? 1 : 0,
-                'email_customer_booking_received_subject'            => sanitize_text_field(wp_unslash($_POST['email_customer_booking_received_subject'] ?? '')),
-                'email_customer_booking_received_heading'            => sanitize_text_field(wp_unslash($_POST['email_customer_booking_received_heading'] ?? '')),
-                'email_customer_booking_received_additional_content' => wp_kses_post(wp_unslash($_POST['email_customer_booking_received_additional_content'] ?? '')),
-                // 2. Customer: Booking Confirmed
-                'email_customer_booking_confirmed_enabled'           => isset($_POST['email_customer_booking_confirmed_enabled']) ? 1 : 0,
-                'email_customer_booking_confirmed_subject'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_confirmed_subject'] ?? '')),
-                'email_customer_booking_confirmed_heading'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_confirmed_heading'] ?? '')),
-                'email_customer_booking_confirmed_additional_content'=> wp_kses_post(wp_unslash($_POST['email_customer_booking_confirmed_additional_content'] ?? '')),
-                // 3. Customer: Booking Cancelled
-                'email_customer_booking_cancelled_enabled'           => isset($_POST['email_customer_booking_cancelled_enabled']) ? 1 : 0,
-                'email_customer_booking_cancelled_subject'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_cancelled_subject'] ?? '')),
-                'email_customer_booking_cancelled_heading'           => sanitize_text_field(wp_unslash($_POST['email_customer_booking_cancelled_heading'] ?? '')),
-                'email_customer_booking_cancelled_additional_content'=> wp_kses_post(wp_unslash($_POST['email_customer_booking_cancelled_additional_content'] ?? '')),
-                // 4. Customer: Trip Reminder
-                'email_customer_trip_reminder_enabled'               => isset($_POST['email_customer_trip_reminder_enabled']) ? 1 : 0,
-                'email_customer_trip_reminder_subject'               => sanitize_text_field(wp_unslash($_POST['email_customer_trip_reminder_subject'] ?? '')),
-                'email_customer_trip_reminder_heading'               => sanitize_text_field(wp_unslash($_POST['email_customer_trip_reminder_heading'] ?? '')),
-                'email_customer_trip_reminder_additional_content'    => wp_kses_post(wp_unslash($_POST['email_customer_trip_reminder_additional_content'] ?? '')),
-                // 5. Admin: New Booking Alert
-                'email_admin_new_booking_enabled'                    => isset($_POST['email_admin_new_booking_enabled']) ? 1 : 0,
-                'email_admin_new_booking_subject'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_booking_subject'] ?? '')),
-                'email_admin_new_booking_heading'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_booking_heading'] ?? '')),
-                'email_admin_new_booking_additional_content'         => wp_kses_post(wp_unslash($_POST['email_admin_new_booking_additional_content'] ?? '')),
-                // 6. Admin: Booking Cancelled Alert
-                'email_admin_booking_cancelled_enabled'              => isset($_POST['email_admin_booking_cancelled_enabled']) ? 1 : 0,
-                'email_admin_booking_cancelled_subject'              => sanitize_text_field(wp_unslash($_POST['email_admin_booking_cancelled_subject'] ?? '')),
-                'email_admin_booking_cancelled_heading'              => sanitize_text_field(wp_unslash($_POST['email_admin_booking_cancelled_heading'] ?? '')),
-                'email_admin_booking_cancelled_additional_content'   => wp_kses_post(wp_unslash($_POST['email_admin_booking_cancelled_additional_content'] ?? '')),
-                // 7. Admin: New Inquiry Alert
-                'email_admin_new_inquiry_enabled'                    => isset($_POST['email_admin_new_inquiry_enabled']) ? 1 : 0,
-                'email_admin_new_inquiry_subject'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_inquiry_subject'] ?? '')),
-                'email_admin_new_inquiry_heading'                    => sanitize_text_field(wp_unslash($_POST['email_admin_new_inquiry_heading'] ?? '')),
-                'email_admin_new_inquiry_additional_content'         => wp_kses_post(wp_unslash($_POST['email_admin_new_inquiry_additional_content'] ?? '')),
-                'primary_color'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_color'] ?? '#0d9488'))) ?: '#0d9488',
-                'primary_hover'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_hover'] ?? '#0f766e'))) ?: '#0f766e',
-                'accent_color'               => sanitize_hex_color(wp_unslash((string)($_POST['accent_color'] ?? '#f59e0b'))) ?: '#f59e0b',
-                'border_radius'              => sanitize_text_field(wp_unslash((string)($_POST['border_radius'] ?? '8px'))),
-                'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
-                'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
-                'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
-                'webhook_url'                => esc_url_raw(wp_unslash($_POST['webhook_url'] ?? '')),
-                'webhook_secret'             => sanitize_text_field(wp_unslash($_POST['webhook_secret'] ?? '')),
-                'webhook_events'             => isset($_POST['webhook_events']) && is_array($_POST['webhook_events']) ? array_map('sanitize_text_field', wp_unslash($_POST['webhook_events'])) : [],
-                'webhook_include_phone'      => isset($_POST['webhook_include_phone']) ? 1 : 0,
-                'webhook_include_message'    => isset($_POST['webhook_include_message']) ? 1 : 0,
-                'require_consent'            => isset($_POST['require_consent']) ? 1 : 0,
-                'privacy_policy_page_id'     => absint($_POST['privacy_policy_page_id'] ?? 0),
-                'terms_page_id'              => absint($_POST['terms_page_id'] ?? 0),
-                'consent_label'              => sanitize_text_field(wp_unslash($_POST['consent_label'] ?? 'I agree to the {privacy} and {terms}')),
-                'store_ip'                   => isset($_POST['store_ip']) ? 1 : 0,
-                'anonymize_after_months'     => max(0, (int) sanitize_text_field(wp_unslash($_POST['anonymize_after_months'] ?? '0'))),
-                'delete_inquiries_after_months' => max(0, (int) sanitize_text_field(wp_unslash($_POST['delete_inquiries_after_months'] ?? '0'))),
-                'proxy_mode'                 => in_array(sanitize_text_field(wp_unslash($_POST['proxy_mode'] ?? '')), ['cloudflare', 'reverse_proxy'], true) ? sanitize_text_field(wp_unslash($_POST['proxy_mode'])) : 'disabled',
-                'trusted_proxies'            => sanitize_textarea_field(wp_unslash($_POST['trusted_proxies'] ?? '')),
-                'trust_proxy_headers'        => (isset($_POST['proxy_mode']) && in_array($_POST['proxy_mode'], ['cloudflare', 'reverse_proxy'], true)) ? 1 : 0,
-                'erase_data_on_uninstall'    => isset($_POST['erase_data_on_uninstall']) ? 1 : 0,
-            ];
-
-            $merged = array_merge($currentSettings, $newSettings);
-            update_option('tourivo_settings', $merged);
-
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        if (isset($_GET['settings-updated'])) {
             echo '<div class="notice notice-success is-dismissible"><p>' . esc_html__('Settings saved successfully.', 'tourivo') . '</p></div>';
         }
 
         $currency          = Config::get('currency', 'USD');
         $currencySymbol    = Config::get('currency_symbol', '$');
         $currencyPos       = Config::get('currency_position', 'left');
+        $numDecimals       = (int) Config::get('number_of_decimals', 2);
+        $decimalSep        = (string) Config::get('decimal_separator', '.');
+        $thousandSep       = (string) Config::get('thousand_separator', ',');
         $pluginLanguage    = Config::get('plugin_language', 'default');
         $useBanglaDigits   = Config::get('use_bangla_digits', 0);
         $taxEnabled        = Config::get('tax_enabled', 0);
@@ -142,6 +205,9 @@ class SettingsPage
         $enableDatalayer         = Config::get('enable_datalayer', 0);
         $allowCancelRequests     = Config::get('allow_cancel_requests', 1);
         $customerSelfCancelHours = (int) Config::get('customer_self_cancel_hours', 0);
+        $pendingExpiryHours      = (int) Config::get('pending_expiry_hours', 0);
+        $requireEmailVerify      = Config::get('require_email_verification', 0);
+        $unverifiedExpiryMinutes = (int) Config::get('unverified_expiry_minutes', 60);
         $fromName                = Config::get('email_from_name', get_bloginfo('name'));
         $fromEmail         = Config::get('email_from_address', get_option('admin_email'));
         $notifyEmail       = Config::get('email_notification_address', get_option('admin_email'));
@@ -268,7 +334,8 @@ class SettingsPage
                 </a>
             </h2>
 
-            <form method="post" action="" style="margin-top: 20px;">
+            <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="margin-top: 20px;">
+                <input type="hidden" name="action" value="tourivo_save_settings">
                 <?php wp_nonce_field('tourivo_settings_action', 'tourivo_settings_nonce'); ?>
 
                 <!-- TAB 1: General & Currency -->
@@ -308,6 +375,24 @@ class SettingsPage
                                         <option value="right" <?php selected($currencyPos, 'right'); ?>><?php esc_html_e('Right (99$)', 'tourivo'); ?></option>
                                         <option value="left_space" <?php selected($currencyPos, 'left_space'); ?>><?php esc_html_e('Left with space ($ 99)', 'tourivo'); ?></option>
                                         <option value="right_space" <?php selected($currencyPos, 'right_space'); ?>><?php esc_html_e('Right with space (99 $)', 'tourivo'); ?></option>
+                                    </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="number_of_decimals"><?php esc_html_e('Number Format', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="number_of_decimals" type="number" id="number_of_decimals" min="0" max="4" value="<?php echo esc_attr((string) $numDecimals); ?>" class="small-text">
+                                    <?php esc_html_e('decimals', 'tourivo'); ?>
+                                    &nbsp;
+                                    <select name="decimal_separator" id="decimal_separator" aria-label="<?php esc_attr_e('Decimal separator', 'tourivo'); ?>">
+                                        <option value="." <?php selected($decimalSep, '.'); ?>><?php esc_html_e('Decimal: . (period)', 'tourivo'); ?></option>
+                                        <option value="," <?php selected($decimalSep, ','); ?>><?php esc_html_e('Decimal: , (comma)', 'tourivo'); ?></option>
+                                    </select>
+                                    <select name="thousand_separator" id="thousand_separator" aria-label="<?php esc_attr_e('Thousands separator', 'tourivo'); ?>">
+                                        <option value="," <?php selected($thousandSep, ','); ?>><?php esc_html_e('Thousands: , (comma)', 'tourivo'); ?></option>
+                                        <option value="." <?php selected($thousandSep, '.'); ?>><?php esc_html_e('Thousands: . (period)', 'tourivo'); ?></option>
+                                        <option value=" " <?php selected($thousandSep, ' '); ?>><?php esc_html_e('Thousands: space', 'tourivo'); ?></option>
+                                        <option value="" <?php selected($thousandSep, ''); ?>><?php esc_html_e('Thousands: none', 'tourivo'); ?></option>
                                     </select>
                                 </td>
                             </tr>
@@ -443,6 +528,37 @@ class SettingsPage
                                     <input name="customer_self_cancel_hours" type="number" id="customer_self_cancel_hours" min="0" max="720" value="<?php echo esc_attr((string) $customerSelfCancelHours); ?>" class="small-text">
                                     <?php esc_html_e('hours before trip departure / hotel check-in.', 'tourivo'); ?>
                                     <p class="description"><?php esc_html_e('Set to 0 (default) to require admin review for all cancellations. If set to > 0, unpaid bookings can be instantly cancelled by the traveler if check-in is at least N hours away, immediately releasing inventory.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+                        <h2>🧹 <?php esc_html_e('Booking Hygiene & Anti-Abuse', 'tourivo'); ?></h2>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Require Email Confirmation', 'tourivo'); ?></th>
+                                <td>
+                                    <label for="require_email_verification">
+                                        <input name="require_email_verification" type="checkbox" id="require_email_verification" value="1" <?php checked($requireEmailVerify, 1); ?>>
+                                        <strong><?php esc_html_e('Travelers must click a link emailed to them before the booking is secured.', 'tourivo'); ?></strong>
+                                    </label>
+                                    <p class="description"><?php esc_html_e('Stops fake bookings from locking your inventory and from spamming third-party inboxes. Staff alerts are sent only after confirmation.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="unverified_expiry_minutes"><?php esc_html_e('Unconfirmed Booking Expiry', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="unverified_expiry_minutes" type="number" id="unverified_expiry_minutes" min="5" max="1440" value="<?php echo esc_attr((string) $unverifiedExpiryMinutes); ?>" class="small-text">
+                                    <?php esc_html_e('minutes, then the booking is cancelled and its spots released.', 'tourivo'); ?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="pending_expiry_hours"><?php esc_html_e('Auto-Cancel Unpaid Pending Bookings', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="pending_expiry_hours" type="number" id="pending_expiry_hours" min="0" max="8760" value="<?php echo esc_attr((string) $pendingExpiryHours); ?>" class="small-text">
+                                    <?php esc_html_e('hours after creation.', 'tourivo'); ?>
+                                    <p class="description"><?php esc_html_e('0 (default) keeps pending bookings until you confirm or cancel them manually.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
                         </table>
@@ -734,7 +850,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="webhook_secret"><?php esc_html_e('Secret Key (HMAC SHA-256)', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="webhook_secret" type="text" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="e.g. secret_trv_xxxx" style="max-width: 400px;">
+                                    <input name="webhook_secret" type="password" autocomplete="new-password" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="e.g. secret_trv_xxxx" style="max-width: 400px;">
                                     <button type="button" class="button" id="tourivo-gen-secret-btn"><?php esc_html_e('Generate Secret', 'tourivo'); ?></button>
                                     <p class="description"><?php esc_html_e('Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification.', 'tourivo'); ?></p>
                                 </td>

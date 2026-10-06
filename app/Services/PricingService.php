@@ -290,7 +290,11 @@ class PricingService
         $subtotal     = round($subtotal, $decimals);
         $discount     = round($discount, $decimals);
         $taxAmount    = round($taxAmount, $decimals);
-        $total        = round($total, $decimals);
+        // Exclusive tax: the grand total is the sum of the two rounded lines the customer sees, so
+        // "subtotal + tax = total" always holds to the cent.
+        $total        = ($taxApplies && $taxMode !== 'inclusive')
+            ? round($subtotal + $taxAmount, $decimals)
+            : round($total, $decimals);
         $avgUnitPrice = round($avgUnitPrice, $decimals);
 
         return [

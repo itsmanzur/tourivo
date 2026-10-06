@@ -105,6 +105,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             public string $prefix = 'wp_';
             public string $posts = 'wp_posts';
             public string $postmeta = 'wp_postmeta';
+            public string $options = 'wp_options';
             public array $bookings = [];
             public array $booking_items = [];
             public array $inventories = [];
@@ -136,6 +137,21 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
                 // 1. INSERT INTO wp_tourivo_inventories
                 if (stripos($trimmed, 'INSERT INTO') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
+                    // Test hook: simulate losing the "first row for this date" race (a concurrent writer inserts the
+                    // row first, our INSERT then fails with a duplicate-key error).
+                    if (!empty($GLOBALS['tourivo_mock_fail_next_inventory_insert'])) {
+                        $GLOBALS['tourivo_mock_fail_next_inventory_insert'] = false;
+                        if (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)/i", $trimmed, $mr)) {
+                            $this->inventories["{$mr[1]}_{$mr[3]}"] = [
+                                'id' => count($this->inventories) + 1, 'item_id' => (int) $mr[1], 'item_type' => $mr[2],
+                                'event_date' => $mr[3], 'time_slot' => $mr[4], 'total_capacity' => (int) $mr[5],
+                                'booked_capacity' => 1, 'booked_count' => 1, 'reserved_count' => 0,
+                                'price_override' => null, 'status' => 'available',
+                            ];
+                        }
+                        $this->rows_affected = 0;
+                        return false;
+                    }
                     if (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(NULL|'[^']*'|[0-9\.]+)\s*,\s*'([^']+)'/is", $trimmed, $m)) {
                         $itemId   = (int) $m[1];
                         $itemType = $m[2];
@@ -271,6 +287,29 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
                 // 3. UPDATE wp_tourivo_bookings
                 if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_bookings') !== false) {
+                    // Email verification stamp (conditional on still being NULL)
+                    if (preg_match("/SET\s+email_verified_at\s*=\s*'([^']+)'.*WHERE\s+id\s*=\s*(\d+)\s+AND\s+email_verified_at\s+IS\s+NULL/is", $trimmed, $m)) {
+                        $id = (int) $m[2];
+                        if (isset($this->bookings[$id]) && empty($this->bookings[$id]['email_verified_at'])) {
+                            $this->bookings[$id]['email_verified_at'] = $m[1];
+                            $this->rows_affected = 1;
+                            return 1;
+                        }
+                        $this->rows_affected = 0;
+                        return 0;
+                    }
+                    // Migration backfill: mark every legacy booking as already verified
+                    if (preg_match('/SET\s+email_verified_at\s*=\s*created_at\s+WHERE\s+email_verified_at\s+IS\s+NULL/is', $trimmed)) {
+                        $n = 0;
+                        foreach ($this->bookings as $bid => $b) {
+                            if (empty($b['email_verified_at'])) {
+                                $this->bookings[$bid]['email_verified_at'] = $b['created_at'] ?? gmdate('Y-m-d H:i:s');
+                                $n++;
+                            }
+                        }
+                        $this->rows_affected = $n;
+                        return $n;
+                    }
                     if (preg_match("/SET\s+booking_status\s*=\s*'([^']+)'.*WHERE\s+id\s*=\s*(\d+)\s+AND\s+booking_status\s*=\s*'([^']+)'/is", $trimmed, $m)) {
                         $newStatus = $m[1];
                         $id        = (int) $m[2];
@@ -283,6 +322,22 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                             $this->rows_affected = 0;
                             return 0;
                         }
+                    }
+                }
+
+                // 3b. UPDATE wp_tourivo_logs (PII redaction)
+                if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_logs') !== false) {
+                    if (preg_match("/SET\s+details\s*=\s*'([^']*)'\s+WHERE\s+booking_id\s*=\s*(\d+)\s+AND\s+action\s+IN\s*\(([^)]*)\)/is", $trimmed, $m)) {
+                        $actions = array_map(static fn ($a) => trim($a, " '"), explode(',', $m[3]));
+                        $n = 0;
+                        foreach ($this->logs as $lid => $log) {
+                            if ((int) ($log['booking_id'] ?? 0) === (int) $m[2] && in_array($log['action'] ?? '', $actions, true)) {
+                                $this->logs[$lid]['details'] = $m[1];
+                                $n++;
+                            }
+                        }
+                        $this->rows_affected = $n;
+                        return $n;
                     }
                 }
 
@@ -394,8 +449,22 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 return null;
             }
 
+            public function esc_like(string $text): string {
+                return addcslashes($text, '_%\\');
+            }
+
             public function get_col(?string $query = null, int $x = 0): array {
                 if (!$query) return [];
+                if (stripos($query, 'option_name') !== false && preg_match("/LIKE\s+'([^']*)'/i", $query, $mLike)) {
+                    $prefix = rtrim(str_replace('\\_', '_', stripslashes($mLike[1])), '%');
+                    $names = [];
+                    foreach (array_keys($GLOBALS['tourivo_mock_options'] ?? []) as $name) {
+                        if (str_starts_with((string) $name, $prefix)) {
+                            $names[] = (string) $name;
+                        }
+                    }
+                    return $names;
+                }
                 if (stripos($query, 'tourivo_inquiries') !== false) {
                     $res = [];
                     $cutoff = null;
@@ -532,6 +601,16 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 }
 
                 if (stripos($query, 'tourivo_booking_items') !== false) {
+                    if (preg_match('/booking_id\s+IN\s*\(([^)]+)\)/i', $query, $mIn)) {
+                        $wanted = array_map('intval', explode(',', $mIn[1]));
+                        $res = [];
+                        foreach ($this->booking_items as $item) {
+                            if (in_array((int) $item['booking_id'], $wanted, true)) {
+                                $res[] = (object) $item;
+                            }
+                        }
+                        return $res;
+                    }
                     if (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
                         $bookingId = (int) $m[1];
                         $res = [];
@@ -625,6 +704,12 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function insert(string $table, array $data, ?array $format = null): int|bool {
                 if (stripos($table, 'tourivo_bookings') !== false) {
+                    // Test hook: simulate N unique-key (booking_code) collisions
+                    if (!empty($GLOBALS['tourivo_mock_fail_next_booking_insert'])) {
+                        $GLOBALS['tourivo_mock_fail_next_booking_insert']--;
+                        $this->rows_affected = 0;
+                        return false;
+                    }
                     $id = count($this->bookings) + 1;
                     $data['id'] = $id;
                     $data['created_at'] = $data['created_at'] ?? gmdate('Y-m-d H:i:s');
@@ -682,6 +767,8 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         $this->rows_affected = 1;
                         return 1;
                     }
+                    $this->rows_affected = 0;
+                    return 0;
                 }
                 if (stripos($table, 'tourivo_inquiries') !== false) {
                     $id = (int) ($where['id'] ?? 0);
@@ -980,6 +1067,13 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             return true;
         }
     }
+    if (!function_exists('delete_option')) {
+        function delete_option(string $option): bool {
+            global $tourivo_mock_options;
+            unset($tourivo_mock_options[$option]);
+            return true;
+        }
+    }
     if (!function_exists('get_transient')) {
         function get_transient(string $transient): mixed {
             global $tourivo_mock_transients;
@@ -998,6 +1092,33 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             global $tourivo_mock_transients;
             unset($tourivo_mock_transients[$transient]);
             return true;
+        }
+    }
+    if (!function_exists('wp_using_ext_object_cache')) {
+        function wp_using_ext_object_cache(?bool $using = null): bool {
+            return !empty($GLOBALS['tourivo_mock_ext_object_cache']);
+        }
+    }
+    if (!function_exists('wp_cache_add')) {
+        function wp_cache_add(string|int $key, mixed $data, string $group = '', int $expire = 0): bool {
+            global $tourivo_mock_transients;
+            $k = 'cache_' . $group . '_' . $key;
+            if (isset($tourivo_mock_transients[$k])) {
+                return false;
+            }
+            $tourivo_mock_transients[$k] = $data;
+            return true;
+        }
+    }
+    if (!function_exists('wp_cache_incr')) {
+        function wp_cache_incr(string|int $key, int $offset = 1, string $group = ''): int|false {
+            global $tourivo_mock_transients;
+            $k = 'cache_' . $group . '_' . $key;
+            if (!isset($tourivo_mock_transients[$k])) {
+                return false;
+            }
+            $tourivo_mock_transients[$k] = (int) $tourivo_mock_transients[$k] + $offset;
+            return $tourivo_mock_transients[$k];
         }
     }
     if (!function_exists('wp_cache_get')) {
@@ -1417,6 +1538,42 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('wp_add_privacy_policy_content')) {
         function wp_add_privacy_policy_content(string $plugin_name, string $policy_text): void {
             $GLOBALS['tourivo_mock_privacy_policy_content'][$plugin_name] = $policy_text;
+        }
+    }
+
+    if (!class_exists('WP_REST_Server')) {
+        class WP_REST_Server {
+            public const READABLE  = 'GET';
+            public const CREATABLE = 'POST';
+        }
+    }
+
+    if (!function_exists('sanitize_hex_color')) {
+        function sanitize_hex_color(string $color): ?string {
+            return preg_match('/^#([A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/', $color) ? $color : null;
+        }
+    }
+
+    if (!function_exists('get_role')) {
+        function get_role(string $role): ?object { return null; }
+    }
+    if (!function_exists('is_multisite')) {
+        function is_multisite(): bool { return !empty($GLOBALS['tourivo_mock_is_multisite']); }
+    }
+    if (!function_exists('get_sites')) {
+        function get_sites(array $args = []): array { return $GLOBALS['tourivo_mock_sites'] ?? []; }
+    }
+    if (!function_exists('switch_to_blog')) {
+        function switch_to_blog(int $blogId): bool { $GLOBALS['tourivo_mock_blog_log'][] = "switch:{$blogId}"; return true; }
+    }
+    if (!function_exists('restore_current_blog')) {
+        function restore_current_blog(): bool { $GLOBALS['tourivo_mock_blog_log'][] = 'restore'; return true; }
+    }
+
+    if (!function_exists('register_rest_route')) {
+        function register_rest_route(string $route_namespace, string $route, array $args = [], bool $override = false): bool {
+            $GLOBALS['tourivo_mock_rest_routes'][$route_namespace . $route] = $args;
+            return true;
         }
     }
 

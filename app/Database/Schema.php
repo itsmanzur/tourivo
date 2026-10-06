@@ -32,7 +32,7 @@ class Schema
     /**
      * Current schema version.
      */
-    public const CURRENT_DB_VERSION = '1.3.0';
+    public const CURRENT_DB_VERSION = '1.5.0';
 
     /**
      * Get the registered migrations list.
@@ -77,6 +77,7 @@ class Schema
 
             $prefix = $wpdb->prefix . 'tourivo_';
             $charsetCollate = $wpdb->get_charset_collate();
+            $installedVersion = (string) get_option(self::DB_VERSION_OPTION, '0.0.0');
 
             foreach (self::getMigrations() as $migrationClass) {
                 /** @var MigrationInterface $migration */
@@ -86,6 +87,13 @@ class Schema
                 if (!empty($sql)) {
                     dbDelta($sql);
                 }
+            }
+
+            // 1.4.0 introduced email verification: NULL now means "awaiting verification", so every
+            // pre-existing booking must be backfilled as already verified or it would be auto-cancelled.
+            if ($installedVersion !== '0.0.0' && version_compare($installedVersion, '1.4.0', '<')) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                $wpdb->query("UPDATE {$prefix}bookings SET email_verified_at = created_at WHERE email_verified_at IS NULL");
             }
 
             update_option(self::DB_VERSION_OPTION, self::CURRENT_DB_VERSION);

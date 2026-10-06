@@ -146,7 +146,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     document.querySelectorAll('.tourivo-seeder-notice, #tourivo-seeder-notice').forEach(noticeBox => {
                         noticeBox.className = 'notice notice-success inline';
-                        noticeBox.innerHTML = `<p>${data.data ? data.data.message : 'Sample data imported successfully!'}</p>`;
+                        const noticeText = document.createElement('p');
+                        noticeText.textContent = data.data ? data.data.message : 'Sample data imported successfully!';
+                        noticeBox.replaceChildren(noticeText);
                         noticeBox.style.display = 'block';
                     });
 
@@ -218,6 +220,33 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .catch(() => {
                     alert('Network error while updating booking status.');
+                });
+        });
+    });
+
+    // 4b. Revoke previously shared voucher / calendar links of a booking
+    document.querySelectorAll('.revoke-links-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+            if (!confirm(`Revoke all voucher and calendar links already shared for booking #${this.dataset.id}?`)) {
+                return;
+            }
+
+            this.disabled = true;
+
+            const formData = new FormData();
+            formData.append('action', 'tourivo_revoke_booking_links');
+            formData.append('booking_id', this.dataset.id);
+            formData.append('nonce', this.dataset.nonce);
+
+            fetch(ajaxurl, { method: 'POST', body: formData })
+                .then(res => res.json())
+                .then(data => {
+                    alert(data.data ? data.data.message : 'Request finished.');
+                    this.disabled = false;
+                })
+                .catch(() => {
+                    alert('Network error while revoking links.');
+                    this.disabled = false;
                 });
         });
     });
@@ -398,10 +427,10 @@ document.addEventListener('DOMContentLoaded', function () {
                 if (testEmailAlert) {
                     if (data.success) {
                         testEmailAlert.style.color = '#15803d';
-                        testEmailAlert.innerHTML = `✓ ${data.data ? data.data.message : 'Test email sent!'}`;
+                        testEmailAlert.textContent = `✓ ${data.data ? data.data.message : 'Test email sent!'}`;
                     } else {
                         testEmailAlert.style.color = '#b91c1c';
-                        testEmailAlert.innerHTML = `✕ ${data.data ? data.data.message : 'Failed to send.'}`;
+                        testEmailAlert.textContent = `✕ ${data.data ? data.data.message : 'Failed to send.'}`;
                     }
                     testEmailAlert.style.display = 'block';
                 }
@@ -487,10 +516,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     if (testWebhookAlert) {
                         if (data.success) {
                             testWebhookAlert.style.color = '#15803d';
-                            testWebhookAlert.innerHTML = `✓ ${data.data ? data.data.message : 'Webhook test successful!'}`;
+                            testWebhookAlert.textContent = `✓ ${data.data ? data.data.message : 'Webhook test successful!'}`;
                         } else {
                             testWebhookAlert.style.color = '#b91c1c';
-                            testWebhookAlert.innerHTML = `✕ ${data.data ? data.data.message : 'Webhook ping failed.'}`;
+                            testWebhookAlert.textContent = `✕ ${data.data ? data.data.message : 'Webhook ping failed.'}`;
                         }
                         testWebhookAlert.style.display = 'block';
                     }
@@ -641,7 +670,13 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     if (data.success && data.data) {
                         retentionDryRunResult.style.color = '#0f766e';
-                        retentionDryRunResult.innerHTML = `📊 <strong>Dry-Run Scan Results:</strong> ${data.data.bookings_to_anonymize} completed/cancelled booking(s) eligible for anonymization, and ${data.data.inquiries_to_delete} inquiry/inquiries eligible for deletion.`;
+                        const scanLabel = document.createElement('strong');
+                        scanLabel.textContent = 'Dry-Run Scan Results:';
+                        retentionDryRunResult.replaceChildren(
+                            document.createTextNode('📊 '),
+                            scanLabel,
+                            document.createTextNode(` ${Number(data.data.bookings_to_anonymize)} completed/cancelled booking(s) eligible for anonymization, and ${Number(data.data.inquiries_to_delete)} inquiry/inquiries eligible for deletion.`)
+                        );
                         retentionDryRunResult.style.display = 'block';
                     } else {
                         retentionDryRunResult.style.color = '#b91c1c';

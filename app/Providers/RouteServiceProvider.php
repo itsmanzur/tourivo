@@ -7,10 +7,13 @@ namespace Tourivo\Providers;
 use Tourivo\Common\Abstracts\ServiceProvider;
 use Tourivo\Controllers\Api\AvailabilityController;
 use Tourivo\Controllers\Api\BookingController;
+use Tourivo\Controllers\Api\PricingController;
 use Tourivo\Repositories\InventoryRepository;
 use Tourivo\Services\BookingService;
 use Tourivo\Services\EmailService;
+use Tourivo\Services\InquiryService;
 use Tourivo\Services\InventoryService;
+use Tourivo\Services\PricingService;
 use WP_REST_Server;
 
 if (!defined('ABSPATH')) {
@@ -42,7 +45,7 @@ class RouteServiceProvider extends ServiceProvider
         );
         $this->container->singleton(
             InquiryService::class,
-            fn ($c) => new \Tourivo\Services\InquiryService($c->get(EmailService::class))
+            fn ($c) => new InquiryService($c->get(EmailService::class))
         );
         $this->container->singleton(
             BookingService::class,
@@ -70,11 +73,36 @@ class RouteServiceProvider extends ServiceProvider
     {
         $this->addAction('rest_api_init', [$this, 'registerRestRoutes']);
         $this->addAction('tourivo_cleanup_expired_holds', [$this, 'cleanupExpiredHolds']);
+        $this->addAction('tourivo_expire_stale_bookings', [$this, 'expireStaleBookings']);
 
-        // Schedule cron if not already scheduled
-        if (!wp_next_scheduled('tourivo_cleanup_expired_holds')) {
-            wp_schedule_event(time(), 'hourly', 'tourivo_cleanup_expired_holds');
+        $this->addFilter('cron_schedules', [$this, 'registerCronSchedules']);
+
+        // Schedule cron if not already scheduled (re-schedule legacy hourly installs to the 5-minute cadence)
+        if (function_exists('wp_get_schedule') && wp_get_schedule('tourivo_cleanup_expired_holds') === 'hourly') {
+            wp_clear_scheduled_hook('tourivo_cleanup_expired_holds');
         }
+        if (!wp_next_scheduled('tourivo_cleanup_expired_holds')) {
+            wp_schedule_event(time(), 'tourivo_five_minutes', 'tourivo_cleanup_expired_holds');
+        }
+        if (!wp_next_scheduled('tourivo_expire_stale_bookings')) {
+            wp_schedule_event(time(), 'tourivo_five_minutes', 'tourivo_expire_stale_bookings');
+        }
+    }
+
+    /**
+     * Register the short cron interval used for releasing expired checkout holds.
+     *
+     * @param array<string, array<string, mixed>> $schedules
+     * @return array<string, array<string, mixed>>
+     */
+    public function registerCronSchedules(array $schedules): array
+    {
+        $schedules['tourivo_five_minutes'] = [
+            'interval' => 300,
+            'display'  => __('Every 5 minutes (Tourivo)', 'tourivo'),
+        ];
+
+        return $schedules;
     }
 
     /**
@@ -130,14 +158,26 @@ class RouteServiceProvider extends ServiceProvider
     }
 
     /**
+     * Cancel unverified / expired pending bookings and release their inventory.
+     *
+     * @return void
+     */
+    public function expireStaleBookings(): void
+    {
+        /** @var BookingService $bookings */
+        $bookings = $this->container->get(BookingService::class);
+        $bookings->expireStaleBookings();
+    }
+
+    /**
      * Cleanup expired checkout holds.
      *
      * @return void
      */
     public function cleanupExpiredHolds(): void
     {
-        /** @var InventoryRepository $repo */
-        $repo = $this->container->get(InventoryRepository::class);
-        $repo->clearExpiredHolds(15);
+        /** @var InventoryService $inventory */
+        $inventory = $this->container->get(InventoryService::class);
+        $inventory->releaseExpiredHolds();
     }
 }

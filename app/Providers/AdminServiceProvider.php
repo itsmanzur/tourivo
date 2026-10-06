@@ -50,6 +50,8 @@ class AdminServiceProvider extends ServiceProvider
         // Printable Voucher & Calendar .ics handlers (Admin & Public with token)
         add_action('admin_post_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
         add_action('admin_post_nopriv_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
+        add_action('admin_post_tourivo_verify_email', [$this, 'handleVerifyEmail']);
+        add_action('admin_post_nopriv_tourivo_verify_email', [$this, 'handleVerifyEmail']);
         add_action('admin_post_tourivo_download_ics', [$this, 'handleDownloadIcs']);
         add_action('admin_post_nopriv_tourivo_download_ics', [$this, 'handleDownloadIcs']);
 
@@ -61,14 +63,17 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('admin_enqueue_scripts', [$this, 'maybeSwitchUiLocale'], 1);
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
         $this->addAction('admin_post_tourivo_export_bookings_csv', [BookingsTable::class, 'exportCsv']);
+        $this->addAction('admin_post_tourivo_save_settings', [SettingsPage::class, 'handleSave']);
 
         // Admin Notices
         $this->addAction('admin_notices', [$this, 'renderWelcomeDemoNotice']);
+        $this->addAction('admin_notices', [$this, 'renderProxyModeNotice']);
 
         // AJAX handlers
         $this->addAction('wp_ajax_tourivo_import_sample_data', [$this, 'handleSampleDataImport']);
         $this->addAction('wp_ajax_tourivo_dismiss_welcome_notice', [$this, 'handleDismissWelcomeNotice']);
         $this->addAction('wp_ajax_tourivo_update_booking_status', [$this, 'handleUpdateBookingStatus']);
+        $this->addAction('wp_ajax_tourivo_revoke_booking_links', [$this, 'handleRevokeBookingLinks']);
         $this->addAction('wp_ajax_tourivo_create_manual_booking', [$this, 'handleCreateManualBooking']);
         $this->addAction('wp_ajax_tourivo_update_inquiry_status', [$this, 'handleUpdateInquiryStatus']);
         $this->addAction('wp_ajax_tourivo_delete_inquiry', [$this, 'handleDeleteInquiry']);
@@ -312,6 +317,82 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
+     * Warn when the site evidently sits behind a CDN / reverse proxy but client-IP detection is off.
+     *
+     * With proxy_mode disabled every visitor shares the proxy's IP, so IP-based rate limits would
+     * throttle all customers together after a handful of bookings.
+     */
+    public function renderProxyModeNotice(): void
+    {
+        if (!current_user_can('manage_tourivo_settings')) {
+            return;
+        }
+
+        $screen = function_exists('get_current_screen') ? get_current_screen() : null;
+        if (!$screen || !str_contains((string) $screen->id, 'tourivo')) {
+            return;
+        }
+
+        $mode = (string) \Tourivo\Config\Config::get('proxy_mode', 'disabled');
+        if (in_array($mode, ['cloudflare', 'reverse_proxy'], true)) {
+            return;
+        }
+
+        $behindCloudflare = !empty($_SERVER['HTTP_CF_CONNECTING_IP']);
+        $behindProxy      = !empty($_SERVER['HTTP_X_FORWARDED_FOR']);
+        if (!$behindCloudflare && !$behindProxy) {
+            return;
+        }
+
+        $settingsUrl = admin_url('admin.php?page=tourivo-settings');
+        ?>
+        <div class="notice notice-warning">
+            <p>
+                <strong><?php esc_html_e('Tourivo: proxy / CDN detected.', 'tourivo'); ?></strong>
+                <?php esc_html_e('Visitor IP addresses may be hidden behind your proxy, so anti-spam rate limits would treat all customers as one visitor and block legitimate bookings.', 'tourivo'); ?>
+                <a href="<?php echo esc_url($settingsUrl); ?>"><?php esc_html_e('Choose the correct Proxy Mode in Settings', 'tourivo'); ?></a>
+            </p>
+        </div>
+        <?php
+    }
+
+    /**
+     * Public handler for the "confirm your email" link sent after a booking.
+     */
+    public function handleVerifyEmail(): void
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $code  = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
+
+        if (!\Tourivo\Support\RateLimiter::hit('trv_verify_' . md5(\Tourivo\Support\ClientIp::get()), 20, 600)) {
+            wp_die(esc_html__('Too many attempts. Please try again later.', 'tourivo'), '', ['response' => 429]);
+        }
+
+        $bookingService = Container::getInstance()->get(BookingService::class);
+        $result = $bookingService->verifyEmail($code, $token);
+
+        if (empty($result['success'])) {
+            wp_die(
+                esc_html($result['message']),
+                esc_html__('Email confirmation', 'tourivo'),
+                ['response' => 400, 'back_link' => true]
+            );
+        }
+
+        $thankyouPageId = (int) \Tourivo\Config\Config::get('thankyou_page_id', 0);
+        $base = $thankyouPageId > 0 ? (string) get_permalink($thankyouPageId) : home_url('/');
+
+        wp_safe_redirect(add_query_arg([
+            'code'     => $code,
+            'token'    => ThankYouShortcode::generateThankYouToken((int) ($result['booking_id'] ?? 0)),
+            'verified' => 1,
+        ], $base));
+        exit;
+    }
+
+    /**
      * AJAX handler to permanently dismiss welcome banner.
      */
     public function handleDismissWelcomeNotice(): void
@@ -396,6 +477,29 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         wp_send_json_success(['message' => $result['message']]);
+    }
+
+    /**
+     * AJAX handler: invalidate every previously issued voucher / calendar link of a booking.
+     */
+    public function handleRevokeBookingLinks(): void
+    {
+        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_tourivo_bookings')) {
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            return;
+        }
+
+        $bookingId = isset($_POST['booking_id']) ? absint($_POST['booking_id']) : 0;
+        $bookingService = Container::getInstance()->get(BookingService::class);
+
+        if ($bookingId <= 0 || !$bookingService->rotateAccessKey($bookingId)) {
+            wp_send_json_error(['message' => __('Could not revoke the links for this booking.', 'tourivo')], 400);
+            return;
+        }
+
+        wp_send_json_success(['message' => __('Previously shared voucher links no longer work. New links are generated automatically.', 'tourivo')]);
     }
 
     /**
@@ -691,7 +795,7 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         // Security verification: Either valid HMAC token OR logged-in administrator with capability
-        $expectedToken = BookingLookupShortcode::generateVoucherToken((int) $tourivoBooking->id, (string) $tourivoBooking->customer_email);
+        $expectedToken = BookingLookupShortcode::generateVoucherToken((int) $tourivoBooking->id, (string) $tourivoBooking->customer_email, $tourivoBooking->access_key ?? null);
         $hasValidToken = hash_equals($expectedToken, $token);
         $isAdmin       = current_user_can('manage_tourivo_bookings');
 
@@ -744,7 +848,7 @@ class AdminServiceProvider extends ServiceProvider
 
         $bookingId            = (int) $tourivoBooking->id;
         $isValidThankYou      = ThankYouShortcode::verifyThankYouToken($bookingId, $token);
-        $expectedVoucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $tourivoBooking->customer_email);
+        $expectedVoucherToken = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $tourivoBooking->customer_email, $tourivoBooking->access_key ?? null);
         $isValidVoucher       = hash_equals($expectedVoucherToken, $token);
         $isAdmin              = current_user_can('manage_tourivo_bookings');
 

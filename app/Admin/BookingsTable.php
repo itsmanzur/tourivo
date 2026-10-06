@@ -17,6 +17,71 @@ if (!defined('ABSPATH')) {
  */
 class BookingsTable
 {
+    public const PER_PAGE = 20;
+
+    public const STATUS_FILTERS = ['all', 'pending', 'confirmed', 'on_hold', 'completed', 'cancelled', 'cancel_requested'];
+
+    /**
+     * Fetch one page of bookings (newest first) plus the first line item of each, in two queries.
+     *
+     * @param string $status  One of STATUS_FILTERS.
+     * @param string $search  Free text matched against code, name, email and phone.
+     * @param int    $page    1-based page number.
+     * @param int    $perPage Rows per page.
+     * @return array{bookings: array<int, object>, total: int, items: array<int, object>}
+     */
+    public static function fetchPage(string $status, string $search, int $page = 1, int $perPage = self::PER_PAGE): array
+    {
+        global $wpdb;
+
+        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
+        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
+
+        $where  = ['1=1'];
+        $params = [];
+
+        if ($status === 'cancel_requested') {
+            $where[] = "cancel_requested_at IS NOT NULL AND booking_status != 'cancelled'";
+        } elseif ($status !== 'all' && in_array($status, self::STATUS_FILTERS, true)) {
+            $where[]  = 'booking_status = %s';
+            $params[] = $status;
+        }
+
+        if ($search !== '') {
+            $where[] = '(booking_code LIKE %s OR customer_name LIKE %s OR customer_email LIKE %s OR customer_phone LIKE %s)';
+            $like    = '%' . $wpdb->esc_like($search) . '%';
+            array_push($params, $like, $like, $like, $like);
+        }
+
+        $whereSql = implode(' AND ', $where);
+        $page     = max(1, $page);
+        $perPage  = max(1, $perPage);
+        $offset   = ($page - 1) * $perPage;
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $countSql = "SELECT COUNT(*) FROM {$bookingsTable} WHERE {$whereSql}";
+        $total    = (int) $wpdb->get_var(empty($params) ? $countSql : $wpdb->prepare($countSql, ...$params));
+
+        $rowsSql  = "SELECT * FROM {$bookingsTable} WHERE {$whereSql} ORDER BY id DESC LIMIT %d OFFSET %d";
+        $bookings = (array) $wpdb->get_results($wpdb->prepare($rowsSql, ...array_merge($params, [$perPage, $offset])));
+
+        $items = [];
+        $ids   = array_values(array_filter(array_map(static fn ($b): int => (int) $b->id, $bookings)));
+        if (!empty($ids)) {
+            $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+            $rows = (array) $wpdb->get_results($wpdb->prepare(
+                "SELECT * FROM {$itemsTable} WHERE booking_id IN ({$placeholders}) ORDER BY id ASC",
+                ...$ids
+            ));
+            foreach ($rows as $row) {
+                $items[(int) $row->booking_id] ??= $row; // first line item per booking
+            }
+        }
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        return ['bookings' => $bookings, 'total' => $total, 'items' => $items];
+    }
+
     /**
      * Render the bookings management view.
      *
@@ -33,37 +98,17 @@ class BookingsTable
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $searchQuery   = isset($_GET['s']) ? sanitize_text_field(wp_unslash($_GET['s'])) : '';
 
-        // Build SQL
-        $where = ['1=1'];
-        $params = [];
-
-        if ($statusFilter === 'cancel_requested') {
-            $where[] = "cancel_requested_at IS NOT NULL AND booking_status != 'cancelled'";
-        } elseif ($statusFilter !== 'all') {
-            $where[] = 'booking_status = %s';
-            $params[] = $statusFilter;
+        if (!in_array($statusFilter, self::STATUS_FILTERS, true)) {
+            $statusFilter = 'all';
         }
 
-        if (!empty($searchQuery)) {
-            $where[] = '(booking_code LIKE %s OR customer_name LIKE %s OR customer_email LIKE %s OR customer_phone LIKE %s)';
-            $like = '%' . $wpdb->esc_like($searchQuery) . '%';
-            $params[] = $like;
-            $params[] = $like;
-            $params[] = $like;
-            $params[] = $like;
-        }
-
-        $whereSql = implode(' AND ', $where);
-        $sql = "SELECT * FROM {$bookingsTable} WHERE {$whereSql} ORDER BY id DESC LIMIT 50";
-
-        if (!empty($params)) {
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-            $sql = $wpdb->prepare($sql, ...$params);
-        }
-
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $bookings = (array) $wpdb->get_results($sql);
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $page     = isset($_GET['paged']) ? max(1, absint($_GET['paged'])) : 1;
+        $perPage  = self::PER_PAGE;
+        $result   = self::fetchPage($statusFilter, $searchQuery, $page, $perPage);
+        $bookings = $result['bookings'];
+        $total    = $result['total'];
+        $itemsByBooking = $result['items'];
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
         $nonce = wp_create_nonce('tourivo_admin_nonce');
 
@@ -95,6 +140,8 @@ class BookingsTable
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=pending')); ?>" class="<?php echo ($statusFilter === 'pending') ? 'current' : ''; ?>"><?php esc_html_e('Pending', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=confirmed')); ?>" class="<?php echo ($statusFilter === 'confirmed') ? 'current' : ''; ?>"><?php esc_html_e('Confirmed', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancel_requested')); ?>" class="<?php echo ($statusFilter === 'cancel_requested') ? 'current' : ''; ?>"><?php esc_html_e('🚨 Cancel Requested', 'tourivo'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=on_hold')); ?>" class="<?php echo ($statusFilter === 'on_hold') ? 'current' : ''; ?>"><?php esc_html_e('On Hold', 'tourivo'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=completed')); ?>" class="<?php echo ($statusFilter === 'completed') ? 'current' : ''; ?>"><?php esc_html_e('Completed', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancelled')); ?>" class="<?php echo ($statusFilter === 'cancelled') ? 'current' : ''; ?>"><?php esc_html_e('Cancelled', 'tourivo'); ?></a></li>
             </ul>
 
@@ -122,9 +169,13 @@ class BookingsTable
                 </thead>
                 <tbody>
                     <?php if (!empty($bookings)) : foreach ($bookings as $b) : 
-                        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-                        $lineItem = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d LIMIT 1", $b->id));
-                        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+                        $lineItem = $itemsByBooking[(int) $b->id] ?? null;
+                        if ($lineItem) {
+                            // Expose the item to the "Details" modal data-attributes below.
+                            $b->item_title = $lineItem->item_title;
+                            $b->check_in   = $lineItem->check_in;
+                            $b->check_out  = $lineItem->check_out;
+                        }
                     ?>
                         <tr id="booking-row-<?php echo esc_attr((string)$b->id); ?>">
                             <td>
@@ -188,6 +239,7 @@ class BookingsTable
                                     <a href="<?php echo esc_url(add_query_arg(['action' => 'tourivo_print_voucher', 'code' => $b->booking_code], admin_url('admin-post.php'))); ?>" target="_blank" rel="noopener" class="button button-small" title="<?php esc_attr_e('Print Booking Voucher', 'tourivo'); ?>">
                                         🖨️ <?php esc_html_e('Voucher', 'tourivo'); ?>
                                     </a>
+                                    <button type="button" class="button button-small revoke-links-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Invalidate previously shared voucher / calendar links', 'tourivo'); ?>">🔒 <?php esc_html_e('Revoke Links', 'tourivo'); ?></button>
                                     <?php if ($b->booking_status !== 'confirmed') : ?>
                                         <button type="button" class="button button-small button-primary change-status-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-status="confirmed" data-nonce="<?php echo esc_attr($nonce); ?>">✓ <?php esc_html_e('Confirm', 'tourivo'); ?></button>
                                     <?php endif; ?>
@@ -206,6 +258,30 @@ class BookingsTable
                     <?php endif; ?>
                 </tbody>
             </table>
+
+            <?php
+            $totalPages = (int) ceil($total / $perPage);
+            if ($totalPages > 1) :
+                $pageLinks = paginate_links([
+                    'base'      => add_query_arg('paged', '%#%'),
+                    'format'    => '',
+                    'current'   => $page,
+                    'total'     => $totalPages,
+                    'prev_text' => '&laquo;',
+                    'next_text' => '&raquo;',
+                ]);
+                ?>
+                <div class="tablenav bottom">
+                    <div class="tablenav-pages">
+                        <span class="displaying-num"><?php echo esc_html(sprintf(
+                            /* translators: %s: Number of bookings */
+                            _n('%s booking', '%s bookings', $total, 'tourivo'),
+                            number_format_i18n($total)
+                        )); ?></span>
+                        <?php echo wp_kses_post((string) $pageLinks); ?>
+                    </div>
+                </div>
+            <?php endif; ?>
 
             <!-- Manual Booking Modal -->
             <div id="tourivo-manual-booking-modal" class="tourivo-admin-modal" style="display: none;">

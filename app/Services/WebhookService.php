@@ -34,6 +34,30 @@ class WebhookService
     }
 
     /**
+     * Build the signature headers for a payload.
+     *
+     * - `X-Tourivo-Signature`: HMAC-SHA256 of the raw body (original scheme, kept for existing receivers).
+     * - `X-Tourivo-Timestamp` + `X-Tourivo-Signature-V2`: HMAC-SHA256 of "{timestamp}.{body}". Receivers should
+     *   verify V2 and reject timestamps older than a few minutes, which makes captured requests non-replayable.
+     *
+     * @return array<string, string>
+     */
+    public static function signatureHeaders(string $jsonPayload, string $secret, ?int $timestamp = null): array
+    {
+        if ($secret === '') {
+            return [];
+        }
+
+        $timestamp ??= time();
+
+        return [
+            'X-Tourivo-Signature'    => hash_hmac('sha256', $jsonPayload, $secret),
+            'X-Tourivo-Timestamp'    => (string) $timestamp,
+            'X-Tourivo-Signature-V2' => hash_hmac('sha256', $timestamp . '.' . $jsonPayload, $secret),
+        ];
+    }
+
+    /**
      * Validate webhook URL to ensure HTTPS scheme (HTTP allowed only via filter).
      *
      * @param string $url
@@ -230,17 +254,13 @@ class WebhookService
         }
 
         $secret = trim((string) Config::get('webhook_secret', ''));
-        $signature = !empty($secret) ? hash_hmac('sha256', $jsonPayload, $secret) : '';
 
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
             'X-Tourivo-Event' => $event,
             'User-Agent'      => 'Tourivo-Webhook/' . TOURIVO_VERSION,
         ];
-
-        if (!empty($signature)) {
-            $headers['X-Tourivo-Signature'] = $signature;
-        }
+        $headers += self::signatureHeaders($jsonPayload, $secret);
 
         $bookingId = (int) ($data['booking_id'] ?? 0);
 
@@ -341,17 +361,13 @@ class WebhookService
         ];
 
         $json = wp_json_encode($testPayload);
-        $signature = !empty($secret) ? hash_hmac('sha256', (string) $json, $secret) : '';
 
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
             'X-Tourivo-Event' => 'test.ping',
             'User-Agent'      => 'Tourivo-Webhook/' . TOURIVO_VERSION,
         ];
-
-        if (!empty($signature)) {
-            $headers['X-Tourivo-Signature'] = $signature;
-        }
+        $headers += self::signatureHeaders((string) $json, $secret);
 
         $response = wp_safe_remote_post($url, [
             'timeout'     => 10,

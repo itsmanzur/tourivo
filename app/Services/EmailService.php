@@ -31,7 +31,8 @@ class EmailService
     public function register(): void
     {
         add_action('tourivo/booking_created', [$this, 'onBookingCreated'], 20, 2);
-        add_action('tourivo/booking_status_changed', [$this, 'onBookingStatusChanged'], 20, 3);
+        add_action('tourivo/booking_status_changed', [$this, 'onBookingStatusChanged'], 20, 4);
+        add_action('tourivo/booking_email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
         add_action('tourivo/inquiry_created', [$this, 'onInquiryCreated'], 20, 2);
         add_action('tourivo_process_email_delivery', [$this, 'dispatch'], 10, 4);
         add_action('tourivo_daily_reminders', [$this, 'processDailyReminders']);
@@ -71,6 +72,16 @@ class EmailService
     {
         $status = (string) ($bookingData['booking_status'] ?? 'pending');
 
+        // Unverified public booking: the only mail that may go out is the confirmation link. Staff and the
+        // regular "received" mail follow once the address is confirmed (see onBookingEmailVerified()).
+        if (array_key_exists('email_verified', $bookingData) && $bookingData['email_verified'] === false) {
+            $customerEmail = (string) ($bookingData['customer_email'] ?? '');
+            if (!empty($customerEmail) && is_email($customerEmail)) {
+                $this->enqueue('customer_verify_email', $customerEmail, $bookingData);
+            }
+            return;
+        }
+
         // 1. Enqueue Admin Notification
         $adminEmail = $this->getAdminEmail();
         if (!empty($adminEmail) && is_email($adminEmail)) {
@@ -102,11 +113,17 @@ class EmailService
      * @param int    $bookingId
      * @param string $oldStatus
      * @param string $newStatus
+     * @param array<string, mixed> $context
      * @return void
      */
-    public function onBookingStatusChanged(int $bookingId, string $oldStatus, string $newStatus): void
+    public function onBookingStatusChanged(int $bookingId, string $oldStatus, string $newStatus, array $context = []): void
     {
         if ($bookingId <= 0 || $oldStatus === $newStatus) {
+            return;
+        }
+
+        // Never mail (or alert staff about) an address that did not prove ownership of the booking.
+        if (($context['source'] ?? '') === 'unverified_expired') {
             return;
         }
 
@@ -137,6 +154,36 @@ class EmailService
                 $this->enqueue('admin_booking_cancelled', $adminEmail, $bookingData);
             }
         }
+    }
+
+    /**
+     * Triggered once the customer confirmed their email address: release the notifications that were held back.
+     *
+     * @param int $bookingId
+     * @return void
+     */
+    public function onBookingEmailVerified(int $bookingId): void
+    {
+        $bookingData = $this->getBookingData($bookingId);
+        if (empty($bookingData)) {
+            return;
+        }
+
+        $adminEmail = $this->getAdminEmail();
+        if (!empty($adminEmail) && is_email($adminEmail)) {
+            $this->enqueue('admin_new_booking', $adminEmail, $bookingData);
+        }
+
+        $customerEmail = (string) ($bookingData['customer_email'] ?? '');
+        if (empty($customerEmail) || !is_email($customerEmail)) {
+            return;
+        }
+
+        $this->enqueue(
+            ($bookingData['booking_status'] ?? 'pending') === 'confirmed' ? 'customer_booking_confirmed' : 'customer_booking_received',
+            $customerEmail,
+            $bookingData
+        );
     }
 
     /**
@@ -225,7 +272,8 @@ class EmailService
         // Generate voucher URL & lookup URL
         $voucherUrl = '';
         if ($bookingId > 0 && !empty($data['customer_email'])) {
-            $token = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $data['customer_email']);
+            $bookingRow = function_exists('tourivo_get_booking') ? tourivo_get_booking($bookingId) : null;
+            $token = BookingLookupShortcode::generateVoucherToken($bookingId, (string) $data['customer_email'], $bookingRow->access_key ?? null);
             $voucherUrl = add_query_arg([
                 'action' => 'tourivo_print_voucher',
                 'code'   => (string) ($data['booking_code'] ?? ''),

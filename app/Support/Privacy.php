@@ -355,6 +355,8 @@ class Privacy
                 ['id' => $b->id]
             );
 
+            LogService::redactPersonalData((int) $b->id);
+
             $anonymizedCount++;
         }
 

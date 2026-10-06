@@ -221,6 +221,11 @@ class InventoryRepository
     }
 
     /**
+     * Maximum attempts for the "first row for this date" race (duplicate-key / deadlock retry).
+     */
+    protected const WRITE_ATTEMPTS = 3;
+
+    /**
      * Atomically reserve inventory spots (Temporary Checkout Hold).
      *
      * @param int    $itemId
@@ -233,66 +238,71 @@ class InventoryRepository
      */
     public function reserveSpots(int $itemId, string $itemType, string $date, string $timeSlot, int $count, int $defaultCapacity): bool
     {
-        $this->db->query('START TRANSACTION');
+        for ($attempt = 0; $attempt < self::WRITE_ATTEMPTS; $attempt++) {
+            $this->db->query('START TRANSACTION');
 
-        // Fetch row with row lock
-        $query = $this->db->prepare(
-            "SELECT * FROM {$this->table} 
-             WHERE item_id = %d AND item_type = %s AND event_date = %s AND time_slot = %s 
-             FOR UPDATE",
-            $itemId,
-            $itemType,
-            $date,
-            $timeSlot
-        );
-
-        $row = $this->db->get_row($query);
-
-        $totalCapacity = $row ? (int) $row->total_capacity : $defaultCapacity;
-        $bookedCount   = $row ? (int) $row->booked_count : 0;
-        $reservedCount = $row ? (int) $row->reserved_count : 0;
-        $status        = $row ? $row->status : 'available';
-
-        if ($status !== 'available') {
-            $this->db->query('ROLLBACK');
-            return false;
-        }
-
-        $availableSpots = $totalCapacity - $bookedCount - $reservedCount;
-
-        if ($availableSpots < $count) {
-            $this->db->query('ROLLBACK');
-            return false;
-        }
-
-        // Apply hold
-        if ($row) {
-            $update = $this->db->prepare(
-                "UPDATE {$this->table} 
-                 SET reserved_count = reserved_count + %d, updated_at = NOW() 
-                 WHERE id = %d",
-                $count,
-                $row->id
-            );
-            $this->db->query($update);
-        } else {
-            $insert = $this->db->prepare(
-                "INSERT INTO {$this->table} 
-                    (item_id, item_type, event_date, time_slot, total_capacity, booked_count, reserved_count, status, created_at, updated_at)
-                 VALUES 
-                    (%d, %s, %s, %s, %d, 0, %d, 'available', NOW(), NOW())",
+            // Fetch row with row lock
+            $query = $this->db->prepare(
+                "SELECT * FROM {$this->table}
+                 WHERE item_id = %d AND item_type = %s AND event_date = %s AND time_slot = %s
+                 FOR UPDATE",
                 $itemId,
                 $itemType,
                 $date,
-                $timeSlot,
-                $defaultCapacity,
-                $count
+                $timeSlot
             );
-            $this->db->query($insert);
+
+            $row = $this->db->get_row($query);
+
+            $totalCapacity = $row ? (int) $row->total_capacity : $defaultCapacity;
+            $bookedCount   = $row ? (int) $row->booked_count : 0;
+            $reservedCount = $row ? (int) $row->reserved_count : 0;
+            $status        = $row ? $row->status : 'available';
+
+            if ($status !== 'available') {
+                $this->db->query('ROLLBACK');
+                return false;
+            }
+
+            if (($totalCapacity - $bookedCount - $reservedCount) < $count) {
+                $this->db->query('ROLLBACK');
+                return false;
+            }
+
+            if ($row) {
+                $ok = $this->db->query($this->db->prepare(
+                    "UPDATE {$this->table}
+                     SET reserved_count = reserved_count + %d, updated_at = NOW()
+                     WHERE id = %d",
+                    $count,
+                    $row->id
+                ));
+            } else {
+                $ok = $this->db->query($this->db->prepare(
+                    "INSERT INTO {$this->table}
+                        (item_id, item_type, event_date, time_slot, total_capacity, booked_count, reserved_count, status, created_at, updated_at)
+                     VALUES
+                        (%d, %s, %s, %s, %d, 0, %d, 'available', NOW(), NOW())",
+                    $itemId,
+                    $itemType,
+                    $date,
+                    $timeSlot,
+                    $defaultCapacity,
+                    $count
+                ));
+            }
+
+            if ($ok === false) {
+                // Lost the race to create the first row (duplicate key) or deadlocked: retry against the now-existing row.
+                $this->db->query('ROLLBACK');
+                continue;
+            }
+
+            $this->db->query('COMMIT');
+            return true;
         }
 
-        $this->db->query('COMMIT');
-        return true;
+        return false;
     }
 
     /**
@@ -316,76 +326,97 @@ class InventoryRepository
         int $defaultCapacity,
         bool $hasPriorHold = true
     ): bool {
-        $this->db->query('START TRANSACTION');
+        for ($attempt = 0; $attempt < self::WRITE_ATTEMPTS; $attempt++) {
+            $this->db->query('START TRANSACTION');
 
-        $query = $this->db->prepare(
-            "SELECT * FROM {$this->table} 
-             WHERE item_id = %d AND item_type = %s AND event_date = %s AND time_slot = %s 
-             FOR UPDATE",
-            $itemId,
-            $itemType,
-            $date,
-            $timeSlot
-        );
+            $query = $this->db->prepare(
+                "SELECT * FROM {$this->table}
+                 WHERE item_id = %d AND item_type = %s AND event_date = %s AND time_slot = %s
+                 FOR UPDATE",
+                $itemId,
+                $itemType,
+                $date,
+                $timeSlot
+            );
 
-        $row = $this->db->get_row($query);
+            $row = $this->db->get_row($query);
 
-        if (!$row) {
-            if ($count > $defaultCapacity) {
+            if (!$row) {
+                if ($count > $defaultCapacity) {
+                    $this->db->query('ROLLBACK');
+                    return false;
+                }
+
+                $ok = $this->db->query($this->db->prepare(
+                    "INSERT INTO {$this->table}
+                        (item_id, item_type, event_date, time_slot, total_capacity, booked_count, reserved_count, status, created_at, updated_at)
+                     VALUES
+                        (%d, %s, %s, %s, %d, %d, 0, %s, NOW(), NOW())",
+                    $itemId,
+                    $itemType,
+                    $date,
+                    $timeSlot,
+                    $defaultCapacity,
+                    $count,
+                    ($count >= $defaultCapacity) ? 'sold_out' : 'available'
+                ));
+
+                if ($ok === false) {
+                    // Another request created the row first: retry so the count is applied to it, never silently dropped.
+                    $this->db->query('ROLLBACK');
+                    continue;
+                }
+
+                $this->db->query('COMMIT');
+                return true;
+            }
+
+            // Blocked / closed dates can never receive new bookings, even inside the locked section.
+            if (!in_array((string) $row->status, ['available', 'sold_out'], true)) {
                 $this->db->query('ROLLBACK');
                 return false;
             }
 
-            $insert = $this->db->prepare(
-                "INSERT INTO {$this->table} 
-                    (item_id, item_type, event_date, time_slot, total_capacity, booked_count, reserved_count, status, created_at, updated_at)
-                 VALUES 
-                    (%d, %s, %s, %s, %d, %d, 0, 'available', NOW(), NOW())",
-                $itemId,
-                $itemType,
-                $date,
-                $timeSlot,
-                $defaultCapacity,
-                $count
-            );
-            $this->db->query($insert);
+            $totalCapacity = (int) $row->total_capacity;
+            $bookedCount   = (int) $row->booked_count;
+            $reservedCount = (int) $row->reserved_count;
+
+            if ($hasPriorHold) {
+                $newReserved = max(0, $reservedCount - $count);
+                $newBooked   = $bookedCount + $count;
+            } else {
+                if (($totalCapacity - $bookedCount - $reservedCount) < $count) {
+                    $this->db->query('ROLLBACK');
+                    return false;
+                }
+                $newReserved = $reservedCount;
+                $newBooked   = $bookedCount + $count;
+            }
+
+            $newStatus = ($newBooked >= $totalCapacity) ? 'sold_out' : (string) $row->status;
+
+            $ok = $this->db->query($this->db->prepare(
+                "UPDATE {$this->table}
+                 SET booked_count = %d, reserved_count = %d, status = %s, updated_at = NOW()
+                 WHERE id = %d",
+                $newBooked,
+                $newReserved,
+                $newStatus,
+                $row->id
+            ));
+
+            if ($ok === false) {
+                $this->db->query('ROLLBACK');
+                return false;
+            }
+
             $this->db->query('COMMIT');
             return true;
         }
 
-        $totalCapacity = (int) $row->total_capacity;
-        $bookedCount   = (int) $row->booked_count;
-        $reservedCount = (int) $row->reserved_count;
-
-        if ($hasPriorHold) {
-            $newReserved = max(0, $reservedCount - $count);
-            $newBooked   = $bookedCount + $count;
-        } else {
-            $available = $totalCapacity - $bookedCount - $reservedCount;
-            if ($available < $count) {
-                $this->db->query('ROLLBACK');
-                return false;
-            }
-            $newReserved = $reservedCount;
-            $newBooked   = $bookedCount + $count;
-        }
-
-        $newStatus = ($newBooked >= $totalCapacity) ? 'sold_out' : $row->status;
-
-        $update = $this->db->prepare(
-            "UPDATE {$this->table} 
-             SET booked_count = %d, reserved_count = %d, status = %s, updated_at = NOW() 
-             WHERE id = %d",
-            $newBooked,
-            $newReserved,
-            $newStatus,
-            $row->id
-        );
-        $this->db->query($update);
-
-        $this->db->query('COMMIT');
-        return true;
+        return false;
     }
+
 
     /**
      * Release temporary reservation hold.
@@ -411,25 +442,6 @@ class InventoryRepository
         );
 
         return $this->db->query($query) !== false;
-    }
-
-    /**
-     * Release all expired holds older than given minutes.
-     *
-     * @param int $minutes
-     * @return int Number of reset records
-     */
-    public function clearExpiredHolds(int $minutes = 15): int
-    {
-        $query = $this->db->prepare(
-            "UPDATE {$this->table} 
-             SET reserved_count = 0 
-             WHERE reserved_count > 0 AND updated_at < DATE_SUB(NOW(), INTERVAL %d MINUTE)",
-            $minutes
-        );
-
-        $res = $this->db->query($query);
-        return is_numeric($res) ? (int) $res : 0;
     }
 
     /**

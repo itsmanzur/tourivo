@@ -24,6 +24,27 @@ class Config
      */
     public static function getDefaults(): array
     {
+        return self::$defaultsCache ??= self::buildDefaults();
+    }
+
+    /**
+     * Forget the per-request defaults cache (after the site email/name changes, and in tests).
+     */
+    public static function flushDefaults(): void
+    {
+        self::$defaultsCache = null;
+    }
+
+    /**
+     * @var array<string, mixed>|null
+     */
+    private static ?array $defaultsCache = null;
+
+    /**
+     * @return array<string, mixed>
+     */
+    private static function buildDefaults(): array
+    {
         $siteEmail = (string) get_option('admin_email', 'admin@example.com');
         if (empty($siteEmail) || !is_email($siteEmail)) {
             $siteEmail = 'admin@example.com';
@@ -62,6 +83,9 @@ class Config
             'thankyou_page_id'      => 0,
             'redirect_after_booking'=> 'inline', // 'inline' or 'thankyou'
             'enable_datalayer'      => false,
+            'pending_expiry_hours'  => 0, // 0 = pending bookings never auto-expire
+            'require_email_verification' => false,
+            'unverified_expiry_minutes'  => 60,
             'allow_cancel_requests' => true,
             'customer_self_cancel_hours' => 0, // 0 = disabled (request-only)
             'offline_payment_instructions' => '',
@@ -75,6 +99,11 @@ class Config
             'email_customer_booking_confirmed_subject'           => 'Your Booking Confirmation #{booking_code} - {site_name}',
             'email_customer_booking_confirmed_heading'           => 'Booking Confirmed!',
             'email_customer_booking_confirmed_additional_content'=> '',
+            // 2b. Customer: Confirm Your Email (only when email verification is required)
+            'email_customer_verify_email_enabled'                => true,
+            'email_customer_verify_email_subject'                => 'Please confirm your booking #{booking_code} - {site_name}',
+            'email_customer_verify_email_heading'                => 'Confirm Your Email Address',
+            'email_customer_verify_email_additional_content'     => '',
             // 3. Customer: Booking Cancelled
             'email_customer_booking_cancelled_enabled'           => true,
             'email_customer_booking_cancelled_subject'           => 'Your Booking #{booking_code} has been Cancelled - {site_name}',

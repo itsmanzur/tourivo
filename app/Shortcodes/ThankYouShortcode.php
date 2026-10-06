@@ -141,7 +141,7 @@ class ThankYouShortcode
         // Fire thank you viewed hook for conversion integrations & audit
         do_action('tourivo/thankyou_viewed', (int) $booking->id);
 
-        $voucherToken = BookingLookupShortcode::generateVoucherToken((int) $booking->id, (string) $booking->customer_email);
+        $voucherToken = BookingLookupShortcode::generateVoucherToken((int) $booking->id, (string) $booking->customer_email, $booking->access_key ?? null);
         $voucherUrl   = add_query_arg([
             'action' => 'tourivo_print_voucher',
             'code'   => $booking->booking_code,
@@ -233,8 +233,12 @@ class ThankYouShortcode
         $checkOutRaw = ($item && !empty($item->check_out)) ? (string) $item->check_out : $checkInRaw;
 
         $dtStart = gmdate('Ymd', strtotime($checkInRaw));
-        // For iCal full-day event, DTEND is non-inclusive day after end date
-        $dtEnd = gmdate('Ymd', strtotime($checkOutRaw . ' +1 day'));
+        // iCal all-day DTEND is exclusive. A hotel stay ends on the check-out morning, so DTEND is the check-out
+        // date itself; a tour's last day is inclusive, so DTEND is the day after it.
+        $isStay = $item && in_array((string) $item->item_type, ['room', 'hotel_room'], true) && !empty($item->check_out);
+        $dtEnd  = $isStay
+            ? gmdate('Ymd', strtotime($checkOutRaw))
+            : gmdate('Ymd', strtotime($checkOutRaw . ' +1 day'));
 
         $summary = sprintf(
             /* translators: 1: Item title, 2: Booking code */
@@ -243,14 +247,23 @@ class ThankYouShortcode
             $code
         );
 
-        $description = sprintf(
-            /* translators: 1: Booking reference code, 2: Customer name, 3: Total amount, 4: Site name */
-            __('Reservation Reference: #%1$s\nTraveler: %2$s\nTotal: %3$s\nOrganized by: %4$s', 'tourivo'),
-            $code,
-            $booking->customer_name,
-            Money::format((float) $booking->total_amount),
-            $siteName
-        );
+        // Real newlines here; escapeIcsText() turns them into the RFC 5545 "\n" escape.
+        $description = implode("\n", [
+            /* translators: %s: Booking reference code */
+            sprintf(__('Reservation Reference: #%s', 'tourivo'), $code),
+            /* translators: %s: Customer name */
+            sprintf(__('Traveler: %s', 'tourivo'), $booking->customer_name),
+            /* translators: %s: Total amount */
+            sprintf(__('Total: %s', 'tourivo'), Money::format((float) $booking->total_amount)),
+            /* translators: %s: Site name */
+            sprintf(__('Organized by: %s', 'tourivo'), $siteName),
+        ]);
+
+        $icsStatus = match ((string) $booking->booking_status) {
+            'confirmed', 'completed' => 'CONFIRMED',
+            'cancelled'              => 'CANCELLED',
+            default                  => 'TENTATIVE',
+        };
 
         // Escape iCalendar text
         $summaryEsc     = self::escapeIcsText($summary);
@@ -271,7 +284,7 @@ class ThankYouShortcode
             "SUMMARY:{$summaryEsc}",
             "DESCRIPTION:{$descriptionEsc}",
             "LOCATION:{$locationEsc}",
-            'STATUS:CONFIRMED',
+            "STATUS:{$icsStatus}",
             'END:VEVENT',
             'END:VCALENDAR',
         ];

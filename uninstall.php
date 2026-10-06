@@ -33,4 +33,13 @@ if (!class_exists('Tourivo\\Core\\Uninstaller')) {
     }
 }
 
-\Tourivo\Core\Uninstaller::uninstall();
+if (is_multisite()) {
+    // Network delete: clean every site, not just the main one.
+    foreach (get_sites(['fields' => 'ids', 'number' => 0]) as $tourivoBlogId) {
+        switch_to_blog((int) $tourivoBlogId);
+        \Tourivo\Core\Uninstaller::uninstall();
+        restore_current_blog();
+    }
+} else {
+    \Tourivo\Core\Uninstaller::uninstall();
+}

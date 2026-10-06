@@ -330,6 +330,38 @@ document.addEventListener('DOMContentLoaded', function() {
     var cancelAlert = document.getElementById('tourivoCancelAlert');
 
     var currentBooking = null;
+    var trvAjaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
+
+    // POST to admin-ajax with the lookup nonce. A cached page may carry a stale nonce, so on a
+    // `nonce_expired` reply fetch a fresh one once and transparently retry.
+    function trvPost(formData, retried) {
+        formData.set('nonce', document.getElementById('trv_lookup_nonce').value);
+
+        return fetch(trvAjaxUrl, {
+            method: 'POST',
+            body: formData,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(function(res) { return res.json(); })
+        .then(function(data) {
+            if (retried || !data || data.success || !data.data || data.data.code !== 'nonce_expired') {
+                return data;
+            }
+
+            var nonceRequest = new FormData();
+            nonceRequest.append('action', 'tourivo_get_lookup_nonce');
+
+            return fetch(trvAjaxUrl, { method: 'POST', body: nonceRequest })
+                .then(function(res) { return res.json(); })
+                .then(function(fresh) {
+                    if (fresh && fresh.success && fresh.data && fresh.data.nonce) {
+                        document.getElementById('trv_lookup_nonce').value = fresh.data.nonce;
+                        return trvPost(formData, true);
+                    }
+                    return data;
+                });
+        });
+    }
 
     if (!form || !btn) return;
 
@@ -362,16 +394,7 @@ document.addEventListener('DOMContentLoaded', function() {
         formData.append('booking_code', code);
         formData.append('customer_email', email);
 
-        var ajaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
-
-        fetch(ajaxUrl, {
-            method: 'POST',
-            body: formData,
-            headers: {
-                'X-Requested-With': 'XMLHttpRequest'
-            }
-        })
-        .then(function(res) { return res.json(); })
+        trvPost(formData)
         .then(function(data) {
             btn.disabled = false;
             btn.querySelector('.btn-text').style.display = 'inline';
@@ -423,16 +446,7 @@ document.addEventListener('DOMContentLoaded', function() {
             formData.append('reason', reason);
             formData.append('trv_hp_check', document.getElementById('trv_hp_check').value);
 
-            var ajaxUrl = '<?php echo esc_url(admin_url('admin-ajax.php')); ?>';
-
-            fetch(ajaxUrl, {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest'
-                }
-            })
-            .then(function(res) { return res.json(); })
+            trvPost(formData)
             .then(function(data) {
                 confirmCancelBtn.disabled = false;
                 confirmCancelBtn.textContent = '<?php echo esc_js(__('Confirm Cancellation', 'tourivo')); ?>';

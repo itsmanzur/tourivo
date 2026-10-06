@@ -17,6 +17,11 @@ require_once __DIR__ . '/Unit/ClientIpTest.php';
 require_once __DIR__ . '/Unit/DateValidationTest.php';
 
 // Load Integration tests
+require_once __DIR__ . '/Integration/ContainerWiringTest.php';
+require_once __DIR__ . '/Integration/InventoryHoldTest.php';
+require_once __DIR__ . '/Integration/BookingHygieneTest.php';
+require_once __DIR__ . '/Integration/MediumFixesTest.php';
+require_once __DIR__ . '/Integration/LowFixesTest.php';
 require_once __DIR__ . '/Integration/BookingEngineTest.php';
 require_once __DIR__ . '/Integration/BookingStatusTransitionTest.php';
 require_once __DIR__ . '/Integration/ConcurrencyOverbookingTest.php';
@@ -38,6 +43,11 @@ $testClasses = [
     \Tourivo\Tests\Unit\MoneyTest::class,
     \Tourivo\Tests\Unit\ClientIpTest::class,
     \Tourivo\Tests\Unit\DateValidationTest::class,
+    \Tourivo\Tests\Integration\ContainerWiringTest::class,
+    \Tourivo\Tests\Integration\InventoryHoldTest::class,
+    \Tourivo\Tests\Integration\BookingHygieneTest::class,
+    \Tourivo\Tests\Integration\MediumFixesTest::class,
+    \Tourivo\Tests\Integration\LowFixesTest::class,
     \Tourivo\Tests\Integration\BookingEngineTest::class,
     \Tourivo\Tests\Integration\BookingStatusTransitionTest::class,
     \Tourivo\Tests\Integration\ConcurrencyOverbookingTest::class,

@@ -159,7 +159,13 @@ document.addEventListener('DOMContentLoaded', function () {
                                     quote.lines.forEach(line => {
                                         const row = document.createElement('div');
                                         row.className = 'breakdown-row';
-                                        row.innerHTML = `<span class="breakdown-desc">${line.title} (${line.quantity} × ${formatPrice(line.rate, symbol)})</span><span class="breakdown-val">${formatPrice(line.total, symbol)}</span>`;
+                                        const desc = document.createElement('span');
+                                        desc.className = 'breakdown-desc';
+                                        desc.textContent = `${line.title} (${line.quantity} × ${formatPrice(line.rate, symbol)})`;
+                                        const val = document.createElement('span');
+                                        val.className = 'breakdown-val';
+                                        val.textContent = formatPrice(line.total, symbol);
+                                        row.append(desc, val);
                                         breakdownItems.appendChild(row);
                                     });
                                 }

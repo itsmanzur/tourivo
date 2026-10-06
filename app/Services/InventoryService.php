@@ -54,6 +54,11 @@ class InventoryService
     {
         if ($itemType === 'tour') {
             $tour = new Tour($itemId);
+            if ($tour->getDailyCapacity() > 0) {
+                return $tour->getDailyCapacity();
+            }
+
+            // No explicit daily capacity configured: fall back to the group-size limit (legacy behaviour).
             return $tour->getMaxGuests() > 0 ? $tour->getMaxGuests() : 20;
         }
 
@@ -145,7 +150,8 @@ class InventoryService
         ?string $endDate = null,
         string $timeSlot = 'all_day',
         int $requestedCount = 1,
-        bool $enforceFuture = true
+        bool $enforceFuture = true,
+        ?string $holdToken = null
     ): array {
         $timeSlot = self::normalizeTimeSlot($timeSlot);
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
@@ -164,6 +170,16 @@ class InventoryService
             ];
         }
 
+        // A valid hold for exactly this selection is the caller's own reservation: don't count it against them.
+        $ownHoldSpots = 0;
+        $hold = $this->getHold($holdToken);
+        if ($hold !== null) {
+            $normalizedType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour';
+            if ($this->holdMatches($hold, $itemId, $normalizedType, $dates, $timeSlot, 1)) {
+                $ownHoldSpots = (int) $hold['count'];
+            }
+        }
+
         $minAvailableSpots = PHP_INT_MAX;
         $totalCalculatedPrice = 0.0;
         $allAvailable = true;
@@ -176,7 +192,7 @@ class InventoryService
             $reserved = $record ? (int) $record->reserved_count : 0;
             $status   = $record ? $record->status : 'available';
 
-            $spotsLeft = max(0, $capacity - $booked - $reserved);
+            $spotsLeft = max(0, $capacity - $booked - max(0, $reserved - $ownHoldSpots));
             if ($spotsLeft < $minAvailableSpots) {
                 $minAvailableSpots = $spotsLeft;
             }
@@ -271,6 +287,57 @@ class InventoryService
     }
 
     /**
+     * Option-name prefix under which checkout holds are persisted.
+     *
+     * Holds live in a dedicated, per-token option (never autoloaded) instead of a transient so the
+     * reserved spots can always be released exactly, even if the object cache is flushed.
+     */
+    public const HOLD_OPTION_PREFIX = 'tourivo_hold_';
+
+    /**
+     * Default checkout hold lifetime in minutes.
+     */
+    public const HOLD_TTL_MINUTES = 15;
+
+    /**
+     * Resolve a hold token to its stored, still-valid hold data.
+     *
+     * @param string|null $holdToken
+     * @return array<string, mixed>|null
+     */
+    public function getHold(?string $holdToken): ?array
+    {
+        if (empty($holdToken) || !str_starts_with($holdToken, 'trv_hold_')) {
+            return null;
+        }
+
+        $data = get_option(self::HOLD_OPTION_PREFIX . $holdToken, false);
+        if (!is_array($data) || (int) ($data['expires_at'] ?? 0) <= time()) {
+            return null;
+        }
+
+        return $data;
+    }
+
+    /**
+     * Whether a hold was issued for exactly this item, dates and slot and covers at least $count spots.
+     *
+     * A token is only a capability for the reservation it was issued for; presenting it for any other
+     * item/date/quantity must never unlock the "skip capacity check" commit path.
+     *
+     * @param array<string, mixed> $hold
+     * @param array<string>        $dates
+     */
+    protected function holdMatches(array $hold, int $itemId, string $itemType, array $dates, string $timeSlot, int $count): bool
+    {
+        return (int) ($hold['item_id'] ?? 0) === $itemId
+            && (string) ($hold['item_type'] ?? '') === $itemType
+            && (string) ($hold['time_slot'] ?? '') === $timeSlot
+            && array_values((array) ($hold['dates'] ?? [])) === array_values($dates)
+            && (int) ($hold['count'] ?? 0) >= $count;
+    }
+
+    /**
      * Hold spots during checkout with unique hold token.
      *
      * @param int         $itemId
@@ -280,6 +347,8 @@ class InventoryService
      * @param string      $timeSlot
      * @param int         $count
      * @param int         $ttlMinutes
+     * @param bool        $enforceFuture
+     * @param string      $owner Opaque requester key (e.g. hashed IP), stored for abuse tracking.
      * @return string|false Hold token or false
      */
     public function holdInventory(
@@ -289,9 +358,12 @@ class InventoryService
         ?string $endDate = null,
         string $timeSlot = 'all_day',
         int $count = 1,
-        int $ttlMinutes = 15,
-        bool $enforceFuture = true
+        int $ttlMinutes = self::HOLD_TTL_MINUTES,
+        bool $enforceFuture = true,
+        string $owner = ''
     ): string|false {
+        $this->maybeReleaseExpiredHolds();
+
         $timeSlot = self::normalizeTimeSlot($timeSlot);
         $itemType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour';
         $dates = $this->generateDateList($startDate, $endDate, $enforceFuture);
@@ -316,16 +388,15 @@ class InventoryService
         }
 
         $holdToken = 'trv_hold_' . bin2hex(random_bytes(16));
-        $holdData = [
+        update_option(self::HOLD_OPTION_PREFIX . $holdToken, [
             'item_id'    => $itemId,
             'item_type'  => $itemType,
             'dates'      => $dates,
             'time_slot'  => $timeSlot,
             'count'      => $count,
+            'owner'      => $owner,
             'expires_at' => time() + ($ttlMinutes * 60),
-        ];
-
-        set_transient($holdToken, $holdData, $ttlMinutes * 60);
+        ], false);
 
         return $holdToken;
     }
@@ -361,7 +432,9 @@ class InventoryService
         }
 
         $defaultCapacity = $this->getDefaultCapacity($itemId, $itemType);
-        $hasPriorHold = !empty($holdToken) && get_transient($holdToken) !== false;
+
+        $hold = $this->getHold($holdToken);
+        $hasPriorHold = $hold !== null && $this->holdMatches($hold, $itemId, $itemType, $dates, $timeSlot, $count);
 
         $committedDates = [];
         foreach ($dates as $date) {
@@ -376,8 +449,15 @@ class InventoryService
             $committedDates[] = $date;
         }
 
-        if ($hasPriorHold && !empty($holdToken)) {
-            delete_transient($holdToken);
+        if ($hasPriorHold && $hold !== null && !empty($holdToken)) {
+            // Hold covered more spots than were booked: give the surplus back immediately.
+            $surplus = (int) $hold['count'] - $count;
+            if ($surplus > 0) {
+                foreach ($dates as $date) {
+                    $this->repository->releaseSpots($itemId, $itemType, $date, $timeSlot, $surplus);
+                }
+            }
+            delete_option(self::HOLD_OPTION_PREFIX . $holdToken);
         }
 
         return true;
@@ -424,24 +504,91 @@ class InventoryService
      */
     public function releaseHold(string $holdToken): bool
     {
-        $data = get_transient($holdToken);
+        if (!str_starts_with($holdToken, 'trv_hold_')) {
+            return false;
+        }
+
+        $optionName = self::HOLD_OPTION_PREFIX . $holdToken;
+        $data = get_option($optionName, false);
         if (!is_array($data)) {
             return false;
         }
 
+        $this->releaseHoldData($data);
+        delete_option($optionName);
+
+        return true;
+    }
+
+    /**
+     * Give a hold's reserved spots back to the pool.
+     *
+     * @param array<string, mixed> $data
+     */
+    protected function releaseHoldData(array $data): void
+    {
         $itemId   = (int) ($data['item_id'] ?? 0);
         $itemType = (string) ($data['item_type'] ?? 'tour');
         $itemType = ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour';
-        $dates    = (array) ($data['dates'] ?? []);
         $timeSlot = (string) ($data['time_slot'] ?? 'all_day');
         $count    = (int) ($data['count'] ?? 1);
 
-        foreach ($dates as $date) {
-            $this->repository->releaseSpots($itemId, $itemType, $date, $timeSlot, $count);
+        foreach ((array) ($data['dates'] ?? []) as $date) {
+            $this->repository->releaseSpots($itemId, $itemType, (string) $date, $timeSlot, $count);
+        }
+    }
+
+    /**
+     * Release every expired hold, returning exactly the spots each one reserved.
+     *
+     * Unlike a blanket "zero all reserved counts" sweep this never touches holds that are still live.
+     *
+     * @return int Number of holds released.
+     */
+    public function releaseExpiredHolds(): int
+    {
+        global $wpdb;
+        if (!$wpdb) {
+            return 0;
         }
 
-        delete_transient($holdToken);
-        return true;
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+        $names = (array) $wpdb->get_col($wpdb->prepare(
+            "SELECT option_name FROM {$wpdb->options} WHERE option_name LIKE %s LIMIT 500",
+            $wpdb->esc_like(self::HOLD_OPTION_PREFIX) . '%'
+        ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+        $released = 0;
+        foreach ($names as $name) {
+            $name = (string) $name;
+            $data = get_option($name, false);
+            if (!is_array($data)) {
+                delete_option($name);
+                continue;
+            }
+            if ((int) ($data['expires_at'] ?? 0) > time()) {
+                continue;
+            }
+
+            $this->releaseHoldData($data);
+            delete_option($name);
+            $released++;
+        }
+
+        return $released;
+    }
+
+    /**
+     * Opportunistic, throttled expiry sweep so inventory frees up even if WP-Cron is slow or disabled.
+     */
+    protected function maybeReleaseExpiredHolds(): void
+    {
+        if (get_transient('trv_hold_sweep')) {
+            return;
+        }
+        set_transient('trv_hold_sweep', 1, 60);
+        $this->releaseExpiredHolds();
     }
 
     /**
@@ -538,6 +685,14 @@ class InventoryService
             return [
                 'success' => false,
                 'message' => __('Selected item was not found.', 'tourivo'),
+            ];
+        }
+
+        $expectedPostType = $itemType === 'tour' ? 'tourivo_tour' : 'tourivo_room';
+        if ($post->post_type !== $expectedPostType) {
+            return [
+                'success' => false,
+                'message' => __('Selected item does not match the given item type.', 'tourivo'),
             ];
         }
 

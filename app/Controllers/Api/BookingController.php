@@ -8,6 +8,7 @@ use Tourivo\Common\Abstracts\Controller;
 use Tourivo\Common\Container;
 use Tourivo\Services\BookingService;
 use Tourivo\Support\ClientIp;
+use Tourivo\Support\RateLimiter;
 use WP_Error;
 use WP_REST_Request;
 use WP_REST_Response;
@@ -61,18 +62,13 @@ class BookingController extends Controller
 
         // 2. IP-based Rate Limiting (5 requests per 10 minutes)
         $ip = ClientIp::get();
-        $rateLimitKey = 'trv_rl_booking_' . md5($ip);
-        $attempts = (int) get_transient($rateLimitKey);
-
-        if ($attempts >= 5) {
+        if (!RateLimiter::hit('trv_rl_booking_' . md5($ip), 5, 600)) {
             return new WP_Error(
                 'too_many_requests',
                 __('Too many booking requests submitted. Please wait a few minutes before trying again.', 'tourivo'),
                 ['status' => 429]
             );
         }
-
-        set_transient($rateLimitKey, $attempts + 1, 600); // 10 minutes
 
         // 3. Strict Whitelist of incoming public parameters (strip any injected privileged fields)
         $adults   = max(1, (int) ($rawParams['adults'] ?? 1));

@@ -53,6 +53,35 @@ class LogService
     }
 
     /**
+     * Action types whose free-text details can embed personal data (recipient addresses, cancellation
+     * reasons, staff notes) and must therefore be scrubbed when a booking is anonymized.
+     */
+    public const PII_ACTIONS = ['email_sent', 'email_failed', 'cancel_requested', 'internal_note'];
+
+    /**
+     * Replace the details of PII-bearing log entries of a booking with a neutral placeholder.
+     *
+     * The audit trail itself (that something happened, and when) is kept.
+     *
+     * @param int $bookingId
+     * @return void
+     */
+    public static function redactPersonalData(int $bookingId): void
+    {
+        global $wpdb;
+        $table = $wpdb->prefix . 'tourivo_logs';
+
+        $placeholders = implode(',', array_fill(0, count(self::PII_ACTIONS), '%s'));
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+        $wpdb->query($wpdb->prepare(
+            "UPDATE {$table} SET details = %s WHERE booking_id = %d AND action IN ({$placeholders})",
+            ...array_merge(['[redacted]', $bookingId], self::PII_ACTIONS)
+        ));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared
+    }
+
+    /**
      * Get timeline history and notes for a specific booking.
      *
      * @param int $bookingId
