@@ -15,6 +15,12 @@ parameters:
         - dist/*
         - bin/*
     checkMissingIterableValueType: false
+    ignoreErrors:
+        # WordPress core accepts more register_block_type() keys (title, category, icon, ...) than the
+        # php-stubs/wordpress-stubs array shape lists; the calls are valid.
+        -
+            message: '#^Parameter \#2 \$args of function register_block_type expects array#'
+            path: app/Blocks/BlockManager.php
     checkGenericClassInNonGenericObjectType: false
     # Constants defined by the plugin bootstrap / WordPress at runtime.
     bootstrapFiles:

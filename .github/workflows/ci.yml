@@ -180,6 +180,12 @@ jobs:
           vendor/bin/phpcs -q --report=full > phpcs-report.txt
           status=$?
           vendor/bin/phpcs -q --report=checkstyle | cs2pr --graceful-warnings
+          # Compact, annotation-sized digest of the errors (annotations are capped at ~10 per step).
+          enc() { sed ':a;N;$!ba;s/%/%25/g;s/\r//g;s/\n/%0A/g' "$1"; }
+          vendor/bin/phpcs -q --warning-severity=0 --report=source > phpcs-source.txt
+          vendor/bin/phpcs -q --warning-severity=0 --report=emacs | head -60 > phpcs-errors.txt
+          echo "::error title=PHPCS error sources::$(enc phpcs-source.txt)"
+          echo "::error title=PHPCS first errors::$(enc phpcs-errors.txt)"
           { echo '### PHPCS'; echo '```'; head -c 50000 phpcs-report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           exit $status
 
