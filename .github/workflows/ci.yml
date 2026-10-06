@@ -91,14 +91,13 @@ jobs:
         continue-on-error: ${{ matrix.allow_failure || false }}
 
   # ---------------------------------------------------------------------------
-  # Real MySQL: verifies the inventory table's unique key / upsert semantics that the
-  # mocked suite cannot prove (booking correctness depends on them).
-  # Advisory until it has been green on a few runs; remove continue-on-error then.
+  # Real MySQL concurrency: many parallel processes hammer the same inventory row and
+  # we assert that no seat is ever oversold, lost or duplicated. The mocked suite cannot
+  # prove this (it cannot reproduce gap-lock deadlocks or duplicate-key races).
   # ---------------------------------------------------------------------------
   mysql:
-    name: Real MySQL inventory checks
+    name: Real MySQL inventory concurrency
     runs-on: ubuntu-latest
-    continue-on-error: true
     services:
       mysql:
         image: mysql:8.0
@@ -120,17 +119,19 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: '8.2'
-          extensions: mbstring, intl, pdo, pdo_mysql
+          extensions: mbstring, intl, mysqli
           coverage: none
 
-      - name: Run MySQL availability verification
+      - name: Run inventory concurrency test
         env:
-          DB_HOST: 127.0.0.1:3306
+          DB_HOST: 127.0.0.1
+          DB_PORT: '3306'
           DB_NAME: tourivo_test
           DB_USER: root
           DB_PASSWORD: root
-          TABLE_PREFIX: wp_
-        run: php tests/manual/test_availability_real_mysql.php
+          RUNS: '5'
+          WORKERS: '12'
+        run: php tests/RealDb/run_inventory_concurrency.php
 
   # ---------------------------------------------------------------------------
   # Code standards & static analysis. Advisory (non-blocking) until the first green
@@ -238,15 +239,16 @@ jobs:
   ci-success:
     name: CI passed
     if: always()
-    needs: [syntax, test, package]
+    needs: [syntax, test, mysql, package]
     runs-on: ubuntu-latest
     steps:
       - name: Verify required jobs
         run: |
           echo "syntax:  ${{ needs.syntax.result }}"
           echo "test:    ${{ needs.test.result }}"
+          echo "mysql:   ${{ needs.mysql.result }}"
           echo "package: ${{ needs.package.result }}"
-          if [ "${{ needs.syntax.result }}" != "success" ] || [ "${{ needs.test.result }}" != "success" ] || [ "${{ needs.package.result }}" != "success" ]; then
+          if [ "${{ needs.syntax.result }}" != "success" ] || [ "${{ needs.test.result }}" != "success" ] || [ "${{ needs.mysql.result }}" != "success" ] || [ "${{ needs.package.result }}" != "success" ]; then
             echo "::error::A required job failed."
             exit 1
           fi
