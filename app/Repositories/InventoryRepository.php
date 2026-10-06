@@ -226,6 +226,32 @@ class InventoryRepository
     protected const WRITE_ATTEMPTS = 3;
 
     /**
+     * Make sure the (item, date, slot) row exists, outside any transaction.
+     *
+     * Locking a *missing* row with SELECT ... FOR UPDATE takes a gap lock; when many requests do that at once
+     * and then INSERT, InnoDB resolves the resulting lock cycle by killing all but one of them, so under load
+     * customers would be turned away although seats remain. Creating the row first with a single autocommit
+     * INSERT IGNORE (no-op if it exists) means every later FOR UPDATE locks one existing record and the
+     * transactions simply queue up.
+     *
+     * @return void
+     */
+    protected function ensureRow(int $itemId, string $itemType, string $date, string $timeSlot, int $defaultCapacity): void
+    {
+        $this->db->query($this->db->prepare(
+            "INSERT IGNORE INTO {$this->table} 
+                (item_id, item_type, event_date, time_slot, total_capacity, booked_count, reserved_count, status, created_at, updated_at)
+             VALUES 
+                (%d, %s, %s, %s, %d, 0, 0, 'available', NOW(), NOW())",
+            $itemId,
+            $itemType,
+            $date,
+            $timeSlot,
+            $defaultCapacity
+        ));
+    }
+
+    /**
      * Atomically reserve inventory spots (Temporary Checkout Hold).
      *
      * @param int    $itemId
@@ -238,6 +264,10 @@ class InventoryRepository
      */
     public function reserveSpots(int $itemId, string $itemType, string $date, string $timeSlot, int $count, int $defaultCapacity): bool
     {
+        if ($count <= $defaultCapacity) {
+            $this->ensureRow($itemId, $itemType, $date, $timeSlot, $defaultCapacity);
+        }
+
         for ($attempt = 0; $attempt < self::WRITE_ATTEMPTS; $attempt++) {
             $this->db->query('START TRANSACTION');
 
@@ -326,6 +356,10 @@ class InventoryRepository
         int $defaultCapacity,
         bool $hasPriorHold = true
     ): bool {
+        if ($count <= $defaultCapacity) {
+            $this->ensureRow($itemId, $itemType, $date, $timeSlot, $defaultCapacity);
+        }
+
         for ($attempt = 0; $attempt < self::WRITE_ATTEMPTS; $attempt++) {
             $this->db->query('START TRANSACTION');
 

@@ -131,7 +131,13 @@ jobs:
           DB_PASSWORD: root
           RUNS: '5'
           WORKERS: '12'
-        run: php tests/RealDb/run_inventory_concurrency.php
+        run: |
+          set +e
+          set -o pipefail
+          php tests/RealDb/run_inventory_concurrency.php | tee concurrency-report.txt
+          status=$?
+          { echo '### Inventory concurrency'; echo '```'; head -c 50000 concurrency-report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
 
   # ---------------------------------------------------------------------------
   # Code standards & static analysis. Advisory (non-blocking) until the first green
@@ -151,7 +157,7 @@ jobs:
           php-version: '8.2'
           extensions: mbstring, intl
           coverage: none
-          tools: composer:v2
+          tools: composer:v2, cs2pr
 
       - name: Get Composer Cache Directory
         id: composer-cache
@@ -169,7 +175,13 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run PHPCS
-        run: composer lint
+        run: |
+          set +e
+          vendor/bin/phpcs -q --report=full > phpcs-report.txt
+          status=$?
+          vendor/bin/phpcs -q --report=checkstyle | cs2pr --graceful-warnings
+          { echo '### PHPCS'; echo '```'; head -c 50000 phpcs-report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
 
   analyse:
     name: Static Analysis (PHPStan)
@@ -203,7 +215,13 @@ jobs:
         run: composer install --prefer-dist --no-progress --no-interaction
 
       - name: Run PHPStan
-        run: composer analyse
+        run: |
+          set +e
+          vendor/bin/phpstan analyse --no-progress --error-format=table > phpstan-report.txt
+          status=$?
+          vendor/bin/phpstan analyse --no-progress --error-format=github
+          { echo '### PHPStan'; echo '```'; head -c 50000 phpstan-report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
 
   # ---------------------------------------------------------------------------
   # Release package: build the distributable zip and keep it as a downloadable artifact.

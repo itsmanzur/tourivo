@@ -135,6 +135,27 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     return 1;
                 }
 
+                // 0. INSERT IGNORE INTO wp_tourivo_inventories: create the row only if it does not exist yet
+                if (stripos($trimmed, 'INSERT IGNORE INTO') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
+                    if (preg_match("/VALUES\s*\(\s*(\d+)\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*'([^']+)'\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*'([^']+)'/is", $trimmed, $m)) {
+                        $key = "{$m[1]}_{$m[3]}";
+                        // While the "lose the first-row race" hook is armed, ensureRow() is a no-op so the fallback
+                        // INSERT path (and its retry) is what gets exercised.
+                        if (isset($this->inventories[$key]) || !empty($GLOBALS['tourivo_mock_fail_next_inventory_insert'])) {
+                            $this->rows_affected = 0;
+                            return 0;
+                        }
+                        $this->inventories[$key] = [
+                            'id' => count($this->inventories) + 1, 'item_id' => (int) $m[1], 'item_type' => $m[2],
+                            'event_date' => $m[3], 'time_slot' => $m[4], 'total_capacity' => (int) $m[5],
+                            'booked_capacity' => (int) $m[6], 'booked_count' => (int) $m[6], 'reserved_count' => (int) $m[7],
+                            'price_override' => null, 'status' => $m[8],
+                        ];
+                        $this->rows_affected = 1;
+                        return 1;
+                    }
+                }
+
                 // 1. INSERT INTO wp_tourivo_inventories
                 if (stripos($trimmed, 'INSERT INTO') !== false && stripos($trimmed, 'tourivo_inventories') !== false) {
                     // Test hook: simulate losing the "first row for this date" race (a concurrent writer inserts the

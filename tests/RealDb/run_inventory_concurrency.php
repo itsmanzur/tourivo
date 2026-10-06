@@ -138,6 +138,14 @@ function fire(array $workers, int $itemId, string $date, int $defaultCapacity, a
     return ['oks' => $oks, 'okByAction' => $byAction, 'errors' => $errors, 'rows' => $rows];
 }
 
+/** Surface a failure as a GitHub Actions annotation (readable without log access) when running in CI. */
+function annotate(string $message): void
+{
+    if (getenv('GITHUB_ACTIONS')) {
+        echo '::error title=Inventory concurrency::' . str_replace(["\r", "\n", '%'], ['', ' ', '%25'], substr($message, 0, 900)) . "\n";
+    }
+}
+
 $failures = [];
 $deadlocks = 0;
 $date = gmdate('Y-m-d', strtotime('+30 days'));
@@ -237,6 +245,7 @@ foreach ($scenarios as $name => $s) {
             if (!$passed) {
                 $scenarioFailed = true;
                 $failures[] = "{$name} (run {$run}): {$label} — oks={$result['oks']} rows=" . json_encode($result['rows']);
+                annotate(end($failures));
             }
         }
     }
