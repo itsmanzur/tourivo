@@ -188,7 +188,7 @@ abstract class MetaBox
     {
         $file = untrailingslashit(TOURIVO_PLUGIN_DIR) . '/views/' . ltrim($viewPath, '/');
         if (file_exists($file)) {
-            extract($data, EXTR_SKIP);
+            extract($data, EXTR_SKIP); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- template scope, EXTR_SKIP
             include $file;
         }
     }

@@ -12,11 +12,12 @@ parameters:
     scanDirectories:
         - vendor/php-stubs/wp-cli-stubs
     excludePaths:
-        - tests/*
-        - vendor/*
-        - node_modules/*
-        - dist/*
-        - bin/*
+        analyse:
+            - tests/*
+            - vendor/*
+            - node_modules/*
+            - dist/*
+            - bin/*
     checkMissingIterableValueType: false
     ignoreErrors:
         # WordPress core accepts more register_block_type() keys (title, category, icon, ...) than the

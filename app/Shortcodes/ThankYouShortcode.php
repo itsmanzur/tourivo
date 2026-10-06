@@ -97,7 +97,7 @@ class ThankYouShortcode
     {
         // 1. Prevent search indexing and intermediate proxy/CDN caching
         if (!defined('DONOTCACHEPAGE')) {
-            define('DONOTCACHEPAGE', true);
+            define('DONOTCACHEPAGE', true); // phpcs:ignore WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedConstantFound -- cache-plugin convention
         }
         nocache_headers();
 

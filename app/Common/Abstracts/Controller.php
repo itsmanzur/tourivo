@@ -86,7 +86,7 @@ abstract class Controller
             return '';
         }
 
-        extract($args, EXTR_SKIP);
+        extract($args, EXTR_SKIP); // phpcs:ignore WordPress.PHP.DontExtract.extract_extract -- template scope, EXTR_SKIP
 
         ob_start();
         include $template;
