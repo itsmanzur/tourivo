@@ -42,9 +42,8 @@
     <rule ref="WordPress.DB"/>
     <rule ref="WordPress.WP"/>
     <rule ref="WordPress.PHP">
-        <!-- Pure style (Yoda conditions, short ternaries): enforced by review, not by the build. -->
+        <!-- Pure style (Yoda conditions): enforced by review, not by the build. -->
         <exclude name="WordPress.PHP.YodaConditions"/>
-        <exclude name="WordPress.PHP.DisallowShortTernary"/>
     </rule>
 
     <!-- Warnings are advisory: only errors fail the build. -->

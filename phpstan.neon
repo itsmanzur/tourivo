@@ -8,6 +8,9 @@ parameters:
         - app
         - tourivo.php
         - uninstall.php
+    # WP-CLI is only present when running under wp-cli; analyse against its stubs.
+    scanDirectories:
+        - vendor/php-stubs/wp-cli-stubs
     excludePaths:
         - tests/*
         - vendor/*
