@@ -90,6 +90,8 @@ class BookingLookupShortcode
         ]);
     }
 
+    // phpcs:disable WordPress.Security.NonceVerification.Missing -- every request-handling method up to the matching enable is gated by hasValidNonce() (wp_verify_nonce).
+
     /**
      * Require a valid lookup nonce. Cached pages obtain a fresh one through `tourivo_get_lookup_nonce`,
      * so a missing or stale token is always rejected with the machine-readable `nonce_expired` code.
@@ -202,6 +204,8 @@ class BookingLookupShortcode
             wp_send_json_error($res, $res['code'] ?? 400);
         }
     }
+
+    // phpcs:enable WordPress.Security.NonceVerification.Missing
 
     /**
      * Core business logic for processing cancellation request or direct self-cancellation.

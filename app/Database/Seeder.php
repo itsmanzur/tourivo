@@ -683,7 +683,7 @@ class Seeder
     protected static function insertDemoPost(array $args): int
     {
         $postId = wp_insert_post($args);
-        if ($postId && !is_wp_error($postId)) {
+        if ($postId > 0) {
             update_post_meta((int) $postId, '_tourivo_demo', '1');
             return (int) $postId;
         }

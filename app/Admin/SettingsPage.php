@@ -41,6 +41,16 @@ class SettingsPage
     }
 
     /**
+     * Accept only simple CSS lengths (12px, 0.5rem, 50%) for the corner radius; otherwise the 8px default.
+     */
+    protected static function borderRadius(string $value): string
+    {
+        $value = trim($value);
+
+        return preg_match('/^\d{1,3}(?:\.\d{1,2})?(?:px|rem|em|%)$/', $value) === 1 ? $value : '8px';
+    }
+
+    /**
      * Keep a three-letter ISO-style code, otherwise fall back to the previously saved value.
      */
     protected static function sanitizeCurrencyCode(string $raw, string $fallback): string
@@ -81,7 +91,7 @@ class SettingsPage
         $currentSettings = get_option('tourivo_settings', Config::getDefaults());
 
         $newSettings = [
-            'currency'                => self::sanitizeCurrencyCode(wp_unslash($_POST['currency'] ?? ''), (string) ($currentSettings['currency'] ?? 'USD')),
+            'currency'                => self::sanitizeCurrencyCode(sanitize_text_field(wp_unslash($_POST['currency'] ?? '')), (string) ($currentSettings['currency'] ?? 'USD')),
             'currency_symbol'         => sanitize_text_field(wp_unslash($_POST['currency_symbol'] ?? '$')),
             'currency_position'       => self::choice('currency_position', ['left', 'right', 'left_space', 'right_space'], 'left'),
             'number_of_decimals'      => min(4, absint($_POST['number_of_decimals'] ?? 2)),
@@ -147,7 +157,7 @@ class SettingsPage
             'primary_color'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_color'] ?? '#0d9488'))) ?: '#0d9488',
             'primary_hover'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_hover'] ?? '#0f766e'))) ?: '#0f766e',
             'accent_color'               => sanitize_hex_color(wp_unslash((string)($_POST['accent_color'] ?? '#f59e0b'))) ?: '#f59e0b',
-            'border_radius'              => preg_match('/^\d{1,3}(?:px|rem|em|%)$/', trim((string) wp_unslash($_POST['border_radius'] ?? ''))) ? trim((string) wp_unslash($_POST['border_radius'])) : '8px',
+            'border_radius'              => self::borderRadius(sanitize_text_field(wp_unslash($_POST['border_radius'] ?? ''))),
             'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
             'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
             'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
@@ -498,7 +508,7 @@ class SettingsPage
                                     wp_dropdown_pages([
                                         'name'              => 'thankyou_page_id',
                                         'id'                => 'thankyou_page_id',
-                                        'selected'          => $thankyouPageId,
+                                        'selected'          => absint($thankyouPageId),
                                         'show_option_none'  => esc_html__('— Select Page with [tourivo_thank_you] —', 'tourivo'),
                                         'option_none_value' => '0',
                                     ]);
@@ -734,7 +744,7 @@ class SettingsPage
                                     wp_dropdown_pages([
                                         'name'              => 'lookup_page_id',
                                         'id'                => 'lookup_page_id',
-                                        'selected'          => $lookupPageId,
+                                        'selected'          => absint($lookupPageId),
                                         'show_option_none'  => esc_html__('— Select Page with [tourivo_booking_lookup] —', 'tourivo'),
                                         'option_none_value' => '0',
                                     ]);
@@ -932,7 +942,7 @@ class SettingsPage
                                     wp_dropdown_pages([
                                         'name'              => 'privacy_policy_page_id',
                                         'id'                => 'privacy_policy_page_id',
-                                        'selected'          => $privacyPolicyPageId,
+                                        'selected'          => absint($privacyPolicyPageId),
                                         'show_option_none'  => esc_html__('— Use WordPress Core Privacy Policy Page —', 'tourivo'),
                                         'option_none_value' => '0',
                                     ]);

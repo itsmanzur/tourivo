@@ -66,6 +66,13 @@
         </properties>
     </rule>
 
+    <!-- Templates/views are included inside functions (tourivo_get_template, loadView), so their local
+         variables are not globals and need no plugin prefix. -->
+    <rule ref="WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound">
+        <exclude-pattern>*/templates/*</exclude-pattern>
+        <exclude-pattern>*/views/*</exclude-pattern>
+    </rule>
+
     <!-- Text Domain Verification -->
     <rule ref="WordPress.WP.I18n">
         <properties>

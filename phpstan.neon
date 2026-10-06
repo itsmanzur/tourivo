@@ -20,6 +20,14 @@ parameters:
             - bin/*
     checkMissingIterableValueType: false
     ignoreErrors:
+        # Elementor classes only exist when Elementor is active (the plugin guards for it at runtime).
+        -
+            message: '#Elementor.Elements_Manager#'
+            path: app/Elementor/ElementorManager.php
+        # Singleton trait: subclasses keep the (protected) constructor signature by convention.
+        -
+            message: '#^Unsafe usage of new static\(\)#'
+            path: app/Common/Traits/Singleton.php
         # WordPress core accepts more register_block_type() keys (title, category, icon, ...) than the
         # php-stubs/wordpress-stubs array shape lists; the calls are valid.
         -

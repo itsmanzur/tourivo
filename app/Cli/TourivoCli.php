@@ -119,7 +119,6 @@ class TourivoCli extends WP_CLI_Command
                 $id = isset($args[1]) ? (int) $args[1] : 0;
                 if ($id <= 0) {
                     WP_CLI::error(__('Please provide a valid numeric booking ID. Example: wp tourivo booking get 12', 'tourivo'));
-                    return;
                 }
 
                 // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
@@ -127,7 +126,6 @@ class TourivoCli extends WP_CLI_Command
                 if (!$booking) {
                     /* translators: %d: Numeric booking ID */
                     WP_CLI::error(sprintf(__('Booking #%d not found.', 'tourivo'), $id));
-                    return;
                 }
 
                 $format = $assocArgs['format'] ?? 'table';
@@ -148,7 +146,6 @@ class TourivoCli extends WP_CLI_Command
 
                 if ($id <= 0 || empty($newStatus)) {
                     WP_CLI::error(__('Usage: wp tourivo booking set-status <id> <status>', 'tourivo'));
-                    return;
                 }
 
                 $bookingService = \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\BookingService::class);
@@ -164,7 +161,6 @@ class TourivoCli extends WP_CLI_Command
             default:
                 /* translators: %s: Action name */
                 WP_CLI::error(sprintf(__('Unknown booking action "%s". Use list, get, or set-status.', 'tourivo'), $action));
-                break;
         }
     }
 
@@ -225,7 +221,6 @@ class TourivoCli extends WP_CLI_Command
         $itemId = isset($args[0]) ? (int) $args[0] : 0;
         if ($itemId <= 0) {
             WP_CLI::error(__('Please specify a valid item ID. Example: wp tourivo inventory 15', 'tourivo'));
-            return;
         }
 
         $postType = get_post_type($itemId);
