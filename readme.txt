@@ -117,12 +117,17 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 == Changelog ==
 
 = 1.3.0 =
-* **Asynchronous Webhook Delivery:** Webhooks now queue asynchronously via Action Scheduler or WP-Cron with exponential backoff retries and SHA256 HMAC signature verification.
+* **Pricing Engine & Date Overrides:** Centralized pricing calculations with date-specific overrides, child rates, infant options, and flexible tax configurations.
+* **Complete Email Notification Suite:** Multi-template responsive HTML emails with background queues, client deduplication, plain-text fallback, and admin test controls.
+* **Post-Booking Experience & Thank-You Page:** Dedicated `[tourivo_thank_you]` page, HMAC token security without exposing PII, and downloadable ICS calendar invites.
+* **Privacy & GDPR Compliance:** Explicit user consent checkboxes with version hash tracking, WordPress Core Personal Data Exporter & Eraser integration, and automated retention cleanup.
+* **Inventory Hold & Concurrency Hardening:** Real-MySQL row-level locking, automated temporary hold expiration, and rate-limiting anti-abuse protections.
+* **Asynchronous Webhook Delivery:** Webhooks queue asynchronously via Action Scheduler or WP-Cron with exponential backoff retries and SHA256 HMAC signature verification.
 * **Atomic Booking Status Transitions:** Unified `BookingService::changeStatus()` with atomic conditional SQL updates and concurrency-safe inventory rollback across Admin AJAX and WP-CLI.
 * **Dynamic Schema & SEO Availability:** Real-time 90-day inventory calculation for Schema.org (`InStock` / `SoldOut`) with transient caching and Yoast/Rank Math compatibility.
 * **Lookup & Voucher URL Fixes:** Clean raw URL parsing and safe client-side textContent rendering for booking lookup and vouchers.
-* **Seeder Robustness & Rollback:** Demo seeder now supports clean rollbacks on insertion failure and smart metadata backfilling.
-* **100% Complete Bengali Localization:** Bundled complete Bengali translation (1,017 strings) with self-hosted Hind Siliguri WOFF2 typography and WP.org translation precedence.
+* **Seeder Robustness & Rollback:** Demo seeder supports clean rollbacks on insertion failure and smart metadata backfilling.
+* **Bengali Localization Support:** Comprehensive Bengali translation pack with self-hosted Hind Siliguri typography and WP.org translation precedence.
 
 = 1.2.0 =
 * Hardened ClientIp anti-spoofing logic for Cloudflare edge verification and reverse proxies.
