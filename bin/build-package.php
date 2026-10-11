@@ -35,8 +35,9 @@ foreach ($iterator as $file) {
     if ($file->isFile() && $file->getExtension() === 'php') {
         $filePath = $file->getPathname();
         
-        // Skip dist directory
-        if (str_contains($filePath, DIRECTORY_SEPARATOR . 'dist' . DIRECTORY_SEPARATOR)) {
+        // Skip dist and vendor directories
+        if (str_contains($filePath, DIRECTORY_SEPARATOR . 'dist' . DIRECTORY_SEPARATOR) ||
+            str_contains($filePath, DIRECTORY_SEPARATOR . 'vendor' . DIRECTORY_SEPARATOR)) {
             continue;
         }
 

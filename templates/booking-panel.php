@@ -192,7 +192,7 @@ if ($tourivoItemType === 'tour') {
                 <div class="field-row tourivo-consent-row" style="margin-top:10px; display:flex; align-items:flex-start; gap:8px;">
                     <input type="checkbox" name="consent" id="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required style="margin-top:3px;">
                     <label for="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" style="font-size:13px; line-height:1.4;">
-                        <?php echo \Tourivo\Support\Privacy::getRenderedConsentLabel(); ?> <span class="required" style="color:#ef4444;">*</span>
+                        <?php echo wp_kses_post(\Tourivo\Support\Privacy::getRenderedConsentLabel()); ?> <span class="required" style="color:#ef4444;">*</span>
                     </label>
                 </div>
             <?php endif; ?>
@@ -259,7 +259,7 @@ if ($tourivoItemType === 'tour') {
                         <div class="inquiry-field-row tourivo-consent-row" style="display:flex; align-items:flex-start; gap:8px; margin-top:8px;">
                             <input type="checkbox" name="consent" id="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required style="margin-top:3px;">
                             <label for="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" style="font-size:13px; line-height:1.4;">
-                                <?php echo \Tourivo\Support\Privacy::getRenderedConsentLabel(); ?> <span class="required" style="color:#ef4444;">*</span>
+                                <?php echo wp_kses_post(\Tourivo\Support\Privacy::getRenderedConsentLabel()); ?> <span class="required" style="color:#ef4444;">*</span>
                             </label>
                         </div>
                     <?php endif; ?>

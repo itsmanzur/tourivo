@@ -1,6 +1,7 @@
 # Composer
 /vendor/
 composer.phar
+composer.lock
 
 # Node & Frontend
 /node_modules/

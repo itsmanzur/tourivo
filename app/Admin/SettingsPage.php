@@ -957,7 +957,7 @@ class SettingsPage
                                     wp_dropdown_pages([
                                         'name'              => 'terms_page_id',
                                         'id'                => 'terms_page_id',
-                                        'selected'          => $termsPageId,
+                                        'selected'          => absint($termsPageId),
                                         'show_option_none'  => esc_html__('— Select Terms and Conditions Page —', 'tourivo'),
                                         'option_none_value' => '0',
                                     ]);
