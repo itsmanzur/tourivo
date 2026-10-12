@@ -21,6 +21,7 @@ use Tourivo\Services\ExportService;
 use Tourivo\Services\InquiryService;
 use Tourivo\Services\InventoryService;
 use Tourivo\Services\LogService;
+use Tourivo\Services\PaymentService;
 use Tourivo\Admin\ReportsPage;
 use Tourivo\Services\ReportingService;
 use Tourivo\Shortcodes\BookingLookupShortcode;
@@ -43,6 +44,7 @@ class AdminServiceProvider extends ServiceProvider
     {
         $this->container->singleton(ExportService::class, static fn (): ExportService => new ExportService());
         $this->container->singleton(ReportingService::class, static fn (): ReportingService => new ReportingService());
+        $this->container->singleton(PaymentService::class, static fn (): PaymentService => new PaymentService());
     }
 
     public function boot(): void
@@ -50,6 +52,10 @@ class AdminServiceProvider extends ServiceProvider
         // Public & Admin AJAX for Inquiry submission
         add_action('wp_ajax_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
         add_action('wp_ajax_nopriv_tourivo_submit_inquiry', [$this, 'handleSubmitInquiry']);
+
+        // Public & Admin AJAX for Customer Transaction Reference Submission
+        add_action('wp_ajax_tourivo_submit_payment_reference', [$this, 'handleSubmitPaymentReference']);
+        add_action('wp_ajax_nopriv_tourivo_submit_payment_reference', [$this, 'handleSubmitPaymentReference']);
 
         // Printable Voucher & Calendar .ics handlers (Admin & Public with token)
         add_action('admin_post_tourivo_print_voucher', [$this, 'handlePrintVoucher']);
@@ -90,6 +96,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('wp_ajax_tourivo_update_availability', [$this, 'handleUpdateAvailability']);
         $this->addAction('wp_ajax_tourivo_retention_dry_run', [$this, 'handleRetentionDryRun']);
         $this->addAction('wp_ajax_tourivo_get_export_preview', [$this, 'handleExportPreview']);
+        $this->addAction('wp_ajax_tourivo_record_payment', [$this, 'handleRecordPayment']);
 
         // Setup Wizard AJAX Handlers
         $this->addAction('wp_ajax_tourivo_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
@@ -1023,6 +1030,80 @@ class AdminServiceProvider extends ServiceProvider
             : new ReportingService();
 
         $reportingService->handleExportRequest();
+    }
+
+    /**
+     * AJAX handler to record received payment by admin.
+     *
+     * @return void
+     */
+    public function handleRecordPayment(): void
+    {
+        check_ajax_referer('tourivo_admin_nonce', 'nonce');
+
+        if (!current_user_can('manage_tourivo_bookings')) {
+            wp_send_json_error(['message' => __('Unauthorized permission to record payments.', 'tourivo')], 403);
+        }
+
+        $bookingId = absint($_POST['booking_id'] ?? 0);
+        if ($bookingId <= 0) {
+            wp_send_json_error(['message' => __('Invalid booking ID.', 'tourivo')], 400);
+        }
+
+        /** @var PaymentService $paymentService */
+        $paymentService = Container::getInstance()->get(PaymentService::class);
+        $result = $paymentService->recordPayment($bookingId, [
+            'amount'         => isset($_POST['amount']) ? (float) sanitize_text_field(wp_unslash($_POST['amount'])) : null,
+            'payment_status' => sanitize_key(wp_unslash($_POST['payment_status'] ?? '')),
+            'payment_method' => sanitize_text_field(wp_unslash($_POST['payment_method'] ?? '')),
+            'transaction_id' => sanitize_text_field(wp_unslash($_POST['transaction_id'] ?? '')),
+            'auto_confirm'   => !empty($_POST['auto_confirm']),
+            'note'           => sanitize_textarea_field(wp_unslash($_POST['note'] ?? '')),
+        ]);
+
+        if (!empty($result['success'])) {
+            wp_send_json_success($result);
+        } else {
+            wp_send_json_error(['message' => $result['message']], 400);
+        }
+    }
+
+    /**
+     * AJAX handler for customer submitting transaction/deposit reference.
+     *
+     * @return void
+     */
+    public function handleSubmitPaymentReference(): void
+    {
+        // Accepts frontend nonce OR admin nonce for CSRF
+        $verified = check_ajax_referer('tourivo_frontend_nonce', 'nonce', false)
+            || check_ajax_referer('tourivo_admin_nonce', 'nonce', false);
+
+        if (!$verified) {
+            wp_send_json_error(['message' => __('Security verification failed. Please refresh the page.', 'tourivo')], 403);
+        }
+
+        $bookingCode   = sanitize_text_field(wp_unslash($_POST['booking_code'] ?? ''));
+        $transactionId = sanitize_text_field(wp_unslash($_POST['transaction_id'] ?? ''));
+        $token         = isset($_POST['token']) ? sanitize_text_field(wp_unslash($_POST['token'])) : null;
+        $customerEmail = isset($_POST['customer_email']) ? sanitize_email(wp_unslash($_POST['customer_email'])) : null;
+        $notes         = isset($_POST['notes']) ? sanitize_textarea_field(wp_unslash($_POST['notes'])) : null;
+
+        /** @var PaymentService $paymentService */
+        $paymentService = Container::getInstance()->get(PaymentService::class);
+        $result = $paymentService->submitTransactionReference(
+            $bookingCode,
+            $transactionId,
+            $token,
+            $customerEmail,
+            $notes
+        );
+
+        if (!empty($result['success'])) {
+            wp_send_json_success($result);
+        } else {
+            wp_send_json_error(['message' => $result['message']], 400);
+        }
     }
 }
 

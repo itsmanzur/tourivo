@@ -90,6 +90,16 @@ class Config
             'allow_cancel_requests' => true,
             'customer_self_cancel_hours' => 0, // 0 = disabled (request-only)
             'offline_payment_instructions' => '',
+            'bank_transfer_enabled'        => true,
+            'bank_name'                    => '',
+            'bank_account_name'            => '',
+            'bank_account_number'          => '',
+            'bank_iban'                    => '',
+            'bank_swift_routing'           => '',
+            'bank_branch'                  => '',
+            'bank_instructions'            => '',
+            'cash_on_arrival_enabled'      => true,
+            'cash_on_arrival_instructions' => '',
             // 1. Customer: Booking Received (Pending)
             'email_customer_booking_received_enabled'            => true,
             'email_customer_booking_received_subject'            => 'Your Booking Request Received #{booking_code} - {site_name}',

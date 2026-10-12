@@ -158,13 +158,114 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
                 </div>
             </div>
 
-            <!-- Offline Payment Box (if applicable) -->
-            <?php if (!empty($offlinePaymentInstructions) && $paymentStatus !== 'paid') : ?>
+            <!-- Offline Payment Details & Transaction Reference Submission -->
+            <?php
+            $isPaid = ($paymentStatus === 'paid');
+            $paymentMethod = (string) ($booking->payment_method ?? 'offline');
+            $paymentService = \Tourivo\Common\Container::getInstance()->has(\Tourivo\Services\PaymentService::class)
+                ? \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\PaymentService::class)
+                : new \Tourivo\Services\PaymentService();
+            ?>
+            <?php if (!$isPaid) : ?>
                 <div class="tourivo-offline-instructions-card">
-                    <h3 class="tourivo-instructions-title">🏦 <?php esc_html_e('Payment Instructions', 'tourivo'); ?></h3>
-                    <p class="tourivo-instructions-desc"><?php esc_html_e('Please complete your payment using your booking reference code as the payment description:', 'tourivo'); ?></p>
-                    <div class="tourivo-instructions-content">
-                        <?php echo nl2br(esc_html($offlinePaymentInstructions)); ?>
+                    <?php if ($paymentMethod === 'bank_transfer' || empty($paymentMethod) || $paymentMethod === 'offline') : ?>
+                        <?php echo $paymentService->getBankDetailsHtml(); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped ?>
+                    <?php endif; ?>
+
+                    <?php if ($paymentMethod === 'cash_on_arrival') : ?>
+                        <div class="tourivo-cash-card">
+                            <h4 style="margin: 0 0 8px; color: #1e293b;">💵 <?php esc_html_e('Cash on Arrival / Pay at Check-in', 'tourivo'); ?></h4>
+                            <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+                                <?php
+                                $cashNote = (string) \Tourivo\Config\Config::get('cash_on_arrival_instructions', '');
+                                echo !empty($cashNote)
+                                    ? nl2br(esc_html($cashNote))
+                                    : esc_html__('Your payment will be collected in cash or card upon arrival at our reception / tour counter.', 'tourivo');
+                                ?>
+                            </p>
+                        </div>
+                    <?php endif; ?>
+
+                    <!-- Transaction Reference Submission Form -->
+                    <div class="tourivo-submit-reference-box" style="margin-top: 18px; padding-top: 16px; border-top: 1px dashed #cbd5e1;">
+                        <h4 style="margin: 0 0 6px; font-size: 14.5px; color: #0f172a;">📝 <?php esc_html_e('Already completed your transfer or deposit?', 'tourivo'); ?></h4>
+                        <p style="margin: 0 0 12px; font-size: 13px; color: #64748b;">
+                            <?php esc_html_e('Submit your deposit slip, bank transaction reference, or mobile banking TrxID below for fast verification.', 'tourivo'); ?>
+                        </p>
+
+                        <?php if (!empty($booking->transaction_id)) : ?>
+                            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #166534;">
+                                <strong>✓ <?php esc_html_e('Submitted Reference:', 'tourivo'); ?></strong>
+                                <code><?php echo esc_html($booking->transaction_id); ?></code>
+                                <span style="font-size: 12px; margin-left: 6px; color: #15803d;"><?php esc_html_e('(Under review by accounts team)', 'tourivo'); ?></span>
+                            </div>
+                        <?php else : ?>
+                            <form id="tourivo-submit-ref-form" style="display: flex; flex-direction: column; gap: 8px;">
+                                <input type="hidden" name="action" value="tourivo_submit_payment_reference">
+                                <input type="hidden" name="nonce" value="<?php echo esc_attr(wp_create_nonce('tourivo_frontend_nonce')); ?>">
+                                <input type="hidden" name="booking_code" value="<?php echo esc_attr($booking->booking_code); ?>">
+                                <?php if (!empty($token)) : ?>
+                                    <input type="hidden" name="token" value="<?php echo esc_attr($token); ?>">
+                                <?php endif; ?>
+                                <input type="hidden" name="customer_email" value="<?php echo esc_attr($booking->customer_email); ?>">
+
+                                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                                    <input type="text" name="transaction_id" id="tourivo-ref-input" required placeholder="<?php esc_attr_e('Transaction Reference / Slip # / TrxID *', 'tourivo'); ?>" style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px;">
+                                    <button type="submit" id="tourivo-submit-ref-btn" class="button button-primary" style="background: var(--trv-primary, #0d9488); border-color: var(--trv-primary, #0d9488); color: #fff; padding: 8px 18px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                                        <?php esc_html_e('Submit Reference', 'tourivo'); ?>
+                                    </button>
+                                </div>
+                                <div id="tourivo-ref-alert" style="display: none; padding: 8px 12px; border-radius: 6px; font-size: 13px; margin-top: 4px;"></div>
+                            </form>
+                            <script>
+                            document.addEventListener('DOMContentLoaded', function() {
+                                var form = document.getElementById('tourivo-submit-ref-form');
+                                var btn = document.getElementById('tourivo-submit-ref-btn');
+                                var alertEl = document.getElementById('tourivo-ref-alert');
+                                if (!form) return;
+
+                                form.addEventListener('submit', function(e) {
+                                    e.preventDefault();
+                                    btn.disabled = true;
+                                    btn.textContent = 'Submitting...';
+                                    alertEl.style.display = 'none';
+
+                                    var fd = new FormData(form);
+                                    var ajaxEndpoint = (window.tourivoData && window.tourivoData.ajaxUrl) ? window.tourivoData.ajaxUrl : <?php echo wp_json_encode(admin_url('admin-ajax.php')); ?>;
+
+                                    fetch(ajaxEndpoint, {
+                                        method: 'POST',
+                                        body: fd
+                                    })
+                                    .then(function(r) { return r.json(); })
+                                    .then(function(res) {
+                                        btn.disabled = false;
+                                        btn.textContent = <?php echo wp_json_encode(__('Submit Reference', 'tourivo')); ?>;
+                                        alertEl.style.display = 'block';
+
+                                        if (res && res.success) {
+                                            alertEl.style.background = '#dcfce7';
+                                            alertEl.style.color = '#15803d';
+                                            alertEl.textContent = res.data.message || 'Reference submitted successfully!';
+                                            setTimeout(function() { window.location.reload(); }, 1200);
+                                        } else {
+                                            alertEl.style.background = '#fee2e2';
+                                            alertEl.style.color = '#991b1b';
+                                            alertEl.textContent = (res && res.data && res.data.message) ? res.data.message : 'Submission failed. Please try again.';
+                                        }
+                                    })
+                                    .catch(function() {
+                                        btn.disabled = false;
+                                        btn.textContent = <?php echo wp_json_encode(__('Submit Reference', 'tourivo')); ?>;
+                                        alertEl.style.display = 'block';
+                                        alertEl.style.background = '#fee2e2';
+                                        alertEl.style.color = '#991b1b';
+                                        alertEl.textContent = 'Connection error. Please try again.';
+                                    });
+                                });
+                            });
+                            </script>
+                        <?php endif; ?>
                     </div>
                 </div>
             <?php endif; ?>

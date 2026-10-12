@@ -4,7 +4,7 @@ Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.4.2
+Stable tag: 1.4.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,13 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 
 == Changelog ==
 
+= 1.4.3 =
+* **Offline Payment Method Expansion (Bank Transfer & Cash on Arrival):** Added dedicated offline payment method configuration allowing tour operators and hoteliers to accept direct bank deposits and cash on arrival.
+* **Structured Bank Transfer Details:** Configurable bank fields including Bank Name, Account Name, Account Number, IBAN, SWIFT/Routing Code, Branch Name, and custom payment instructions rendered automatically on the booking confirmation (Thank You) page and customer emails.
+* **Customer Transaction Reference Submission:** Interactive AJAX-powered reference submission form on the Thank You page and reservation lookup, allowing travelers to submit wire/deposit transaction IDs and verification notes.
+* **Admin Payment Recording & Ledger Suite:** Added interactive payment recording modal in the Bookings Table allowing administrators to log received amounts, transaction IDs, payment dates, update payment status (`paid`, `partially_paid`, `refunded`, `pending`), track paid vs outstanding due balances, auto-confirm reservations, and append audit logs.
+* **Enhanced Frontend Booking Flow:** Added payment method radio selectors directly into the interactive booking panel with instant offline checkout support.
+
 = 1.4.2 =
 * **Admin Analytics, Sales & Occupancy Reports Hub:** Added dedicated Reports & Analytics dashboard (`tourivo-reports`) providing comprehensive business monitoring for site administrators and tour operators.
 * **Dynamic Date-Range Filtering:** Real-time metrics filtering with quick presets (Today, Last 7 Days, This Month, Last Month, This Year) and custom calendar date picker.
@@ -171,6 +178,9 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * 1-Click Sample Travel & Accommodation Data Seeder.
 
 == Upgrade Notice ==
+
+= 1.4.3 =
+Introduces the Offline Payment Expansion suite (Structured Bank Transfer & Cash on Arrival), customer payment reference submission, and Admin payment recording tool.
 
 = 1.4.2 =
 Introduces the Admin Analytics, Sales & Occupancy Reports Hub (`tourivo-reports`), timeline charts, and 1-click Accounting & Tax Filing CSV export.

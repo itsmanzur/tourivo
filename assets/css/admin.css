@@ -1144,4 +1144,35 @@
     margin: 10px 0;
 }
 
+/* Payment Status Badges */
+.tourivo-badge-paid {
+    background: #dcfce7;
+    color: #15803d;
+}
+
+.tourivo-badge-partially_paid {
+    background: #fef3c7;
+    color: #b45309;
+}
+
+.tourivo-badge-pending {
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.tourivo-badge-refunded {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.tourivo-badge-bank_transfer {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.tourivo-badge-cash_on_arrival {
+    background: #f3e8ff;
+    color: #6b21a8;
+}
+
 

@@ -281,9 +281,11 @@ class BookingService
 
             $paymentMethod = sanitize_text_field((string) ($data['payment_method'] ?? 'offline'));
         } else {
-            $bookingStatus = $this->defaultBookingStatus();
-            $paymentStatus = 'pending';
-            $paymentMethod = 'offline';
+            $bookingStatus        = $this->defaultBookingStatus();
+            $paymentStatus        = 'pending';
+            $allowedPublicMethods = ['offline', 'bank_transfer', 'cash_on_arrival'];
+            $reqMethod            = sanitize_text_field((string) ($data['payment_method'] ?? 'offline'));
+            $paymentMethod        = in_array($reqMethod, $allowedPublicMethods, true) ? $reqMethod : 'offline';
         }
 
         // Nothing to collect on a free booking: it is settled by definition (and so exempt from unpaid-expiry).

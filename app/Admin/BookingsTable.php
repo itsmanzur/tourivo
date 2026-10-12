@@ -240,6 +240,9 @@ class BookingsTable
                                     <a href="<?php echo esc_url(add_query_arg(['action' => 'tourivo_print_voucher', 'code' => $b->booking_code], admin_url('admin-post.php'))); ?>" target="_blank" rel="noopener" class="button button-small" title="<?php esc_attr_e('Print Booking Voucher', 'tourivo'); ?>">
                                         🖨️ <?php esc_html_e('Voucher', 'tourivo'); ?>
                                     </a>
+                                    <button type="button" class="button button-small tourivo-open-payment-modal-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-customer="<?php echo esc_attr($b->customer_name); ?>" data-total="<?php echo esc_attr((string)$b->total_amount); ?>" data-paid="<?php echo esc_attr((string)($b->paid_amount ?? 0)); ?>" data-due="<?php echo esc_attr((string)($b->due_amount ?? $b->total_amount)); ?>" data-payment-status="<?php echo esc_attr($b->payment_status); ?>" data-payment-method="<?php echo esc_attr($b->payment_method); ?>" data-transaction-id="<?php echo esc_attr($b->transaction_id ?? ''); ?>" data-booking-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Record received offline payment or mark paid', 'tourivo'); ?>">
+                                        💳 <?php esc_html_e('Payment', 'tourivo'); ?>
+                                    </button>
                                     <button type="button" class="button button-small revoke-links-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Invalidate previously shared voucher / calendar links', 'tourivo'); ?>">🔒 <?php esc_html_e('Revoke Links', 'tourivo'); ?></button>
                                     <?php if ($b->booking_status !== 'confirmed') : ?>
                                         <button type="button" class="button button-small button-primary change-status-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-status="confirmed" data-nonce="<?php echo esc_attr($nonce); ?>">✓ <?php esc_html_e('Confirm', 'tourivo'); ?></button>
@@ -575,6 +578,101 @@ class BookingsTable
                         <button type="button" class="button close-modal-btn"><?php esc_html_e('Cancel', 'tourivo'); ?></button>
                         <button type="submit" id="tourivo-submit-export-btn" class="button button-primary">
                             📥 <?php esc_html_e('Download CSV Report', 'tourivo'); ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- 3. Record Offline Payment Modal -->
+        <div id="tourivo-record-payment-modal" class="tourivo-modal-wrap" style="display: none;">
+            <div class="tourivo-modal-overlay"></div>
+            <div class="tourivo-modal-content" style="max-width: 520px; padding: 0; overflow: hidden; border-radius: 8px;">
+                <div class="modal-header" style="background: #0f172a; color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <h3 style="margin: 0; color: #ffffff; font-size: 16px;">💳 <?php esc_html_e('Record Payment', 'tourivo'); ?> &mdash; <span id="payment-modal-booking-code">#...</span></h3>
+                    <button type="button" class="close-modal-btn" style="background: none; border: none; color: #ffffff; font-size: 20px; cursor: pointer; line-height: 1;">&times;</button>
+                </div>
+                <form id="tourivo-record-payment-form">
+                    <input type="hidden" name="booking_id" id="payment-modal-booking-id" value="0">
+                    <input type="hidden" name="nonce" id="payment-modal-nonce" value="">
+
+                    <div class="modal-body" style="padding: 20px;">
+                        <!-- Booking financial summary banner -->
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px;">
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span><?php esc_html_e('Customer:', 'tourivo'); ?></span>
+                                <strong id="payment-modal-customer">—</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
+                                <span><?php esc_html_e('Total Amount:', 'tourivo'); ?></span>
+                                <strong id="payment-modal-total">$0.00</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; color: #15803d; margin-bottom: 4px;">
+                                <span><?php esc_html_e('Already Paid:', 'tourivo'); ?></span>
+                                <strong id="payment-modal-already-paid">$0.00</strong>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; color: #b45309; font-weight: 600;">
+                                <span><?php esc_html_e('Current Due:', 'tourivo'); ?></span>
+                                <strong id="payment-modal-due">$0.00</strong>
+                            </div>
+                        </div>
+
+                        <!-- Amount to Record -->
+                        <div class="tourivo-form-group" style="margin-bottom: 14px;">
+                            <label for="payment-amount" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Payment Amount to Record', 'tourivo'); ?> *</label>
+                            <input type="number" step="0.01" min="0" name="amount" id="payment-amount" class="widefat" required style="font-size: 15px; font-weight: 600;">
+                            <p class="description" style="margin-top: 4px;"><?php esc_html_e('Defaults to the full or remaining due balance.', 'tourivo'); ?></p>
+                        </div>
+
+                        <!-- Payment Status -->
+                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-bottom: 14px;">
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="payment-status-select" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Payment Status', 'tourivo'); ?></label>
+                                <select name="payment_status" id="payment-status-select" style="width: 100%;">
+                                    <option value="paid"><?php esc_html_e('Paid (Settled)', 'tourivo'); ?></option>
+                                    <option value="partially_paid"><?php esc_html_e('Partially Paid (Deposit)', 'tourivo'); ?></option>
+                                    <option value="pending"><?php esc_html_e('Pending (Unpaid)', 'tourivo'); ?></option>
+                                    <option value="refunded"><?php esc_html_e('Refunded', 'tourivo'); ?></option>
+                                </select>
+                            </div>
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="payment-method-select" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Payment Method', 'tourivo'); ?></label>
+                                <select name="payment_method" id="payment-method-select" style="width: 100%;">
+                                    <option value="bank_transfer"><?php esc_html_e('Bank Transfer', 'tourivo'); ?></option>
+                                    <option value="cash_on_arrival"><?php esc_html_e('Cash on Arrival', 'tourivo'); ?></option>
+                                    <option value="offline"><?php esc_html_e('Manual / Other Offline', 'tourivo'); ?></option>
+                                    <option value="pos_counter"><?php esc_html_e('POS / Reception Counter', 'tourivo'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Transaction Reference / ID -->
+                        <div class="tourivo-form-group" style="margin-bottom: 14px;">
+                            <label for="payment-txn-id" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Transaction / Deposit Reference', 'tourivo'); ?></label>
+                            <input type="text" name="transaction_id" id="payment-txn-id" class="widefat" placeholder="<?php esc_attr_e('e.g. BANK-TXN-882299, Slip #, bKash TrxID', 'tourivo'); ?>">
+                        </div>
+
+                        <!-- Auto-confirm pending booking checkbox -->
+                        <div class="tourivo-form-group" id="payment-auto-confirm-wrap" style="margin-bottom: 14px; background: #eff6ff; padding: 10px 12px; border-radius: 6px; border: 1px solid #bfdbfe;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 500;">
+                                <input type="checkbox" name="auto_confirm" id="payment-auto-confirm" value="1" checked>
+                                <span><?php esc_html_e('Automatically confirm reservation if currently in Pending status', 'tourivo'); ?></span>
+                            </label>
+                        </div>
+
+                        <!-- Internal Audit Note -->
+                        <div class="tourivo-form-group">
+                            <label for="payment-note" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Internal Audit Note', 'tourivo'); ?></label>
+                            <textarea name="note" id="payment-note" rows="2" class="widefat" placeholder="<?php esc_attr_e('Optional memo (e.g. Verified via City Bank Online portal)', 'tourivo'); ?>"></textarea>
+                        </div>
+
+                        <div id="payment-modal-alert" style="display: none; margin-top: 14px; padding: 10px 12px; border-radius: 6px; font-size: 13px;"></div>
+                    </div>
+
+                    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                        <button type="button" class="button close-modal-btn"><?php esc_html_e('Cancel', 'tourivo'); ?></button>
+                        <button type="submit" id="tourivo-submit-payment-btn" class="button button-primary">
+                            ✓ <?php esc_html_e('Save Payment Record', 'tourivo'); ?>
                         </button>
                     </div>
                 </form>

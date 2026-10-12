@@ -165,6 +165,7 @@ class ThankYouShortcode
             'voucherUrl'                 => $voucherUrl,
             'icsUrl'                     => $icsUrl,
             'lookupUrl'                  => $lookupUrl,
+            'token'                      => $token,
             'offlinePaymentInstructions' => $offlinePaymentInstructions,
             'enableDataLayer'            => $enableDataLayer,
             'primaryColor'               => $primaryColor,

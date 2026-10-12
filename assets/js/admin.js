@@ -855,5 +855,127 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
+
+    // 16. Admin Record Payment Modal Handler
+    const paymentModal = document.getElementById('tourivo-record-payment-modal');
+    const paymentForm = document.getElementById('tourivo-record-payment-form');
+    if (paymentModal && paymentForm) {
+        const bIdInput = document.getElementById('payment-modal-booking-id');
+        const bNonceInput = document.getElementById('payment-modal-nonce');
+        const bCodeSpan = document.getElementById('payment-modal-booking-code');
+        const bCustomerEl = document.getElementById('payment-modal-customer');
+        const bTotalEl = document.getElementById('payment-modal-total');
+        const bPaidEl = document.getElementById('payment-modal-already-paid');
+        const bDueEl = document.getElementById('payment-modal-due');
+        const amountInput = document.getElementById('payment-amount');
+        const statusSelect = document.getElementById('payment-status-select');
+        const methodSelect = document.getElementById('payment-method-select');
+        const txnIdInput = document.getElementById('payment-txn-id');
+        const autoConfirmWrap = document.getElementById('payment-auto-confirm-wrap');
+        const autoConfirmCheck = document.getElementById('payment-auto-confirm');
+        const alertBox = document.getElementById('payment-modal-alert');
+        const submitBtn = document.getElementById('tourivo-submit-payment-btn');
+
+        document.querySelectorAll('.tourivo-open-payment-modal-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                const bookingId = this.dataset.id;
+                const bookingCode = this.dataset.code;
+                const customer = this.dataset.customer;
+                const total = parseFloat(this.dataset.total) || 0;
+                const paid = parseFloat(this.dataset.paid) || 0;
+                const due = parseFloat(this.dataset.due) || Math.max(0, total - paid);
+                const paymentStatus = this.dataset.paymentStatus || 'pending';
+                const paymentMethod = this.dataset.paymentMethod || 'bank_transfer';
+                const txnId = this.dataset.transactionId || '';
+                const bookingStatus = this.dataset.bookingStatus || 'pending';
+                const nonce = this.dataset.nonce || '';
+
+                bIdInput.value = bookingId;
+                bNonceInput.value = nonce;
+                bCodeSpan.textContent = '#' + bookingCode;
+                bCustomerEl.textContent = customer || '—';
+                bTotalEl.textContent = '$' + total.toFixed(2);
+                bPaidEl.textContent = '$' + paid.toFixed(2);
+                bDueEl.textContent = '$' + due.toFixed(2);
+
+                // Default amount to due amount (or total if due is 0)
+                amountInput.value = due > 0 ? due.toFixed(2) : total.toFixed(2);
+                statusSelect.value = due <= 0 ? 'paid' : (paid > 0 ? 'partially_paid' : 'paid');
+                methodSelect.value = (paymentMethod && methodSelect.querySelector(`option[value="${paymentMethod}"]`)) ? paymentMethod : 'bank_transfer';
+                txnIdInput.value = txnId;
+
+                if (autoConfirmWrap) {
+                    autoConfirmWrap.style.display = (bookingStatus === 'pending') ? 'block' : 'none';
+                    if (autoConfirmCheck) autoConfirmCheck.checked = (bookingStatus === 'pending');
+                }
+
+                if (alertBox) {
+                    alertBox.style.display = 'none';
+                    alertBox.textContent = '';
+                }
+
+                paymentModal.style.display = 'block';
+            });
+        });
+
+        // Close modal buttons & background overlay
+        paymentModal.querySelectorAll('.close-modal-btn, .tourivo-modal-overlay').forEach(el => {
+            el.addEventListener('click', () => {
+                paymentModal.style.display = 'none';
+            });
+        });
+
+        // Submit Payment Record via AJAX
+        paymentForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            if (!bIdInput.value) return;
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
+            if (alertBox) alertBox.style.display = 'none';
+
+            const formData = new FormData(paymentForm);
+            formData.append('action', 'tourivo_record_payment');
+
+            fetch(ajaxurl, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(res => res.json())
+                .then(data => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '✓ Save Payment Record';
+
+                    if (data.success) {
+                        if (alertBox) {
+                            alertBox.style.display = 'block';
+                            alertBox.style.background = '#dcfce7';
+                            alertBox.style.color = '#15803d';
+                            alertBox.textContent = data.data.message || 'Payment updated successfully!';
+                        }
+                        setTimeout(() => {
+                            window.location.reload();
+                        }, 800);
+                    } else {
+                        if (alertBox) {
+                            alertBox.style.display = 'block';
+                            alertBox.style.background = '#fee2e2';
+                            alertBox.style.color = '#991b1b';
+                            alertBox.textContent = data.data?.message || 'Failed to update payment.';
+                        }
+                    }
+                })
+                .catch(() => {
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = '✓ Save Payment Record';
+                    if (alertBox) {
+                        alertBox.style.display = 'block';
+                        alertBox.style.background = '#fee2e2';
+                        alertBox.style.color = '#991b1b';
+                        alertBox.textContent = 'Connection error. Please try again.';
+                    }
+                });
+        });
+    }
 });
 

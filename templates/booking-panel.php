@@ -196,6 +196,37 @@ if ($tourivoItemType === 'tour') {
                     </label>
                 </div>
             <?php endif; ?>
+
+            <?php
+            $paymentService = \Tourivo\Common\Container::getInstance()->has(\Tourivo\Services\PaymentService::class)
+                ? \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\PaymentService::class)
+                : new \Tourivo\Services\PaymentService();
+            $offlineMethods = $paymentService->getOfflinePaymentMethods();
+            ?>
+            <?php if (!empty($offlineMethods)) : ?>
+                <div class="field-row tourivo-payment-methods-selector" style="margin-top: 14px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
+                    <label style="display: block; font-weight: 600; font-size: 13.5px; margin-bottom: 8px; color: #1e293b;">
+                        💳 <?php esc_html_e('Payment Method', 'tourivo'); ?>
+                    </label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <?php
+                        $isFirst = true;
+                        foreach ($offlineMethods as $mId => $method) :
+                        ?>
+                            <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 12px; font-size: 13px;">
+                                <input type="radio" name="payment_method" value="<?php echo esc_attr($mId); ?>" <?php checked($isFirst, true); ?> style="margin-top: 3px;">
+                                <span>
+                                    <strong><?php echo esc_html($method['title']); ?></strong>
+                                    <br><small style="color: #64748b;"><?php echo esc_html($method['description']); ?></small>
+                                </span>
+                            </label>
+                        <?php
+                            $isFirst = false;
+                        endforeach;
+                        ?>
+                    </div>
+                </div>
+            <?php endif; ?>
         </div>
 
         <?php do_action('tourivo_booking_panel_before_submit', $tourivoItemId, $tourivoItemType); ?>

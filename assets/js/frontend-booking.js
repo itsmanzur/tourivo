@@ -278,6 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     customer_email: formData.get('customer_email'),
                     customer_phone: formData.get('customer_phone'),
                     customer_notes: formData.get('customer_notes') || '',
+                    payment_method: formData.get('payment_method') || 'offline',
                     consent: formData.get('consent') ? 1 : 0,
                     tourivo_hp_check: formData.get('tourivo_hp_check') || '',
                 };

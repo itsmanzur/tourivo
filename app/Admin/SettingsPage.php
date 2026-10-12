@@ -120,6 +120,16 @@ class SettingsPage
             'lookup_page_id'             => absint($_POST['lookup_page_id'] ?? 0),
             'my_bookings_page_id'        => absint($_POST['my_bookings_page_id'] ?? 0),
             'offline_payment_instructions' => sanitize_textarea_field(wp_unslash($_POST['offline_payment_instructions'] ?? '')),
+            'bank_transfer_enabled'        => isset($_POST['bank_transfer_enabled']) ? 1 : 0,
+            'bank_name'                    => sanitize_text_field(wp_unslash($_POST['bank_name'] ?? '')),
+            'bank_account_name'            => sanitize_text_field(wp_unslash($_POST['bank_account_name'] ?? '')),
+            'bank_account_number'          => sanitize_text_field(wp_unslash($_POST['bank_account_number'] ?? '')),
+            'bank_iban'                    => sanitize_text_field(wp_unslash($_POST['bank_iban'] ?? '')),
+            'bank_swift_routing'           => sanitize_text_field(wp_unslash($_POST['bank_swift_routing'] ?? '')),
+            'bank_branch'                  => sanitize_text_field(wp_unslash($_POST['bank_branch'] ?? '')),
+            'bank_instructions'            => sanitize_textarea_field(wp_unslash($_POST['bank_instructions'] ?? '')),
+            'cash_on_arrival_enabled'      => isset($_POST['cash_on_arrival_enabled']) ? 1 : 0,
+            'cash_on_arrival_instructions' => sanitize_textarea_field(wp_unslash($_POST['cash_on_arrival_instructions'] ?? '')),
             // 1. Customer: Booking Received
             'email_customer_booking_received_enabled'            => isset($_POST['email_customer_booking_received_enabled']) ? 1 : 0,
             'email_customer_booking_received_subject'            => sanitize_text_field(wp_unslash($_POST['email_customer_booking_received_subject'] ?? '')),
@@ -226,6 +236,16 @@ class SettingsPage
         $lookupPageId      = (int) Config::get('lookup_page_id', 0);
         $myBookingsPageId  = (int) Config::get('my_bookings_page_id', 0);
         $offlinePayment    = (string) Config::get('offline_payment_instructions', '');
+        $bankEnabled       = (bool) Config::get('bank_transfer_enabled', 1);
+        $bankName          = (string) Config::get('bank_name', '');
+        $bankAccountName   = (string) Config::get('bank_account_name', '');
+        $bankAccountNumber  = (string) Config::get('bank_account_number', '');
+        $bankIban          = (string) Config::get('bank_iban', '');
+        $bankSwiftRouting  = (string) Config::get('bank_swift_routing', '');
+        $bankBranch        = (string) Config::get('bank_branch', '');
+        $bankInstructions  = (string) Config::get('bank_instructions', '');
+        $cashEnabled       = (bool) Config::get('cash_on_arrival_enabled', 1);
+        $cashInstructions  = (string) Config::get('cash_on_arrival_instructions', '');
         $requireConsent        = Config::get('require_consent', 0);
         $privacyPolicyPageId   = (int) Config::get('privacy_policy_page_id', 0);
         $termsPageId           = (int) Config::get('terms_page_id', 0);
@@ -606,6 +626,87 @@ class SettingsPage
                                         <input name="use_bangla_digits" type="checkbox" id="use_bangla_digits" value="1" <?php checked($useBanglaDigits, 1); ?>>
                                         <?php esc_html_e('Render prices and counters in Bengali digits (যেমন: ৳১,৫০০, ৩ জন)', 'tourivo'); ?>
                                     </label>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <hr style="margin: 20px 0; border: 0; border-top: 1px solid #e2e8f0;">
+
+                        <h2>🏦 <?php esc_html_e('Offline Payment Methods (Bank Transfer & Cash on Arrival)', 'tourivo'); ?></h2>
+                        <p class="description"><?php esc_html_e('Configure structured bank details for direct wire transfer and Pay-on-Arrival terms for bookings without online payment gateways.', 'tourivo'); ?></p>
+
+                        <!-- Bank Transfer Configuration -->
+                        <h3 style="margin-top: 20px; font-size: 15px; color: #1e293b;">🏛️ <?php esc_html_e('Direct Bank Transfer (Wire / Deposit)', 'tourivo'); ?></h3>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Enable Bank Transfer', 'tourivo'); ?></th>
+                                <td>
+                                    <label for="bank_transfer_enabled">
+                                        <input name="bank_transfer_enabled" type="checkbox" id="bank_transfer_enabled" value="1" <?php checked($bankEnabled); ?>>
+                                        <strong><?php esc_html_e('Allow travelers to select Bank Transfer during reservation.', 'tourivo'); ?></strong>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="bank_name"><?php esc_html_e('Bank Name', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="bank_name" type="text" id="bank_name" value="<?php echo esc_attr($bankName); ?>" class="regular-text" placeholder="e.g. Standard Chartered / City Bank">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="bank_account_name"><?php esc_html_e('Account Name / Beneficiary', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="bank_account_name" type="text" id="bank_account_name" value="<?php echo esc_attr($bankAccountName); ?>" class="regular-text" placeholder="e.g. Tourivo Holidays Ltd.">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="bank_account_number"><?php esc_html_e('Account Number', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="bank_account_number" type="text" id="bank_account_number" value="<?php echo esc_attr($bankAccountNumber); ?>" class="regular-text code" placeholder="e.g. 01-2345678-01">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="bank_iban"><?php esc_html_e('IBAN (International)', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="bank_iban" type="text" id="bank_iban" value="<?php echo esc_attr($bankIban); ?>" class="regular-text code" placeholder="e.g. GB29NWBK60161331926819">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="bank_swift_routing"><?php esc_html_e('SWIFT / BIC / Routing Code', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="bank_swift_routing" type="text" id="bank_swift_routing" value="<?php echo esc_attr($bankSwiftRouting); ?>" class="regular-text code" placeholder="e.g. CIBLBDDH">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="bank_branch"><?php esc_html_e('Branch Name & Address', 'tourivo'); ?></label></th>
+                                <td>
+                                    <input name="bank_branch" type="text" id="bank_branch" value="<?php echo esc_attr($bankBranch); ?>" class="regular-text" placeholder="e.g. Principal Branch, Dhaka">
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="bank_instructions"><?php esc_html_e('Bank Transfer Instructions', 'tourivo'); ?></label></th>
+                                <td>
+                                    <textarea name="bank_instructions" id="bank_instructions" rows="3" class="large-text" placeholder="<?php esc_attr_e('e.g. Please include your Booking Reference # in your transfer remarks and submit transaction reference on Thank You page.', 'tourivo'); ?>"><?php echo esc_textarea($bankInstructions); ?></textarea>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <!-- Cash on Arrival Configuration -->
+                        <h3 style="margin-top: 25px; font-size: 15px; color: #1e293b;">💵 <?php esc_html_e('Cash on Arrival / Pay at Check-in', 'tourivo'); ?></h3>
+                        <table class="form-table">
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Enable Cash on Arrival', 'tourivo'); ?></th>
+                                <td>
+                                    <label for="cash_on_arrival_enabled">
+                                        <input name="cash_on_arrival_enabled" type="checkbox" id="cash_on_arrival_enabled" value="1" <?php checked($cashEnabled); ?>>
+                                        <strong><?php esc_html_e('Allow travelers to pay in cash or card at the tour desk / hotel front reception.', 'tourivo'); ?></strong>
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="cash_on_arrival_instructions"><?php esc_html_e('Arrival Payment Instructions', 'tourivo'); ?></label></th>
+                                <td>
+                                    <textarea name="cash_on_arrival_instructions" id="cash_on_arrival_instructions" rows="2" class="large-text" placeholder="<?php esc_attr_e('e.g. Payment is collected at the tour reception desk before boarding. Cash and all major debit/credit cards accepted.', 'tourivo'); ?>"><?php echo esc_textarea($cashInstructions); ?></textarea>
                                 </td>
                             </tr>
                         </table>

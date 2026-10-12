@@ -96,6 +96,7 @@ class BookingController extends Controller
             'time_slot'       => !empty($rawParams['time_slot']) ? sanitize_text_field((string) $rawParams['time_slot']) : 'all_day',
             'hold_token'      => !empty($rawParams['hold_token']) ? sanitize_text_field((string) $rawParams['hold_token']) : null,
             'consent'         => !empty($rawParams['consent']) ? 1 : 0,
+            'payment_method'  => !empty($rawParams['payment_method']) ? sanitize_text_field((string) $rawParams['payment_method']) : 'bank_transfer',
         ];
 
         // Public route: $trusted is false
