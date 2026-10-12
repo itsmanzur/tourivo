@@ -21,6 +21,8 @@ use Tourivo\Services\ExportService;
 use Tourivo\Services\InquiryService;
 use Tourivo\Services\InventoryService;
 use Tourivo\Services\LogService;
+use Tourivo\Admin\ReportsPage;
+use Tourivo\Services\ReportingService;
 use Tourivo\Shortcodes\BookingLookupShortcode;
 use Tourivo\Shortcodes\ThankYouShortcode;
 
@@ -40,6 +42,7 @@ class AdminServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->container->singleton(ExportService::class, static fn (): ExportService => new ExportService());
+        $this->container->singleton(ReportingService::class, static fn (): ReportingService => new ReportingService());
     }
 
     public function boot(): void
@@ -64,6 +67,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('admin_enqueue_scripts', [$this, 'maybeSwitchUiLocale'], 1);
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
         $this->addAction('admin_post_tourivo_export_bookings_csv', [ExportService::class, 'handleExportRequest']);
+        $this->addAction('admin_post_tourivo_export_accounting_csv', [$this, 'handleExportAccountingCsv']);
         $this->addAction('admin_post_tourivo_save_settings', [SettingsPage::class, 'handleSave']);
 
         // Admin Notices
@@ -163,6 +167,15 @@ class AdminServiceProvider extends ServiceProvider
             'manage_tourivo_bookings',
             'tourivo-inquiries',
             [$this, 'renderInquiriesPage']
+        );
+
+        add_submenu_page(
+            'tourivo',
+            __('Reports & Analytics', 'tourivo'),
+            __('Reports', 'tourivo'),
+            'manage_tourivo_bookings',
+            'tourivo-reports',
+            [ReportsPage::class, 'render']
         );
 
         add_submenu_page(
@@ -996,6 +1009,20 @@ class AdminServiceProvider extends ServiceProvider
             : new ExportService();
 
         $exportService->handlePreviewAjax();
+    }
+
+    /**
+     * Handle HTTP POST request for Accounting & Tax CSV export.
+     *
+     * @return void
+     */
+    public function handleExportAccountingCsv(): void
+    {
+        $reportingService = Container::getInstance()->has(ReportingService::class)
+            ? Container::getInstance()->get(ReportingService::class)
+            : new ReportingService();
+
+        $reportingService->handleExportRequest();
     }
 }
 

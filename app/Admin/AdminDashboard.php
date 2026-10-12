@@ -58,6 +58,7 @@ class AdminDashboard
                 </div>
                 <div class="header-actions">
                     <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button">🪄 <?php esc_html_e('Setup Wizard', 'tourivo'); ?></a>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-reports')); ?>" class="button">📊 <?php esc_html_e('Reports', 'tourivo'); ?></a>
                     <button type="button" class="button tourivo-open-export-modal-btn">📥 <?php esc_html_e('Export Bookings', 'tourivo'); ?></button>
                     <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_tour')); ?>" class="button button-primary">+ <?php esc_html_e('New Tour', 'tourivo'); ?></a>
                     <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_hotel')); ?>" class="button">+ <?php esc_html_e('New Hotel', 'tourivo'); ?></a>

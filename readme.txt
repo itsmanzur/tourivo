@@ -4,7 +4,7 @@ Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.4.1
+Stable tag: 1.4.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,14 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 
 == Changelog ==
 
+= 1.4.2 =
+* **Admin Analytics, Sales & Occupancy Reports Hub:** Added dedicated Reports & Analytics dashboard (`tourivo-reports`) providing comprehensive business monitoring for site administrators and tour operators.
+* **Dynamic Date-Range Filtering:** Real-time metrics filtering with quick presets (Today, Last 7 Days, This Month, Last Month, This Year) and custom calendar date picker.
+* **KPI Financial Summary Cards:** Instant visibility into Total Bookings, Gross Revenue, Net Revenue, Tax Collected, Discounts, Outstanding Due, Total Travelers, and Average Order Value (AOV).
+* **Occupancy Rate Engine:** Integrated occupancy rate calculation from scheduled tour dates and hotel room inventory capacities with visual progress meters.
+* **Visual Performance Timeline & Rankings:** Lightweight responsive CSS/SVG sales and booking timeline charts, along with ranked leaderboards for top-performing tour packages and hotel stays.
+* **1-Click Accounting & Tax Filing CSV Export:** Instant download of clean accounting spreadsheets formatted for statutory bookkeeping and tax filing with strict CSV formula injection mitigation and UTF-8 BOM encoding for Excel.
+
 = 1.4.1 =
 * **Advanced Booking Export & Reporting Suite:** Added an interactive, modal-driven export system supporting CSV / Excel downloads directly from the Admin Bookings Table and Dashboard.
 * **Flexible Filtering:** Filter exports by Booking Status (including "Cancel Requested"), Payment Status, Date Criteria (Booking Creation Date vs. Travel Check-in Date), Specific Item ID, Item Type (Tour vs. Hotel Room), or Customer Search keywords.
@@ -163,6 +171,9 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * 1-Click Sample Travel & Accommodation Data Seeder.
 
 == Upgrade Notice ==
+
+= 1.4.2 =
+Introduces the Admin Analytics, Sales & Occupancy Reports Hub (`tourivo-reports`), timeline charts, and 1-click Accounting & Tax Filing CSV export.
 
 = 1.4.1 =
 Introduces the Advanced Booking Export & Reporting suite with multi-format CSV/Excel reports, formula injection security, and live preview statistics.

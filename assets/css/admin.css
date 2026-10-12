@@ -855,3 +855,293 @@
     background: #f0f9ff !important;
 }
 
+/* Reports & Analytics Hub */
+.tourivo-reports-header .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.tourivo-reports-filter-box {
+    margin-bottom: 24px;
+    padding: 16px 20px;
+}
+
+.tourivo-filter-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.tourivo-preset-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.tourivo-preset-pill {
+    display: inline-block;
+    padding: 6px 14px;
+    background: #f1f5f9;
+    color: #475569;
+    border-radius: 9999px;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.tourivo-preset-pill:hover {
+    background: #e2e8f0;
+    color: #0f172a;
+}
+
+.tourivo-preset-pill.active {
+    background: #0284c7;
+    color: #ffffff;
+}
+
+.tourivo-custom-date-form .date-inputs-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tourivo-custom-date-form input[type="date"] {
+    padding: 4px 8px;
+    font-size: 13px;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+.tourivo-reports-kpi-grid {
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.kpi-icon.icon-tax { background: #0d9488; }
+.kpi-icon.icon-occupancy { background: #4f46e5; }
+.kpi-icon.icon-travelers { background: #0891b2; }
+.kpi-icon.icon-aov { background: #ca8a04; }
+
+.kpi-subtext {
+    display: block;
+    font-size: 11px;
+    color: #94a3b8;
+    margin-top: 4px;
+}
+
+.tourivo-progress-bar-wrap {
+    width: 100%;
+    height: 6px;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+
+.tourivo-progress-bar {
+    height: 100%;
+    background: #4f46e5;
+    border-radius: 9999px;
+    transition: width 0.3s ease;
+}
+
+/* Sales & Volume Timeline Chart */
+.tourivo-chart-card {
+    margin-bottom: 24px;
+}
+
+.tourivo-chart-legend {
+    font-size: 12px;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.legend-dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+}
+
+.tourivo-timeline-chart-container {
+    min-height: 220px;
+    padding-top: 16px;
+}
+
+.tourivo-bar-chart {
+    display: flex;
+    align-items: flex-end;
+    gap: 12px;
+    height: 180px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e2e8f0;
+    overflow-x: auto;
+}
+
+.bar-col {
+    flex: 1;
+    min-width: 38px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+}
+
+.bar-fill-wrap {
+    width: 100%;
+    max-width: 28px;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+}
+
+.bar-fill {
+    width: 100%;
+    background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+    border-radius: 4px 4px 0 0;
+    transition: height 0.3s ease, background 0.2s ease;
+    position: relative;
+}
+
+.bar-col:hover .bar-fill {
+    background: #0369a1;
+}
+
+.bar-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 6px;
+    background: #0f172a;
+    color: #ffffff;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.bar-col:hover .bar-tooltip {
+    display: block;
+}
+
+.bar-label {
+    position: absolute;
+    bottom: -22px;
+    font-size: 11px;
+    color: #64748b;
+    white-space: nowrap;
+}
+
+.tourivo-no-data-notice {
+    padding: 40px 20px;
+    text-align: center;
+    color: #94a3b8;
+    font-style: italic;
+}
+
+/* Top Items Ranked Lists */
+.tourivo-top-items-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+@media (max-width: 900px) {
+    .tourivo-top-items-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.tourivo-ranked-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ranked-item {
+    background: #f8fafc;
+    border: 1px solid #f1f5f9;
+    border-radius: 6px;
+    padding: 12px 14px;
+}
+
+.ranked-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.ranked-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #1e293b;
+}
+
+.rank-badge {
+    background: #e0f2fe;
+    color: #0369a1;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+.rank-badge-room {
+    background: #ede9fe;
+    color: #6d28d9;
+}
+
+.ranked-sales {
+    font-size: 13px;
+    color: #059669;
+}
+
+.ranked-progress {
+    width: 100%;
+    height: 5px;
+    background: #e2e8f0;
+    border-radius: 9999px;
+    overflow: hidden;
+    margin-bottom: 6px;
+}
+
+.ranked-progress-fill {
+    height: 100%;
+    background: #0284c7;
+    border-radius: 9999px;
+}
+
+.ranked-fill-room {
+    background: #8b5cf6;
+}
+
+.ranked-meta {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: #64748b;
+}
+
+.tourivo-empty-text {
+    color: #94a3b8;
+    font-style: italic;
+    margin: 10px 0;
+}
+
+

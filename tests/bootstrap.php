@@ -738,16 +738,35 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         }
                         return $res;
                     }
-                    if (preg_match('/item_id\s*=\s*(\d+)/i', $query, $mItem)) {
-                        $itemId = (int) $mItem[1];
-                        $res = [];
-                        foreach ($this->inventories as $inv) {
-                            if ((int)$inv['item_id'] === $itemId) {
-                                $res[] = (object) $inv;
-                            }
-                        }
-                        return $res;
+                    $minEvent = null;
+                    $maxEvent = null;
+                    if (preg_match("/event_date\s*>=\s*'([^']+)'/i", $query, $mMinDate)) {
+                        $minEvent = $mMinDate[1];
                     }
+                    if (preg_match("/event_date\s*<=\s*'([^']+)'/i", $query, $mMaxDate)) {
+                        $maxEvent = $mMaxDate[1];
+                    }
+
+                    $wantedItemId = null;
+                    if (preg_match('/item_id\s*=\s*(\d+)/i', $query, $mItem)) {
+                        $wantedItemId = (int) $mItem[1];
+                    }
+
+                    $res = [];
+                    foreach ($this->inventories as $inv) {
+                        if ($wantedItemId !== null && (int) ($inv['item_id'] ?? 0) !== $wantedItemId) {
+                            continue;
+                        }
+                        $evDate = (string) ($inv['event_date'] ?? '');
+                        if ($minEvent !== null && $evDate < $minEvent) {
+                            continue;
+                        }
+                        if ($maxEvent !== null && $evDate > $maxEvent) {
+                            continue;
+                        }
+                        $res[] = ($output === ARRAY_A) ? $inv : (object) $inv;
+                    }
+                    return $res;
                 }
 
                 if (stripos($query, 'tourivo_logs') !== false) {
