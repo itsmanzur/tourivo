@@ -148,5 +148,19 @@ class BlockManager
                 'columns' => ['type' => 'number', 'default' => 3],
             ],
         ]);
+
+        // 8. Customer Account / My Bookings Block
+        register_block_type('tourivo/my-bookings', [
+            'api_version'     => 2,
+            'title'           => __('Tourivo My Bookings Portal', 'tourivo'),
+            'category'        => 'tourivo',
+            'icon'            => 'admin-users',
+            'description'     => __('Display traveler dashboard with upcoming trips, completed itineraries, and self-management actions.', 'tourivo'),
+            'render_callback' => [\Tourivo\Shortcodes\MyBookingsShortcode::class, 'render'],
+            'attributes'      => [
+                'per_page'   => ['type' => 'number', 'default' => 10],
+                'show_stats' => ['type' => 'string', 'default' => 'yes'],
+            ],
+        ]);
     }
 }

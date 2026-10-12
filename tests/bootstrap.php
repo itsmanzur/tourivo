@@ -28,7 +28,7 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
         define('ABSPATH', dirname(__DIR__) . '/');
     }
     if (!defined('TOURIVO_VERSION')) {
-        define('TOURIVO_VERSION', '1.3.0');
+        define('TOURIVO_VERSION', '1.4.0');
     }
     if (!defined('TOURIVO_PLUGIN_DIR')) {
         define('TOURIVO_PLUGIN_DIR', dirname(__DIR__) . '/');
@@ -593,7 +593,11 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'tourivo_booking_items') === false) {
                     $matched = [];
                     $targetEmail = null;
+                    $targetCustomerId = null;
                     $cutoff = null;
+                    if (preg_match('/customer_id\s*=\s*(\d+)/i', $query, $mId)) {
+                        $targetCustomerId = (int) $mId[1];
+                    }
                     if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
                         $targetEmail = $mEmail[1];
                     }
@@ -601,11 +605,19 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         $cutoff = strtotime($mDate[1]);
                     }
                     foreach ($this->bookings as $b) {
-                        if ($targetEmail !== null && ($b['customer_email'] ?? '') !== $targetEmail) {
+                        if ($targetCustomerId !== null && $targetEmail !== null) {
+                            $matchesId    = ((int) ($b['customer_id'] ?? 0) === $targetCustomerId && $targetCustomerId > 0);
+                            $matchesEmail = (strcasecmp((string) ($b['customer_email'] ?? ''), $targetEmail) === 0);
+                            if (!$matchesId && !$matchesEmail) {
+                                continue;
+                            }
+                        } elseif ($targetEmail !== null && strcasecmp((string) ($b['customer_email'] ?? ''), $targetEmail) !== 0) {
+                            continue;
+                        } elseif ($targetCustomerId !== null && (int) ($b['customer_id'] ?? 0) !== $targetCustomerId) {
                             continue;
                         }
                         if ($cutoff !== null) {
-                            if (strtotime((string)($b['created_at'] ?? '')) > $cutoff) continue;
+                            if (strtotime((string) ($b['created_at'] ?? '')) > $cutoff) continue;
                             if (stripos($query, "customer_name != 'Anonymized'") !== false && ($b['customer_name'] ?? '') === 'Anonymized') continue;
                         }
                         $matched[] = ($output === ARRAY_A) ? $b : (object) $b;
@@ -1170,18 +1182,122 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             return true;
         }
     }
+    if (!class_exists('WP_User')) {
+        class WP_User {
+            public int $ID = 0;
+            public string $user_email = '';
+            public string $display_name = '';
+            public string $user_login = '';
+            /** @var array<string, bool> */
+            public array $allcaps = [];
+            public function __construct(int $id = 0) {
+                $this->ID = $id;
+            }
+            public function exists(): bool {
+                return $this->ID > 0;
+            }
+        }
+    }
+
+    $GLOBALS['tourivo_current_user_id'] = 0;
+    $GLOBALS['tourivo_mock_users'] = [];
+
+    if (!function_exists('wp_set_current_user')) {
+        function wp_set_current_user(int $id, string $name = ''): WP_User {
+            global $tourivo_current_user_id, $tourivo_mock_users;
+            $tourivo_current_user_id = $id;
+            if ($id <= 0) {
+                return new WP_User(0);
+            }
+            if (!isset($tourivo_mock_users[$id])) {
+                $u = new WP_User($id);
+                $u->ID = $id;
+                $u->user_email = "user{$id}@example.com";
+                $u->display_name = $name ?: "User {$id}";
+                $tourivo_mock_users[$id] = $u;
+            }
+            return $tourivo_mock_users[$id];
+        }
+    }
+
+    if (!function_exists('wp_get_current_user')) {
+        function wp_get_current_user(): WP_User {
+            global $tourivo_current_user_id, $tourivo_mock_users;
+            $id = $tourivo_current_user_id ?? 0;
+            if ($id > 0 && isset($tourivo_mock_users[$id])) {
+                return $tourivo_mock_users[$id];
+            }
+            return new WP_User($id);
+        }
+    }
+
     if (!function_exists('is_user_logged_in')) {
-        function is_user_logged_in(): bool { return false; }
+        function is_user_logged_in(): bool {
+            global $tourivo_current_user_id;
+            return !empty($tourivo_current_user_id);
+        }
     }
     if (!function_exists('get_current_user_id')) {
-        function get_current_user_id(): int { return 1; }
+        function get_current_user_id(): int {
+            global $tourivo_current_user_id;
+            return (int) ($tourivo_current_user_id ?? 0);
+        }
     }
     if (!function_exists('current_user_can')) {
-        function current_user_can(string $capability, ...$args): bool { return true; }
+        function current_user_can(string $capability, ...$args): bool {
+            global $tourivo_current_user_id, $tourivo_mock_users, $tourivo_mock_user_caps;
+            if (isset($tourivo_mock_user_caps)) {
+                return !empty($tourivo_mock_user_caps[$capability]);
+            }
+            $userId = (int) ($tourivo_current_user_id ?? 0);
+            if ($userId > 0 && isset($tourivo_mock_users[$userId])) {
+                $user = $tourivo_mock_users[$userId];
+                if (isset($user->allcaps) && is_array($user->allcaps)) {
+                    return !empty($user->allcaps[$capability]);
+                }
+            }
+            return true;
+        }
+    }
+    if (!function_exists('shortcode_atts')) {
+        function shortcode_atts(array $pairs, array|string $atts, string $shortcode = ''): array {
+            $atts = (array) $atts;
+            $out = [];
+            foreach ($pairs as $name => $default) {
+                if (array_key_exists($name, $atts)) {
+                    $out[$name] = $atts[$name];
+                } else {
+                    $out[$name] = $default;
+                }
+            }
+            return $out;
+        }
+    }
+    if (!function_exists('esc_js')) {
+        function esc_js(string $text): string {
+            return addslashes($text);
+        }
     }
     if (!function_exists('get_user_by')) {
         function get_user_by(string $field, mixed $value): object|bool {
-            return (object) ['ID' => 1, 'user_email' => 'user@example.com', 'display_name' => 'Test User'];
+            global $tourivo_mock_users;
+            if (!empty($tourivo_mock_users)) {
+                foreach ($tourivo_mock_users as $u) {
+                    if ($field === 'id' && (int)$u->ID === (int)$value) return $u;
+                    if ($field === 'email' && strcasecmp((string)$u->user_email, (string)$value) === 0) return $u;
+                }
+            }
+            return false;
+        }
+    }
+    if (!function_exists('wp_login_url')) {
+        function wp_login_url(string $redirect = ''): string {
+            return 'https://example.com/wp-login.php' . ($redirect ? '?redirect_to=' . urlencode($redirect) : '');
+        }
+    }
+    if (!function_exists('wp_registration_url')) {
+        function wp_registration_url(): string {
+            return 'https://example.com/wp-login.php?action=register';
         }
     }
     if (!class_exists('PHPMailer\\PHPMailer\\PHPMailer')) {
@@ -1334,6 +1450,20 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 $tourivo_mock_posts[$id] = new WP_Post(array_merge($cur, $args));
             }
             return $id;
+        }
+    }
+    if (!function_exists('get_page_by_path')) {
+        function get_page_by_path(string $page_path, string $output = OBJECT, array|string $post_type = 'page'): ?object {
+            global $tourivo_mock_posts;
+            if (!empty($tourivo_mock_posts)) {
+                foreach ($tourivo_mock_posts as $post) {
+                    $p = (array) $post;
+                    if (($p['post_name'] ?? '') === $page_path) {
+                        return is_object($post) ? $post : (object) $post;
+                    }
+                }
+            }
+            return null;
         }
     }
     if (!function_exists('get_the_title')) {

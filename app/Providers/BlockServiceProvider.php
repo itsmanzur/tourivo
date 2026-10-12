@@ -11,6 +11,7 @@ use Tourivo\Shortcodes\BookingPanelShortcode;
 use Tourivo\Shortcodes\CurrencySwitcherShortcode;
 use Tourivo\Shortcodes\FilterSearchShortcode;
 use Tourivo\Shortcodes\HotelGridShortcode;
+use Tourivo\Shortcodes\MyBookingsShortcode;
 use Tourivo\Shortcodes\SearchBarShortcode;
 use Tourivo\Shortcodes\ThankYouShortcode;
 use Tourivo\Shortcodes\TourGridShortcode;
@@ -39,6 +40,7 @@ class BlockServiceProvider extends ServiceProvider
         // 1. Register Shortcodes
         BookingPanelShortcode::register();
         BookingLookupShortcode::register();
+        MyBookingsShortcode::register();
         ThankYouShortcode::register();
         TourGridShortcode::register();
         HotelGridShortcode::register();

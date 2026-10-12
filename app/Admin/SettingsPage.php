@@ -118,6 +118,7 @@ class SettingsPage
             'email_notification_address' => sanitize_email(wp_unslash($_POST['email_notification_address'] ?? get_option('admin_email'))),
             'reminder_days_before'       => max(0, min(30, (int) sanitize_text_field(wp_unslash($_POST['reminder_days_before'] ?? '2')))),
             'lookup_page_id'             => absint($_POST['lookup_page_id'] ?? 0),
+            'my_bookings_page_id'        => absint($_POST['my_bookings_page_id'] ?? 0),
             'offline_payment_instructions' => sanitize_textarea_field(wp_unslash($_POST['offline_payment_instructions'] ?? '')),
             // 1. Customer: Booking Received
             'email_customer_booking_received_enabled'            => isset($_POST['email_customer_booking_received_enabled']) ? 1 : 0,
@@ -223,6 +224,7 @@ class SettingsPage
         $notifyEmail       = Config::get('email_notification_address', get_option('admin_email'));
         $reminderDays      = (int) Config::get('reminder_days_before', 2);
         $lookupPageId      = (int) Config::get('lookup_page_id', 0);
+        $myBookingsPageId  = (int) Config::get('my_bookings_page_id', 0);
         $offlinePayment    = (string) Config::get('offline_payment_instructions', '');
         $requireConsent        = Config::get('require_consent', 0);
         $privacyPolicyPageId   = (int) Config::get('privacy_policy_page_id', 0);
@@ -750,6 +752,21 @@ class SettingsPage
                                     ]);
                                     ?>
                                     <p class="description"><?php esc_html_e('Selected page is used to construct the {lookup_url} placeholder so travelers can look up and self-manage reservations.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="my_bookings_page_id"><?php esc_html_e('Customer Account / My Bookings Page', 'tourivo'); ?></label></th>
+                                <td>
+                                    <?php
+                                    wp_dropdown_pages([
+                                        'name'              => 'my_bookings_page_id',
+                                        'id'                => 'my_bookings_page_id',
+                                        'selected'          => absint($myBookingsPageId),
+                                        'show_option_none'  => esc_html__('— Select Page with [tourivo_my_bookings] —', 'tourivo'),
+                                        'option_none_value' => '0',
+                                    ]);
+                                    ?>
+                                    <p class="description"><?php esc_html_e('Selected page is used as the authenticated traveler account dashboard displaying upcoming trips, vouchers, and reservation management.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
                             <tr>

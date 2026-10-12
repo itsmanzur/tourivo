@@ -81,6 +81,7 @@ class Config
             'reminder_days_before'  => 2,
             'lookup_page_id'        => 0,
             'thankyou_page_id'      => 0,
+            'my_bookings_page_id'   => 0,
             'redirect_after_booking'=> 'inline', // 'inline' or 'thankyou'
             'enable_datalayer'      => false,
             'pending_expiry_hours'  => 0, // 0 = pending bookings never auto-expire

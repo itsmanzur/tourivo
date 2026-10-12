@@ -4,7 +4,7 @@ Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.3.0
+Stable tag: 1.4.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -50,6 +50,7 @@ Tourivo comes with built-in shortcodes to embed anywhere in your posts or pages:
 * `[tourivo_hotels columns="3" count="6" destination="maldives"]` – Display hotels & resorts in a grid.
 * `[tourivo_search_bar]` – Embed the destination, date, and traveler filter search bar.
 * `[tourivo_booking_panel item_id="123" item_type="tour"]` – Embed the interactive booking panel for a specific item.
+* `[tourivo_my_bookings per_page="10" show_stats="yes"]` – Customer account portal for travelers to manage bookings, vouchers, and cancellations.
 
 ---
 
@@ -116,6 +117,12 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 
 == Changelog ==
 
+= 1.4.0 =
+* **Customer Account & "My Bookings" Self-Service Portal:** Added `[tourivo_my_bookings]` shortcode and Gutenberg block enabling travelers to view all past and upcoming trips, filter by booking status, inspect itemized pricing breakdowns, download HMAC-secured vouchers, add trips to calendar (.ics), and cancel bookings within permitted cancellation windows.
+* **Traveler Data Isolation & Security:** Strict customer ID and email ownership checks preventing cross-traveler data access, with seamless guest login/register prompt and direct track-booking fallback.
+* **Booking Setup Wizard Integration:** Added optional one-click creation of the "My Bookings" page during initial plugin setup.
+* **Admin Settings & Documentation:** Added dedicated page selector for My Bookings in Admin Settings and comprehensive shortcode documentation.
+
 = 1.3.0 =
 * **Pricing Engine & Date Overrides:** Centralized pricing calculations with date-specific overrides, child rates, infant options, and flexible tax configurations.
 * **Complete Email Notification Suite:** Multi-template responsive HTML emails with background queues, client deduplication, plain-text fallback, and admin test controls.
@@ -149,6 +156,9 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * 1-Click Sample Travel & Accommodation Data Seeder.
 
 == Upgrade Notice ==
+
+= 1.4.0 =
+Introduces the Customer Account self-service portal (`[tourivo_my_bookings]`), live trip stats, line item details, and self-cancellation management.
 
 = 1.3.0 =
 Important update with async webhook queueing, atomic booking transitions, and enhanced internationalization.

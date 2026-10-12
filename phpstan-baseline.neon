@@ -1,2 +1,251 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: "#^Call to method register\\(\\) on an unknown class Elementor\\\\Widgets_Manager\\.$#"
+			count: 1
+			path: app/Elementor/ElementorManager.php
+
+		-
+			message: "#^Parameter \\$widgetsManager of method Tourivo\\\\Elementor\\\\ElementorManager\\:\\:registerWidgets\\(\\) has invalid type Elementor\\\\Widgets_Manager\\.$#"
+			count: 1
+			path: app/Elementor/ElementorManager.php
+
+		-
+			message: "#^Access to constant NUMBER on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/BookingPanelWidget.php
+
+		-
+			message: "#^Access to constant SELECT on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/BookingPanelWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:add_control\\(\\)\\.$#"
+			count: 2
+			path: app/Elementor/Widgets/BookingPanelWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/BookingPanelWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/BookingPanelWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\BookingPanelWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/BookingPanelWidget.php
+
+		-
+			message: "#^Access to constant NUMBER on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/HotelGridWidget.php
+
+		-
+			message: "#^Access to constant SELECT on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/HotelGridWidget.php
+
+		-
+			message: "#^Access to constant TEXT on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/HotelGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:add_control\\(\\)\\.$#"
+			count: 3
+			path: app/Elementor/Widgets/HotelGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/HotelGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/HotelGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\HotelGridWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/HotelGridWidget.php
+
+		-
+			message: "#^Access to constant RAW_HTML on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/SearchBarWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:add_control\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/SearchBarWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/SearchBarWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\SearchBarWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/SearchBarWidget.php
+
+		-
+			message: "#^Access to constant NUMBER on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/TourGridWidget.php
+
+		-
+			message: "#^Access to constant SELECT on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/TourGridWidget.php
+
+		-
+			message: "#^Access to constant TEXT on an unknown class Elementor\\\\Controls_Manager\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/TourGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:add_control\\(\\)\\.$#"
+			count: 3
+			path: app/Elementor/Widgets/TourGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:end_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/TourGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:get_settings_for_display\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/TourGridWidget.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Elementor\\\\Widgets\\\\TourGridWidget\\:\\:start_controls_section\\(\\)\\.$#"
+			count: 1
+			path: app/Elementor/Widgets/TourGridWidget.php
+
+		-
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, edit_item\\: string, update_item\\: string, add_new_item\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'amenity', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			count: 1
+			path: app/PostTypes/HotelPostType.php
+
+		-
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: false, query_var\\: true, rewrite\\: array\\{slug\\: 'tour\\-feature', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			count: 1
+			path: app/PostTypes/TourPostType.php
+
+		-
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: false, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, edit_item\\: string, update_item\\: string, add_new_item\\: string, menu_name\\: string\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'activity', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			count: 1
+			path: app/PostTypes/TourPostType.php
+
+		-
+			message: "#^Parameter \\#3 \\$args of function register_taxonomy expects array\\{labels\\?\\: array\\<string\\>, description\\?\\: string, public\\?\\: bool, publicly_queryable\\?\\: bool, hierarchical\\?\\: bool, show_ui\\?\\: bool, show_in_menu\\?\\: bool, show_in_nav_menus\\?\\: bool, \\.\\.\\.\\}, array\\{hierarchical\\: true, labels\\: array\\{name\\: string, singular_name\\: string, search_items\\: string, all_items\\: string, parent_item\\: string, parent_item_colon\\: string, edit_item\\: string, update_item\\: string, \\.\\.\\.\\}, show_ui\\: true, show_in_menu\\: 'tourivo', show_admin_column\\: true, query_var\\: true, rewrite\\: array\\{slug\\: 'destination', with_front\\: false\\}, show_in_rest\\: true\\} given\\.$#"
+			count: 1
+			path: app/PostTypes/TourPostType.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 2
+			path: app/Providers/AdminServiceProvider.php
+
+		-
+			message: "#^Action callback returns array\\{anonymized_bookings\\: int, deleted_inquiries\\: int\\} but should not return anything\\.$#"
+			count: 1
+			path: app/Providers/AppServiceProvider.php
+
+		-
+			message: "#^Action callback returns bool but should not return anything\\.$#"
+			count: 1
+			path: app/Services/EmailService.php
+
+		-
+			message: "#^Property Tourivo\\\\Services\\\\InquiryService\\:\\:\\$emailService is never read, only written\\.$#"
+			count: 1
+			path: app/Services/InquiryService.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
+			count: 1
+			path: app/Services/InventoryService.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: app/Services/InventoryService.php
+
+		-
+			message: "#^Parameter \\#2 \\$gmt of function current_time expects bool, int given\\.$#"
+			count: 1
+			path: app/Services/LogService.php
+
+		-
+			message: "#^Comparison operation \"\\>\" between int\\<1, max\\> and 0 is always true\\.$#"
+			count: 1
+			path: app/Services/PricingService.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: app/Services/PricingService.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Models\\\\Hotel\\:\\:getLatitude\\(\\)\\.$#"
+			count: 2
+			path: app/Services/SeoService.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Models\\\\Hotel\\:\\:getLongitude\\(\\)\\.$#"
+			count: 2
+			path: app/Services/SeoService.php
+
+		-
+			message: "#^Call to an undefined method Tourivo\\\\Models\\\\Hotel\\:\\:getPostalCode\\(\\)\\.$#"
+			count: 1
+			path: app/Services/SeoService.php
+
+		-
+			message: "#^Offset 'day' on \\*NEVER\\* on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: app/Services/SeoService.php
+
+		-
+			message: "#^Offset 'desc' on array\\{day\\: int\\|string, title\\: string, desc\\: string, meals\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: app/Services/SeoService.php
+
+		-
+			message: "#^Offset 'title' on array\\{day\\: int\\|string, title\\: string, desc\\: string, meals\\: string\\} on left side of \\?\\? always exists and is not nullable\\.$#"
+			count: 1
+			path: app/Services/SeoService.php
+
+		-
+			message: "#^Action callback returns bool but should not return anything\\.$#"
+			count: 1
+			path: app/Services/WebhookService.php
+
+		-
+			message: "#^Parameter \\#2 \\$gmt of function current_time expects bool, int given\\.$#"
+			count: 1
+			path: app/Shortcodes/BookingLookupShortcode.php
+
+		-
+			message: "#^Unreachable statement \\- code above always terminates\\.$#"
+			count: 3
+			path: app/Shortcodes/BookingLookupShortcode.php
+
+		-
+			message: "#^Variable \\$parts in empty\\(\\) always exists and is not falsy\\.$#"
+			count: 1
+			path: app/Support/ClientIp.php
+
+		-
+			message: "#^Property WP_User\\:\\:\\$ID \\(int\\) in isset\\(\\) is not nullable\\.$#"
+			count: 1
+			path: app/Support/Privacy.php

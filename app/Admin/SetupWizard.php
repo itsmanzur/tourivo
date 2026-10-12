@@ -186,6 +186,14 @@ class SetupWizard
                                     <span><?php esc_html_e('Creates "/booking-confirmation" displaying booking summary, token-secured calendar .ics and vouchers.', 'tourivo'); ?></span>
                                 </div>
                             </label>
+
+                            <label class="wizard-check-item">
+                                <input type="checkbox" name="pages[]" value="my_bookings" checked>
+                                <div class="check-text">
+                                    <strong>👤 <?php esc_html_e('Traveler Dashboard / My Bookings Page', 'tourivo'); ?></strong>
+                                    <span><?php esc_html_e('Creates "/my-bookings" allowing registered travelers to view past and upcoming trips, download vouchers, and manage reservations.', 'tourivo'); ?></span>
+                                </div>
+                            </label>
                         </div>
 
                         <div class="wizard-footer">
@@ -734,7 +742,7 @@ class SetupWizard
         $rawPages = isset($_POST['pages']) ? sanitize_text_field(wp_unslash((string) $_POST['pages'])) : '[]';
         $requested = json_decode($rawPages, true);
         if (!is_array($requested)) {
-            $requested = ['tours', 'hotels', 'search', 'track', 'wishlist', 'thankyou'];
+            $requested = ['tours', 'hotels', 'search', 'track', 'wishlist', 'thankyou', 'my_bookings'];
         }
 
         $pageDefinitions = [
@@ -768,14 +776,20 @@ class SetupWizard
                 'slug'    => 'booking-confirmation',
                 'content' => '<!-- wp:shortcode -->[tourivo_thank_you]<!-- /wp:shortcode -->',
             ],
+            'my_bookings' => [
+                'title'   => 'My Bookings',
+                'slug'    => 'my-bookings',
+                'content' => '<!-- wp:shortcode -->[tourivo_my_bookings]<!-- /wp:shortcode -->',
+            ],
         ];
 
         $pageSettingMap = [
-            'track'    => 'lookup_page_id',
-            'wishlist' => 'wishlist_page_id',
-            'tours'    => 'tours_page_id',
-            'hotels'   => 'hotels_page_id',
-            'thankyou' => 'thankyou_page_id',
+            'track'       => 'lookup_page_id',
+            'wishlist'    => 'wishlist_page_id',
+            'tours'       => 'tours_page_id',
+            'hotels'      => 'hotels_page_id',
+            'thankyou'    => 'thankyou_page_id',
+            'my_bookings' => 'my_bookings_page_id',
         ];
 
         $currentSettings = get_option('tourivo_settings', Config::getDefaults());

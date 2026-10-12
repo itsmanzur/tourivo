@@ -449,6 +449,22 @@ class DocumentationPage
                                 </tr>
                                 <tr>
                                     <td>
+                                        <strong><?php esc_html_e('Customer Account / My Bookings Portal', 'tourivo'); ?></strong>
+                                        <br><small><?php esc_html_e('Authenticated traveler portal showing past and upcoming reservations, status, calendar .ics, vouchers, and cancellation requests.', 'tourivo'); ?></small>
+                                    </td>
+                                    <td><code>[tourivo_my_bookings per_page="10" show_stats="yes"]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_my_bookings per_page="10" show_stats="yes"]'><?php esc_html_e('Copy', 'tourivo'); ?></button></td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <strong><?php esc_html_e('Booking Confirmation & Thank You Page', 'tourivo'); ?></strong>
+                                        <br><small><?php esc_html_e('Displays post-booking overview, token-secured printable voucher, and .ics calendar download.', 'tourivo'); ?></small>
+                                    </td>
+                                    <td><code>[tourivo_thank_you]</code></td>
+                                    <td><button type="button" class="button copy-code-btn" data-code='[tourivo_thank_you]'><?php esc_html_e('Copy', 'tourivo'); ?></button></td>
+                                </tr>
+                                <tr>
+                                    <td>
                                         <strong><?php esc_html_e('Customer Frontend Account Dashboard', 'tourivo'); ?> <span class="tourivo-badge tourivo-badge-pending" style="font-size:10px; padding:2px 6px;"><?php esc_html_e('PRO', 'tourivo'); ?></span></strong>
                                         <br><small><?php esc_html_e('Self-service portal for travelers: past bookings, itinerary lookup, PDF tickets & invoices.', 'tourivo'); ?></small>
                                     </td>

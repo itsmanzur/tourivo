@@ -18,6 +18,9 @@ parameters:
             - node_modules/*
             - dist/*
             - bin/*
+    parallel:
+        processTimeout: 300.0
+        maximumNumberOfProcesses: 2
     checkMissingIterableValueType: false
     ignoreErrors:
         # Elementor classes only exist when Elementor is active (the plugin guards for it at runtime).
