@@ -128,9 +128,9 @@ class BookingsTable
                     <button type="button" id="tourivo-open-manual-booking-btn" class="page-title-action button-primary">
                         ➕ <?php esc_html_e('Add Manual Booking', 'tourivo'); ?>
                     </button>
-                    <a href="<?php echo esc_url($exportUrl); ?>" class="page-title-action button">
-                        📥 <?php esc_html_e('Export to CSV', 'tourivo'); ?>
-                    </a>
+                    <button type="button" id="tourivo-open-export-modal-btn" class="page-title-action button tourivo-open-export-modal-btn" data-status="<?php echo esc_attr($statusFilter); ?>" data-search="<?php echo esc_attr($searchQuery); ?>">
+                        📥 <?php esc_html_e('Export Bookings', 'tourivo'); ?>
+                    </button>
                 </div>
             </div>
 
@@ -427,6 +427,158 @@ class BookingsTable
                     </div>
                 </div>
             </div>
+
+            <!-- Export & Reporting Modal -->
+            <?php self::renderExportModal($tours, $rooms, $statusFilter, $searchQuery); ?>
+        </div>
+        <?php
+    }
+
+    /**
+     * Render the Export Bookings & Reporting Modal.
+     *
+     * @param array<int, \WP_Post> $tours
+     * @param array<int, \WP_Post> $rooms
+     * @param string               $defaultStatus
+     * @param string               $defaultSearch
+     * @return void
+     */
+    public static function renderExportModal(array $tours = [], array $rooms = [], string $defaultStatus = 'all', string $defaultSearch = ''): void
+    {
+        $nonce = wp_create_nonce('tourivo_export_csv_action');
+        ?>
+        <div id="tourivo-export-modal" class="tourivo-admin-modal" style="display: none;">
+            <div class="modal-overlay"></div>
+            <div class="modal-dialog" style="max-width: 650px;">
+                <div class="modal-header">
+                    <h2>📥 <?php esc_html_e('Export Bookings & Generate Reports', 'tourivo'); ?></h2>
+                    <button type="button" class="close-modal-btn">&times;</button>
+                </div>
+                <form id="tourivo-export-form" method="get" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <input type="hidden" name="action" value="tourivo_export_bookings_csv">
+                    <input type="hidden" name="_wpnonce" value="<?php echo esc_attr($nonce); ?>">
+
+                    <div class="modal-body">
+                        <!-- Date Preset Quick Filters -->
+                        <div class="tourivo-form-group">
+                            <label><strong><?php esc_html_e('Date Range Preset', 'tourivo'); ?></strong></label>
+                            <div class="export-date-presets" style="display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px;">
+                                <button type="button" class="button button-small export-preset-btn active" data-range="all"><?php esc_html_e('All Time', 'tourivo'); ?></button>
+                                <button type="button" class="button button-small export-preset-btn" data-range="today"><?php esc_html_e('Today', 'tourivo'); ?></button>
+                                <button type="button" class="button button-small export-preset-btn" data-range="7days"><?php esc_html_e('Last 7 Days', 'tourivo'); ?></button>
+                                <button type="button" class="button button-small export-preset-btn" data-range="this_month"><?php esc_html_e('This Month', 'tourivo'); ?></button>
+                                <button type="button" class="button button-small export-preset-btn" data-range="last_month"><?php esc_html_e('Last Month', 'tourivo'); ?></button>
+                                <button type="button" class="button button-small export-preset-btn" data-range="custom"><?php esc_html_e('Custom Range', 'tourivo'); ?></button>
+                            </div>
+                        </div>
+
+                        <!-- Date Criteria & Custom Range -->
+                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 10px;">
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="export_date_type"><?php esc_html_e('Filter Dates By', 'tourivo'); ?></label>
+                                <select name="date_type" id="export_date_type" style="width: 100%;">
+                                    <option value="booking_date"><?php esc_html_e('Booking Date (Created)', 'tourivo'); ?></option>
+                                    <option value="travel_date"><?php esc_html_e('Travel Date (Check-in)', 'tourivo'); ?></option>
+                                </select>
+                            </div>
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="export_start_date"><?php esc_html_e('Start Date', 'tourivo'); ?></label>
+                                <input type="date" name="start_date" id="export_start_date" style="width: 100%;">
+                            </div>
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="export_end_date"><?php esc_html_e('End Date', 'tourivo'); ?></label>
+                                <input type="date" name="end_date" id="export_end_date" style="width: 100%;">
+                            </div>
+                        </div>
+
+                        <!-- Status & Payment Status -->
+                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 12px;">
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="export_status"><?php esc_html_e('Booking Status', 'tourivo'); ?></label>
+                                <select name="status" id="export_status" style="width: 100%;">
+                                    <option value="all" <?php selected($defaultStatus, 'all'); ?>><?php esc_html_e('All Statuses', 'tourivo'); ?></option>
+                                    <option value="confirmed" <?php selected($defaultStatus, 'confirmed'); ?>><?php esc_html_e('Confirmed', 'tourivo'); ?></option>
+                                    <option value="pending" <?php selected($defaultStatus, 'pending'); ?>><?php esc_html_e('Pending', 'tourivo'); ?></option>
+                                    <option value="cancel_requested" <?php selected($defaultStatus, 'cancel_requested'); ?>><?php esc_html_e('Cancel Requested', 'tourivo'); ?></option>
+                                    <option value="on_hold" <?php selected($defaultStatus, 'on_hold'); ?>><?php esc_html_e('On Hold', 'tourivo'); ?></option>
+                                    <option value="completed" <?php selected($defaultStatus, 'completed'); ?>><?php esc_html_e('Completed', 'tourivo'); ?></option>
+                                    <option value="cancelled" <?php selected($defaultStatus, 'cancelled'); ?>><?php esc_html_e('Cancelled', 'tourivo'); ?></option>
+                                </select>
+                            </div>
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="export_payment_status"><?php esc_html_e('Payment Status', 'tourivo'); ?></label>
+                                <select name="payment_status" id="export_payment_status" style="width: 100%;">
+                                    <option value="all"><?php esc_html_e('All Payment Statuses', 'tourivo'); ?></option>
+                                    <option value="paid"><?php esc_html_e('Paid', 'tourivo'); ?></option>
+                                    <option value="pending"><?php esc_html_e('Pending (Unpaid)', 'tourivo'); ?></option>
+                                    <option value="refunded"><?php esc_html_e('Refunded', 'tourivo'); ?></option>
+                                    <option value="failed"><?php esc_html_e('Failed', 'tourivo'); ?></option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Item / Tour & Search -->
+                        <div class="tourivo-row" style="display: flex; gap: 12px; margin-top: 12px;">
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="export_item_id"><?php esc_html_e('Specific Tour or Room', 'tourivo'); ?></label>
+                                <select name="item_id" id="export_item_id" style="width: 100%;">
+                                    <option value="0"><?php esc_html_e('-- All Tours & Rooms --', 'tourivo'); ?></option>
+                                    <?php if (!empty($tours)) : ?>
+                                        <optgroup label="<?php esc_attr_e('Tour Packages', 'tourivo'); ?>">
+                                            <?php foreach ($tours as $t) : ?>
+                                                <option value="<?php echo esc_attr((string) $t->ID); ?>">🌴 <?php echo esc_html($t->post_title); ?></option>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endif; ?>
+                                    <?php if (!empty($rooms)) : ?>
+                                        <optgroup label="<?php esc_attr_e('Hotel Rooms', 'tourivo'); ?>">
+                                            <?php foreach ($rooms as $r) : ?>
+                                                <option value="<?php echo esc_attr((string) $r->ID); ?>">🏨 <?php echo esc_html($r->post_title); ?></option>
+                                            <?php endforeach; ?>
+                                        </optgroup>
+                                    <?php endif; ?>
+                                </select>
+                            </div>
+                            <div class="tourivo-col" style="flex: 1;">
+                                <label for="export_search"><?php esc_html_e('Search Keyword', 'tourivo'); ?></label>
+                                <input type="text" name="s" id="export_search" value="<?php echo esc_attr($defaultSearch); ?>" placeholder="<?php esc_attr_e('Name, email, phone, code...', 'tourivo'); ?>" style="width: 100%;">
+                            </div>
+                        </div>
+
+                        <!-- Report Format / Type -->
+                        <div class="tourivo-form-group" style="margin-top: 14px;">
+                            <label><strong><?php esc_html_e('Report Format & Detail Level', 'tourivo'); ?></strong></label>
+                            <div class="export-report-type-selector" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 6px;">
+                                <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; background: #f8fafc; padding: 10px 14px; border-radius: 6px; border: 1px solid #cbd5e1; flex: 1; min-width: 180px;">
+                                    <input type="radio" name="export_type" value="bookings" checked style="margin-top: 3px;">
+                                    <span><strong><?php esc_html_e('Bookings List', 'tourivo'); ?></strong><br><small style="color: #64748b;"><?php esc_html_e('Standard manifest with customer & financial totals', 'tourivo'); ?></small></span>
+                                </label>
+                                <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; background: #f8fafc; padding: 10px 14px; border-radius: 6px; border: 1px solid #cbd5e1; flex: 1; min-width: 180px;">
+                                    <input type="radio" name="export_type" value="items" style="margin-top: 3px;">
+                                    <span><strong><?php esc_html_e('Line-Item Manifest', 'tourivo'); ?></strong><br><small style="color: #64748b;"><?php esc_html_e('One row per room/tour line with travelers breakdown', 'tourivo'); ?></small></span>
+                                </label>
+                                <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; background: #f8fafc; padding: 10px 14px; border-radius: 6px; border: 1px solid #cbd5e1; flex: 1; min-width: 180px;">
+                                    <input type="radio" name="export_type" value="financial_summary" style="margin-top: 3px;">
+                                    <span><strong><?php esc_html_e('Financial Summary', 'tourivo'); ?></strong><br><small style="color: #64748b;"><?php esc_html_e('Aggregated metrics: Gross value, taxes & net revenue', 'tourivo'); ?></small></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Live Match Preview Badge -->
+                        <div id="tourivo-export-preview-badge" style="margin-top: 14px; padding: 12px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                            <span>📊 <strong id="export-preview-count">...</strong> <?php esc_html_e('matching bookings found', 'tourivo'); ?> (<span id="export-preview-revenue">...</span>)</span>
+                            <span style="color: #166534; font-size: 12px; font-weight: 600;"><?php esc_html_e('UTF-8 Excel Ready', 'tourivo'); ?></span>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
+                        <button type="button" class="button close-modal-btn"><?php esc_html_e('Cancel', 'tourivo'); ?></button>
+                        <button type="submit" id="tourivo-submit-export-btn" class="button button-primary">
+                            📥 <?php esc_html_e('Download CSV Report', 'tourivo'); ?>
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
         <?php
     }
@@ -436,103 +588,6 @@ class BookingsTable
      */
     public static function exportCsv(): void
     {
-        if (!current_user_can('manage_tourivo_bookings')) {
-            wp_die(esc_html__('Unauthorized access.', 'tourivo'), 403);
-        }
-
-        check_admin_referer('tourivo_export_csv_action');
-
-        global $wpdb;
-        $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
-        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
-        $statusFilter  = isset($_GET['status']) ? sanitize_text_field(wp_unslash($_GET['status'])) : 'all';
-
-        $where = '1=1';
-        $params = [];
-
-        if ($statusFilter === 'cancel_requested') {
-            $where .= " AND b.cancel_requested_at IS NOT NULL AND b.booking_status != 'cancelled'";
-        } elseif ($statusFilter !== 'all') {
-            $where .= ' AND b.booking_status = %s';
-            $params[] = $statusFilter;
-        }
-
-        $sql = "SELECT b.*, i.item_title, i.item_type, i.check_in, i.check_out, i.quantity 
-                FROM {$bookingsTable} b 
-                LEFT JOIN {$itemsTable} i ON b.id = i.booking_id 
-                WHERE {$where} 
-                ORDER BY b.id DESC";
-
-        if (!empty($params)) {
-            // phpcs:ignore WordPress.DB.PreparedSQL.NotPrepared
-            $sql = $wpdb->prepare($sql, ...$params);
-        }
-
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-        $results = (array) $wpdb->get_results($sql, ARRAY_A);
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
-
-        $filename = 'tourivo-bookings-manifest-' . gmdate('Y-m-d') . '.csv';
-
-        header('Content-Type: text/csv; charset=utf-8');
-        header('Content-Disposition: attachment; filename="' . $filename . '"');
-        header('Pragma: no-cache');
-        header('Expires: 0');
-
-        $output = fopen('php://output', 'w');
-
-        // UTF-8 BOM for Excel support
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite
-        fwrite($output, "\xEF\xBB\xBF");
-
-        // Header Row
-        fputcsv($output, [
-            __('Booking Code', 'tourivo'),
-            __('Customer Name', 'tourivo'),
-            __('Customer Email', 'tourivo'),
-            __('Customer Phone', 'tourivo'),
-            __('Trip / Stay Title', 'tourivo'),
-            __('Type', 'tourivo'),
-            __('Check-in Date', 'tourivo'),
-            __('Check-out Date', 'tourivo'),
-            __('Travelers', 'tourivo'),
-            __('Total Amount', 'tourivo'),
-            __('Payment Method', 'tourivo'),
-            __('Payment Status', 'tourivo'),
-            __('Booking Status', 'tourivo'),
-            __('Booking Created At', 'tourivo'),
-        ]);
-
-        $escapeCell = static function (mixed $val): string {
-            $str = (string) ($val ?? '');
-            if ($str !== '' && in_array($str[0], ['=', '+', '-', '@', "\t", "\r"], true)) {
-                return "'" . $str;
-            }
-            return $str;
-        };
-
-        foreach ($results as $row) {
-            fputcsv($output, [
-                $escapeCell($row['booking_code'] ?? ''),
-                $escapeCell($row['customer_name'] ?? ''),
-                $escapeCell($row['customer_email'] ?? ''),
-                $escapeCell($row['customer_phone'] ?? ''),
-                $escapeCell($row['item_title'] ?? 'N/A'),
-                $escapeCell(ucfirst((string) ($row['item_type'] ?? 'Tour'))),
-                $escapeCell($row['check_in'] ?? ''),
-                $escapeCell($row['check_out'] ?? ''),
-                $escapeCell((string) ($row['quantity'] ?? '1')),
-                $escapeCell(number_format((float) ($row['total_amount'] ?? 0), 2, '.', '')),
-                $escapeCell($row['payment_method'] ?? ''),
-                $escapeCell($row['payment_status'] ?? ''),
-                $escapeCell($row['booking_status'] ?? ''),
-                $escapeCell($row['created_at'] ?? ''),
-            ]);
-        }
-
-        // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fclose
-        fclose($output);
-        exit;
+        \Tourivo\Services\ExportService::handleExportRequest();
     }
 }

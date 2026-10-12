@@ -56,6 +56,18 @@ abstract class TestCase extends BaseTestCaseParent
     public function assertArrayHasKey(string|int $key, mixed $array, string $msg = ''): void {
         if (!is_array($array) || !array_key_exists($key, $array)) throw new \Exception($msg ?: "Failed asserting array has key '$key'.");
     }
+    public function assertSame(mixed $expected, mixed $actual, string $msg = ''): void {
+        if ($expected !== $actual) throw new \Exception($msg ?: "Failed asserting that " . var_export($actual, true) . " is identical to " . var_export($expected, true) . ".");
+    }
+    public function assertContains(mixed $needle, mixed $haystack, string $msg = ''): void {
+        if (!is_array($haystack) || !in_array($needle, $haystack, true)) throw new \Exception($msg ?: 'Failed asserting that array contains needle.');
+    }
+    public function assertNotContains(mixed $needle, mixed $haystack, string $msg = ''): void {
+        if (is_array($haystack) && in_array($needle, $haystack, true)) throw new \Exception($msg ?: 'Failed asserting that array does not contain needle.');
+    }
+    public function assertStringStartsWith(string $prefix, string $string, string $msg = ''): void {
+        if (!str_starts_with($string, $prefix)) throw new \Exception($msg ?: "Failed asserting that string starts with '$prefix'.");
+    }
 
     /**
      * Set up test preconditions.

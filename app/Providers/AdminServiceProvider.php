@@ -17,6 +17,7 @@ use Tourivo\PostTypes\HotelPostType;
 use Tourivo\PostTypes\TourPostType;
 use Tourivo\Services\BookingService;
 use Tourivo\Services\EmailService;
+use Tourivo\Services\ExportService;
 use Tourivo\Services\InquiryService;
 use Tourivo\Services\InventoryService;
 use Tourivo\Services\LogService;
@@ -38,7 +39,7 @@ class AdminServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        // Admin controllers & service bindings
+        $this->container->singleton(ExportService::class, static fn (): ExportService => new ExportService());
     }
 
     public function boot(): void
@@ -62,7 +63,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('admin_menu', [$this, 'registerAdminMenus'], 9);
         $this->addAction('admin_enqueue_scripts', [$this, 'maybeSwitchUiLocale'], 1);
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
-        $this->addAction('admin_post_tourivo_export_bookings_csv', [BookingsTable::class, 'exportCsv']);
+        $this->addAction('admin_post_tourivo_export_bookings_csv', [ExportService::class, 'handleExportRequest']);
         $this->addAction('admin_post_tourivo_save_settings', [SettingsPage::class, 'handleSave']);
 
         // Admin Notices
@@ -84,6 +85,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('wp_ajax_tourivo_get_admin_calendar', [$this, 'handleGetAdminCalendar']);
         $this->addAction('wp_ajax_tourivo_update_availability', [$this, 'handleUpdateAvailability']);
         $this->addAction('wp_ajax_tourivo_retention_dry_run', [$this, 'handleRetentionDryRun']);
+        $this->addAction('wp_ajax_tourivo_get_export_preview', [$this, 'handleExportPreview']);
 
         // Setup Wizard AJAX Handlers
         $this->addAction('wp_ajax_tourivo_wizard_save_step1', [SetupWizard::class, 'handleSaveStep1']);
@@ -980,6 +982,20 @@ class AdminServiceProvider extends ServiceProvider
 
         $counts = \Tourivo\Services\PrivacyService::getRetentionDryRunCounts();
         wp_send_json_success($counts);
+    }
+
+    /**
+     * AJAX handler to calculate live export matching counts and totals.
+     *
+     * @return void
+     */
+    public function handleExportPreview(): void
+    {
+        $exportService = Container::getInstance()->has(ExportService::class)
+            ? Container::getInstance()->get(ExportService::class)
+            : new ExportService();
+
+        $exportService->handlePreviewAjax();
     }
 }
 

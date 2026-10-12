@@ -35,6 +35,7 @@ require_once __DIR__ . '/Integration/EmailSystemTest.php';
 require_once __DIR__ . '/Integration/PostBookingExperienceTest.php';
 require_once __DIR__ . '/Integration/PrivacyGdprTest.php';
 require_once __DIR__ . '/Integration/MyBookingsPortalTest.php';
+require_once __DIR__ . '/Integration/ExportReportingTest.php';
 
 echo "=====================================================\n";
 echo "           Tourivo Automated Test Suite\n";
@@ -62,6 +63,7 @@ $testClasses = [
     \Tourivo\Tests\Integration\PostBookingExperienceTest::class,
     \Tourivo\Tests\Integration\PrivacyGdprTest::class,
     \Tourivo\Tests\Integration\MyBookingsPortalTest::class,
+    \Tourivo\Tests\Integration\ExportReportingTest::class,
 ];
 
 $totalTests = 0;
@@ -102,6 +104,18 @@ class SimpleAssertionTrait {
     }
     public function assertArrayHasKey($key, $array, string $msg = ''): void {
         if (!array_key_exists($key, $array)) throw new \Exception($msg ?: "Failed asserting array has key '$key'.");
+    }
+    public function assertSame($expected, $actual, string $msg = ''): void {
+        if ($expected !== $actual) throw new \Exception($msg ?: "Failed asserting that '$actual' is identical to '$expected'.");
+    }
+    public function assertContains($needle, $haystack, string $msg = ''): void {
+        if (!in_array($needle, $haystack, true)) throw new \Exception($msg ?: "Failed asserting that array contains item.");
+    }
+    public function assertNotContains($needle, $haystack, string $msg = ''): void {
+        if (in_array($needle, $haystack, true)) throw new \Exception($msg ?: "Failed asserting that array does not contain item.");
+    }
+    public function assertStringStartsWith(string $prefix, string $string, string $msg = ''): void {
+        if (!str_starts_with($string, $prefix)) throw new \Exception($msg ?: "Failed asserting that string starts with prefix.");
     }
 }
 

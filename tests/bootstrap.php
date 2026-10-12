@@ -27,6 +27,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!defined('ABSPATH')) {
         define('ABSPATH', dirname(__DIR__) . '/');
     }
+    if (!defined('TOURIVO_TEST_MODE')) {
+        define('TOURIVO_TEST_MODE', true);
+    }
     if (!defined('TOURIVO_VERSION')) {
         define('TOURIVO_VERSION', '1.4.0');
     }
@@ -595,16 +598,46 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     $targetEmail = null;
                     $targetCustomerId = null;
                     $cutoff = null;
+                    $minDate = null;
+                    $targetStatus = null;
+                    $targetPaymentStatus = null;
+                    $targetIds = null;
+
                     if (preg_match('/customer_id\s*=\s*(\d+)/i', $query, $mId)) {
                         $targetCustomerId = (int) $mId[1];
                     }
                     if (preg_match("/customer_email\s*=\s*'([^']+)'/i", $query, $mEmail)) {
                         $targetEmail = $mEmail[1];
                     }
+                    if (preg_match("/booking_status\s*=\s*'([^']+)'/i", $query, $mStatus)) {
+                        $targetStatus = $mStatus[1];
+                    }
+                    if (preg_match("/payment_status\s*=\s*'([^']+)'/i", $query, $mPayStatus)) {
+                        $targetPaymentStatus = $mPayStatus[1];
+                    }
+                    if (preg_match("/created_at\s*>=\s*'([^']+)'/i", $query, $mMinDate)) {
+                        $minDate = strtotime($mMinDate[1]);
+                    }
                     if (preg_match("/created_at\s*<=\s*'([^']+)'/i", $query, $mDate)) {
                         $cutoff = strtotime($mDate[1]);
                     }
+                    if (preg_match("/(?:b\.)?id\s+IN\s*\(([^)]+)\)/i", $query, $mInIds)) {
+                        $targetIds = array_map('intval', explode(',', $mInIds[1]));
+                    }
+
                     foreach ($this->bookings as $b) {
+                        if ($targetIds !== null && !in_array((int) ($b['id'] ?? 0), $targetIds, true)) {
+                            continue;
+                        }
+                        if ($targetStatus !== null && ($b['booking_status'] ?? '') !== $targetStatus) {
+                            continue;
+                        }
+                        if (stripos($query, 'cancel_requested_at IS NOT NULL') !== false && empty($b['cancel_requested_at'])) {
+                            continue;
+                        }
+                        if ($targetPaymentStatus !== null && ($b['payment_status'] ?? '') !== $targetPaymentStatus) {
+                            continue;
+                        }
                         if ($targetCustomerId !== null && $targetEmail !== null) {
                             $matchesId    = ((int) ($b['customer_id'] ?? 0) === $targetCustomerId && $targetCustomerId > 0);
                             $matchesEmail = (strcasecmp((string) ($b['customer_email'] ?? ''), $targetEmail) === 0);
@@ -614,6 +647,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         } elseif ($targetEmail !== null && strcasecmp((string) ($b['customer_email'] ?? ''), $targetEmail) !== 0) {
                             continue;
                         } elseif ($targetCustomerId !== null && (int) ($b['customer_id'] ?? 0) !== $targetCustomerId) {
+                            continue;
+                        }
+                        if ($minDate !== null && strtotime((string) ($b['created_at'] ?? '')) < $minDate) {
                             continue;
                         }
                         if ($cutoff !== null) {
@@ -633,27 +669,51 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                     return $matched;
                 }
 
-                if (stripos($query, 'tourivo_booking_items') !== false) {
+                if (stripos($query, 'tourivo_booking_items') !== false && stripos($query, 'tourivo_bookings') === false) {
+                    $wanted = null;
                     if (preg_match('/booking_id\s+IN\s*\(([^)]+)\)/i', $query, $mIn)) {
                         $wanted = array_map('intval', explode(',', $mIn[1]));
-                        $res = [];
-                        foreach ($this->booking_items as $item) {
-                            if (in_array((int) $item['booking_id'], $wanted, true)) {
-                                $res[] = (object) $item;
-                            }
-                        }
-                        return $res;
+                    } elseif (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
+                        $wanted = [(int) $m[1]];
                     }
-                    if (preg_match('/booking_id\s*=\s*(\d+)/i', $query, $m)) {
-                        $bookingId = (int) $m[1];
-                        $res = [];
-                        foreach ($this->booking_items as $item) {
-                            if ((int)$item['booking_id'] === $bookingId) {
-                                $res[] = (object) $item;
-                            }
-                        }
-                        return $res;
+
+                    $wantedItemId = null;
+                    if (preg_match('/item_id\s*=\s*(\d+)/i', $query, $mItemId)) {
+                        $wantedItemId = (int) $mItemId[1];
                     }
+                    $wantedItemType = null;
+                    if (preg_match("/item_type\s*=\s*'([^']+)'/i", $query, $mItemType)) {
+                        $wantedItemType = $mItemType[1];
+                    }
+                    $minCi = null;
+                    if (preg_match("/check_in\s*>=\s*'([^']+)'/i", $query, $mMinCi)) {
+                        $minCi = strtotime($mMinCi[1]);
+                    }
+                    $maxCi = null;
+                    if (preg_match("/check_in\s*<=\s*'([^']+)'/i", $query, $mMaxCi)) {
+                        $maxCi = strtotime($mMaxCi[1]);
+                    }
+
+                    $res = [];
+                    foreach ($this->booking_items as $item) {
+                        if ($wanted !== null && !in_array((int) $item['booking_id'], $wanted, true)) {
+                            continue;
+                        }
+                        if ($wantedItemId !== null && (int) ($item['item_id'] ?? 0) !== $wantedItemId) {
+                            continue;
+                        }
+                        if ($wantedItemType !== null && ($item['item_type'] ?? '') !== $wantedItemType) {
+                            continue;
+                        }
+                        if ($minCi !== null && strtotime((string) ($item['check_in'] ?? '')) < $minCi) {
+                            continue;
+                        }
+                        if ($maxCi !== null && strtotime((string) ($item['check_in'] ?? '')) > $maxCi) {
+                            continue;
+                        }
+                        $res[] = ($output === ARRAY_A) ? $item : (object) $item;
+                    }
+                    return $res;
                 }
                 if (stripos($query, 'tourivo_inventories') !== false) {
                     if (stripos($query, 'recorded_days') !== false) {
@@ -1249,6 +1309,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             if (isset($tourivo_mock_user_caps)) {
                 return !empty($tourivo_mock_user_caps[$capability]);
             }
+            if (isset($tourivo_current_user_id) && $tourivo_current_user_id === 0) {
+                return false;
+            }
             $userId = (int) ($tourivo_current_user_id ?? 0);
             if ($userId > 0 && isset($tourivo_mock_users[$userId])) {
                 $user = $tourivo_mock_users[$userId];
@@ -1592,6 +1655,21 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 throw new \Exception('check_ajax_referer_died');
             }
             return false;
+        }
+    }
+    if (!function_exists('check_admin_referer')) {
+        function check_admin_referer(string|int $action = -1, string $query_arg = '_wpnonce'): int|bool {
+            $nonce = $_POST[$query_arg] ?? $_GET[$query_arg] ?? '';
+            if (wp_verify_nonce((string)$nonce, $action)) {
+                return 1;
+            }
+            wp_die('Invalid security token / nonce.', 403);
+            return false;
+        }
+    }
+    if (!function_exists('wp_die')) {
+        function wp_die(string $message = '', int $status = 500): never {
+            throw new \RuntimeException($message, $status);
         }
     }
     if (!function_exists('wp_send_json_success')) {

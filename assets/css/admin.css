@@ -823,3 +823,35 @@
     color: #64748b;
 }
 
+/* Export & Reporting Modal Enhancements */
+.export-date-presets .export-preset-btn {
+    border-radius: 9999px !important;
+    font-size: 11px !important;
+    padding: 2px 10px !important;
+    line-height: 1.8 !important;
+    border-color: #cbd5e1 !important;
+    color: #475569 !important;
+    background: #f8fafc !important;
+    cursor: pointer;
+    transition: all 0.15s ease-in-out;
+}
+
+.export-date-presets .export-preset-btn:hover {
+    background: #e2e8f0 !important;
+    color: #0f172a !important;
+}
+
+.export-date-presets .export-preset-btn.active,
+.export-date-presets .export-preset-btn.button-primary {
+    background: #0284c7 !important;
+    border-color: #0284c7 !important;
+    color: #ffffff !important;
+    font-weight: 600;
+}
+
+.export-report-type-selector label:has(input:checked),
+.export-report-type-selector label.active {
+    border-color: #0284c7 !important;
+    background: #f0f9ff !important;
+}
+

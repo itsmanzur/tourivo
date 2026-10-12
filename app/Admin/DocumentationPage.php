@@ -517,7 +517,7 @@ class DocumentationPage
                                     <li><strong><?php esc_html_e('Booking Code:', 'tourivo'); ?></strong> <?php esc_html_e('Unique code generated for every reservation (e.g. #TRV-2026-X9A21B).', 'tourivo'); ?></li>
                                     <li><strong><?php esc_html_e('1-Click Confirm / Cancel:', 'tourivo'); ?></strong> <?php esc_html_e('Update status instantly with Ajax without page refreshes.', 'tourivo'); ?></li>
                                     <li><strong><?php esc_html_e('Activity Timeline & Notes:', 'tourivo'); ?></strong> <?php esc_html_e('Click "👁️ Details" to read history and record staff notes.', 'tourivo'); ?></li>
-                                    <li><strong><?php esc_html_e('CSV Export:', 'tourivo'); ?></strong> <?php esc_html_e('Click "📥 Export to CSV" to generate passenger manifests.', 'tourivo'); ?></li>
+                                    <li><strong><?php esc_html_e('Advanced Export & Reporting (CSV):', 'tourivo'); ?></strong> <?php esc_html_e('Click "📥 Export Bookings" from the Dashboard or Bookings table to launch the export dialog. Filter by Booking vs Travel dates, booking/payment status, and specific tour/room. Generate standard booking lists, itemized line manifests, or financial summary reports with full Excel UTF-8 and formula-injection security.', 'tourivo'); ?></li>
                                 </ul>
                             </div>
 

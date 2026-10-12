@@ -4,7 +4,7 @@ Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.4.0
+Stable tag: 1.4.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -117,6 +117,13 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 
 == Changelog ==
 
+= 1.4.1 =
+* **Advanced Booking Export & Reporting Suite:** Added an interactive, modal-driven export system supporting CSV / Excel downloads directly from the Admin Bookings Table and Dashboard.
+* **Flexible Filtering:** Filter exports by Booking Status (including "Cancel Requested"), Payment Status, Date Criteria (Booking Creation Date vs. Travel Check-in Date), Specific Item ID, Item Type (Tour vs. Hotel Room), or Customer Search keywords.
+* **Date Presets & Live Statistics Preview:** Quick date presets (Today, Last 7 Days, This Month, Last Month, All Time) with dynamic debounced AJAX preview calculation displaying matched bookings, projected revenue, and traveler counts prior to downloading.
+* **Multiple Export Formats:** Standard Bookings List, Itemized Line-Item Manifest (breakdown per guest/room), and Aggregated Financial Summary Report.
+* **Security & International Spreadsheet Compatibility:** Comprehensive protection against CSV Formula Injection (escaping `=`, `+`, `-`, `@`, `\t`, `\r` prefixes), full UTF-8 BOM encoding for seamless Bengali & Unicode character display in Microsoft Excel.
+
 = 1.4.0 =
 * **Customer Account & "My Bookings" Self-Service Portal:** Added `[tourivo_my_bookings]` shortcode and Gutenberg block enabling travelers to view all past and upcoming trips, filter by booking status, inspect itemized pricing breakdowns, download HMAC-secured vouchers, add trips to calendar (.ics), and cancel bookings within permitted cancellation windows.
 * **Traveler Data Isolation & Security:** Strict customer ID and email ownership checks preventing cross-traveler data access, with seamless guest login/register prompt and direct track-booking fallback.
@@ -156,6 +163,9 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * 1-Click Sample Travel & Accommodation Data Seeder.
 
 == Upgrade Notice ==
+
+= 1.4.1 =
+Introduces the Advanced Booking Export & Reporting suite with multi-format CSV/Excel reports, formula injection security, and live preview statistics.
 
 = 1.4.0 =
 Introduces the Customer Account self-service portal (`[tourivo_my_bookings]`), live trip stats, line item details, and self-cancellation management.

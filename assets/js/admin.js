@@ -693,5 +693,167 @@ document.addEventListener('DOMContentLoaded', function () {
                 });
         });
     }
+
+    // 10. Export Bookings & Reporting Modal Management
+    const exportModal = document.getElementById('tourivo-export-modal');
+    const openExportBtns = document.querySelectorAll('.tourivo-open-export-modal-btn');
+    const exportForm = document.getElementById('tourivo-export-form');
+
+    if (exportModal && exportForm) {
+        function openExportDialog(btn) {
+            exportModal.style.display = 'flex';
+
+            // Pre-select status and search if provided by button dataset
+            if (btn && btn.dataset) {
+                if (btn.dataset.status && btn.dataset.status !== 'all') {
+                    const statusSelect = document.getElementById('export_status');
+                    if (statusSelect) statusSelect.value = btn.dataset.status;
+                }
+                if (btn.dataset.search) {
+                    const searchInput = document.getElementById('export_search');
+                    if (searchInput) searchInput.value = btn.dataset.search;
+                }
+            }
+
+            fetchExportPreview();
+        }
+
+        function closeExportDialog() {
+            exportModal.style.display = 'none';
+        }
+
+        openExportBtns.forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.preventDefault();
+                openExportDialog(btn);
+            });
+        });
+
+        exportModal.querySelectorAll('.close-modal-btn, .modal-overlay').forEach(el => {
+            el.addEventListener('click', closeExportDialog);
+        });
+
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && exportModal.style.display === 'flex') {
+                closeExportDialog();
+            }
+        });
+
+        // Quick Date Preset Buttons
+        const presetBtns = exportModal.querySelectorAll('.export-preset-btn');
+        const startDateInput = document.getElementById('export_start_date');
+        const endDateInput = document.getElementById('export_end_date');
+
+        function formatDateIso(d) {
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return `${year}-${month}-${day}`;
+        }
+
+        presetBtns.forEach(btn => {
+            btn.addEventListener('click', function () {
+                presetBtns.forEach(b => b.classList.remove('active', 'button-primary'));
+                this.classList.add('active', 'button-primary');
+
+                const range = this.dataset.range;
+                const now = new Date();
+
+                if (range === 'all') {
+                    if (startDateInput) startDateInput.value = '';
+                    if (endDateInput) endDateInput.value = '';
+                } else if (range === 'today') {
+                    const todayStr = formatDateIso(now);
+                    if (startDateInput) startDateInput.value = todayStr;
+                    if (endDateInput) endDateInput.value = todayStr;
+                } else if (range === '7days') {
+                    const past = new Date(now);
+                    past.setDate(past.getDate() - 7);
+                    if (startDateInput) startDateInput.value = formatDateIso(past);
+                    if (endDateInput) endDateInput.value = formatDateIso(now);
+                } else if (range === 'this_month') {
+                    const firstDay = new Date(now.getFullYear(), now.getMonth(), 1);
+                    const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0);
+                    if (startDateInput) startDateInput.value = formatDateIso(firstDay);
+                    if (endDateInput) endDateInput.value = formatDateIso(lastDay);
+                } else if (range === 'last_month') {
+                    const firstDayPrev = new Date(now.getFullYear(), now.getMonth() - 1, 1);
+                    const lastDayPrev = new Date(now.getFullYear(), now.getMonth(), 0);
+                    if (startDateInput) startDateInput.value = formatDateIso(firstDayPrev);
+                    if (endDateInput) endDateInput.value = formatDateIso(lastDayPrev);
+                } else if (range === 'custom') {
+                    if (startDateInput) startDateInput.focus();
+                }
+
+                fetchExportPreview();
+            });
+        });
+
+        // Live preview calculation on filter changes
+        let previewTimer = null;
+        function debouncedPreview() {
+            clearTimeout(previewTimer);
+            previewTimer = setTimeout(fetchExportPreview, 250);
+        }
+
+        const previewCountEl = document.getElementById('export-preview-count');
+        const previewRevenueEl = document.getElementById('export-preview-revenue');
+
+        function fetchExportPreview() {
+            if (!previewCountEl || !previewRevenueEl) return;
+
+            const nonce = (window.tourivoAdminConfig && window.tourivoAdminConfig.nonce)
+                ? window.tourivoAdminConfig.nonce
+                : (document.getElementById('tourivo_admin_nonce_val') ? document.getElementById('tourivo_admin_nonce_val').value : '');
+
+            const status = document.getElementById('export_status')?.value || 'all';
+            const paymentStatus = document.getElementById('export_payment_status')?.value || 'all';
+            const dateType = document.getElementById('export_date_type')?.value || 'booking_date';
+            const startDate = startDateInput?.value || '';
+            const endDate = endDateInput?.value || '';
+            const itemId = document.getElementById('export_item_id')?.value || '0';
+            const search = document.getElementById('export_search')?.value || '';
+
+            previewCountEl.textContent = '...';
+            previewRevenueEl.textContent = 'calculating';
+
+            const formData = new FormData();
+            formData.append('action', 'tourivo_get_export_preview');
+            formData.append('nonce', nonce);
+            formData.append('status', status);
+            formData.append('payment_status', paymentStatus);
+            formData.append('date_type', dateType);
+            formData.append('start_date', startDate);
+            formData.append('end_date', endDate);
+            formData.append('item_id', itemId);
+            formData.append('s', search);
+
+            fetch(ajaxurl, {
+                method: 'POST',
+                body: formData,
+            })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.success && data.data) {
+                        previewCountEl.textContent = Number(data.data.count).toLocaleString();
+                        previewRevenueEl.textContent = data.data.formatted_total || `$${Number(data.data.total_amount).toFixed(2)}`;
+                    } else {
+                        previewCountEl.textContent = '0';
+                        previewRevenueEl.textContent = '$0.00';
+                    }
+                })
+                .catch(() => {
+                    previewCountEl.textContent = '—';
+                    previewRevenueEl.textContent = '—';
+                });
+        }
+
+        exportForm.querySelectorAll('input, select').forEach(field => {
+            field.addEventListener('change', debouncedPreview);
+            if (field.type === 'text') {
+                field.addEventListener('input', debouncedPreview);
+            }
+        });
+    }
 });
 
