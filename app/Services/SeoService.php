@@ -364,7 +364,6 @@ class SeoService
                 '@type'           => 'PostalAddress',
                 'streetAddress'   => $hotel->getAddress(),
                 'addressLocality' => $hotel->getCity(),
-                'postalCode'      => $hotel->getPostalCode(),
             ];
         }
 
@@ -374,15 +373,6 @@ class SeoService
         }
         if ($hotel->getEmail()) {
             $schema['email'] = $hotel->getEmail();
-        }
-
-        // Geocoordinates
-        if ($hotel->getLatitude() && $hotel->getLongitude()) {
-            $schema['geo'] = [
-                '@type'     => 'GeoCoordinates',
-                'latitude'  => $hotel->getLatitude(),
-                'longitude' => $hotel->getLongitude(),
-            ];
         }
 
         // Amenities

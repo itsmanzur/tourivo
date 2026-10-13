@@ -71,12 +71,26 @@ class BookingController extends Controller
         }
 
         // 3. Strict Whitelist of incoming public parameters (strip any injected privileged fields)
-        $adults   = max(1, (int) ($rawParams['adults'] ?? 1));
+        $adults   = array_key_exists('adults', $rawParams) ? max(0, (int) $rawParams['adults']) : 1;
         $children = max(0, (int) ($rawParams['children'] ?? 0));
         $rooms    = max(1, min(25, (int) ($rawParams['rooms'] ?? 1)));
 
+        if (($adults + $children) < 1) {
+            return new WP_Error('invalid_guest_count', __('Please add at least one adult or child.', 'tourivo'), ['status' => 400]);
+        }
+
         if (($adults + $children) > 50) {
             return new WP_Error('invalid_guest_count', __('For group reservations of more than 50 travelers, please contact our support.', 'tourivo'), ['status' => 400]);
+        }
+
+        $selectedAddons = [];
+        if (!empty($rawParams['selected_addons']) && is_array($rawParams['selected_addons'])) {
+            foreach ($rawParams['selected_addons'] as $addonId) {
+                $addonId = sanitize_text_field((string) $addonId);
+                if ($addonId !== '') {
+                    $selectedAddons[] = $addonId;
+                }
+            }
         }
 
         $cleanParams = [
@@ -97,6 +111,9 @@ class BookingController extends Controller
             'hold_token'      => !empty($rawParams['hold_token']) ? sanitize_text_field((string) $rawParams['hold_token']) : null,
             'consent'         => !empty($rawParams['consent']) ? 1 : 0,
             'payment_method'  => !empty($rawParams['payment_method']) ? sanitize_text_field((string) $rawParams['payment_method']) : 'bank_transfer',
+            'selected_addons' => $selectedAddons,
+            'coupon_code'     => isset($rawParams['coupon_code']) ? sanitize_text_field((string) $rawParams['coupon_code']) : '',
+            'custom_fields'   => $this->checkoutFields($rawParams),
         ];
 
         // Public route: $trusted is false
@@ -107,5 +124,28 @@ class BookingController extends Controller
         }
 
         return new WP_REST_Response($result, 200);
+    }
+
+    /**
+     * @param array<string, mixed> $rawParams
+     * @return array<string, string>
+     */
+    private function checkoutFields(array $rawParams): array
+    {
+        $source = [];
+        if (!empty($rawParams['custom_fields']) && is_array($rawParams['custom_fields'])) {
+            $source = $rawParams['custom_fields'];
+        } elseif (!empty($rawParams['tourivo_fields']) && is_array($rawParams['tourivo_fields'])) {
+            $source = $rawParams['tourivo_fields'];
+        }
+
+        $fields = [];
+        foreach ($source as $key => $value) {
+            if (!is_scalar($value)) {
+                continue;
+            }
+            $fields[sanitize_key((string) $key)] = sanitize_textarea_field((string) $value);
+        }
+        return $fields;
     }
 }

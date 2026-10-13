@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', function () {
         const subtotalRow = panel.querySelector('#breakdown-subtotal-row');
         const subtotalVal = panel.querySelector('#breakdown-subtotal-val');
         const discountRow = panel.querySelector('#breakdown-discount-row');
+        const discountLabel = panel.querySelector('#breakdown-discount-label');
         const discountVal = panel.querySelector('#breakdown-discount-val');
         const taxRow = panel.querySelector('#breakdown-tax-row');
         const taxLabel = panel.querySelector('#breakdown-tax-label');
@@ -38,6 +39,34 @@ document.addEventListener('DOMContentLoaded', function () {
 
         let checkAbortController = null;
         let checkDebounceTimer = null;
+        let quoteSerial = 0;
+        const priceBox = panel.querySelector('#tourivo-price-breakdown');
+
+        function setQuotePending(pending) {
+            if (!priceBox) return;
+            priceBox.classList.toggle('is-calculating', pending);
+            priceBox.setAttribute('aria-busy', pending ? 'true' : 'false');
+            let status = priceBox.querySelector('.tourivo-calculating');
+            if (!pending) {
+                if (status) status.remove();
+                return;
+            }
+            if (!status) {
+                status = document.createElement('p');
+                status.className = 'tourivo-calculating';
+                priceBox.appendChild(status);
+            }
+            const label = window.tourivoData && window.tourivoData.i18n && window.tourivoData.i18n.calculating;
+            status.textContent = label || 'Calculating the price...';
+        }
+
+        function syncCheckoutStep(available) {
+            const datesReady = itemType !== 'room' || !!(checkOutInput && checkOutInput.value);
+            const open = !!available && datesReady;
+            panel.querySelectorAll('.tourivo-checkout-step').forEach(function (el) {
+                el.hidden = !open;
+            });
+        }
 
         // Helper to format currency
         function formatPrice(amount, symbol, position) {
@@ -69,13 +98,22 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
 
+        function addDaysIso(iso, days) {
+            const parts = String(iso || '').split('-').map(Number);
+            if (parts.length !== 3 || parts.some(n => !n && n !== 0)) {
+                return iso;
+            }
+            const next = new Date(parts[0], parts[1] - 1, parts[2] + days);
+            const month = String(next.getMonth() + 1).padStart(2, '0');
+            const day = String(next.getDate()).padStart(2, '0');
+            return next.getFullYear() + '-' + month + '-' + day;
+        }
+
         // 2. Date input changes
         if (checkInInput) {
             checkInInput.addEventListener('change', function () {
-                if (checkOutInput && checkOutInput.value <= this.value) {
-                    const nextDay = new Date(this.value);
-                    nextDay.setDate(nextDay.getDate() + 1);
-                    checkOutInput.value = nextDay.toISOString().split('T')[0];
+                if (checkOutInput && checkOutInput.value && checkOutInput.value <= this.value) {
+                    checkOutInput.value = addDaysIso(this.value, 1);
                 }
                 recalculatePrice();
             });
@@ -83,6 +121,316 @@ document.addEventListener('DOMContentLoaded', function () {
 
         if (checkOutInput) {
             checkOutInput.addEventListener('change', recalculatePrice);
+        }
+
+        panel.querySelectorAll('.tourivo-addon-checkbox').forEach(function (cb) {
+            cb.addEventListener('change', recalculatePrice);
+        });
+
+        const couponInput = panel.querySelector('[name="coupon_code"]');
+        const couponMessage = panel.querySelector('.tourivo-coupon-message');
+        panel.querySelector('.tourivo-apply-coupon')?.addEventListener('click', function () {
+            if (checkInInput && !checkInInput.value) {
+                if (couponMessage) {
+                    couponMessage.textContent = 'Choose your travel dates before applying a code.';
+                }
+                return;
+            }
+            recalculatePrice();
+        });
+
+        initAvailabilityCalendar();
+
+        function initAvailabilityCalendar() {
+            const cal = panel.querySelector('.tourivo-cal');
+            const summary = panel.querySelector('.tourivo-cal-summary');
+            const dateFields = panel.querySelector('.tourivo-date-fields');
+            if (!cal || !checkInInput) {
+                return;
+            }
+
+            const copy = (window.tourivoData && window.tourivoData.calendar) || {};
+            const weekdays = Array.isArray(copy.weekdays) && copy.weekdays.length === 7
+                ? copy.weekdays
+                : ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+            const months = Array.isArray(copy.months) && copy.months.length === 12
+                ? copy.months
+                : ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+            const text = {
+                soldOut: copy.soldOut || 'Sold out',
+                left: copy.left || '%d left',
+                loading: copy.loading || 'Loading dates...',
+                pickCheckout: copy.pickCheckout || 'Now choose a check-out date.',
+                closedRange: copy.closedRange || 'Those nights are not fully open. Choose another check-out.',
+                range: copy.range || 'Check-in: %1$s | Check-out: %2$s',
+            };
+
+            const today = cal.dataset.today || '';
+            const title = cal.querySelector('.tourivo-cal-title');
+            const weekdayRow = cal.querySelector('.tourivo-cal-weekdays');
+            const grid = cal.querySelector('.tourivo-cal-grid');
+            const note = cal.querySelector('.tourivo-cal-note');
+            const prev = cal.querySelector('.tourivo-cal-prev');
+            const next = cal.querySelector('.tourivo-cal-next');
+            const cache = {};
+            const inflight = {};
+            let awaitingCheckout = false;
+            let busy = false;
+
+            const startFrom = checkInInput.value || today;
+            const startParts = startFrom.split('-').map(Number);
+            const view = {
+                y: startParts[0] || new Date().getFullYear(),
+                m: startParts[1] || (new Date().getMonth() + 1),
+            };
+
+            function useNativeDates() {
+                cal.hidden = true;
+                if (summary) summary.hidden = true;
+                dateFields?.classList.add('is-native');
+            }
+
+            function pretty(iso) {
+                const parts = String(iso || '').split('-').map(Number);
+                if (parts.length !== 3) return iso;
+                return parts[2] + ' ' + (months[parts[1] - 1] || '');
+            }
+
+            function updateSummary() {
+                if (!summary) return;
+                const cin = checkInInput.value || '';
+                const cout = checkOutInput ? checkOutInput.value : '';
+                if (itemType === 'room' && cin && cout) {
+                    summary.textContent = text.range.replace('%1$s', pretty(cin)).replace('%2$s', pretty(cout));
+                    return;
+                }
+                summary.textContent = cin ? pretty(cin) : '';
+            }
+
+            function setNote(message, warn) {
+                if (!note) return;
+                note.textContent = message || '';
+                note.classList.toggle('is-warn', !!warn && !!message);
+            }
+
+            function dayInfo(iso) {
+                const parts = iso.split('-').map(Number);
+                const monthData = cache[parts[0] + '-' + parts[1]];
+                return monthData ? monthData[iso] : null;
+            }
+
+            function isClosed(info) {
+                return !info || info.status === 'sold_out' || info.status === 'blocked' || Number(info.spots) <= 0;
+            }
+
+            function monthIndex(year, month) {
+                return year * 12 + (month - 1);
+            }
+
+            function paint() {
+                if (!grid || !title) return;
+                const todayParts = today.split('-').map(Number);
+                const ahead = monthIndex(view.y, view.m) - monthIndex(todayParts[0] || view.y, todayParts[1] || view.m);
+                if (prev) prev.disabled = ahead <= 0;
+                if (next) next.disabled = ahead >= 18;
+                title.textContent = (months[view.m - 1] || '') + ' ' + view.y;
+
+                if (weekdayRow && !weekdayRow.childElementCount) {
+                    weekdays.forEach(function (name) {
+                        const cell = document.createElement('span');
+                        cell.textContent = name;
+                        weekdayRow.appendChild(cell);
+                    });
+                }
+
+                grid.textContent = '';
+                const monthData = cache[view.y + '-' + view.m];
+                if (!monthData) {
+                    const loading = document.createElement('p');
+                    loading.className = 'tourivo-cal-loading';
+                    loading.textContent = text.loading;
+                    grid.appendChild(loading);
+                    return;
+                }
+
+                const firstDow = new Date(view.y, view.m - 1, 1).getDay();
+                const daysInMonth = new Date(view.y, view.m, 0).getDate();
+                const cin = checkInInput.value || '';
+                const cout = checkOutInput ? checkOutInput.value : '';
+
+                for (let i = 0; i < firstDow; i++) {
+                    grid.appendChild(document.createElement('span')).className = 'tourivo-cal-pad';
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const iso = view.y + '-' + String(view.m).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+                    const info = monthData[iso];
+                    const closed = isClosed(info);
+                    const past = today && iso < today;
+                    const canLeave = awaitingCheckout && cin && iso > cin;
+                    const button = document.createElement('button');
+                    button.type = 'button';
+                    button.className = 'tourivo-cal-day';
+                    button.dataset.date = iso;
+                    if (past) button.classList.add('is-past');
+                    if (closed) button.classList.add('is-soldout');
+                    else if (info && info.status === 'limited') button.classList.add('is-limited');
+                    if (cin && iso === cin) button.classList.add('is-checkin');
+                    if (cout && iso === cout) button.classList.add('is-checkout');
+                    if (cin && cout && iso > cin && iso < cout) button.classList.add('is-in-range');
+                    button.disabled = past || !info || (closed && !canLeave);
+
+                    const num = document.createElement('span');
+                    num.className = 'tourivo-cal-num';
+                    num.textContent = String(day);
+                    const spots = document.createElement('span');
+                    spots.className = 'tourivo-cal-spots';
+                    if (!past && info) {
+                        spots.textContent = closed ? text.soldOut : String(info.spots);
+                    }
+                    button.append(num, spots);
+
+                    let label = pretty(iso);
+                    if (!past && info) {
+                        label += ', ' + (closed ? text.soldOut : text.left.replace('%d', String(info.spots)));
+                    }
+                    button.setAttribute('aria-label', label);
+                    button.setAttribute('aria-pressed', (iso === cin || iso === cout) ? 'true' : 'false');
+                    grid.appendChild(button);
+                }
+                updateSummary();
+            }
+
+            async function fetchMonth(year, month) {
+                const key = year + '-' + month;
+                if (cache[key]) return;
+                if (inflight[key]) {
+                    await inflight[key];
+                    return;
+                }
+                const rest = window.tourivoData && window.tourivoData.restUrl;
+                if (!rest) throw new Error('calendar');
+                const url = new URL(rest + 'tourivo/v1/availability/calendar');
+                url.searchParams.set('item_id', itemId);
+                url.searchParams.set('item_type', itemType);
+                url.searchParams.set('year', String(year));
+                url.searchParams.set('month', String(month));
+                inflight[key] = fetch(url.toString())
+                    .then(function (res) {
+                        if (!res.ok) throw new Error('calendar');
+                        return res.json();
+                    })
+                    .then(function (data) {
+                        if (!data || !data.calendar) throw new Error('calendar');
+                        cache[key] = data.calendar;
+                    })
+                    .finally(function () {
+                        delete inflight[key];
+                    });
+                await inflight[key];
+            }
+
+            async function showMonth(year, month) {
+                view.y = year;
+                view.m = month;
+                paint();
+                try {
+                    await fetchMonth(year, month);
+                } catch (err) {
+                    if (!cache[year + '-' + month] && Object.keys(cache).length === 0) {
+                        useNativeDates();
+                        return;
+                    }
+                }
+                if (view.y === year && view.m === month) paint();
+            }
+
+            function shiftMonth(delta) {
+                let year = view.y;
+                let month = view.m + delta;
+                if (month < 1) {
+                    month = 12;
+                    year -= 1;
+                }
+                if (month > 12) {
+                    month = 1;
+                    year += 1;
+                }
+                showMonth(year, month);
+            }
+
+            async function rangeIsOpen(start, end) {
+                let cursor = start;
+                let guard = 0;
+                while (cursor < end && guard < 370) {
+                    const parts = cursor.split('-').map(Number);
+                    await fetchMonth(parts[0], parts[1]);
+                    if (isClosed(dayInfo(cursor)) || (today && cursor < today)) return false;
+                    cursor = addDaysIso(cursor, 1);
+                    guard += 1;
+                }
+                return cursor === end;
+            }
+
+            async function choose(date) {
+                if (busy || !date || (today && date < today)) return;
+                const info = dayInfo(date);
+                if (isClosed(info) && !(awaitingCheckout && checkInInput.value && date > checkInInput.value)) return;
+
+                if (itemType !== 'room') {
+                    checkInInput.value = date;
+                    setNote('');
+                    paint();
+                    checkInInput.dispatchEvent(new Event('change'));
+                    return;
+                }
+
+                const cin = checkInInput.value;
+                if (!awaitingCheckout || !cin || date <= cin) {
+                    if (isClosed(info)) return;
+                    awaitingCheckout = true;
+                    checkInInput.value = date;
+                    if (checkOutInput) checkOutInput.value = '';
+                    setNote(text.pickCheckout, false);
+                    paint();
+                    checkInInput.dispatchEvent(new Event('change'));
+                    return;
+                }
+
+                busy = true;
+                let open = false;
+                try {
+                    open = await rangeIsOpen(cin, date);
+                } catch (err) {
+                    open = false;
+                }
+                busy = false;
+                if (!open) {
+                    setNote(text.closedRange, true);
+                    paint();
+                    return;
+                }
+                if (checkOutInput) checkOutInput.value = date;
+                awaitingCheckout = false;
+                setNote('');
+                paint();
+                checkInInput.dispatchEvent(new Event('change'));
+            }
+
+            prev?.addEventListener('click', function () { shiftMonth(-1); });
+            next?.addEventListener('click', function () { shiftMonth(1); });
+            grid?.addEventListener('click', function (event) {
+                const button = event.target.closest('.tourivo-cal-day');
+                if (!button || button.disabled) return;
+                choose(button.dataset.date || '');
+            });
+
+            if (!window.tourivoData || !window.tourivoData.restUrl) {
+                useNativeDates();
+                return;
+            }
+            updateSummary();
+            showMonth(view.y, view.m);
         }
 
         // 3. Recalculate Live Price, Breakdown & Availability
@@ -129,12 +477,17 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Real-time backend quote & availability verification with debounce (~250ms) & AbortController
             if (window.tourivoData && window.tourivoData.restUrl && checkIn) {
+                if (itemType === 'room' && checkOutInput && !checkOutInput.value) {
+                    syncCheckoutStep(false);
+                }
+                setQuotePending(true);
                 clearTimeout(checkDebounceTimer);
                 checkDebounceTimer = setTimeout(function () {
                     if (checkAbortController) {
                         checkAbortController.abort();
                     }
                     checkAbortController = new AbortController();
+                    const serial = ++quoteSerial;
 
                     // 1. Fetch Authoritative Price Quote
                     const quoteUrl = new URL(window.tourivoData.restUrl + 'tourivo/v1/pricing/quote');
@@ -146,10 +499,20 @@ document.addEventListener('DOMContentLoaded', function () {
                     quoteUrl.searchParams.set('children', children);
                     quoteUrl.searchParams.set('infants', infants);
                     quoteUrl.searchParams.set('rooms', rooms);
+                    panel.querySelectorAll('.tourivo-addon-checkbox:checked').forEach(function (cb) {
+                        if (cb.value) {
+                            quoteUrl.searchParams.append('selected_addons[]', cb.value);
+                        }
+                    });
+                    if (couponInput && couponInput.value.trim()) {
+                        quoteUrl.searchParams.set('coupon_code', couponInput.value.trim());
+                    }
 
                     fetch(quoteUrl.toString(), { signal: checkAbortController.signal })
                         .then(res => res.json())
                         .then(quote => {
+                            if (serial !== quoteSerial) return;
+                            setQuotePending(false);
                             if (quote && quote.success) {
                                 const symbol = quote.currency_symbol || currencySymbol;
 
@@ -170,21 +533,37 @@ document.addEventListener('DOMContentLoaded', function () {
                                     });
                                 }
 
-                                // Subtotal
+                                // Discount, including a promo code applied on top of the quoted total
+                                const couponAmount = quote.coupon && quote.coupon.amount > 0 ? Number(quote.coupon.amount) : 0;
+                                if (couponMessage) {
+                                    if (quote.coupon_error) {
+                                        couponMessage.style.color = '#b91c1c';
+                                        couponMessage.textContent = quote.coupon_error;
+                                    } else if (quote.coupon && quote.coupon.label) {
+                                        couponMessage.style.color = '#0f766e';
+                                        couponMessage.textContent = quote.coupon.label;
+                                    } else if (couponInput && couponInput.value.trim()) {
+                                        couponMessage.textContent = '';
+                                    }
+                                }
+                                const shownDiscount = couponAmount > 0 ? couponAmount : quote.discount;
+                                const shownSubtotal = couponAmount > 0 ? quote.subtotal + couponAmount : quote.subtotal;
                                 if (subtotalRow && subtotalVal) {
-                                    if (quote.discount > 0 || quote.tax > 0) {
+                                    if (shownDiscount > 0 || quote.tax > 0) {
                                         subtotalRow.style.display = 'flex';
-                                        subtotalVal.textContent = formatPrice(quote.subtotal, symbol);
+                                        subtotalVal.textContent = formatPrice(shownSubtotal, symbol);
                                     } else {
                                         subtotalRow.style.display = 'none';
                                     }
                                 }
 
-                                // Discount
                                 if (discountRow && discountVal) {
-                                    if (quote.discount > 0) {
+                                    if (shownDiscount > 0) {
                                         discountRow.style.display = 'flex';
-                                        discountVal.textContent = '-' + formatPrice(quote.discount, symbol);
+                                        discountVal.textContent = '-' + formatPrice(shownDiscount, symbol);
+                                        if (discountLabel) {
+                                            discountLabel.textContent = (quote.coupon && quote.coupon.label) ? quote.coupon.label : 'Discount';
+                                        }
                                     } else {
                                         discountRow.style.display = 'none';
                                     }
@@ -210,9 +589,8 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         })
                         .catch(err => {
-                            if (err.name !== 'AbortError') {
-                                // Ignore network aborts
-                            }
+                            if (err.name === 'AbortError' || serial !== quoteSerial) return;
+                            setQuotePending(false);
                         });
 
                     // 2. Availability Check
@@ -227,7 +605,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     fetch(checkUrl.toString(), { signal: checkAbortController.signal })
                         .then(res => res.json())
                         .then(data => {
-                            if (data && statusBadge) {
+                            if (serial !== quoteSerial || !data) return;
+                            syncCheckoutStep(!!data.available);
+                            if (statusBadge) {
                                 statusBadge.innerHTML = '';
                                 const badge = document.createElement('span');
                                 badge.className = 'status-badge status-check';
@@ -246,13 +626,16 @@ document.addEventListener('DOMContentLoaded', function () {
                             }
                         })
                         .catch(err => {
-                            if (err.name !== 'AbortError') {
-                                // Request failed silently on network issue
-                            }
+                            if (err.name === 'AbortError' || serial !== quoteSerial) return;
+                            syncCheckoutStep(true);
                         });
                 }, 250);
+            } else {
+                setQuotePending(false);
             }
         }
+
+        recalculatePrice();
 
         // 4. Handle Direct Booking Form Submission
         if (bookingForm) {
@@ -265,6 +648,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
 
                 const formData = new FormData(bookingForm);
+                const customFields = {};
+                formData.forEach(function (value, key) {
+                    const match = key.match(/^tourivo_fields\[(.+)\]$/);
+                    if (match) {
+                        customFields[match[1]] = value;
+                    }
+                });
                 const payload = {
                     item_id: itemId,
                     item_type: itemType,
@@ -281,6 +671,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     payment_method: formData.get('payment_method') || 'offline',
                     consent: formData.get('consent') ? 1 : 0,
                     tourivo_hp_check: formData.get('tourivo_hp_check') || '',
+                    selected_addons: formData.getAll('selected_addons[]'),
+                    coupon_code: formData.get('coupon_code') || '',
+                    custom_fields: customFields,
                 };
 
                 submitBtn.disabled = true;

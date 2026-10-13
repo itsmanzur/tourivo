@@ -69,12 +69,15 @@ class AdminServiceProvider extends ServiceProvider
             return;
         }
 
+        $this->addAction('admin_menu', [$this, 'loadAdminLocale'], 1);
         $this->addAction('admin_menu', [$this, 'registerAdminMenus'], 9);
+        $this->addAction('admin_menu', [$this, 'loadAdminLocale'], 29);
         $this->addAction('admin_enqueue_scripts', [$this, 'maybeSwitchUiLocale'], 1);
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
         $this->addAction('admin_post_tourivo_export_bookings_csv', [ExportService::class, 'handleExportRequest']);
         $this->addAction('admin_post_tourivo_export_accounting_csv', [$this, 'handleExportAccountingCsv']);
         $this->addAction('admin_post_tourivo_save_settings', [SettingsPage::class, 'handleSave']);
+        $this->addAction('admin_post_tourivo_fix_proxy', [$this, 'handleFixProxy']);
 
         // Admin Notices
         $this->addAction('admin_notices', [$this, 'renderWelcomeDemoNotice']);
@@ -133,12 +136,29 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
+     * Load the plugin language before admin menus are registered.
+     *
+     * Menu titles are translated at registration time. The screen-specific
+     * switch runs later, so without this the sidebar stays in the site locale.
+     */
+    public function loadAdminLocale(): void
+    {
+        $lang = (string) \Tourivo\Config\Config::get('plugin_language', 'default');
+        if ('default' === $lang) {
+            return;
+        }
+
+        tourivo_load_plugin_textdomain('bn' === $lang ? 'bn_BD' : 'en_US');
+    }
+
+    /**
      * Register top-level Tourivo admin menu and submenus.
      *
      * @return void
      */
     public function registerAdminMenus(): void
     {
+        $this->loadAdminLocale();
         add_menu_page(
             __('Tourivo', 'tourivo'),
             __('Tourivo', 'tourivo'),
@@ -366,16 +386,65 @@ class AdminServiceProvider extends ServiceProvider
             return;
         }
 
-        $settingsUrl = admin_url('admin.php?page=tourivo-settings');
+        if ($this->isLocalDevHost()) {
+            return;
+        }
+
         ?>
-        <div class="notice notice-warning">
+        <div class="notice notice-info tourivo-proxy-notice">
             <p>
-                <strong><?php esc_html_e('Tourivo: proxy / CDN detected.', 'tourivo'); ?></strong>
-                <?php esc_html_e('Visitor IP addresses may be hidden behind your proxy, so anti-spam rate limits would treat all customers as one visitor and block legitimate bookings.', 'tourivo'); ?>
-                <a href="<?php echo esc_url($settingsUrl); ?>"><?php esc_html_e('Choose the correct Proxy Mode in Settings', 'tourivo'); ?></a>
+                <span class="tourivo-proxy-notice__text">
+                    <?php esc_html_e('Your site sits behind another server. Without a quick fix, real customers can get blocked after only a few bookings.', 'tourivo'); ?>
+                </span>
+                <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
+                    <input type="hidden" name="action" value="tourivo_fix_proxy">
+                    <?php wp_nonce_field('tourivo_fix_proxy'); ?>
+                    <button type="submit" class="button button-primary button-small"><?php esc_html_e('Fix this for me', 'tourivo'); ?></button>
+                </form>
             </p>
         </div>
         <?php
+    }
+
+    /**
+     * Local WP and similar dev hosts always look like a proxy. Don't ask the site owner to configure that.
+     */
+    private function isLocalDevHost(): bool
+    {
+        $host = wp_parse_url(home_url(), PHP_URL_HOST);
+        if (!is_string($host) || $host === '') {
+            return false;
+        }
+        $host = strtolower($host);
+
+        return $host === 'localhost'
+            || $host === '127.0.0.1'
+            || $host === '[::1]'
+            || str_ends_with($host, '.local')
+            || str_ends_with($host, '.test');
+    }
+
+    /**
+     * Turn on the matching visitor-address mode without sending the owner into advanced settings.
+     */
+    public function handleFixProxy(): void
+    {
+        if (!current_user_can('manage_tourivo_settings')) {
+            wp_die(esc_html__('Unauthorized access.', 'tourivo'));
+        }
+        check_admin_referer('tourivo_fix_proxy');
+
+        $mode = !empty($_SERVER['HTTP_CF_CONNECTING_IP']) ? 'cloudflare' : 'reverse_proxy';
+        $settings = get_option('tourivo_settings', []);
+        if (!is_array($settings)) {
+            $settings = [];
+        }
+        $settings['proxy_mode'] = $mode;
+        $settings['trust_proxy_headers'] = 1;
+        update_option('tourivo_settings', $settings);
+
+        wp_safe_redirect(wp_get_referer() ?: admin_url('admin.php?page=tourivo'));
+        exit;
     }
 
     /**
@@ -387,13 +456,15 @@ class AdminServiceProvider extends ServiceProvider
         $code  = isset($_GET['code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_GET['code']))) : '';
         // phpcs:ignore WordPress.Security.NonceVerification.Recommended
         $token = isset($_GET['token']) ? sanitize_text_field(wp_unslash((string) $_GET['token'])) : '';
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+        $expiresAt = isset($_GET['exp']) ? (int) $_GET['exp'] : 0;
 
         if (!\Tourivo\Support\RateLimiter::hit('trv_verify_' . md5(\Tourivo\Support\ClientIp::get()), 20, 600)) {
             wp_die(esc_html__('Too many attempts. Please try again later.', 'tourivo'), '', ['response' => 429]);
         }
 
         $bookingService = Container::getInstance()->get(BookingService::class);
-        $result = $bookingService->verifyEmail($code, $token);
+        $result = $bookingService->verifyEmail($code, $token, $expiresAt);
 
         if (empty($result['success'])) {
             wp_die(

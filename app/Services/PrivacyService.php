@@ -106,7 +106,10 @@ class PrivacyService
                         'customer_phone'  => '',
                         'billing_address' => '',
                         'customer_notes'  => '',
+                        'admin_notes'     => '',
+                        'transaction_id'  => '',
                         'ip_address'      => '',
+                        'access_key'      => bin2hex(random_bytes(16)),
                     ],
                     ['id' => $row->id]
                 );

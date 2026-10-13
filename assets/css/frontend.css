@@ -308,6 +308,204 @@
     font-size: 14px;
 }
 
+.tourivo-cal-summary {
+    font-size: 13px;
+    font-weight: 700;
+    margin: 0 0 8px;
+}
+
+.tourivo-cal-summary:empty {
+    display: none;
+}
+
+.tourivo-cal {
+    border: 1px solid var(--trv-border);
+    border-radius: 10px;
+    padding: 10px;
+    background: #fff;
+}
+
+.tourivo-cal-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+
+.tourivo-cal-title {
+    font-weight: 700;
+    font-size: 14px;
+}
+
+.tourivo-cal-prev,
+.tourivo-cal-next {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--trv-border);
+    background: #fff;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 20px;
+    line-height: 1;
+    color: var(--trv-text-main);
+}
+
+.tourivo-cal-prev:disabled,
+.tourivo-cal-next:disabled {
+    opacity: 0.35;
+    cursor: default;
+}
+
+.tourivo-cal-weekdays,
+.tourivo-cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+    gap: 4px;
+}
+
+.tourivo-cal-weekdays span {
+    text-align: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--trv-text-muted);
+    padding: 2px 0 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tourivo-cal-day,
+.tourivo-cal-pad {
+    min-height: 46px;
+}
+
+.tourivo-cal-day {
+    border: 1px solid transparent;
+    background: var(--trv-bg-light);
+    border-radius: 8px;
+    padding: 4px 0;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1px;
+    color: var(--trv-text-main);
+}
+
+.tourivo-cal-num {
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 1.1;
+}
+
+.tourivo-cal-spots {
+    font-size: 9px;
+    line-height: 1.1;
+    color: var(--trv-text-muted);
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.tourivo-cal-day.is-limited .tourivo-cal-spots {
+    color: #b45309;
+    font-weight: 700;
+}
+
+.tourivo-cal-day.is-soldout,
+.tourivo-cal-day:disabled {
+    background: #f1f5f9;
+    color: #94a3b8;
+    cursor: default;
+}
+
+.tourivo-cal-day.is-soldout .tourivo-cal-num {
+    text-decoration: line-through;
+}
+
+.tourivo-cal-day.is-soldout:not(:disabled) {
+    cursor: pointer;
+    border-color: #cbd5e1;
+    border-style: dashed;
+}
+
+.tourivo-cal-day.is-in-range {
+    background: color-mix(in srgb, var(--trv-primary) 18%, #fff);
+    border-radius: 4px;
+}
+
+.tourivo-cal-day.is-checkin,
+.tourivo-cal-day.is-checkout {
+    background: var(--trv-primary);
+    color: #fff;
+    border-color: transparent;
+}
+
+.tourivo-cal-day.is-checkin .tourivo-cal-spots,
+.tourivo-cal-day.is-checkout .tourivo-cal-spots {
+    color: rgba(255, 255, 255, 0.88);
+}
+
+.tourivo-cal-day:not(:disabled):hover {
+    border-color: var(--trv-primary);
+}
+
+.tourivo-cal-day:focus-visible {
+    outline: 2px solid var(--trv-primary);
+    outline-offset: 1px;
+}
+
+.tourivo-cal-note {
+    margin: 8px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--trv-text-muted);
+}
+
+.tourivo-cal-note:empty {
+    display: none;
+}
+
+.tourivo-cal-note.is-warn {
+    color: #b45309;
+}
+
+.tourivo-cal-loading {
+    grid-column: 1 / -1;
+    text-align: center;
+    color: var(--trv-text-muted);
+    font-size: 13px;
+    margin: 12px 0;
+}
+
+.tourivo-date-fields {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.tourivo-date-fields.is-native {
+    position: static;
+    width: auto;
+    height: auto;
+    overflow: visible;
+    clip: auto;
+}
+
+.tourivo-date-fields.is-native input {
+    display: block;
+    width: 100%;
+    margin-top: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--trv-border);
+    border-radius: 6px;
+}
+
 /* Guest Counters */
 .guest-counter-row {
     display: flex;
@@ -374,6 +572,18 @@
     padding-top: 8px;
     border-top: 1px dashed var(--trv-border);
     font-size: 15px;
+}
+
+.price-breakdown-box.is-calculating .breakdown-val,
+.price-breakdown-box.is-calculating .total-amount-val {
+    opacity: 0.4;
+}
+
+.tourivo-calculating {
+    margin: 8px 0 0;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--trv-primary);
 }
 
 .total-amount-val {

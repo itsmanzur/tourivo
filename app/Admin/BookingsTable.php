@@ -240,6 +240,7 @@ class BookingsTable
                                     <a href="<?php echo esc_url(add_query_arg(['action' => 'tourivo_print_voucher', 'code' => $b->booking_code], admin_url('admin-post.php'))); ?>" target="_blank" rel="noopener" class="button button-small" title="<?php esc_attr_e('Print Booking Voucher', 'tourivo'); ?>">
                                         🖨️ <?php esc_html_e('Voucher', 'tourivo'); ?>
                                     </a>
+                                    <?php do_action('tourivo_booking_row_actions', $b); ?>
                                     <button type="button" class="button button-small tourivo-open-payment-modal-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-customer="<?php echo esc_attr($b->customer_name); ?>" data-total="<?php echo esc_attr((string)$b->total_amount); ?>" data-paid="<?php echo esc_attr((string)($b->paid_amount ?? 0)); ?>" data-due="<?php echo esc_attr((string)($b->due_amount ?? $b->total_amount)); ?>" data-payment-status="<?php echo esc_attr($b->payment_status); ?>" data-payment-method="<?php echo esc_attr($b->payment_method); ?>" data-transaction-id="<?php echo esc_attr($b->transaction_id ?? ''); ?>" data-booking-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Record received offline payment or mark paid', 'tourivo'); ?>">
                                         💳 <?php esc_html_e('Payment', 'tourivo'); ?>
                                     </button>

@@ -283,6 +283,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
                 <a href="<?php echo esc_url($lookupUrl); ?>" class="tourivo-btn tourivo-btn-track">
                     🔍 <?php esc_html_e('Track My Booking', 'tourivo'); ?>
                 </a>
+                <?php do_action('tourivo/thankyou_actions', $booking); ?>
             </div>
         </div>
     </div>

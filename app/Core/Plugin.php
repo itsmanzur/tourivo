@@ -96,6 +96,9 @@ final class Plugin
         // 1. Fire early hook
         do_action('tourivo/before_boot', $this);
 
+        // Existing installs pick up capabilities added after the plugin was activated.
+        Installer::addCapabilities();
+
         // 2. Allow third-parties / Pro add-on to register additional providers
         $providers = apply_filters('tourivo/service_providers', $this->defaultProviders);
 

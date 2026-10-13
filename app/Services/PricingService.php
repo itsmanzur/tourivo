@@ -250,7 +250,17 @@ class PricingService
             'data'      => $input,
         ]);
 
-        $subtotal = (float) ($pricingData['total_price'] ?? $rawSubtotal);
+        if (!empty($input['reject_invalid_coupon']) && !empty($pricingData['coupon_error'])) {
+            return [
+                'success' => false,
+                'message' => (string) $pricingData['coupon_error'],
+            ];
+        }
+
+        $merchandise = (float) ($pricingData['total_price'] ?? $rawSubtotal);
+        $couponDiscount = max(0.0, (float) ($pricingData['coupon_discount'] ?? 0));
+        $couponDiscount = min($couponDiscount, max(0.0, $merchandise));
+        $subtotal = max(0.0, $merchandise - $couponDiscount);
         $discount = max(0.0, $rawSubtotal - $subtotal);
 
         // Tax Calculations
@@ -313,6 +323,10 @@ class PricingService
             'nights'          => $nights,
             'unit_price'      => $avgUnitPrice,
             'lines'           => $lines,
+            'coupon'          => ($couponDiscount > 0 && is_array($pricingData['coupon'] ?? null))
+                ? array_merge($pricingData['coupon'], ['amount' => round($couponDiscount, $decimals)])
+                : null,
+            'coupon_error'    => (string) ($pricingData['coupon_error'] ?? ''),
             'breakdown'       => [
                 'raw_subtotal' => $rawSubtotal,
                 'subtotal'     => $subtotal,

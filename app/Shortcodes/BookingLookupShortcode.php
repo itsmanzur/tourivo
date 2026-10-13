@@ -403,10 +403,11 @@ class BookingLookupShortcode
         ];
 
         $paymentColors = [
-            'paid'     => '#10b981',
-            'unpaid'   => '#f59e0b',
-            'refunded' => '#64748b',
-            'failed'   => '#ef4444',
+            'paid'           => '#10b981',
+            'partially_paid' => '#f59e0b',
+            'pending'        => '#f59e0b',
+            'refunded'       => '#64748b',
+            'failed'         => '#ef4444',
         ];
 
         $bookingStatus = (string) $booking->booking_status;
@@ -426,7 +427,18 @@ class BookingLookupShortcode
             $itemsHtml .= '</div>';
             $itemsHtml .= '<div style="font-size:13px; color:#64748b;">';
             $itemsHtml .= '📅 <strong>' . esc_html__('Dates:', 'tourivo') . '</strong> ' . esc_html($dateRange) . ' &bull; ';
-            $itemsHtml .= '👥 <strong>' . esc_html__('Qty / Pax:', 'tourivo') . '</strong> ' . esc_html((string) $item->quantity);
+            $partyBits = [];
+            if (!empty($item->adults_count)) {
+                $partyBits[] = sprintf('%d %s', (int) $item->adults_count, __('adults', 'tourivo'));
+            }
+            if (!empty($item->children_count)) {
+                $partyBits[] = sprintf('%d %s', (int) $item->children_count, __('children', 'tourivo'));
+            }
+            if (!empty($item->infants_count)) {
+                $partyBits[] = sprintf('%d %s', (int) $item->infants_count, __('infants', 'tourivo'));
+            }
+            $partyLabel = $partyBits !== [] ? implode(', ', $partyBits) : (string) $item->quantity;
+            $itemsHtml .= '👥 <strong>' . esc_html__('Qty / Pax:', 'tourivo') . '</strong> ' . esc_html($partyLabel);
             $itemsHtml .= '</div>';
             $itemsHtml .= '</div>';
         }

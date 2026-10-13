@@ -650,37 +650,37 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="bank_name"><?php esc_html_e('Bank Name', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_name" type="text" id="bank_name" value="<?php echo esc_attr($bankName); ?>" class="regular-text" placeholder="e.g. Standard Chartered / City Bank">
+                                    <input name="bank_name" type="text" id="bank_name" value="<?php echo esc_attr($bankName); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. Standard Chartered / City Bank', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="bank_account_name"><?php esc_html_e('Account Name / Beneficiary', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_account_name" type="text" id="bank_account_name" value="<?php echo esc_attr($bankAccountName); ?>" class="regular-text" placeholder="e.g. Tourivo Holidays Ltd.">
+                                    <input name="bank_account_name" type="text" id="bank_account_name" value="<?php echo esc_attr($bankAccountName); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. Tourivo Holidays Ltd.', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="bank_account_number"><?php esc_html_e('Account Number', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_account_number" type="text" id="bank_account_number" value="<?php echo esc_attr($bankAccountNumber); ?>" class="regular-text code" placeholder="e.g. 01-2345678-01">
+                                    <input name="bank_account_number" type="text" id="bank_account_number" value="<?php echo esc_attr($bankAccountNumber); ?>" class="regular-text code" placeholder="<?php esc_attr_e('e.g. 01-2345678-01', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="bank_iban"><?php esc_html_e('IBAN (International)', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_iban" type="text" id="bank_iban" value="<?php echo esc_attr($bankIban); ?>" class="regular-text code" placeholder="e.g. GB29NWBK60161331926819">
+                                    <input name="bank_iban" type="text" id="bank_iban" value="<?php echo esc_attr($bankIban); ?>" class="regular-text code" placeholder="<?php esc_attr_e('e.g. GB29NWBK60161331926819', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="bank_swift_routing"><?php esc_html_e('SWIFT / BIC / Routing Code', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_swift_routing" type="text" id="bank_swift_routing" value="<?php echo esc_attr($bankSwiftRouting); ?>" class="regular-text code" placeholder="e.g. CIBLBDDH">
+                                    <input name="bank_swift_routing" type="text" id="bank_swift_routing" value="<?php echo esc_attr($bankSwiftRouting); ?>" class="regular-text code" placeholder="<?php esc_attr_e('e.g. CIBLBDDH', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="bank_branch"><?php esc_html_e('Branch Name & Address', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_branch" type="text" id="bank_branch" value="<?php echo esc_attr($bankBranch); ?>" class="regular-text" placeholder="e.g. Principal Branch, Dhaka">
+                                    <input name="bank_branch" type="text" id="bank_branch" value="<?php echo esc_attr($bankBranch); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. Principal Branch, Dhaka', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
@@ -951,7 +951,7 @@ class SettingsPage
                                     <option value="<?php echo esc_attr($tmplKey); ?>"><?php echo esc_html($tmpl['title']); ?></option>
                                 <?php endforeach; ?>
                             </select>
-                            <input type="email" id="tourivo_test_email_recipient" value="<?php echo esc_attr(get_option('admin_email')); ?>" class="regular-text" placeholder="your-email@example.com">
+                            <input type="email" id="tourivo_test_email_recipient" value="<?php echo esc_attr(get_option('admin_email')); ?>" class="regular-text" placeholder="<?php esc_attr_e('your-email@example.com', 'tourivo'); ?>">
                             <button type="button" class="button button-secondary" id="tourivo-send-test-email-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_test_email_nonce')); ?>">
                                 ✉️ <?php esc_html_e('Send Test Email', 'tourivo'); ?>
                             </button>
@@ -970,7 +970,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="webhook_url"><?php esc_html_e('Webhook Target URL', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="webhook_url" type="url" id="webhook_url" value="<?php echo esc_url($webhookUrl); ?>" class="large-text" placeholder="https://hooks.zapier.com/hooks/catch/..." style="max-width: 600px;">
+                                    <input name="webhook_url" type="url" id="webhook_url" value="<?php echo esc_url($webhookUrl); ?>" class="large-text" placeholder="<?php esc_attr_e('https://hooks.zapier.com/hooks/catch/...', 'tourivo'); ?>" style="max-width: 600px;">
                                     <p class="description"><?php esc_html_e('Your external automation endpoint URL that receives POST requests.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
@@ -978,7 +978,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="webhook_secret"><?php esc_html_e('Secret Key (HMAC SHA-256)', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="webhook_secret" type="password" autocomplete="new-password" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="e.g. secret_trv_xxxx" style="max-width: 400px;">
+                                    <input name="webhook_secret" type="password" autocomplete="new-password" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. secret_trv_xxxx', 'tourivo'); ?>" style="max-width: 400px;">
                                     <button type="button" class="button" id="tourivo-gen-secret-btn"><?php esc_html_e('Generate Secret', 'tourivo'); ?></button>
                                     <p class="description"><?php esc_html_e('Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification.', 'tourivo'); ?></p>
                                 </td>
@@ -1118,7 +1118,7 @@ class SettingsPage
                                 <td>
                                     <input name="anonymize_after_months" type="number" id="anonymize_after_months" min="0" max="120" value="<?php echo esc_attr((string) $anonymizeAfterMonths); ?>" class="small-text">
                                     <?php esc_html_e('months (Set to 0 to disable automated anonymization).', 'tourivo'); ?>
-                                    <p class="description"><?php esc_html_e('Replaces customer name, email, phone, billing address, and IP with anonymized identifiers while keeping revenue stats intact.', 'tourivo'); ?></p>
+                                    <p class="description"><?php esc_html_e('Replaces customer name, email, phone, billing address, notes, payment references, and IP with anonymized values, revokes voucher links, and keeps revenue totals intact.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
                             <tr>

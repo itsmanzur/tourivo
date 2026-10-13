@@ -181,7 +181,7 @@ class Privacy
         $output .= '<p>' . esc_html__('Personal data is collected strictly to process travel reservations, coordinate room and tour availability, verify customer identity for booking lookups, generate booking vouchers and invoices, and deliver booking confirmation and reminder emails.', 'tourivo') . '</p>';
 
         $output .= '<h3>' . esc_html__('Data Retention & Anonymization', 'tourivo') . '</h3>';
-        $output .= '<p>' . esc_html__('Booking financial records (order totals, taxes, transaction IDs, and line items) are retained for statutory accounting and taxation compliance. When an erasure request is executed or retention schedules expire, personal identifiers (name, email, phone, billing address, IP address, and notes) are permanently erased and replaced with anonymized placeholders.', 'tourivo') . '</p>';
+        $output .= '<p>' . esc_html__('Booking financial records (order totals, taxes, and line items) are retained for statutory accounting. When an erasure request is executed or retention schedules expire, personal identifiers (name, email, phone, billing address, notes, payment references, and IP address) are permanently erased, and voucher links are revoked.', 'tourivo') . '</p>';
 
         $output .= '<h3>' . esc_html__('Cookies & Local Browser Storage', 'tourivo') . '</h3>';
         $output .= '<p>' . esc_html__('Tourivo utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies.', 'tourivo') . '</p>';
@@ -350,7 +350,10 @@ class Privacy
                     'customer_phone'  => '',
                     'billing_address' => '',
                     'customer_notes'  => '',
+                    'admin_notes'     => '',
+                    'transaction_id'  => '',
                     'ip_address'      => '',
+                    'access_key'      => bin2hex(random_bytes(16)),
                 ],
                 ['id' => $b->id]
             );

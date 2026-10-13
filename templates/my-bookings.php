@@ -239,6 +239,7 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                             <a href="<?php echo esc_url((string) $b['calendar_url']); ?>" class="tourivo-btn-sm tourivo-btn-outline">
                                 📅 <?php esc_html_e('Add to Calendar', 'tourivo'); ?>
                             </a>
+                            <?php do_action('tourivo/my_booking_actions', $b); ?>
 
                             <?php if (!empty($b['can_cancel'])) : ?>
                                 <button type="button" class="tourivo-btn-sm tourivo-btn-danger btnOpenCancelModal" data-booking-id="<?php echo esc_attr((string) $b['id']); ?>" data-code="<?php echo esc_attr((string) $b['booking_code']); ?>">
@@ -538,37 +539,45 @@ $brandColor = !empty($primaryColor) ? $primaryColor : '#0d9488';
                     if (res && res.success && res.data) {
                         var b = res.data.booking;
                         var items = res.data.items || [];
+                        var esc = function(value) {
+                            return String(value == null ? '' : value)
+                                .replace(/&/g, '&amp;')
+                                .replace(/</g, '&lt;')
+                                .replace(/>/g, '&gt;')
+                                .replace(/"/g, '&quot;')
+                                .replace(/'/g, '&#039;');
+                        };
                         var html = '<div style="margin-bottom:16px; border-bottom:1px solid #e2e8f0; padding-bottom:12px;">';
                         html += '<div style="font-size:12px; color:#64748b; text-transform:uppercase;"><?php echo esc_js(__('Booking Reference', 'tourivo')); ?></div>';
-                        html += '<strong style="font-size:20px; color:#0f172a;">#' + b.booking_code + '</strong>';
-                        html += '<div style="margin-top:4px; font-size:13px; color:#64748b;"><?php echo esc_js(__('Placed on:', 'tourivo')); ?> ' + b.created_at + '</div>';
+                        html += '<strong style="font-size:20px; color:#0f172a;">#' + esc(b.booking_code) + '</strong>';
+                        html += '<div style="margin-top:4px; font-size:13px; color:#64748b;"><?php echo esc_js(__('Placed on:', 'tourivo')); ?> ' + esc(b.created_at) + '</div>';
                         html += '</div>';
 
                         html += '<h4 style="margin:16px 0 8px; font-size:15px; color:#0f172a;"><?php echo esc_js(__('Reserved Items', 'tourivo')); ?></h4>';
                         items.forEach(function(it) {
-                            var range = it.check_out ? (it.check_in + ' → ' + it.check_out) : it.check_in;
+                            var range = it.check_out ? (esc(it.check_in) + ' → ' + esc(it.check_out)) : esc(it.check_in);
                             html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; margin-bottom:8px;">';
                             html += '<div style="display:flex; justify-content:space-between; font-weight:700; color:#0f172a;">';
-                            html += '<span>' + it.item_title + '</span>';
-                            html += '<span>' + it.total_price + '</span>';
+                            html += '<span>' + esc(it.item_title) + '</span>';
+                            html += '<span>' + esc(it.total_price) + '</span>';
                             html += '</div>';
                             html += '<div style="font-size:13px; color:#64748b; margin-top:4px;">';
-                            html += '📅 ' + range + (it.time_slot ? (' &bull; ⏰ ' + it.time_slot) : '') + ' &bull; 👥 Qty: ' + it.quantity;
+                            html += '📅 ' + range + (it.time_slot ? (' &bull; ⏰ ' + esc(it.time_slot)) : '') + ' &bull; 👥 Qty: ' + esc(it.quantity);
                             html += '</div>';
                             html += '</div>';
                         });
 
                         html += '<h4 style="margin:16px 0 8px; font-size:15px; color:#0f172a;"><?php echo esc_js(__('Payment & Financial Summary', 'tourivo')); ?></h4>';
                         html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:12px; font-size:14px;">';
-                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Payment Method:', 'tourivo')); ?></span><strong>' + b.payment_method + '</strong></div>';
-                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Payment Status:', 'tourivo')); ?></span><strong>' + b.payment_status + '</strong></div>';
-                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Tax:', 'tourivo')); ?></span><span>' + b.tax_amount + '</span></div>';
-                        html += '<div style="display:flex; justify-content:space-between; font-size:16px; font-weight:800; color:#0f172a; border-top:1px solid #e2e8f0; padding-top:6px; margin-top:6px;"><span><?php echo esc_js(__('Total:', 'tourivo')); ?></span><span>' + b.total_amount + '</span></div>';
+                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Payment Method:', 'tourivo')); ?></span><strong>' + esc(b.payment_method) + '</strong></div>';
+                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Payment Status:', 'tourivo')); ?></span><strong>' + esc(b.payment_status) + '</strong></div>';
+                        html += '<div style="display:flex; justify-content:space-between; margin-bottom:4px;"><span><?php echo esc_js(__('Tax:', 'tourivo')); ?></span><span>' + esc(b.tax_amount) + '</span></div>';
+                        html += '<div style="display:flex; justify-content:space-between; font-size:16px; font-weight:800; color:#0f172a; border-top:1px solid #e2e8f0; padding-top:6px; margin-top:6px;"><span><?php echo esc_js(__('Total:', 'tourivo')); ?></span><span>' + esc(b.total_amount) + '</span></div>';
                         html += '</div>';
 
                         if (b.customer_notes) {
                             html += '<h4 style="margin:16px 0 8px; font-size:15px; color:#0f172a;"><?php echo esc_js(__('Your Notes:', 'tourivo')); ?></h4>';
-                            html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; font-size:13px; color:#475569;">' + b.customer_notes + '</div>';
+                            html += '<div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px; font-size:13px; color:#475569;">' + esc(b.customer_notes) + '</div>';
                         }
 
                         body.innerHTML = html;

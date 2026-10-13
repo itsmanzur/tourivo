@@ -102,7 +102,7 @@ class MyBookingsShortcode
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $bookings = $wpdb->get_results($wpdb->prepare(
             "SELECT * FROM {$bookingsTable} 
-             WHERE customer_id = %d OR (customer_email = %s AND customer_email != '') 
+             WHERE customer_id = %d OR (customer_id = 0 AND customer_email = %s AND customer_email != '') 
              ORDER BY id DESC LIMIT %d",
             $userId,
             $userEmail,
@@ -162,7 +162,7 @@ class MyBookingsShortcode
             ], admin_url('admin-post.php'));
 
             $calendarUrl = add_query_arg([
-                'action' => 'tourivo_download_calendar',
+                'action' => 'tourivo_download_ics',
                 'code'   => $booking->booking_code,
                 'token'  => $voucherToken,
             ], admin_url('admin-post.php'));
@@ -223,7 +223,7 @@ class MyBookingsShortcode
         $bookings = (array) $wpdb->get_results($wpdb->prepare(
             "SELECT id, booking_status, total_amount, created_at
              FROM {$bookingsTable}
-             WHERE customer_id = %d OR (customer_email = %s AND customer_email != '')",
+             WHERE customer_id = %d OR (customer_id = 0 AND customer_email = %s AND customer_email != '')",
             $userId,
             $userEmail
         ));
@@ -329,7 +329,7 @@ class MyBookingsShortcode
         $currentUser   = wp_get_current_user();
         $userId        = (int) $currentUser->ID;
         $userEmail     = (string) $currentUser->user_email;
-        $isOwner       = ((int) $booking->customer_id === $userId) || (strcasecmp((string) $booking->customer_email, $userEmail) === 0);
+        $isOwner       = self::userOwnsBooking($booking, $userId, $userEmail);
         $isAdmin       = current_user_can('manage_tourivo_bookings');
 
         if (!$isOwner && !$isAdmin) {
@@ -384,7 +384,7 @@ class MyBookingsShortcode
         $currentUser = wp_get_current_user();
         $userId      = (int) $currentUser->ID;
         $userEmail   = (string) $currentUser->user_email;
-        $isOwner     = ((int) $booking->customer_id === $userId) || (strcasecmp((string) $booking->customer_email, $userEmail) === 0);
+        $isOwner     = self::userOwnsBooking($booking, $userId, $userEmail);
         $isAdmin     = current_user_can('manage_tourivo_bookings');
 
         if (!$isOwner && !$isAdmin) {
@@ -443,6 +443,20 @@ class MyBookingsShortcode
             ],
             'items'   => $formattedItems,
         ];
+    }
+
+    /**
+     * A logged-in traveler owns a booking tied to their account, or a guest booking that still matches their email.
+     */
+    private static function userOwnsBooking(object $booking, int $userId, string $userEmail): bool
+    {
+        if ($userId > 0 && (int) $booking->customer_id === $userId) {
+            return true;
+        }
+
+        return (int) $booking->customer_id === 0
+            && $userEmail !== ''
+            && strcasecmp((string) $booking->customer_email, $userEmail) === 0;
     }
 
     /**

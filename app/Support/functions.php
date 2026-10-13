@@ -413,12 +413,13 @@ if (!function_exists('tourivo_load_plugin_textdomain')) {
 
         $wporgFile   = defined('WP_LANG_DIR') ? WP_LANG_DIR . '/plugins/tourivo-' . $locale . '.mo' : '';
         $bundledFile = defined('TOURIVO_PLUGIN_DIR') ? TOURIVO_PLUGIN_DIR . 'languages/tourivo-' . $locale . '.mo' : '';
+        $bundledPhp  = $bundledFile !== '' ? (string) preg_replace('/\.mo$/', '.l10n.php', $bundledFile) : '';
 
         // 1. Prioritize WP.org translation updates if available
         if (!empty($wporgFile) && file_exists($wporgFile)) {
             load_textdomain('tourivo', $wporgFile, $locale);
-        } elseif (!empty($bundledFile) && file_exists($bundledFile)) {
-            // 2. Fallback to bundled plugin translation file
+        } elseif ($bundledFile !== '' && (file_exists($bundledFile) || ($bundledPhp !== '' && file_exists($bundledPhp)))) {
+            // 2. Bundled catalog. WordPress prefers the .l10n.php file beside this .mo path.
             load_textdomain('tourivo', $bundledFile, $locale);
         } else {
             // 3. Fallback standard loader

@@ -231,7 +231,7 @@ class MyBookingsPortalTest extends TestCase
         $output = MyBookingsShortcode::render([]);
 
         $this->assertStringContainsString('action=tourivo_print_voucher', $output);
-        $this->assertStringContainsString('action=tourivo_download_calendar', $output);
+        $this->assertStringContainsString('action=tourivo_download_ics', $output);
         $this->assertStringContainsString('code=' . $res['booking_code'], $output);
     }
 

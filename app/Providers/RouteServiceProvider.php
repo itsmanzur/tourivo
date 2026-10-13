@@ -133,7 +133,7 @@ class RouteServiceProvider extends ServiceProvider
         register_rest_route(self::REST_NAMESPACE, '/availability/hold', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$controller, 'hold'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [$this, 'authorizePublicWrite'],
         ]);
 
         /** @var PricingController $pricingController */
@@ -153,8 +153,32 @@ class RouteServiceProvider extends ServiceProvider
         register_rest_route(self::REST_NAMESPACE, '/bookings/direct', [
             'methods'             => WP_REST_Server::CREATABLE,
             'callback'            => [$bookingController, 'directCheckout'],
-            'permission_callback' => '__return_true',
+            'permission_callback' => [$this, 'authorizePublicWrite'],
         ]);
+    }
+
+    /**
+     * Cookie and cross-site posts must present the nonce localized on the booking form.
+     *
+     * @param \WP_REST_Request $request
+     * @return true|\WP_Error
+     */
+    public function authorizePublicWrite(\WP_REST_Request $request): bool|\WP_Error
+    {
+        $nonce = $request->get_header('X-WP-Nonce');
+        if (!is_string($nonce) || $nonce === '') {
+            $nonce = (string) $request->get_param('_wpnonce');
+        }
+
+        if ($nonce === '' || !wp_verify_nonce($nonce, 'wp_rest')) {
+            return new \WP_Error(
+                'rest_forbidden',
+                __('Invalid or missing security token.', 'tourivo'),
+                ['status' => 403]
+            );
+        }
+
+        return true;
     }
 
     /**

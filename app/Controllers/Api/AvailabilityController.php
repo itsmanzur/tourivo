@@ -58,6 +58,10 @@ class AvailabilityController extends Controller
      */
     public function check(WP_REST_Request $request): WP_REST_Response|WP_Error
     {
+        if (function_exists('tourivo_load_plugin_textdomain')) {
+            tourivo_load_plugin_textdomain();
+        }
+
         $itemId    = (int) $request->get_param('item_id');
         $itemType  = sanitize_text_field((string) ($request->get_param('item_type') ?: 'tour'));
         $startDate = sanitize_text_field((string) $request->get_param('start_date'));

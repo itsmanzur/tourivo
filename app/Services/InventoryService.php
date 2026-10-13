@@ -58,8 +58,8 @@ class InventoryService
                 return $tour->getDailyCapacity();
             }
 
-            // No explicit daily capacity configured: fall back to the group-size limit (legacy behaviour).
-            return $tour->getMaxGuests() > 0 ? $tour->getMaxGuests() : 20;
+            // No explicit daily capacity: use the group-size limit. Zero means the tour is not bookable until one is set.
+            return $tour->getMaxGuests() > 0 ? $tour->getMaxGuests() : 0;
         }
 
         if ($itemType === 'hotel_room' || $itemType === 'room') {
@@ -167,6 +167,18 @@ class InventoryService
                 'currency_symbol' => $currencySymbol,
                 'dates_checked'   => [],
                 'message'         => __('Invalid date range specified.', 'tourivo'),
+            ];
+        }
+
+        if ($defaultCapacity < 1) {
+            return [
+                'available'       => false,
+                'available_spots' => 0,
+                'unit_price'      => 0.0,
+                'total_price'     => 0.0,
+                'currency_symbol' => $currencySymbol,
+                'dates_checked'   => $dates,
+                'message'         => __('This departure has no capacity configured yet.', 'tourivo'),
             ];
         }
 

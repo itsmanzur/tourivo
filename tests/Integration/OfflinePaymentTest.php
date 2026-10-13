@@ -183,7 +183,7 @@ class OfflinePaymentTest extends TestCase
     }
 
     /**
-     * 4. Test: Customer submits transaction reference with email lookup.
+     * 4. Test: Booking code plus email alone cannot write a payment reference.
      */
     public function test_customer_submit_transaction_reference_with_email(): void
     {
@@ -199,10 +199,7 @@ class OfflinePaymentTest extends TestCase
             'client@travel.com'
         );
 
-        $this->assertTrue($res['success']);
-
-        $updated = $wpdb->bookings[$bookingId];
-        $this->assertSame('BKASH-77112233', $updated['transaction_id']);
+        $this->assertFalse($res['success']);
     }
 
     /**

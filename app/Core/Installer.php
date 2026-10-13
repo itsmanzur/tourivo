@@ -97,7 +97,7 @@ class Installer
      *
      * @return void
      */
-    protected static function addCapabilities(): void
+    public static function addCapabilities(): void
     {
         $adminRole = get_role('administrator');
         if (!$adminRole) {
@@ -110,6 +110,7 @@ class Installer
             'manage_tourivo_tours',
             'manage_tourivo_hotels',
             'manage_tourivo_settings',
+            'manage_tourivo_checkin',
         ];
 
         foreach ($capabilities as $cap) {

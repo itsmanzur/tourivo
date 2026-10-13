@@ -213,6 +213,11 @@ class PaymentService
             ];
         }
 
+        // Booking code plus email is not a write credential. The argument stays so older forms can keep posting it.
+        if (is_string($customerEmail)) {
+            $customerEmail = trim($customerEmail);
+        }
+
         // Security Authentication
         $isAuthorized = false;
 
@@ -229,20 +234,15 @@ class PaymentService
             }
         }
 
-        // 3. Customer Email verification
-        if (!$isAuthorized && !empty($customerEmail) && strcasecmp((string) $booking->customer_email, trim($customerEmail)) === 0) {
-            $isAuthorized = true;
-        }
-
-        // 4. Logged-in customer check
+        // 3. The account the booking is already tied to
         if (!$isAuthorized && is_user_logged_in()) {
             $currentUser = wp_get_current_user();
-            if ((int) $booking->customer_id === (int) $currentUser->ID || strcasecmp((string) $booking->customer_email, (string) $currentUser->user_email) === 0) {
+            if ((int) $currentUser->ID > 0 && (int) $booking->customer_id === (int) $currentUser->ID) {
                 $isAuthorized = true;
             }
         }
 
-        // 5. Admin check
+        // 4. Admin check
         if (!$isAuthorized && current_user_can('manage_tourivo_bookings')) {
             $isAuthorized = true;
         }
@@ -263,7 +263,7 @@ class PaymentService
         $newNotes = trim($oldNote . "\n" . $noteMsg);
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->update(
+        $updated = $wpdb->update(
             $bookingsTable,
             [
                 'transaction_id' => $cleanTxn,
@@ -273,6 +273,13 @@ class PaymentService
             ['id' => (int) $booking->id]
         );
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
+
+        if ($updated === false) {
+            return [
+                'success' => false,
+                'message' => __('Could not save the payment reference. Please try again.', 'tourivo'),
+            ];
+        }
 
         LogService::log(
             (int) $booking->id,
@@ -326,12 +333,23 @@ class PaymentService
         }
 
         $totalAmount   = (float) ($booking->total_amount ?? 0.0);
-        $amount        = isset($data['amount']) ? max(0.0, (float) $data['amount']) : $totalAmount;
+        $alreadyPaid   = max(0.0, (float) ($booking->paid_amount ?? 0.0));
+        $incoming      = isset($data['amount']) ? max(0.0, (float) $data['amount']) : max(0.0, $totalAmount - $alreadyPaid);
         $paymentStatus = in_array($data['payment_status'] ?? '', ['paid', 'partially_paid', 'pending', 'refunded'], true)
             ? (string) $data['payment_status']
-            : ($amount >= $totalAmount ? 'paid' : 'partially_paid');
+            : '';
 
-        $dueAmount     = max(0.0, $totalAmount - $amount);
+        if ($paymentStatus === 'refunded') {
+            $paidAmount = max(0.0, round($alreadyPaid - $incoming, 2));
+        } else {
+            $paidAmount = min($totalAmount, round($alreadyPaid + $incoming, 2));
+        }
+
+        if ($paymentStatus === '') {
+            $paymentStatus = $paidAmount >= $totalAmount ? 'paid' : ($paidAmount > 0 ? 'partially_paid' : 'pending');
+        }
+
+        $dueAmount     = max(0.0, round($totalAmount - $paidAmount, 2));
         $paymentMethod = sanitize_text_field((string) ($data['payment_method'] ?? ($booking->payment_method ?: 'bank_transfer')));
         $transactionId = sanitize_text_field((string) ($data['transaction_id'] ?? ($booking->transaction_id ?: '')));
         $autoConfirm   = !empty($data['auto_confirm']);
@@ -343,7 +361,7 @@ class PaymentService
             '[%s] %s: %s (%s) via %s. %s',
             $now,
             __('Payment Recorded', 'tourivo'),
-            Money::format($amount),
+            Money::format($incoming),
             ucfirst($paymentStatus),
             ucwords(str_replace('_', ' ', $paymentMethod)),
             $note
@@ -352,10 +370,10 @@ class PaymentService
 
         // Update database record
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
-        $wpdb->update(
+        $updated = $wpdb->update(
             $bookingsTable,
             [
-                'paid_amount'    => $amount,
+                'paid_amount'    => $paidAmount,
                 'due_amount'     => $dueAmount,
                 'payment_status' => $paymentStatus,
                 'payment_method' => $paymentMethod,
@@ -367,13 +385,20 @@ class PaymentService
         );
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching
 
+        if ($updated === false) {
+            return [
+                'success' => false,
+                'message' => __('Could not save the payment record. Please try again.', 'tourivo'),
+            ];
+        }
+
         LogService::log(
             $bookingId,
             'payment_recorded',
             sprintf(
                 /* translators: 1: Amount formatted, 2: Payment status, 3: Method */
                 __('Admin recorded payment of %1$s (%2$s) via %3$s.', 'tourivo'),
-                Money::format($amount),
+                Money::format($incoming),
                 ucfirst($paymentStatus),
                 ucwords(str_replace('_', ' ', $paymentMethod))
             )
@@ -387,7 +412,7 @@ class PaymentService
         }
 
         do_action('tourivo/payment_recorded', $bookingId, [
-            'amount'         => $amount,
+            'amount'         => $incoming,
             'payment_status' => $paymentStatus,
             'payment_method' => $paymentMethod,
             'transaction_id' => $transactionId,
@@ -398,7 +423,7 @@ class PaymentService
             'message' => __('Payment record updated successfully.', 'tourivo'),
             'booking' => [
                 'id'             => $bookingId,
-                'paid_amount'    => $amount,
+                'paid_amount'    => $paidAmount,
                 'due_amount'     => $dueAmount,
                 'payment_status' => $paymentStatus,
                 'payment_method' => $paymentMethod,

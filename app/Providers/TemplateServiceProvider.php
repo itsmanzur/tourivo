@@ -167,15 +167,24 @@ class TemplateServiceProvider extends ServiceProvider
      */
     public function enqueueFrontendAssets(): void
     {
+        if (function_exists('tourivo_load_plugin_textdomain')) {
+            tourivo_load_plugin_textdomain();
+        }
+
         wp_enqueue_style(
             'dashicons'
         );
+
+        $frontCss = TOURIVO_PLUGIN_DIR . 'assets/css/frontend.css';
+        $frontJs  = TOURIVO_PLUGIN_DIR . 'assets/js/frontend-booking.js';
+        $cssVer   = file_exists($frontCss) ? (string) filemtime($frontCss) : TOURIVO_VERSION;
+        $jsVer    = file_exists($frontJs) ? (string) filemtime($frontJs) : TOURIVO_VERSION;
 
         wp_enqueue_style(
             'tourivo-frontend',
             TOURIVO_PLUGIN_URL . 'assets/css/frontend.css',
             ['dashicons'],
-            TOURIVO_VERSION
+            $cssVer
         );
 
         if (function_exists('tourivo_is_bengali') && tourivo_is_bengali()) {
@@ -206,9 +215,13 @@ class TemplateServiceProvider extends ServiceProvider
             'tourivo-frontend',
             TOURIVO_PLUGIN_URL . 'assets/js/frontend-booking.js',
             [],
-            TOURIVO_VERSION,
+            $jsVer,
             true
         );
+
+        if (function_exists('tourivo_load_plugin_textdomain')) {
+            tourivo_load_plugin_textdomain();
+        }
 
         wp_localize_script('tourivo-frontend', 'tourivoData', [
             'restUrl'         => esc_url_raw(rest_url()),
@@ -227,6 +240,38 @@ class TemplateServiceProvider extends ServiceProvider
                 'submitting'      => __('Submitting...', 'tourivo'),
                 'night'           => __('night', 'tourivo'),
                 'person'          => __('person', 'tourivo'),
+                'calculating'     => __('Calculating the price...', 'tourivo'),
+            ],
+            'calendar'        => [
+                'weekdays'     => [
+                    __('Sun', 'tourivo'),
+                    __('Mon', 'tourivo'),
+                    __('Tue', 'tourivo'),
+                    __('Wed', 'tourivo'),
+                    __('Thu', 'tourivo'),
+                    __('Fri', 'tourivo'),
+                    __('Sat', 'tourivo'),
+                ],
+                'months'       => [
+                    __('January', 'tourivo'),
+                    __('February', 'tourivo'),
+                    __('March', 'tourivo'),
+                    __('April', 'tourivo'),
+                    __('May', 'tourivo'),
+                    __('June', 'tourivo'),
+                    __('July', 'tourivo'),
+                    __('August', 'tourivo'),
+                    __('September', 'tourivo'),
+                    __('October', 'tourivo'),
+                    __('November', 'tourivo'),
+                    __('December', 'tourivo'),
+                ],
+                'soldOut'      => __('Sold out', 'tourivo'),
+                'left'         => __('%d left', 'tourivo'),
+                'loading'      => __('Loading dates...', 'tourivo'),
+                'pickCheckout' => __('Now choose a check-out date.', 'tourivo'),
+                'closedRange'  => __('Those nights are not fully open. Choose another check-out.', 'tourivo'),
+                'range'        => __('Check-in: %1$s | Check-out: %2$s', 'tourivo'),
             ],
         ]);
     }

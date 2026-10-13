@@ -28,6 +28,7 @@ class WebhookService
     public function register(): void
     {
         add_action('tourivo/booking_created', [$this, 'onBookingCreated'], 20, 2);
+        add_action('tourivo/booking_email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
         add_action('tourivo/booking_status_changed', [$this, 'onBookingStatusChanged'], 20, 3);
         add_action('tourivo/inquiry_created', [$this, 'onInquiryCreated'], 20, 2);
         add_action('tourivo_process_webhook_delivery', [$this, 'dispatch'], 10, 3);
@@ -126,6 +127,10 @@ class WebhookService
      */
     public function onBookingCreated(int $bookingId, array $bookingData): void
     {
+        if (array_key_exists('email_verified', $bookingData) && $bookingData['email_verified'] === false) {
+            return;
+        }
+
         $includePhone = (bool) Config::get('webhook_include_phone', true);
         $customer = [
             'name'  => $bookingData['customer_name'] ?? '',
@@ -158,6 +163,42 @@ class WebhookService
     }
 
     /**
+     * Send the booking.created webhook once the customer proves they own the address.
+     */
+    public function onBookingEmailVerified(int $bookingId): void
+    {
+        $booking = function_exists('tourivo_get_booking') ? tourivo_get_booking($bookingId) : null;
+        if (!$booking) {
+            return;
+        }
+
+        global $wpdb;
+        $item = null;
+        if ($wpdb) {
+            $itemsTable = $wpdb->prefix . 'tourivo_booking_items';
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+            $item = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d LIMIT 1", $bookingId));
+        }
+
+        $this->onBookingCreated($bookingId, [
+            'booking_code'    => (string) ($booking->booking_code ?? ''),
+            'customer_name'   => (string) ($booking->customer_name ?? ''),
+            'customer_email'  => (string) ($booking->customer_email ?? ''),
+            'customer_phone'  => (string) ($booking->customer_phone ?? ''),
+            'item_id'         => $item ? (int) $item->item_id : 0,
+            'item_type'       => $item ? (string) $item->item_type : 'tour',
+            'item_title'      => $item ? (string) $item->item_title : '',
+            'check_in'        => $item ? substr((string) $item->check_in, 0, 10) : '',
+            'check_out'       => ($item && !empty($item->check_out)) ? substr((string) $item->check_out, 0, 10) : null,
+            'raw_total'       => (float) ($booking->total_amount ?? 0),
+            'currency'        => (string) ($booking->currency ?? 'USD'),
+            'payment_status'  => (string) ($booking->payment_status ?? 'pending'),
+            'booking_status'  => (string) ($booking->booking_status ?? 'pending'),
+            'email_verified'  => true,
+        ]);
+    }
+
+    /**
      * Triggered when a booking status changes.
      *
      * @param int    $bookingId
@@ -168,6 +209,10 @@ class WebhookService
     public function onBookingStatusChanged(int $bookingId, string $oldStatus, string $newStatus): void
     {
         $booking = function_exists('tourivo_get_booking') ? tourivo_get_booking($bookingId) : null;
+
+        if ($booking && empty($booking->email_verified_at)) {
+            return;
+        }
 
         $this->enqueue('booking.status_changed', [
             'booking_id'   => $bookingId,
@@ -254,6 +299,19 @@ class WebhookService
         }
 
         $secret = trim((string) Config::get('webhook_secret', ''));
+        $bookingId = (int) ($data['booking_id'] ?? 0);
+
+        if ($secret === '') {
+            if ($bookingId > 0) {
+                LogService::log(
+                    $bookingId,
+                    'webhook_skipped',
+                    __('Webhook was not sent because no signing secret is configured.', 'tourivo')
+                );
+            }
+
+            return false;
+        }
 
         $headers = [
             'Content-Type'    => 'application/json; charset=utf-8',
@@ -261,8 +319,6 @@ class WebhookService
             'User-Agent'      => 'Tourivo-Webhook/' . TOURIVO_VERSION,
         ];
         $headers += self::signatureHeaders($jsonPayload, $secret);
-
-        $bookingId = (int) ($data['booking_id'] ?? 0);
 
         // Safe remote post for security
         $response = wp_safe_remote_post($webhookUrl, [

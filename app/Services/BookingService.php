@@ -108,9 +108,13 @@ class BookingService
         $checkOut      = !empty($data['check_out']) ? sanitize_text_field((string) $data['check_out']) : null;
         $timeSlot      = InventoryService::normalizeTimeSlot((string) ($data['time_slot'] ?? 'all_day'));
 
-        $adultsCount   = max(1, (int) ($data['adults'] ?? 1));
+        // Adults may be zero when the party is children only. Omitting the field still defaults to one adult.
+        $adultsCount   = array_key_exists('adults', $data) ? max(0, (int) $data['adults']) : 1;
         $childrenCount = max(0, (int) ($data['children'] ?? 0));
         $infantsCount  = max(0, (int) ($data['infants'] ?? 0));
+        if (($adultsCount + $childrenCount) < 1) {
+            return ['success' => false, 'message' => __('Please add at least one adult or child.', 'tourivo')];
+        }
         $totalGuests   = $adultsCount + $childrenCount + $infantsCount;
         $roomsCount    = max(1, (int) ($data['rooms'] ?? 1));
         $holdToken     = !empty($data['hold_token']) ? sanitize_text_field((string) $data['hold_token']) : null;
@@ -213,7 +217,7 @@ class BookingService
         }
 
         // 4. Calculate Authoritative Price Quote from Pricing Engine
-        $quote = $this->pricingService->quote([
+        $quoteInput = [
             'item_id'   => $itemId,
             'item_type' => $itemType,
             'check_in'  => $checkIn,
@@ -223,14 +227,40 @@ class BookingService
             'children'  => $childrenCount,
             'infants'   => $infantsCount,
             'rooms'     => $roomsCount,
-        ]);
+        ];
+        $selectedAddons = [];
+        if (!empty($data['selected_addons']) && is_array($data['selected_addons'])) {
+            $selectedAddons = array_map('strval', $data['selected_addons']);
+        } elseif (!empty($data['addons']) && is_array($data['addons'])) {
+            $selectedAddons = array_map('strval', $data['addons']);
+        }
+        if ($selectedAddons !== []) {
+            $quoteInput['selected_addons'] = $selectedAddons;
+        }
+        $couponCode = isset($data['coupon_code']) ? sanitize_text_field((string) $data['coupon_code']) : '';
+        if ($couponCode !== '') {
+            $quoteInput['coupon_code'] = $couponCode;
+            $quoteInput['reject_invalid_coupon'] = true;
+        }
+
+        $submittedFields = (isset($data['custom_fields']) && is_array($data['custom_fields'])) ? $data['custom_fields'] : [];
+        $customFields = apply_filters('tourivo/sanitize_checkout_fields', $submittedFields, $data, $trusted);
+        if (is_wp_error($customFields)) {
+            return ['success' => false, 'message' => $customFields->get_error_message()];
+        }
+        if (!is_array($customFields)) {
+            $customFields = [];
+        }
+
+        $quote = $this->pricingService->quote($quoteInput);
 
         if (!$quote['success']) {
             return ['success' => false, 'message' => $quote['message'] ?? __('Failed to calculate price quote.', 'tourivo')];
         }
 
         // 5. Check Inventory Availability
-        $avail = $this->inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity, !$trusted, $holdToken);
+        $enforceFuture = array_key_exists('enforce_future', $data) ? (bool) $data['enforce_future'] : !$trusted;
+        $avail = $this->inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity, $enforceFuture, $holdToken);
         if (!$avail['available']) {
             return ['success' => false, 'message' => $avail['message']];
         }
@@ -251,8 +281,27 @@ class BookingService
 
         // A zero total is only legitimate for items explicitly marked free; otherwise it means pricing failed
         // (missing price meta, add-on bug) and must never turn into a free booking.
-        if ($totalPrice < 0 || ($totalPrice <= 0.0 && !$this->allowsFreeBooking($itemId))) {
+        $couponCovered = $totalPrice <= 0.0 && !empty($quote['coupon']['code']);
+        if ($totalPrice < 0 || ($totalPrice <= 0.0 && !$couponCovered && !$this->allowsFreeBooking($itemId))) {
             return ['success' => false, 'message' => __('Invalid total price calculated for this booking.', 'tourivo')];
+        }
+
+        $couponHeld = false;
+        $releaseCouponHold = function () use (&$couponHeld, $quote, $data): void {
+            if (!$couponHeld) {
+                return;
+            }
+            $couponHeld = false;
+            do_action('tourivo/booking_coupon_rollback', $quote, $data);
+        };
+        if (!empty($quote['coupon']['code'])) {
+            $couponGate = apply_filters('tourivo/booking_coupon_commit', true, $quote, $data);
+            if ($couponGate !== true) {
+                $message = is_string($couponGate) ? $couponGate : __('This coupon could not be applied.', 'tourivo');
+                return ['success' => false, 'message' => $message];
+            }
+            $couponHeld = true;
+            register_shutdown_function($releaseCouponHold);
         }
 
         // 6. Resolve Customer ID and Statuses
@@ -266,7 +315,10 @@ class BookingService
             if ($foundUser) {
                 $customerId = (int) $foundUser->ID;
             } elseif (is_user_logged_in() && !current_user_can('manage_tourivo_bookings')) {
-                $customerId = get_current_user_id();
+                $currentUser = wp_get_current_user();
+                if ($currentUser && strcasecmp((string) $currentUser->user_email, $customerEmail) === 0) {
+                    $customerId = (int) $currentUser->ID;
+                }
             }
         }
 
@@ -311,8 +363,20 @@ class BookingService
         // 8. Step 1: Commit Inventory First (atomic repository transaction)
         $committed = $this->inventoryService->commitBooking($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity, $holdToken, !$trusted);
         if (!$committed) {
+            $releaseCouponHold();
             return ['success' => false, 'message' => __('Failed to commit inventory. Selected slots are no longer available.', 'tourivo')];
         }
+
+        // If PHP dies before the booking row is committed, give the seats back. Handled failures release themselves.
+        $inventorySettled = false;
+        $releaseCommittedInventory = function () use (&$inventorySettled, $itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity): void {
+            if ($inventorySettled) {
+                return;
+            }
+            $inventorySettled = true;
+            $this->inventoryService->releaseBookingInventory($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity);
+        };
+        register_shutdown_function($releaseCommittedInventory);
 
         // 8. Step 2: Insert Booking Record
         // Booking row, line item and audit entry are written atomically; inventory was committed (and is
@@ -355,7 +419,8 @@ class BookingService
 
             if (!$inserted) {
                 $this->db->query('ROLLBACK');
-                $this->inventoryService->releaseBookingInventory($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity);
+                $releaseCommittedInventory();
+                $releaseCouponHold();
                 return ['success' => false, 'message' => __('Could not save booking record to database.', 'tourivo')];
             }
 
@@ -373,7 +438,7 @@ class BookingService
                 'adults_count'      => $adultsCount,
                 'children_count'    => $childrenCount,
                 'infants_count'     => $infantsCount,
-                'quantity'          => ($itemType === 'room') ? $roomsCount : $totalGuests,
+                'quantity'          => $inventoryQuantity,
                 'unit_price'        => $unitPrice,
                 'total_price'       => $totalPrice,
                 'pricing_breakdown' => wp_json_encode($quote, JSON_UNESCAPED_UNICODE),
@@ -385,7 +450,8 @@ class BookingService
                 // Rollback booking and inventory
                 $this->db->query('ROLLBACK');
                 $this->db->delete($bookingsTable, ['id' => $bookingId], ['%d']);
-                $this->inventoryService->releaseBookingInventory($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity);
+                $releaseCommittedInventory();
+                $releaseCouponHold();
                 return ['success' => false, 'message' => __('Could not save booking item line to database.', 'tourivo')];
             }
 
@@ -405,12 +471,16 @@ class BookingService
             $this->db->query('COMMIT');
         } catch (Exception $e) {
             $this->db->query('ROLLBACK');
-            $this->inventoryService->releaseBookingInventory($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity);
+            $releaseCommittedInventory();
+            $releaseCouponHold();
             do_action('tourivo/booking_error', $e);
 
             // Internal details stay out of the customer-facing response.
             return ['success' => false, 'message' => __('An unexpected error occurred while creating your booking. Please try again.', 'tourivo')];
         }
+
+        $inventorySettled = true;
+        $couponHeld = false;
 
         // 9. Fire Booking Created Action & Trigger Confirmation Notification
         $bookingData = [
@@ -442,6 +512,9 @@ class BookingService
             'send_customer_email' => $data['send_customer_email'] ?? true,
             'email_verified'      => !$requireVerification,
             'verify_url'          => $requireVerification ? self::buildVerificationUrl($bookingCode, $bookingId, $customerEmail) : '',
+            'coupon_code'         => (string) ($quote['coupon']['code'] ?? ''),
+            'coupon_amount'       => (float) ($quote['coupon']['amount'] ?? 0),
+            'custom_fields'       => $customFields,
         ];
 
         do_action('tourivo/booking_created', $bookingId, $bookingData);
@@ -518,6 +591,25 @@ class BookingService
             return ['success' => true, 'message' => __('Booking status unchanged.', 'tourivo')];
         }
 
+        $allowedNext = [
+            'pending'   => ['confirmed', 'on_hold', 'cancelled'],
+            'on_hold'   => ['pending', 'confirmed', 'cancelled'],
+            'confirmed' => ['completed', 'cancelled', 'on_hold'],
+            'completed' => ['cancelled'],
+            'cancelled' => ['pending', 'confirmed', 'on_hold'],
+        ];
+        $transitionAllowed = in_array($newStatus, $allowedNext[$oldStatus] ?? [], true);
+        if (function_exists('apply_filters')) {
+            $transitionAllowed = (bool) apply_filters('tourivo/booking_status_transition_allowed', $transitionAllowed, $bookingId, $oldStatus, $newStatus, $booking);
+        }
+        if (!$transitionAllowed) {
+            return [
+                'success' => false,
+                /* translators: 1: Current status, 2: Requested status */
+                'message' => sprintf(__('A booking cannot move from %1$s to %2$s.', 'tourivo'), $oldStatus, $newStatus),
+            ];
+        }
+
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $lineItems = (array) $this->db->get_results($this->db->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d", $bookingId));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -536,7 +628,7 @@ class BookingService
                         substr((string) $item->check_in, 0, 10),
                         !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
                         (string) ($item->time_slot ?: 'all_day'),
-                        (int) $item->quantity
+                        $this->lineInventoryUnits($item)
                     );
 
                     if (!$committed) {
@@ -556,7 +648,7 @@ class BookingService
                         substr((string) $cItem->check_in, 0, 10),
                         !empty($cItem->check_out) ? substr((string) $cItem->check_out, 0, 10) : null,
                         (string) ($cItem->time_slot ?: 'all_day'),
-                        (int) $cItem->quantity
+                        $this->lineInventoryUnits($cItem)
                     );
                 }
                 return ['success' => false, 'message' => __('Cannot reactivate booking. Required inventory spots are no longer available.', 'tourivo')];
@@ -586,7 +678,7 @@ class BookingService
                         substr((string) $cItem->check_in, 0, 10),
                         !empty($cItem->check_out) ? substr((string) $cItem->check_out, 0, 10) : null,
                         (string) ($cItem->time_slot ?: 'all_day'),
-                        (int) $cItem->quantity
+                        $this->lineInventoryUnits($cItem)
                     );
                 }
             }
@@ -604,7 +696,7 @@ class BookingService
                         substr((string) $item->check_in, 0, 10),
                         !empty($item->check_out) ? substr((string) $item->check_out, 0, 10) : null,
                         (string) ($item->time_slot ?: 'all_day'),
-                        (int) $item->quantity
+                        $this->lineInventoryUnits($item)
                     );
                 }
             }
@@ -718,11 +810,78 @@ class BookingService
     }
 
     /**
-     * Signed token proving the holder received the verification email for this booking.
+     * How long a freshly issued email-confirmation link stays valid.
      */
-    public static function generateVerificationToken(int $bookingId, string $email): string
+    public const VERIFICATION_TTL = 259200;
+
+    /**
+     * Seats or rooms that were actually committed for this line.
+     *
+     * Tour rows used to store every traveler in quantity, including infants who do not take a seat.
+     */
+    private function lineInventoryUnits(object $item): int
     {
-        return hash_hmac('sha256', "tourivo_verify_{$bookingId}_" . strtolower($email), wp_salt('nonce'));
+        $type = (string) ($item->item_type ?? 'tour');
+        if ($type === 'room' || $type === 'hotel_room') {
+            return max(1, (int) ($item->quantity ?? 1));
+        }
+
+        $adults   = (int) ($item->adults_count ?? 0);
+        $children = (int) ($item->children_count ?? 0);
+        $infants  = (int) ($item->infants_count ?? 0);
+        if (($adults + $children + $infants) > 0) {
+            $useInfants = (bool) apply_filters(
+                'tourivo/infants_use_capacity',
+                false,
+                (int) ($item->item_id ?? 0),
+                'tour',
+                []
+            );
+
+            return max(1, $adults + $children + ($useInfants ? $infants : 0));
+        }
+
+        return max(1, (int) ($item->quantity ?? 1));
+    }
+
+    /**
+     * Accept a current expiring token, or a legacy token only while the booking is still inside the same window.
+     */
+    private function verificationTokenMatches(object $booking, string $token, int $expiresAt): bool
+    {
+        $bookingId = (int) $booking->id;
+        $email     = (string) $booking->customer_email;
+
+        if ($expiresAt > 0) {
+            if ($expiresAt < time()) {
+                return false;
+            }
+
+            return hash_equals(self::generateVerificationToken($bookingId, $email, $expiresAt), $token);
+        }
+
+        if (!hash_equals(self::generateVerificationToken($bookingId, $email), $token)) {
+            return false;
+        }
+
+        $createdAt = strtotime((string) ($booking->created_at ?? ''));
+
+        return $createdAt !== false && (time() - $createdAt) <= self::VERIFICATION_TTL;
+    }
+
+    /**
+     * Signed token proving the holder received the verification email for this booking.
+     *
+     * Pass $expiresAt to bind the link to a deadline. Omit it only for links issued before expiry existed.
+     */
+    public static function generateVerificationToken(int $bookingId, string $email, ?int $expiresAt = null): string
+    {
+        $payload = 'tourivo_verify_' . $bookingId . '_' . strtolower($email);
+        if ($expiresAt !== null && $expiresAt > 0) {
+            $payload .= '_' . $expiresAt;
+        }
+
+        return hash_hmac('sha256', $payload, wp_salt('nonce'));
     }
 
     /**
@@ -730,10 +889,13 @@ class BookingService
      */
     public static function buildVerificationUrl(string $bookingCode, int $bookingId, string $email): string
     {
+        $expiresAt = time() + self::VERIFICATION_TTL;
+
         return add_query_arg([
             'action' => 'tourivo_verify_email',
             'code'   => $bookingCode,
-            'token'  => self::generateVerificationToken($bookingId, $email),
+            'token'  => self::generateVerificationToken($bookingId, $email, $expiresAt),
+            'exp'    => $expiresAt,
         ], admin_url('admin-post.php'));
     }
 
@@ -742,7 +904,7 @@ class BookingService
      *
      * @return array{success: bool, message: string, booking_id?: int}
      */
-    public function verifyEmail(string $bookingCode, string $token): array
+    public function verifyEmail(string $bookingCode, string $token, int $expiresAt = 0): array
     {
         $invalid = ['success' => false, 'message' => __('This confirmation link is invalid.', 'tourivo')];
 
@@ -756,7 +918,7 @@ class BookingService
         $booking = $this->db->get_row($this->db->prepare("SELECT * FROM {$bookingsTable} WHERE booking_code = %s LIMIT 1", $bookingCode));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
-        if (!$booking || !hash_equals(self::generateVerificationToken((int) $booking->id, (string) $booking->customer_email), $token)) {
+        if (!$booking || !$this->verificationTokenMatches($booking, $token, $expiresAt)) {
             return $invalid;
         }
 

@@ -390,6 +390,26 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             });
         });
+
+        const openSettingsTabFromHash = function () {
+            const match = window.location.hash.match(/^#tab-([a-z0-9-]+)$/);
+            if (!match) {
+                return;
+            }
+            const tab = document.querySelector('.tourivo-settings-tabs .nav-tab[data-tab="' + match[1] + '"]');
+            if (tab && !tab.classList.contains('nav-tab-active')) {
+                tab.click();
+            }
+            if (match[1] === 'advanced') {
+                const row = document.getElementById('proxy_mode')?.closest('tr');
+                if (row) {
+                    row.classList.add('tourivo-proxy-target');
+                    row.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            }
+        };
+        openSettingsTabFromHash();
+        window.addEventListener('hashchange', openSettingsTabFromHash);
     }
 
     // 8. Test Email Dispatcher

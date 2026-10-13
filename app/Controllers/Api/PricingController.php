@@ -60,12 +60,23 @@ class PricingController extends Controller
         $children = max(0, min(100, (int) ($request->get_param('children') ?: 0)));
         $infants  = max(0, min(100, (int) ($request->get_param('infants') ?: 0)));
         $rooms    = max(1, min(50, (int) ($request->get_param('rooms') ?: 1)));
+        $selectedAddons = $request->get_param('selected_addons');
+        if (!is_array($selectedAddons)) {
+            $selectedAddons = [];
+        }
+        $cleanAddons = [];
+        foreach ($selectedAddons as $addonId) {
+            $addonId = sanitize_text_field((string) $addonId);
+            if ($addonId !== '') {
+                $cleanAddons[] = $addonId;
+            }
+        }
 
         if ($itemId <= 0 || empty($checkIn) || get_post_status($itemId) !== 'publish') {
             return new WP_Error('invalid_params', __('Valid published Item ID and check_in date are required.', 'tourivo'), ['status' => 400]);
         }
 
-        $result = $this->pricingService->quote([
+        $quoteInput = [
             'item_id'   => $itemId,
             'item_type' => $itemType,
             'check_in'  => $checkIn,
@@ -75,7 +86,16 @@ class PricingController extends Controller
             'children'  => $children,
             'infants'   => $infants,
             'rooms'     => $rooms,
-        ]);
+        ];
+        if ($cleanAddons !== []) {
+            $quoteInput['selected_addons'] = $cleanAddons;
+        }
+        $couponCode = sanitize_text_field((string) $request->get_param('coupon_code'));
+        if ($couponCode !== '') {
+            $quoteInput['coupon_code'] = $couponCode;
+        }
+
+        $result = $this->pricingService->quote($quoteInput);
 
         if (!$result['success']) {
             return new WP_Error('quote_error', $result['message'] ?? __('Failed to compute pricing quote.', 'tourivo'), ['status' => 400]);

@@ -415,8 +415,8 @@ class InventoryRepository
             $bookedCount   = (int) $row->booked_count;
             $reservedCount = (int) $row->reserved_count;
 
-            if ($hasPriorHold) {
-                $newReserved = max(0, $reservedCount - $count);
+            if ($hasPriorHold && $reservedCount >= $count && ($bookedCount + $count) <= $totalCapacity) {
+                $newReserved = $reservedCount - $count;
                 $newBooked   = $bookedCount + $count;
             } else {
                 if (($totalCapacity - $bookedCount - $reservedCount) < $count) {

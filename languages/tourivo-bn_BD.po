@@ -527,7 +527,7 @@ msgstr "বাংলা (Bengali)"
 
 #: app/Admin/SettingsPage.php
 msgid "Bengali Numbers / বাংলা সংখ্যা"
-msgstr "Bengali Numbers / বাংলা সংখ্যা"
+msgstr "বাংলা সংখ্যা"
 
 #: languages/tourivo.pot
 msgid "Book Now"
@@ -1931,7 +1931,7 @@ msgstr "ভ্রমণ পরিকল্পনা (আইটিনারার
 
 #: app/Admin/SettingsPage.php
 msgid "Language & Localization / ভাষা ও লোকালাইজেশন"
-msgstr "Language & Localization / ভাষা ও লোকালাইজেশন"
+msgstr "ভাষা ও লোকালাইজেশন"
 
 #: languages/tourivo.pot
 msgid "Latitude"
@@ -2475,7 +2475,7 @@ msgstr "প্লাগিনের ভাষা"
 
 #: app/Admin/SettingsPage.php
 msgid "Plugin Language / প্লাগিনের ভাষা"
-msgstr "Plugin Language / প্লাগিনের ভাষা"
+msgstr "প্লাগিনের ভাষা"
 
 #: views/admin/metaboxes/hotel-metabox.php
 msgid "Policies & Rules"
@@ -2791,7 +2791,7 @@ msgstr "সংরক্ষণ করা হচ্ছে..."
 
 #: app/Admin/SettingsPage.php
 msgid "Schema.org JSON-LD"
-msgstr "Schema.org JSON-LD"
+msgstr "স্কিমা.অর্গ JSON-LD"
 
 #: app/Admin/DocumentationPage.php
 msgid "Seamlessly checkout via 100+ gateways: Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, COD, and direct bank transfers."
@@ -4081,3 +4081,771 @@ msgstr "✨ ট্যুরিতোর সম্পূর্ণ ফিচার
 msgid "🚀 4-Step Quick Launch Checklist"
 msgstr "🚀 ৪-ধাপের দ্রুত চালুকরণ চেকলিস্ট"
 
+
+#: app/Admin/SettingsPage.php
+msgid "Customer: Booking Request Received (Pending)"
+msgstr "গ্রাহক: বুকিং অনুরোধ গৃহীত (অপেক্ষমাণ)"
+
+#: app/Admin/SettingsPage.php
+msgid "Customer (Booker)"
+msgstr "গ্রাহক (বুকিংকারী)"
+
+#: app/Admin/SettingsPage.php
+msgid "Sent to traveler immediately when a new booking is placed in Pending status."
+msgstr "নতুন বুকিং অপেক্ষমাণ অবস্থায় তৈরি হলেই ভ্রমণকারীকে পাঠানো হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Customer: Booking Confirmed"
+msgstr "গ্রাহক: বুকিং নিশ্চিত"
+
+#: app/Admin/SettingsPage.php
+msgid "Sent to traveler when a booking is confirmed. Includes printable voucher access."
+msgstr "বুকিং নিশ্চিত হলে ভ্রমণকারীকে পাঠানো হয়। প্রিন্টযোগ্য ভাউচারের লিংক থাকে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Customer: Booking Cancelled"
+msgstr "গ্রাহক: বুকিং বাতিল"
+
+#: app/Admin/SettingsPage.php
+msgid "Sent to traveler when a reservation is cancelled."
+msgstr "রিজার্ভেশন বাতিল হলে ভ্রমণকারীকে পাঠানো হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Customer: Upcoming Trip Reminder"
+msgstr "গ্রাহক: আসন্ন ভ্রমণের রিমাইন্ডার"
+
+#: app/Admin/SettingsPage.php
+msgid "Automated reminder dispatched X days prior to check-in/departure."
+msgstr "চেক-ইন বা যাত্রার কয়েক দিন আগে স্বয়ংক্রিয় রিমাইন্ডার পাঠানো হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Admin: New Booking Notification"
+msgstr "অ্যাডমিন: নতুন বুকিং নোটিফিকেশন"
+
+#: app/Admin/SettingsPage.php
+msgid "Admin Notification Recipient"
+msgstr "অ্যাডমিন নোটিফিকেশনের প্রাপক"
+
+#: app/Admin/SettingsPage.php
+msgid "Sent to site administrator when a new booking is submitted."
+msgstr "নতুন বুকিং জমা হলে সাইট অ্যাডমিনিস্ট্রেটরকে পাঠানো হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Admin: Booking Cancelled Alert"
+msgstr "অ্যাডমিন: বুকিং বাতিলের সতর্কতা"
+
+#: app/Admin/SettingsPage.php
+msgid "Sent to site administrator when a booking is cancelled."
+msgstr "বুকিং বাতিল হলে সাইট অ্যাডমিনিস্ট্রেটরকে পাঠানো হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Admin: New Customer Inquiry"
+msgstr "অ্যাডমিন: নতুন গ্রাহক অনুসন্ধান"
+
+#: app/Admin/SettingsPage.php
+msgid "Sent to site administrator when a traveler submits the trip inquiry popup form."
+msgstr "ভ্রমণকারী ট্রিপ অনুসন্ধান ফর্ম জমা দিলে সাইট অ্যাডমিনিস্ট্রেটরকে পাঠানো হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Privacy & GDPR"
+msgstr "গোপনীয়তা ও জিডিপিআর"
+
+#: app/Admin/SettingsPage.php
+msgid "Number Format"
+msgstr "সংখ্যার ফরম্যাট"
+
+#: app/Admin/SettingsPage.php
+msgid "decimals"
+msgstr "দশমিক"
+
+#: app/Admin/SettingsPage.php
+msgid "Decimal separator"
+msgstr "দশমিক বিভাজক"
+
+#: app/Admin/SettingsPage.php
+msgid "Decimal: . (period)"
+msgstr "দশমিক: . (বিন্দু)"
+
+#: app/Admin/SettingsPage.php
+msgid "Decimal: , (comma)"
+msgstr "দশমিক: , (কমা)"
+
+#: app/Admin/SettingsPage.php
+msgid "Thousands separator"
+msgstr "হাজারের বিভাজক"
+
+#: app/Admin/SettingsPage.php
+msgid "Thousands: , (comma)"
+msgstr "হাজার: , (কমা)"
+
+#: app/Admin/SettingsPage.php
+msgid "Thousands: . (period)"
+msgstr "হাজার: . (বিন্দু)"
+
+#: app/Admin/SettingsPage.php
+msgid "Thousands: space"
+msgstr "হাজার: স্পেস"
+
+#: app/Admin/SettingsPage.php
+msgid "Thousands: none"
+msgstr "হাজার: নেই"
+
+#: app/Admin/SettingsPage.php
+msgid "Tax & VAT Configuration"
+msgstr "ট্যাক্স ও ভ্যাট সেটিংস"
+
+#: app/Admin/SettingsPage.php
+msgid "Enable Tax"
+msgstr "ট্যাক্স চালু করুন"
+
+#: app/Admin/SettingsPage.php
+msgid "Calculate tax on bookings"
+msgstr "বুকিংয়ে ট্যাক্স হিসাব করুন"
+
+#: app/Admin/SettingsPage.php
+msgid "Tax Name / Label"
+msgstr "ট্যাক্সের নাম / লেবেল"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. VAT / GST / Sales Tax"
+msgstr "যেমন: ভ্যাট / জিএসটি / সেলস ট্যাক্স"
+
+#: app/Admin/SettingsPage.php
+msgid "Tax Rate (%)"
+msgstr "ট্যাক্স হার (%)"
+
+#: app/Admin/SettingsPage.php
+msgid "Tax Mode"
+msgstr "ট্যাক্স মোড"
+
+#: app/Admin/SettingsPage.php
+msgid "Exclusive (Tax added on top of subtotal)"
+msgstr "এক্সক্লুসিভ (সাবটোটালের ওপর ট্যাক্স যোগ হয়)"
+
+#: app/Admin/SettingsPage.php
+msgid "Inclusive (Tax extracted from price)"
+msgstr "ইনক্লুসিভ (দামের ভেতর থেকে ট্যাক্স বের করা হয়)"
+
+#: app/Admin/SettingsPage.php
+msgid "Tax Applies To"
+msgstr "ট্যাক্স প্রযোজ্য"
+
+#: app/Admin/SettingsPage.php
+msgid "All Bookings (Tours & Rooms)"
+msgstr "সব বুকিং (ট্যুর ও রুম)"
+
+#: app/Admin/SettingsPage.php
+msgid "Tours Only"
+msgstr "শুধু ট্যুর"
+
+#: app/Admin/SettingsPage.php
+msgid "Rooms / Accommodations Only"
+msgstr "শুধু রুম / আবাসন"
+
+#: app/Admin/SettingsPage.php
+msgid "Booking Defaults & Post-Booking Experience"
+msgstr "বুকিং ডিফল্ট ও বুকিং-পরবর্তী অভিজ্ঞতা"
+
+#: app/Admin/SettingsPage.php
+msgid "Post-Booking Action"
+msgstr "বুকিং-পরবর্তী কাজ"
+
+#: app/Admin/SettingsPage.php
+msgid "Inline Message (Stay on Booking Page)"
+msgstr "ইনলাইন বার্তা (বুকিং পেজেই থাকুন)"
+
+#: app/Admin/SettingsPage.php
+msgid "Redirect to Dedicated Thank You / Confirmation Page"
+msgstr "আলাদা ধন্যবাদ / নিশ্চিতকরণ পেজে নিয়ে যান"
+
+#: app/Admin/SettingsPage.php
+msgid "Choose what happens immediately after a customer submits the frontend booking form."
+msgstr "গ্রাহক ফ্রন্টএন্ড বুকিং ফর্ম জমা দেওয়ার পরপর কী হবে, তা বেছে নিন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Thank You / Confirmation Page"
+msgstr "ধন্যবাদ / নিশ্চিতকরণ পেজ"
+
+#: app/Admin/SettingsPage.php
+msgid "— Select Page with [tourivo_thank_you] —"
+msgstr "— [tourivo_thank_you] শর্টকোডযুক্ত পেজ বেছে নিন —"
+
+#: app/Admin/SettingsPage.php
+msgid "Page containing the [tourivo_thank_you] shortcode where travelers are redirected."
+msgstr "যে পেজে [tourivo_thank_you] শর্টকোড আছে, ভ্রমণকারীকে সেখানে নিয়ে যাওয়া হবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Traveler Self-Service & Cancellation Policy"
+msgstr "ভ্রমণকারীর সেলফ-সার্ভিস ও বাতিল নীতি"
+
+#: app/Admin/SettingsPage.php
+msgid "Allow Cancellation Requests"
+msgstr "বাতিলের অনুরোধ অনুমতি দিন"
+
+#: app/Admin/SettingsPage.php
+msgid "Allow travelers to request cancellation via the booking lookup portal."
+msgstr "বুকিং খোঁজার পোর্টাল থেকে ভ্রমণকারী বাতিলের অনুরোধ করতে পারবেন।"
+
+#: app/Admin/SettingsPage.php
+msgid "When enabled, travelers can initiate a cancellation request on the track booking page."
+msgstr "চালু থাকলে ভ্রমণকারী ট্র্যাক বুকিং পেজ থেকে বাতিলের অনুরোধ শুরু করতে পারবেন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Self-Cancellation Window (Hours Before Check-in)"
+msgstr "নিজে বাতিলের সময়সীমা (চেক-ইনের কত ঘণ্টা আগে)"
+
+#: app/Admin/SettingsPage.php
+msgid "hours before trip departure / hotel check-in."
+msgstr "ঘণ্টা আগে, যাত্রা বা হোটেল চেক-ইনের।"
+
+#: app/Admin/SettingsPage.php
+msgid "Set to 0 (default) to require admin review for all cancellations. If set to > 0, unpaid bookings can be instantly cancelled by the traveler if check-in is at least N hours away, immediately releasing inventory."
+msgstr "০ রাখলে (ডিফল্ট) সব বাতিল অ্যাডমিনের অনুমোদন লাগবে। ০-এর বেশি দিলে, চেক-ইন অন্তত সেই ঘণ্টা দূরে থাকলে ভ্রমণকারী অপরিশোধিত বুকিং সাথে সাথে বাতিল করতে পারবেন এবং সিট খালি হয়ে যাবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Booking Hygiene & Anti-Abuse"
+msgstr "বুকিং সুরক্ষা ও অপব্যবহার রোধ"
+
+#: app/Admin/SettingsPage.php
+msgid "Require Email Confirmation"
+msgstr "ইমেইল নিশ্চিতকরণ বাধ্যতামূলক"
+
+#: app/Admin/SettingsPage.php
+msgid "Travelers must click a link emailed to them before the booking is secured."
+msgstr "বুকিং নিশ্চিত হওয়ার আগে ভ্রমণকারীকে ইমেইলে পাঠানো লিংকে ক্লিক করতে হবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Stops fake bookings from locking your inventory and from spamming third-party inboxes. Staff alerts are sent only after confirmation."
+msgstr "ভুয়া বুকিং যাতে ইনভেন্টরি আটকে না রাখে এবং অন্যের ইনবক্সে স্প্যাম না হয়। স্টাফকে সতর্কবার্তা যায় নিশ্চিতকরণের পরে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Unconfirmed Booking Expiry"
+msgstr "অনিশ্চিত বুকিংয়ের মেয়াদ"
+
+#: app/Admin/SettingsPage.php
+msgid "minutes, then the booking is cancelled and its spots released."
+msgstr "মিনিট পর বুকিং বাতিল হবে এবং সিট খালি হবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Auto-Cancel Unpaid Pending Bookings"
+msgstr "অপরিশোধিত অপেক্ষমাণ বুকিং স্বয়ংক্রিয় বাতিল"
+
+#: app/Admin/SettingsPage.php
+msgid "hours after creation."
+msgstr "ঘণ্টা পর, তৈরি হওয়ার।"
+
+#: app/Admin/SettingsPage.php
+msgid "0 (default) keeps pending bookings until you confirm or cancel them manually."
+msgstr "০ (ডিফল্ট) রাখলে অপেক্ষমাণ বুকিং থেকে যায়, যতক্ষণ না আপনি নিজে নিশ্চিত বা বাতিল করেন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Offline Payment Methods (Bank Transfer & Cash on Arrival)"
+msgstr "অফলাইন পেমেন্ট (ব্যাংক ট্রান্সফার ও পৌঁছে পরিশোধ)"
+
+#: app/Admin/SettingsPage.php
+msgid "Configure structured bank details for direct wire transfer and Pay-on-Arrival terms for bookings without online payment gateways."
+msgstr "অনলাইন গেটওয়ে ছাড়া বুকিংয়ের জন্য ব্যাংক ট্রান্সফারের তথ্য এবং পৌঁছে পরিশোধের শর্ত সেট করুন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Direct Bank Transfer (Wire / Deposit)"
+msgstr "সরাসরি ব্যাংক ট্রান্সফার (ওয়্যার / ডিপোজিট)"
+
+#: app/Admin/SettingsPage.php
+msgid "Enable Bank Transfer"
+msgstr "ব্যাংক ট্রান্সফার চালু করুন"
+
+#: app/Admin/SettingsPage.php
+msgid "Allow travelers to select Bank Transfer during reservation."
+msgstr "রিজার্ভেশনের সময় ভ্রমণকারী ব্যাংক ট্রান্সফার বেছে নিতে পারবেন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Bank Name"
+msgstr "ব্যাংকের নাম"
+
+#: app/Admin/SettingsPage.php
+msgid "Account Name / Beneficiary"
+msgstr "অ্যাকাউন্টের নাম / সুবিধাভোগী"
+
+#: app/Admin/SettingsPage.php
+msgid "Account Number"
+msgstr "অ্যাকাউন্ট নম্বর"
+
+#: app/Admin/SettingsPage.php
+msgid "IBAN (International)"
+msgstr "আইবান (আন্তর্জাতিক)"
+
+#: app/Admin/SettingsPage.php
+msgid "SWIFT / BIC / Routing Code"
+msgstr "সুইফট / বিআইসি / রাউটিং কোড"
+
+#: app/Admin/SettingsPage.php
+msgid "Branch Name & Address"
+msgstr "শাখার নাম ও ঠিকানা"
+
+#: app/Admin/SettingsPage.php
+msgid "Bank Transfer Instructions"
+msgstr "ব্যাংক ট্রান্সফারের নির্দেশনা"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. Please include your Booking Reference # in your transfer remarks and submit transaction reference on Thank You page."
+msgstr "যেমন: ট্রান্সফারের মন্তব্যে বুকিং রেফারেন্স নম্বর লিখুন এবং ধন্যবাদ পেজে লেনদেনের রেফারেন্স জমা দিন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Cash on Arrival / Pay at Check-in"
+msgstr "পৌঁছে নগদ / চেক-ইনে পরিশোধ"
+
+#: app/Admin/SettingsPage.php
+msgid "Enable Cash on Arrival"
+msgstr "পৌঁছে নগদ পরিশোধ চালু করুন"
+
+#: app/Admin/SettingsPage.php
+msgid "Allow travelers to pay in cash or card at the tour desk / hotel front reception."
+msgstr "ভ্রমণকারী ট্যুর ডেস্ক বা হোটেল রিসেপশনে নগদ বা কার্ডে পরিশোধ করতে পারবেন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Arrival Payment Instructions"
+msgstr "পৌঁছে পরিশোধের নির্দেশনা"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. Payment is collected at the tour reception desk before boarding. Cash and all major debit/credit cards accepted."
+msgstr "যেমন: গাড়িতে ওঠার আগে ট্যুর রিসেপশনে পেমেন্ট নেওয়া হয়। নগদ এবং প্রধান ডেবিট/ক্রেডিট কার্ড গ্রহণযোগ্য।"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. Standard Chartered / City Bank"
+msgstr "যেমন: স্ট্যান্ডার্ড চার্টার্ড / সিটি ব্যাংক"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. Tourivo Holidays Ltd."
+msgstr "যেমন: ট্যুরিভো হলিডেজ লিমিটেড"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. 01-2345678-01"
+msgstr "যেমন: 01-2345678-01"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. GB29NWBK60161331926819"
+msgstr "যেমন: GB29NWBK60161331926819"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. CIBLBDDH"
+msgstr "যেমন: CIBLBDDH"
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. Principal Branch, Dhaka"
+msgstr "যেমন: প্রিন্সিপাল শাখা, ঢাকা"
+
+#: app/Admin/SettingsPage.php
+msgid "Google Tag Manager / DataLayer"
+msgstr "গুগল ট্যাগ ম্যানেজার / ডেটালেয়ার"
+
+#: app/Admin/SettingsPage.php
+msgid "Enable eCommerce conversion tracking dataLayer event on Thank You page."
+msgstr "ধন্যবাদ পেজে ই-কমার্স কনভার্শন ট্র্যাকিংয়ের ডেটালেয়ার ইভেন্ট চালু করুন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Pushes a privacy-friendly tourivo_booking event (booking_id, value, currency) to window.dataLayer without customer PII."
+msgstr "গ্রাহকের ব্যক্তিগত তথ্য ছাড়া window.dataLayer-এ tourivo_booking ইভেন্ট (booking_id, value, currency) পাঠায়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Sender Details & Routing"
+msgstr "প্রেরকের তথ্য ও রাউটিং"
+
+#: app/Admin/SettingsPage.php
+msgid "Sender \"From\" Name"
+msgstr "প্রেরকের \"প্রেরক\" নাম"
+
+#: app/Admin/SettingsPage.php
+msgid "The name appearing in traveler inboxes (e.g. Your Agency Name)."
+msgstr "ভ্রমণকারীর ইনবক্সে যে নাম দেখা যাবে (যেমন: আপনার এজেন্সির নাম)।"
+
+#: app/Admin/SettingsPage.php
+msgid "Sender \"From\" Email"
+msgstr "প্রেরকের ইমেইল"
+
+#: app/Admin/SettingsPage.php
+msgid "The outbound email address used in the From and Reply-To headers."
+msgstr "প্রেরক ও রিপ্লাই-টু হেডারে ব্যবহৃত ইমেইল ঠিকানা।"
+
+#: app/Admin/SettingsPage.php
+msgid "Internal staff / operator email that receives new booking alerts, cancellation notices, and customer inquiries."
+msgstr "নতুন বুকিং, বাতিল এবং গ্রাহকের অনুসন্ধান যে স্টাফ বা অপারেটরের ইমেইলে যাবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "General Email & Reminder Settings"
+msgstr "সাধারণ ইমেইল ও রিমাইন্ডার সেটিংস"
+
+#: app/Admin/SettingsPage.php
+msgid "Upcoming Trip Reminder (Days Before)"
+msgstr "আসন্ন ভ্রমণের রিমাইন্ডার (কত দিন আগে)"
+
+#: app/Admin/SettingsPage.php
+msgid "days before tour departure or hotel check-in date."
+msgstr "দিন আগে, ট্যুর যাত্রা বা হোটেল চেক-ইনের।"
+
+#: app/Admin/SettingsPage.php
+msgid "Set to 0 to disable automated daily trip reminder emails. Tourivo runs a daily background cron check to dispatch reminders."
+msgstr "০ দিলে স্বয়ংক্রিয় রিমাইন্ডার ইমেইল বন্ধ থাকবে। ট্যুরিভো প্রতিদিন ব্যাকগ্রাউন্ডে চেক করে রিমাইন্ডার পাঠায়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Customer Booking Lookup Page"
+msgstr "গ্রাহকের বুকিং খোঁজার পেজ"
+
+#: app/Admin/SettingsPage.php
+msgid "— Select Page with [tourivo_booking_lookup] —"
+msgstr "— [tourivo_booking_lookup] শর্টকোডযুক্ত পেজ বেছে নিন —"
+
+#: app/Admin/SettingsPage.php
+msgid "Selected page is used to construct the {lookup_url} placeholder so travelers can look up and self-manage reservations."
+msgstr "নির্বাচিত পেজ দিয়ে {lookup_url} তৈরি হয়, যাতে ভ্রমণকারী রিজার্ভেশন খুঁজে নিজে পরিচালনা করতে পারেন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Customer Account / My Bookings Page"
+msgstr "গ্রাহক অ্যাকাউন্ট / আমার বুকিং পেজ"
+
+#: app/Admin/SettingsPage.php
+msgid "— Select Page with [tourivo_my_bookings] —"
+msgstr "— [tourivo_my_bookings] শর্টকোডযুক্ত পেজ বেছে নিন —"
+
+#: app/Admin/SettingsPage.php
+msgid "Selected page is used as the authenticated traveler account dashboard displaying upcoming trips, vouchers, and reservation management."
+msgstr "নির্বাচিত পেজ লগইন করা ভ্রমণকারীর ড্যাশবোর্ড, যেখানে আসন্ন ভ্রমণ, ভাউচার ও রিজার্ভেশন পরিচালনা দেখা যায়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Offline / Manual Payment Instructions"
+msgstr "অফলাইন / ম্যানুয়াল পেমেন্টের নির্দেশনা"
+
+#: app/Admin/SettingsPage.php
+msgid "Included in Pending Booking emails via the {offline_payment_instructions} placeholder for manual bank wire, bKash, or pay-on-arrival instructions."
+msgstr "অপেক্ষমাণ বুকিং ইমেইলে {offline_payment_instructions} দিয়ে ব্যাংক, বিকাশ বা পৌঁছে পরিশোধের নির্দেশনা যায়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Bank Transfer Details:\nBank: City Bank\nAccount: 123456789\nOr bKash Merchant: 01700000000 (Use booking code as reference)"
+msgstr "ব্যাংক ট্রান্সফারের তথ্য:\nব্যাংক: সিটি ব্যাংক\nঅ্যাকাউন্ট: 123456789\nঅথবা বিকাশ মার্চেন্ট: 01700000000 (রেফারেন্স হিসেবে বুকিং কোড ব্যবহার করুন)"
+
+#: app/Admin/SettingsPage.php
+msgid "Available Template Placeholders"
+msgstr "ব্যবহারযোগ্য টেমপ্লেট প্লেসহোল্ডার"
+
+#: app/Admin/SettingsPage.php
+msgid "Use these tags inside email subjects, headings, and additional content. They will be dynamically replaced with real booking data:"
+msgstr "ইমেইলের বিষয়, শিরোনাম ও অতিরিক্ত লেখায় এই ট্যাগ ব্যবহার করুন। এগুলো আসল বুকিং তথ্য দিয়ে বদলে যাবে:"
+
+#: app/Admin/SettingsPage.php
+msgid "For inquiry notifications: {inquiry_name}, {inquiry_email}, {inquiry_phone}, {inquiry_message}, {item_title}, {site_name}."
+msgstr "অনুসন্ধানের নোটিফিকেশনে: {inquiry_name}, {inquiry_email}, {inquiry_phone}, {inquiry_message}, {item_title}, {site_name}।"
+
+#: app/Admin/SettingsPage.php
+msgid "Email Templates Configuration"
+msgstr "ইমেইল টেমপ্লেট সেটিংস"
+
+#: app/Admin/SettingsPage.php
+msgid "Customize the subject lines, headings, and additional notes for all automated emails. You can also override email layouts in your active WordPress theme under your-theme/tourivo/emails/."
+msgstr "সব স্বয়ংক্রিয় ইমেইলের বিষয়, শিরোনাম ও অতিরিক্ত নোট বদলান। থিমের your-theme/tourivo/emails/ ফোল্ডার থেকে লেআউটও বদলানো যায়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Test This Email"
+msgstr "এই ইমেইল পরীক্ষা করুন"
+
+#: app/Admin/SettingsPage.php
+msgid "Email Subject Line"
+msgstr "ইমেইলের বিষয়"
+
+#: app/Admin/SettingsPage.php
+msgid "Email Main Heading"
+msgstr "ইমেইলের মূল শিরোনাম"
+
+#: app/Admin/SettingsPage.php
+msgid "Additional Content / Custom Notes"
+msgstr "অতিরিক্ত লেখা / কাস্টম নোট"
+
+#: app/Admin/SettingsPage.php
+msgid "Optional custom message, arrival guidelines, or policy instructions..."
+msgstr "ঐচ্ছিক কাস্টম বার্তা, পৌঁছানোর নির্দেশনা, বা নীতিমালা..."
+
+#: app/Admin/SettingsPage.php
+msgid "Send a sample email to verify your WordPress mail server setup and layout rendering."
+msgstr "ওয়ার্ডপ্রেস মেইল সার্ভার ও লেআউট ঠিক আছে কিনা দেখতে একটি নমুনা ইমেইল পাঠান।"
+
+#: app/Admin/SettingsPage.php
+msgid "your-email@example.com"
+msgstr "your-email@example.com"
+
+#: app/Admin/SettingsPage.php
+msgid "Payload Data Minimization"
+msgstr "পেলোডে তথ্য কমানো"
+
+#: app/Admin/SettingsPage.php
+msgid "Include customer phone numbers in webhook payloads."
+msgstr "ওয়েবহুক পেলোডে গ্রাহকের ফোন নম্বর রাখুন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Include custom traveler inquiry messages in inquiry webhook payloads."
+msgstr "অনুসন্ধানের ওয়েবহুক পেলোডে ভ্রমণকারীর বার্তা রাখুন।"
+
+#: app/Admin/SettingsPage.php
+msgid "Uncheck to strip personal communication details and phone numbers from external automated webhooks for privacy minimization."
+msgstr "গোপনীয়তার জন্য আনচেক করলে বাইরের অটোমেশনে ফোন নম্বর ও ব্যক্তিগত যোগাযোগের তথ্য যাবে না।"
+
+#: app/Admin/SettingsPage.php
+msgid "https://hooks.zapier.com/hooks/catch/..."
+msgstr "https://hooks.zapier.com/hooks/catch/..."
+
+#: app/Admin/SettingsPage.php
+msgid "e.g. secret_trv_xxxx"
+msgstr "যেমন: secret_trv_xxxx"
+
+#: app/Admin/SettingsPage.php
+msgid "User Consent & Terms Agreement"
+msgstr "ব্যবহারকারীর সম্মতি ও শর্তাবলি"
+
+#: app/Admin/SettingsPage.php
+msgid "Require travelers to explicitly agree to your Terms and Privacy Policy before submitting bookings or trip inquiries."
+msgstr "বুকিং বা ট্রিপ অনুসন্ধান জমা দেওয়ার আগে ভ্রমণকারীকে শর্তাবলি ও গোপনীয়তা নীতিতে সম্মতি দিতে হবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Require Consent"
+msgstr "সম্মতি বাধ্যতামূলক"
+
+#: app/Admin/SettingsPage.php
+msgid "Require checkbox agreement before checkout and inquiry submission."
+msgstr "চেকআউট ও অনুসন্ধান জমা দেওয়ার আগে চেকবক্সে সম্মতি লাগবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "When enabled, bookings and inquiries cannot proceed without agreeing to terms. Tourivo records the exact timestamp and policy version SHA-256 hash."
+msgstr "চালু থাকলে শর্তে সম্মতি ছাড়া বুকিং বা অনুসন্ধান এগোবে না। ট্যুরিভো সময় ও নীতির SHA-256 হ্যাশ সংরক্ষণ করে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Privacy Policy Page"
+msgstr "গোপনীয়তা নীতির পেজ"
+
+#: app/Admin/SettingsPage.php
+msgid "— Use WordPress Core Privacy Policy Page —"
+msgstr "— ওয়ার্ডপ্রেসের নিজস্ব গোপনীয়তা নীতির পেজ ব্যবহার করুন —"
+
+#: app/Admin/SettingsPage.php
+msgid "By default, Tourivo links to the WordPress site privacy policy defined under Settings → Privacy."
+msgstr "ডিফল্টভাবে ট্যুরিভো সেটিংস → গোপনীয়তায় নির্ধারিত ওয়ার্ডপ্রেস গোপনীয়তা নীতির লিংক দেয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Terms & Conditions Page"
+msgstr "শর্তাবলির পেজ"
+
+#: app/Admin/SettingsPage.php
+msgid "— Select Terms and Conditions Page —"
+msgstr "— শর্তাবলির পেজ বেছে নিন —"
+
+#: app/Admin/SettingsPage.php
+msgid "Consent Checkbox Label"
+msgstr "সম্মতি চেকবক্সের লেবেল"
+
+#: app/Admin/SettingsPage.php
+msgid "Placeholders {privacy} and {terms} will be automatically transformed into clickable links."
+msgstr "{privacy} ও {terms} প্লেসহোল্ডার স্বয়ংক্রিয়ভাবে ক্লিকযোগ্য লিংক হবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "IP Storage & Data Minimization"
+msgstr "আইপি সংরক্ষণ ও তথ্য কমানো"
+
+#: app/Admin/SettingsPage.php
+msgid "Store IP Addresses"
+msgstr "আইপি ঠিকানা সংরক্ষণ"
+
+#: app/Admin/SettingsPage.php
+msgid "Log client IP addresses with booking and inquiry records."
+msgstr "বুকিং ও অনুসন্ধানের সাথে গ্রাহকের আইপি ঠিকানা রাখুন।"
+
+#: app/Admin/SettingsPage.php
+msgid "If disabled, the IP address column will remain blank in the database. Rate limiting defenses continue securely using one-way transient hashes."
+msgstr "বন্ধ থাকলে ডাটাবেসে আইপি কলাম খালি থাকবে। রেট লিমিট তখনও ওয়ান-ওয়ে হ্যাশ দিয়ে চলবে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Scheduled Data Retention & Anonymization Routine"
+msgstr "নির্ধারিত ডেটা সংরক্ষণ ও বেনামীকরণ"
+
+#: app/Admin/SettingsPage.php
+msgid "Automate GDPR storage limitation compliance. Bookings are safely anonymized (retaining financial amounts and lines for tax laws), while inquiries are permanently deleted."
+msgstr "জিডিপিআর অনুযায়ী পুরনো তথ্য স্বয়ংক্রিয়ভাবে সীমিত করুন। বুকিং বেনামী হয় (ট্যাক্সের জন্য টাকার হিসাব থাকে), অনুসন্ধান স্থায়ীভাবে মুছে যায়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Anonymize Completed Bookings After"
+msgstr "সম্পন্ন বুকিং বেনামী হবে"
+
+#: app/Admin/SettingsPage.php
+msgid "months (Set to 0 to disable automated anonymization)."
+msgstr "মাস পর (০ দিলে স্বয়ংক্রিয় বেনামীকরণ বন্ধ)।"
+
+#: app/Admin/SettingsPage.php
+msgid "Replaces customer name, email, phone, billing address, notes, payment references, and IP with anonymized values, revokes voucher links, and keeps revenue totals intact."
+msgstr "গ্রাহকের নাম, ইমেইল, ফোন, বিলিং ঠিকানা, নোট, পেমেন্ট রেফারেন্স ও আইপি বেনামী হয়, ভাউচার লিংক বাতিল হয়, এবং আয়ের হিসাব অক্ষুণ্ণ থাকে।"
+
+#: app/Admin/SettingsPage.php
+msgid "Delete Old Inquiries After"
+msgstr "পুরনো অনুসন্ধান মুছে যাবে"
+
+#: app/Admin/SettingsPage.php
+msgid "months (Set to 0 to retain inquiries indefinitely)."
+msgstr "মাস পর (০ দিলে অনুসন্ধান অনির্দিষ্টকাল থাকবে)।"
+
+#: app/Admin/SettingsPage.php
+msgid "Retention Routine Dry-Run Preview"
+msgstr "রিটেনশন রুটিনের প্রিভিউ"
+
+#: app/Admin/SettingsPage.php
+msgid "Check how many expired records are currently eligible for scheduled retention actions without modifying data."
+msgstr "কোনো তথ্য না বদলে দেখুন এখন কতগুলো মেয়াদোত্তীর্ণ রেকর্ড রিটেনশনের জন্য প্রস্তুত।"
+
+#: app/Admin/SettingsPage.php
+msgid "Check Eligible Records Count"
+msgstr "প্রস্তুত রেকর্ডের সংখ্যা দেখুন"
+
+#: app/Admin/SettingsPage.php
+msgid "WordPress Core Privacy Tools Integration"
+msgstr "ওয়ার্ডপ্রেস গোপনীয়তা টুলের সাথে সংযোগ"
+
+#: app/Admin/SettingsPage.php
+msgid "Tourivo is fully integrated with standard WordPress privacy compliance features:"
+msgstr "ট্যুরিভো ওয়ার্ডপ্রেসের আদর্শ গোপনীয়তা ফিচারের সাথে যুক্ত:"
+
+#: app/Admin/SettingsPage.php
+msgid "Export Personal Data:"
+msgstr "ব্যক্তিগত তথ্য এক্সপোর্ট:"
+
+#: app/Admin/SettingsPage.php
+msgid "Exports traveler bookings and trip inquiries when requested via Tools → Export Personal Data."
+msgstr "টুলস → ব্যক্তিগত তথ্য এক্সপোর্ট থেকে চাইলে ভ্রমণকারীর বুকিং ও অনুসন্ধান বের হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Erase Personal Data:"
+msgstr "ব্যক্তিগত তথ্য মুছুন:"
+
+#: app/Admin/SettingsPage.php
+msgid "Erases inquiry submissions and wishlist user meta, and anonymizes booking financial records for tax/statutory compliance via Tools → Erase Personal Data."
+msgstr "টুলস → ব্যক্তিগত তথ্য মুছুন থেকে অনুসন্ধান ও উইশলিস্ট মুছে যায়, এবং ট্যাক্স আইনের জন্য বুকিংয়ের আর্থিক রেকর্ড বেনামী হয়।"
+
+#: app/Admin/SettingsPage.php
+msgid "Privacy Policy Guide:"
+msgstr "গোপনীয়তা নীতি গাইড:"
+
+#: app/Admin/SettingsPage.php
+msgid "Suggested disclosures are automatically registered in the WordPress Privacy Policy Guide under Settings → Privacy."
+msgstr "প্রস্তাবিত প্রকাশনা সেটিংস → গোপনীয়তার নীতি গাইডে স্বয়ংক্রিয়ভাবে যুক্ত হয়।"
+
+#: app/Admin/AdminDashboard.php
+msgid "Reports"
+msgstr "রিপোর্ট"
+
+#: app/Admin/AdminDashboard.php
+msgid "Reports & Analytics"
+msgstr "রিপোর্ট ও বিশ্লেষণ"
+
+#: app/Admin/AdminDashboard.php
+msgid "Export Bookings"
+msgstr "বুকিং এক্সপোর্ট"
+
+#: app/Admin/AdminDashboard.php
+msgid "Export Bookings & Generate Reports"
+msgstr "বুকিং এক্সপোর্ট ও রিপোর্ট"
+
+#: app/Admin/AdminDashboard.php
+msgid "Proxy or CDN detected."
+msgstr "প্রক্সি বা সিডিএন শনাক্ত হয়েছে।"
+
+#: app/Admin/AdminDashboard.php
+msgid "Visitor IP addresses are hidden, so booking limits can block real customers."
+msgstr "ভিজিটরের আইপি লুকানো আছে, তাই বুকিং লিমিট আসল গ্রাহককে আটকে দিতে পারে।"
+
+#: app/Admin/AdminDashboard.php
+msgid "Set proxy mode"
+msgstr "প্রক্সি মোড ঠিক করুন"
+
+#: app/Providers/AdminServiceProvider.php
+msgid "Your site sits behind another server. Without a quick fix, real customers can get blocked after only a few bookings."
+msgstr "আপনার সাইট আরেকটি সার্ভারের আড়ালে চলছে। একবার ঠিক না করলে অল্প কিছু বুকিংয়ের পর আসল গ্রাহকও আটকে যেতে পারেন।"
+
+#: app/Providers/AdminServiceProvider.php
+msgid "Fix this for me"
+msgstr "এক ক্লিকে ঠিক করুন"
+
+msgid "Check-in & check-out *"
+msgstr "চেক-ইন ও চেক-আউট *"
+
+msgid "Previous month"
+msgstr "আগের মাস"
+
+msgid "Next month"
+msgstr "পরের মাস"
+
+msgid "Sun"
+msgstr "রবি"
+
+msgid "Mon"
+msgstr "সোম"
+
+msgid "Tue"
+msgstr "মঙ্গল"
+
+msgid "Wed"
+msgstr "বুধ"
+
+msgid "Thu"
+msgstr "বৃহঃ"
+
+msgid "Fri"
+msgstr "শুক্র"
+
+msgid "Sat"
+msgstr "শনি"
+
+msgid "January"
+msgstr "জানুয়ারি"
+
+msgid "February"
+msgstr "ফেব্রুয়ারি"
+
+msgid "March"
+msgstr "মার্চ"
+
+msgid "April"
+msgstr "এপ্রিল"
+
+msgid "May"
+msgstr "মে"
+
+msgid "June"
+msgstr "জুন"
+
+msgid "July"
+msgstr "জুলাই"
+
+msgid "August"
+msgstr "আগস্ট"
+
+msgid "September"
+msgstr "সেপ্টেম্বর"
+
+msgid "October"
+msgstr "অক্টোবর"
+
+msgid "November"
+msgstr "নভেম্বর"
+
+msgid "December"
+msgstr "ডিসেম্বর"
+
+msgid "Sold out"
+msgstr "ভর্তি"
+
+msgid "%d left"
+msgstr "%d বাকি"
+
+msgid "Loading dates..."
+msgstr "তারিখ আসছে..."
+
+msgid "Now choose a check-out date."
+msgstr "এখন চেক-আউটের তারিখ বেছে নিন।"
+
+msgid "Those nights are not fully open. Choose another check-out."
+msgstr "এই রাতগুলো পুরো খালি নেই। অন্য চেক-আউট বেছে নিন।"
+
+msgid "Calculating the price..."
+msgstr "হিসাব হচ্ছে..."

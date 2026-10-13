@@ -16,9 +16,16 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if (function_exists('tourivo_load_plugin_textdomain')) {
+    tourivo_load_plugin_textdomain();
+}
+
 $tourivoItemId         = isset($tourivoItemId) ? (int) $tourivoItemId : (isset($itemId) ? (int) $itemId : (int) get_the_ID());
 $tourivoPostType       = get_post_type($tourivoItemId);
 $tourivoItemType       = isset($tourivoItemType) ? (string) $tourivoItemType : (($tourivoPostType === 'tourivo_room') ? 'room' : 'tour');
+if ($tourivoItemType === 'hotel_room') {
+    $tourivoItemType = 'room';
+}
 $tourivoCurrencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
 
 if ($tourivoItemType === 'tour') {
@@ -60,22 +67,27 @@ if ($tourivoItemType === 'tour') {
 
         <!-- Date Selection -->
         <div class="form-section">
-            <label class="section-label"><?php echo ($tourivoItemType === 'tour') ? esc_html__('Select Tour Date *', 'tourivo') : esc_html__('Check-in Date *', 'tourivo'); ?></label>
-            <div class="input-with-icon">
-                <span class="dashicons dashicons-calendar-alt"></span>
+            <label class="section-label"><?php echo ($tourivoItemType === 'tour') ? esc_html__('Select Tour Date *', 'tourivo') : esc_html__('Check-in & check-out *', 'tourivo'); ?></label>
+            <p class="tourivo-cal-summary" aria-live="polite"></p>
+            <div class="tourivo-cal" data-today="<?php echo esc_attr(wp_date('Y-m-d')); ?>">
+                <div class="tourivo-cal-nav">
+                    <button type="button" class="tourivo-cal-prev" aria-label="<?php esc_attr_e('Previous month', 'tourivo'); ?>">&#8249;</button>
+                    <span class="tourivo-cal-title"></span>
+                    <button type="button" class="tourivo-cal-next" aria-label="<?php esc_attr_e('Next month', 'tourivo'); ?>">&#8250;</button>
+                </div>
+                <div class="tourivo-cal-weekdays"></div>
+                <div class="tourivo-cal-grid"></div>
+                <p class="tourivo-cal-note" aria-live="polite"></p>
+            </div>
+            <div class="tourivo-date-fields">
                 <input type="date" name="check_in" id="tourivo-check-in" min="<?php echo esc_attr(wp_date('Y-m-d')); ?>" value="<?php echo esc_attr(wp_date('Y-m-d', strtotime('+1 day'))); ?>" required>
+                <?php if ($tourivoItemType === 'room') : ?>
+                    <input type="date" name="check_out" id="tourivo-check-out" min="<?php echo esc_attr(wp_date('Y-m-d', strtotime('+1 day'))); ?>" value="<?php echo esc_attr(wp_date('Y-m-d', strtotime('+2 days'))); ?>" required>
+                <?php endif; ?>
             </div>
         </div>
 
         <?php if ($tourivoItemType === 'room') : ?>
-            <div class="form-section">
-                <label class="section-label"><?php esc_html_e('Check-out Date *', 'tourivo'); ?></label>
-                <div class="input-with-icon">
-                    <span class="dashicons dashicons-calendar-alt"></span>
-                    <input type="date" name="check_out" id="tourivo-check-out" min="<?php echo esc_attr(wp_date('Y-m-d', strtotime('+1 day'))); ?>" value="<?php echo esc_attr(wp_date('Y-m-d', strtotime('+2 days'))); ?>" required>
-                </div>
-            </div>
-
             <!-- Room Units Counter -->
             <div class="form-section">
                 <label class="section-label"><?php esc_html_e('Number of Rooms *', 'tourivo'); ?></label>
@@ -160,7 +172,7 @@ if ($tourivoItemType === 'tour') {
                 <span class="breakdown-val" id="breakdown-subtotal-val"><?php echo esc_html(Money::format($tourivoBasePrice)); ?></span>
             </div>
             <div class="breakdown-row" id="breakdown-discount-row" style="display:none; color:#15803d;">
-                <span class="breakdown-desc"><?php esc_html_e('Discount', 'tourivo'); ?></span>
+                <span class="breakdown-desc" id="breakdown-discount-label"><?php esc_html_e('Discount', 'tourivo'); ?></span>
                 <span class="breakdown-val" id="breakdown-discount-val">-<?php echo esc_html(Money::format(0)); ?></span>
             </div>
             <div class="breakdown-row" id="breakdown-tax-row" style="display:none;">
@@ -173,8 +185,10 @@ if ($tourivoItemType === 'tour') {
             </div>
         </div>
 
+        <?php do_action('tourivo_booking_panel_after_total', $tourivoItemId, $tourivoItemType); ?>
+
         <!-- Checkout Customer Details Accordion -->
-        <div class="checkout-fields-box" id="tourivo-customer-details">
+        <div class="checkout-fields-box tourivo-checkout-step" id="tourivo-customer-details" hidden>
             <h4 class="checkout-fields-title"><?php esc_html_e('Lead Traveler Information', 'tourivo'); ?></h4>
             <div class="field-row">
                 <input type="text" name="customer_name" placeholder="<?php esc_attr_e('Full Name *', 'tourivo'); ?>" required>
@@ -188,6 +202,7 @@ if ($tourivoItemType === 'tour') {
             <div class="field-row">
                 <textarea name="customer_notes" rows="2" placeholder="<?php esc_attr_e('Special requests or notes...', 'tourivo'); ?>"></textarea>
             </div>
+            <?php do_action('tourivo_booking_panel_checkout_fields', $tourivoItemId, $tourivoItemType); ?>
             <?php if (\Tourivo\Config\Config::get('require_consent', false)) : ?>
                 <div class="field-row tourivo-consent-row" style="margin-top:10px; display:flex; align-items:flex-start; gap:8px;">
                     <input type="checkbox" name="consent" id="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required style="margin-top:3px;">
@@ -232,7 +247,7 @@ if ($tourivoItemType === 'tour') {
         <?php do_action('tourivo_booking_panel_before_submit', $tourivoItemId, $tourivoItemType); ?>
 
         <!-- Action Submit -->
-        <button type="submit" class="tourivo-btn tourivo-btn-primary tourivo-btn-block" id="tourivo-submit-btn">
+        <button type="submit" class="tourivo-btn tourivo-btn-primary tourivo-btn-block tourivo-checkout-step" id="tourivo-submit-btn" hidden>
             <span class="dashicons dashicons-lock"></span> <?php esc_html_e('Book Now (Pay Offline)', 'tourivo'); ?>
         </button>
 

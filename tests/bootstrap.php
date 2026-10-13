@@ -640,7 +640,9 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         }
                         if ($targetCustomerId !== null && $targetEmail !== null) {
                             $matchesId    = ((int) ($b['customer_id'] ?? 0) === $targetCustomerId && $targetCustomerId > 0);
-                            $matchesEmail = (strcasecmp((string) ($b['customer_email'] ?? ''), $targetEmail) === 0);
+                            $emailMatches = strcasecmp((string) ($b['customer_email'] ?? ''), $targetEmail) === 0 && $targetEmail !== '';
+                            $guestClaim   = (bool) preg_match('/customer_id\s*=\s*0\b/i', $query);
+                            $matchesEmail = $emailMatches && (!$guestClaim || (int) ($b['customer_id'] ?? 0) === 0);
                             if (!$matchesId && !$matchesEmail) {
                                 continue;
                             }
