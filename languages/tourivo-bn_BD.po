@@ -4838,6 +4838,60 @@ msgstr "ভর্তি"
 msgid "%d left"
 msgstr "%d বাকি"
 
+msgid "%d tours open"
+msgstr "%d টি ট্যুর খালি"
+
+msgid "%d hotels open"
+msgstr "%d টি হোটেল খালি"
+
+msgid "%1$d tours are open on %2$s for %3$d travelers."
+msgstr "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$d টি ট্যুর খালি।"
+
+msgid "%d tour"
+msgstr "%d টি ট্যুর"
+
+msgid "%d tours"
+msgstr "%d টি ট্যুর"
+
+msgid "%d hotel"
+msgstr "%d টি হোটেল"
+
+msgid "%d hotels"
+msgstr "%d টি হোটেল"
+
+msgid "%1$s and %2$s are open on %3$s for %4$d travelers."
+msgstr "%3$s তারিখে %4$d জন ভ্রমণকারীর জন্য %1$s ও %2$s খালি।"
+
+msgid "%1$s is open on %2$s for %3$d travelers."
+msgstr "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$s খালি।"
+
+msgid "%1$s are open on %2$s for %3$d travelers."
+msgstr "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$s খালি।"
+
+msgid "Any day"
+msgstr "যেকোনো দিন"
+
+msgid "Destination: %s"
+msgstr "গন্তব্য: %s"
+
+msgid "Each date shows how many tours are open."
+msgstr "প্রতিটি তারিখে দেখায় কতগুলো ট্যুর খালি।"
+
+msgid "Each date shows open tours, then open hotels."
+msgstr "প্রতিটি তারিখে আগে খালি ট্যুর, তারপর খালি হোটেল দেখায়।"
+
+msgid "No tours are open on that day. Try another date."
+msgstr "এই দিনে কোনো ট্যুর খালি নেই। অন্য তারিখ বেছে নিন।"
+
+msgid "No tours or hotels are open on that day. Try another date."
+msgstr "এই দিনে কোনো ট্যুর বা হোটেল খালি নেই। অন্য তারিখ বেছে নিন।"
+
+msgid "Tours in %s."
+msgstr "%s-এর ট্যুর।"
+
+msgid "Tours and hotels in %s."
+msgstr "%s-এ ট্যুর ও হোটেল।"
+
 msgid "Loading dates..."
 msgstr "তারিখ আসছে..."
 
@@ -4849,3 +4903,208 @@ msgstr "এই রাতগুলো পুরো খালি নেই। অ�
 
 msgid "Calculating the price..."
 msgstr "হিসাব হচ্ছে..."
+
+msgid "Booking Reference:"
+msgstr "বুকিং রেফারেন্স:"
+
+msgid "Discount:"
+msgstr "ছাড়:"
+
+msgid "Grand Total:"
+msgstr "সর্বমোট:"
+
+msgid "Great news! Your booking has been officially confirmed. We are excited to host your upcoming journey."
+msgstr "সুখবর! আপনার বুকিং নিশ্চিত হয়েছে। আমরা আপনার আসন্ন ভ্রমণের অপেক্ষায় আছি।"
+
+msgid "Infant(s)"
+msgstr "নবজাতক"
+
+msgid "N/A"
+msgstr "প্রযোজ্য নয়"
+
+msgid "Payment Instructions"
+msgstr "পেমেন্টের নির্দেশনা"
+
+msgid "Print Your Travel Voucher"
+msgstr "ট্রাভেল ভাউচার প্রিন্ট করুন"
+
+msgid "Tax / VAT:"
+msgstr "কর / ভ্যাট:"
+
+msgid "This is a friendly reminder that your upcoming trip / reservation is approaching very soon! Please ensure you have all your travel documents ready."
+msgstr "আপনার আসন্ন ভ্রমণ খুব কাছে। টিকিট ও প্রয়োজনীয় কাগজপত্র গুছিয়ে রাখুন।"
+
+msgid "Track your booking anytime"
+msgstr "যেকোনো সময় বুকিং ট্র্যাক করুন"
+
+msgid "Trip Reminder"
+msgstr "ভ্রমণের রিমাইন্ডার"
+
+msgid "Upcoming Trip Reminder: #{booking_code} - {site_name}"
+msgstr "আসন্ন ভ্রমণের রিমাইন্ডার: #{booking_code} - {site_name}"
+
+msgid "View & Print Official Voucher"
+msgstr "অফিসিয়াল ভাউচার দেখুন ও প্রিন্ট করুন"
+
+msgid "Your Booking Confirmation #{booking_code} - {site_name}"
+msgstr "আপনার বুকিং নিশ্চিতকরণ #{booking_code} - {site_name}"
+
+msgid "Your reservation check-in date is on %s."
+msgstr "আপনার চেক-ইন তারিখ %s।"
+
+msgid "Your reservation is secured. You can download and print your official travel voucher below."
+msgstr "আপনার আসন নিশ্চিত। নিচ থেকে অফিসিয়াল ভাউচার ডাউনলোড ও প্রিন্ট করতে পারবেন।"
+
+msgid "Your Trip is Coming Up Soon!"
+msgstr "আপনার ভ্রমণ শিগগিরই শুরু হচ্ছে!"
+
+msgid "Booking Cancelled"
+msgstr "বুকিং বাতিল হয়েছে"
+
+msgid "Booking Request Received"
+msgstr "বুকিং অনুরোধ পেয়েছি"
+
+msgid "Booking Status: Cancelled"
+msgstr "বুকিংয়ের অবস্থা: বাতিল"
+
+msgid "Action required"
+msgstr "আপনার পদক্ষেপ দরকার"
+
+msgid "Confirm My Email"
+msgstr "আমার ইমেইল নিশ্চিত করুন"
+
+msgid "Confirm Your Email Address"
+msgstr "ইমেইল ঠিকানা নিশ্চিত করুন"
+
+msgid "Scheduled Check-in:"
+msgstr "নির্ধারিত চেক-ইন:"
+
+msgid "Status: Pending Confirmation"
+msgstr "অবস্থা: নিশ্চিতকরণের অপেক্ষায়"
+
+msgid "Thank you for choosing us! We have received your booking request. Our team is reviewing the availability and will confirm your reservation shortly."
+msgstr "ধন্যবাদ! আপনার বুকিং অনুরোধ পেয়েছি। আমরা খালি আসন দেখে শিগগিরই নিশ্চিত করব।"
+
+msgid "This reservation has been cancelled and any reserved seats or rooms have been released."
+msgstr "এই বুকিং বাতিল হয়েছে এবং আটকে রাখা আসন বা রুম ছেড়ে দেওয়া হয়েছে।"
+
+msgid "Track Your Booking Online"
+msgstr "অনলাইনে বুকিং ট্র্যাক করুন"
+
+msgid "Unconfirmed bookings are released automatically after a short time. If you did not make this request, simply ignore this email."
+msgstr "নিশ্চিত না করা বুকিং কিছুক্ষণ পর আপনাআপনি ছেড়ে দেওয়া হয়। আপনি এই অনুরোধ না করে থাকলে ইমেইলটি উপেক্ষা করুন।"
+
+msgid "Your Booking Request Received #{booking_code} - {site_name}"
+msgstr "আপনার বুকিং অনুরোধ পেয়েছি #{booking_code} - {site_name}"
+
+msgid "Your Booking #{booking_code} has been Cancelled - {site_name}"
+msgstr "আপনার বুকিং #{booking_code} বাতিল হয়েছে - {site_name}"
+
+msgid "Your reservation has been cancelled. Below are the details of the cancelled booking for your reference:"
+msgstr "আপনার বুকিং বাতিল হয়েছে। রেফারেন্সের জন্য বিবরণ নিচে দেওয়া হলো:"
+
+msgid "Your reservation is currently on hold while we review your itinerary."
+msgstr "আপনার আসন আপাতত ধরে রাখা আছে। আমরা ভ্রমণের বিবরণ দেখছি।"
+
+msgid "If you have any questions or believe this cancellation was made in error, please feel free to reply directly to this email."
+msgstr "কোনো প্রশ্ন থাকলে, বা এই বাতিল ভুলে হয়ে থাকলে, এই ইমেইলের উত্তর দিন।"
+
+msgid "We received a booking request for %1$s (reference #%2$s). Please confirm that this email address is yours to secure the reservation."
+msgstr "%1$s-এর একটি বুকিং অনুরোধ পেয়েছি (রেফারেন্স #%2$s)। আসন নিশ্চিত করতে এই ইমেইল ঠিকানা আপনার কি না, তা নিশ্চিত করুন।"
+
+msgid "Please confirm your booking #{booking_code} - {site_name}"
+msgstr "আপনার বুকিং নিশ্চিত করুন #{booking_code} - {site_name}"
+
+msgid "[New Booking] #{booking_code} by {customer_name}"
+msgstr "[নতুন বুকিং] #{booking_code} — {customer_name}"
+
+msgid "[Booking Cancelled] #{booking_code} - {customer_name}"
+msgstr "[বুকিং বাতিল] #{booking_code} — {customer_name}"
+
+msgid "[New Inquiry] {item_title} from {customer_name}"
+msgstr "[নতুন ইনকোয়ারি] {item_title} — {customer_name}"
+
+msgid "New Booking Received"
+msgstr "নতুন বুকিং এসেছে"
+
+msgid "Booking Cancelled Notification"
+msgstr "বুকিং বাতিলের নোটিশ"
+
+msgid "New Traveler Trip Inquiry"
+msgstr "নতুন ভ্রমণ ইনকোয়ারি"
+
+msgid "Hello Administrator,"
+msgstr "হ্যালো অ্যাডমিন,"
+
+msgid "A new reservation has just been submitted on your website. Here are the booking details:"
+msgstr "ওয়েবসাইটে একটি নতুন বুকিং এসেছে। বিবরণ নিচে:"
+
+msgid "Customer Name:"
+msgstr "গ্রাহকের নাম:"
+
+msgid "Customer Email:"
+msgstr "গ্রাহকের ইমেইল:"
+
+msgid "Customer Phone:"
+msgstr "গ্রাহকের ফোন:"
+
+msgid "Item / Tour:"
+msgstr "আইটেম / ট্যুর:"
+
+msgid "Customer Notes:"
+msgstr "গ্রাহকের মন্তব্য:"
+
+msgid "Manage Bookings in Admin"
+msgstr "অ্যাডমিনে বুকিং দেখুন"
+
+msgid "A booking has been marked as Cancelled. The reserved inventory capacity has been automatically released back to the calendar."
+msgstr "একটি বুকিং বাতিল হয়েছে। আটকে রাখা আসন ক্যালেন্ডারে ফিরে গেছে।"
+
+msgid "Reservation #%1$s by %2$s is now cancelled."
+msgstr "#%1$s বুকিং (%2$s) এখন বাতিল।"
+
+msgid "Open Bookings Panel"
+msgstr "বুকিং প্যানেল খুলুন"
+
+msgid "You have received a new traveler trip inquiry submitted from your website:"
+msgstr "ওয়েবসাইট থেকে একটি নতুন ভ্রমণ ইনকোয়ারি এসেছে:"
+
+msgid "Email Address:"
+msgstr "ইমেইল ঠিকানা:"
+
+msgid "Trip / Package:"
+msgstr "ট্যুর / প্যাকেজ:"
+
+msgid "Number of Travelers:"
+msgstr "ভ্রমণকারীর সংখ্যা:"
+
+msgid "Inquiry / Question:"
+msgstr "ইনকোয়ারি / প্রশ্ন:"
+
+msgid "View & Reply in Inquiries Manager"
+msgstr "ইনকোয়ারি থেকে দেখুন ও উত্তর দিন"
+
+msgid "Paid"
+msgstr "পরিশোধিত"
+
+msgid "Unpaid"
+msgstr "অপরিশোধিত"
+
+msgid "Partial"
+msgstr "আংশিক"
+
+msgid "Tours you can book"
+msgstr "যে ট্যুর এখন বুক করা যায়"
+
+msgid "See all tours"
+msgstr "সব ট্যুর দেখুন"
+
+msgid "Places to stay"
+msgstr "থাকার জায়গা"
+
+msgid "See all hotels"
+msgstr "সব হোটেল দেখুন"
+
+
+
+

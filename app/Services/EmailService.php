@@ -263,6 +263,10 @@ class EmailService
             return false;
         }
 
+        if (function_exists('tourivo_load_plugin_textdomain')) {
+            tourivo_load_plugin_textdomain();
+        }
+
         $siteName     = get_bloginfo('name');
         $primaryColor = Config::get('primary_color', '#0d9488');
         $fromName     = $this->sanitizeHeader((string) Config::get('email_from_name', $siteName));
@@ -634,6 +638,28 @@ class EmailService
     }
 
     /**
+     * Translate a subject or heading that is still the built-in English text.
+     * A subject the site owner rewrote is left as they saved it.
+     *
+     * @param string $value
+     * @param string $settingKey
+     * @return string
+     */
+    protected function translateStockCopy(string $value, string $settingKey): string
+    {
+        $stock = (string) (Config::getDefaults()[$settingKey] ?? '');
+        if ($stock === '' || $value !== $stock) {
+            return $value;
+        }
+
+        if (function_exists('tourivo_load_plugin_textdomain')) {
+            tourivo_load_plugin_textdomain();
+        }
+
+        return __($stock, 'tourivo');
+    }
+
+    /**
      * Resolve email subject with placeholders and fallback to old settings.
      *
      * @param string               $emailType
@@ -659,6 +685,7 @@ class EmailService
             $subject = (string) ($defaults[$settingKey] ?? 'Notification from {site_name}');
         }
 
+        $subject = $this->translateStockCopy($subject, $settingKey);
         $replaced = $this->replacePlaceholders($subject, $data);
         return $this->sanitizeHeader($replaced);
     }
@@ -680,6 +707,7 @@ class EmailService
             $heading = (string) ($defaults[$settingKey] ?? 'Notification');
         }
 
+        $heading = $this->translateStockCopy($heading, $settingKey);
         $replaced = $this->replacePlaceholders($heading, $data);
         return $this->sanitizeHeader($replaced);
     }

@@ -358,6 +358,38 @@ if (!function_exists('tourivo_bn_number')) {
     }
 }
 
+if (!function_exists('tourivo_format_date')) {
+    /**
+     * Format a Y-m-d date with the plugin language's month name.
+     *
+     * @param string $date
+     * @return string
+     */
+    function tourivo_format_date(string $date): string
+    {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}/', $date)) {
+            return $date;
+        }
+
+        $stamp = strtotime(substr($date, 0, 10) . ' 12:00:00');
+        if ($stamp === false) {
+            return $date;
+        }
+
+        $months = [
+            __('January', 'tourivo'), __('February', 'tourivo'), __('March', 'tourivo'),
+            __('April', 'tourivo'), __('May', 'tourivo'), __('June', 'tourivo'),
+            __('July', 'tourivo'), __('August', 'tourivo'), __('September', 'tourivo'),
+            __('October', 'tourivo'), __('November', 'tourivo'), __('December', 'tourivo'),
+        ];
+        $label = (int) wp_date('j', $stamp) . ' ' . ($months[(int) wp_date('n', $stamp) - 1] ?? '') . ' ' . wp_date('Y', $stamp);
+        $banglaDigits = (function_exists('tourivo_is_bengali') && tourivo_is_bengali())
+            || (bool) Config::get('use_bangla_digits', false);
+
+        return $banglaDigits ? tourivo_bn_number($label) : $label;
+    }
+}
+
 if (!function_exists('tourivo_current_locale')) {
     /**
      * Get the active plugin locale code (e.g. 'en_US', 'bn_BD').
@@ -374,7 +406,11 @@ if (!function_exists('tourivo_current_locale')) {
             return 'en_US';
         }
 
-        return function_exists('determine_locale') ? determine_locale() : get_locale();
+        if (function_exists('determine_locale')) {
+            return determine_locale();
+        }
+
+        return function_exists('get_locale') ? get_locale() : 'en_US';
     }
 }
 
@@ -403,6 +439,10 @@ if (!function_exists('tourivo_load_plugin_textdomain')) {
      */
     function tourivo_load_plugin_textdomain(?string $customLocale = null): void
     {
+        if (!function_exists('unload_textdomain') || !function_exists('load_textdomain')) {
+            return;
+        }
+
         $locale = $customLocale ?: tourivo_current_locale();
 
         unload_textdomain('tourivo');

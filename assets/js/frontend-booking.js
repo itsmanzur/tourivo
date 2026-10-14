@@ -5,6 +5,34 @@
 document.addEventListener('DOMContentLoaded', function () {
     const panels = document.querySelectorAll('.tourivo-booking-panel');
 
+    function formatMoney(amount, symbol) {
+        const money = (window.tourivoData && window.tourivoData.money) || {};
+        const decimals = Number.isInteger(money.decimals) ? money.decimals : 2;
+        const decimalSep = typeof money.decimal === 'string' ? money.decimal : '.';
+        const thousandSep = typeof money.thousand === 'string' ? money.thousand : ',';
+        const position = money.position || 'left';
+        const glyph = symbol || money.symbol || '$';
+        const value = Number(amount);
+        const negative = value < 0;
+        const fixed = Math.abs(Number.isFinite(value) ? value : 0).toFixed(decimals);
+        const parts = fixed.split('.');
+        const whole = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, thousandSep);
+        let number = decimals > 0 ? whole + decimalSep + (parts[1] || '') : whole;
+        if (negative) {
+            number = '-' + number;
+        }
+        if (money.bangla) {
+            const digits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+            number = number.replace(/\d/g, function (digit) {
+                return digits[digit];
+            });
+        }
+        if (position === 'right') return number + glyph;
+        if (position === 'left_space') return glyph + ' ' + number;
+        if (position === 'right_space') return number + ' ' + glyph;
+        return glyph + number;
+    }
+
     panels.forEach(panel => {
         initBookingPanel(panel);
     });
@@ -69,11 +97,8 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         // Helper to format currency
-        function formatPrice(amount, symbol, position) {
-            symbol = symbol || panel.dataset.currency || '$';
-            position = position || 'left';
-            const formatted = (Math.round(amount * 100) / 100).toFixed(2);
-            return position === 'right' ? `${formatted}${symbol}` : `${symbol}${formatted}`;
+        function formatPrice(amount, symbol) {
+            return formatMoney(amount, symbol || panel.dataset.currency || '');
         }
 
         // 1. Guest & Room +/- buttons
@@ -1140,7 +1165,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 const livePriceAmount = panel.querySelector('#tourivo-live-price');
                 if (livePriceAmount) {
-                    livePriceAmount.textContent = `${symbol}${(basePrice * rate).toFixed(2)}`;
+                    livePriceAmount.textContent = formatMoney(basePrice * rate, symbol);
                 }
 
                 // Dispatch input event to recalculate
@@ -1264,6 +1289,256 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     initLightbox();
+
+    function initSearchCalendars() {
+        const forms = document.querySelectorAll('.tourivo-search-form');
+        if (!forms.length || !window.tourivoData || !window.tourivoData.restUrl) {
+            return;
+        }
+
+        const text = window.tourivoData.calendar || {};
+        const weekdays = text.weekdays || [];
+        const months = text.months || [];
+        const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+
+        function digits(value) {
+            const raw = String(value);
+            if (!window.tourivoData.money || !window.tourivoData.money.bangla) {
+                return raw;
+            }
+            return raw.replace(/\d/g, function (digit) {
+                return banglaDigits[digit];
+            });
+        }
+
+        forms.forEach(function (form) {
+            const field = form.querySelector('.tourivo-search-date');
+            const button = field && field.querySelector('.tourivo-search-date-btn');
+            const label = field && field.querySelector('.tourivo-search-date-label');
+            const input = field && field.querySelector('.tourivo-search-native');
+            const pop = field && field.querySelector('.tourivo-search-cal');
+            const grid = field && field.querySelector('.tourivo-cal-grid');
+            const title = field && field.querySelector('.tourivo-cal-title');
+            const prev = field && field.querySelector('.tourivo-cal-prev');
+            const next = field && field.querySelector('.tourivo-cal-next');
+            const heads = field && field.querySelector('.tourivo-cal-weekdays');
+            if (!field || !button || !label || !input || !pop || !grid || !title || !prev || !next) {
+                return;
+            }
+
+            const todayIso = pop.dataset.today || '';
+            let view = todayIso ? new Date(todayIso + 'T12:00:00') : new Date();
+            if (/^\d{4}-\d{2}-\d{2}$/.test(input.value)) {
+                view = new Date(input.value + 'T12:00:00');
+            }
+            let cache = {};
+            let serial = 0;
+            let open = false;
+
+            if (heads && weekdays.length) {
+                heads.innerHTML = weekdays.map(function (name) {
+                    return '<span>' + name + '</span>';
+                }).join('');
+            }
+
+            function pretty(iso) {
+                const parts = iso.split('-');
+                return digits(Number(parts[2])) + ' ' + (months[Number(parts[1]) - 1] || '');
+            }
+
+            function setLabel() {
+                label.textContent = input.value ? pretty(input.value) : (text.anyDay || 'Any day');
+            }
+            setLabel();
+
+            function guests() {
+                const guestInput = form.querySelector('[name="tourivo_guests"]');
+                const count = guestInput ? parseInt(guestInput.value, 10) : 1;
+                return Math.max(1, Math.min(50, Number.isFinite(count) ? count : 1));
+            }
+
+            function destination() {
+                const select = form.querySelector('[name="tourivo_destination"]');
+                return select ? select.value : '';
+            }
+
+            function cacheKey(year, month) {
+                return year + '-' + month + '|' + destination() + '|' + guests();
+            }
+
+            function load(year, month) {
+                const key = cacheKey(year, month);
+                if (cache[key]) {
+                    return Promise.resolve(cache[key]);
+                }
+                const url = new URL(window.tourivoData.restUrl + 'tourivo/v1/availability/search');
+                url.searchParams.set('year', String(year));
+                url.searchParams.set('month', String(month));
+                url.searchParams.set('guests', String(guests()));
+                if (destination()) {
+                    url.searchParams.set('destination', destination());
+                }
+                return fetch(url.toString()).then(function (res) {
+                    if (!res.ok) {
+                        throw new Error('search calendar');
+                    }
+                    return res.json();
+                }).then(function (data) {
+                    cache[key] = data.calendar || {};
+                    return cache[key];
+                });
+            }
+
+            function paint(days) {
+                const year = view.getFullYear();
+                const month = view.getMonth();
+                title.textContent = (months[month] || '') + ' ' + digits(year);
+                const startPad = new Date(year, month, 1).getDay();
+                const count = new Date(year, month + 1, 0).getDate();
+                const min = todayIso ? new Date(todayIso + 'T12:00:00') : new Date();
+                const max = new Date(min.getFullYear(), min.getMonth() + 18, 1);
+                prev.disabled = year < min.getFullYear() || (year === min.getFullYear() && month <= min.getMonth());
+                next.disabled = new Date(year, month, 1) >= max;
+
+                grid.innerHTML = '';
+                for (let pad = 0; pad < startPad; pad++) {
+                    const blank = document.createElement('span');
+                    blank.className = 'tourivo-cal-pad';
+                    grid.appendChild(blank);
+                }
+
+                for (let day = 1; day <= count; day++) {
+                    const iso = year + '-' + String(month + 1).padStart(2, '0') + '-' + String(day).padStart(2, '0');
+                    const info = days[iso] || { open: 0, hotels: 0, status: 'sold_out' };
+                    const past = todayIso !== '' && iso < todayIso;
+                    const tours = Number(info.open) || 0;
+                    const hotels = Number(info.hotels) || 0;
+                    const closed = past || (tours < 1 && hotels < 1);
+                    const dayButton = document.createElement('button');
+                    dayButton.type = 'button';
+                    dayButton.className = 'tourivo-cal-day ' + (closed ? 'is-soldout' : (info.status === 'limited' ? 'is-limited' : 'is-available'));
+                    if (input.value === iso) {
+                        dayButton.classList.add('is-selected');
+                    }
+                    dayButton.dataset.date = iso;
+                    dayButton.disabled = closed;
+                    const tourLabel = (text.toursOpen || '%d tours open').replace('%d', digits(tours));
+                    const hotelLabel = (text.hotelsOpen || '%d hotels open').replace('%d', digits(hotels));
+                    dayButton.setAttribute('aria-label', digits(day) + ' ' + (months[month] || '') + ', ' + tourLabel + ', ' + hotelLabel);
+                    const spots = past ? '' : (closed ? (text.soldOut || '0') : '<span class="tourivo-cal-tours">' + digits(tours) + '</span><span class="tourivo-cal-hotels">' + digits(hotels) + '</span>');
+                    dayButton.innerHTML = '<span class="tourivo-cal-num">' + digits(day) + '</span><span class="tourivo-cal-spots">' + spots + '</span>';
+                    grid.appendChild(dayButton);
+                }
+
+                if (input.value && days[input.value] && (Number(days[input.value].open) || 0) < 1 && (Number(days[input.value].hotels) || 0) < 1) {
+                    input.value = '';
+                    setLabel();
+                }
+            }
+
+            function showMonth() {
+                const mine = ++serial;
+                grid.textContent = text.loading || '';
+                load(view.getFullYear(), view.getMonth() + 1).then(function (days) {
+                    if (mine !== serial) {
+                        return;
+                    }
+                    paint(days);
+                }).catch(function () {
+                    if (mine !== serial) {
+                        return;
+                    }
+                    field.classList.add('is-native');
+                    pop.hidden = true;
+                    open = false;
+                });
+            }
+
+            function toggle(force) {
+                const current = field.dataset.open === '1';
+                open = typeof force === 'boolean' ? force : !current;
+                field.dataset.open = open ? '1' : '0';
+                pop.hidden = !open;
+                button.setAttribute('aria-expanded', open ? 'true' : 'false');
+                if (open) {
+                    showMonth();
+                }
+            }
+
+            button.addEventListener('click', function () {
+                toggle();
+            });
+            prev.addEventListener('click', function () {
+                view = new Date(view.getFullYear(), view.getMonth() - 1, 1);
+                showMonth();
+            });
+            next.addEventListener('click', function () {
+                view = new Date(view.getFullYear(), view.getMonth() + 1, 1);
+                showMonth();
+            });
+            grid.addEventListener('click', function (event) {
+                const day = event.target.closest('.tourivo-cal-day');
+                if (!day || day.disabled || !day.dataset.date) {
+                    return;
+                }
+                input.value = day.dataset.date;
+                setLabel();
+                toggle(false);
+            });
+
+            function refresh() {
+                cache = {};
+                if (open) {
+                    showMonth();
+                    return;
+                }
+                if (!/^\d{4}-\d{2}-\d{2}$/.test(input.value)) {
+                    return;
+                }
+                const parts = input.value.split('-');
+                const selected = input.value;
+                load(Number(parts[0]), Number(parts[1])).then(function (days) {
+                    const info = days[selected];
+                    if (!info || ((Number(info.open) || 0) < 1 && (Number(info.hotels) || 0) < 1)) {
+                        input.value = '';
+                        setLabel();
+                    }
+                }).catch(function () {});
+            }
+            const guestInput = form.querySelector('[name="tourivo_guests"]');
+            const destInput = form.querySelector('[name="tourivo_destination"]');
+            if (guestInput) {
+                guestInput.addEventListener('change', refresh);
+            }
+            if (destInput) {
+                destInput.addEventListener('change', refresh);
+            }
+            document.addEventListener('click', function (event) {
+                if (!field.contains(event.target)) {
+                    toggle(false);
+                }
+            });
+        });
+
+        document.addEventListener('keydown', function (event) {
+            if (event.key !== 'Escape') {
+                return;
+            }
+            document.querySelectorAll('.tourivo-search-date').forEach(function (field) {
+                field.dataset.open = '0';
+                const pop = field.querySelector('.tourivo-search-cal');
+                const button = field.querySelector('.tourivo-search-date-btn');
+                if (pop) {
+                    pop.hidden = true;
+                }
+                if (button) {
+                    button.setAttribute('aria-expanded', 'false');
+                }
+            });
+        });
+    }
+
+    initSearchCalendars();
 });
 
 

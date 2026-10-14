@@ -117,6 +117,27 @@ class AvailabilityController extends Controller
     }
 
     /**
+     * How many published tours are open on each day of a month.
+     *
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function searchCalendar(WP_REST_Request $request): WP_REST_Response
+    {
+        $currYear = (int) wp_date('Y');
+        $year = max($currYear - 1, min($currYear + 5, (int) ($request->get_param('year') ?: $currYear)));
+        $month = max(1, min(12, (int) ($request->get_param('month') ?: (int) wp_date('n'))));
+        $destination = sanitize_title((string) $request->get_param('destination'));
+        $guests = max(1, min(50, (int) ($request->get_param('guests') ?: 1)));
+
+        return new WP_REST_Response([
+            'year'     => $year,
+            'month'    => $month,
+            'calendar' => $this->inventoryService->getSearchMonth($year, $month, $destination, $guests),
+        ], 200);
+    }
+
+    /**
      * Reserve temporary hold during checkout with rate limit protections.
      *
      * @param WP_REST_Request $request

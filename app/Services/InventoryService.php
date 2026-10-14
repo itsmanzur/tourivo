@@ -988,4 +988,329 @@ class InventoryService
 
         return $calendar;
     }
+
+    /**
+     * How many published tours are open on each day of a month.
+     *
+     * @param int    $year
+     * @param int    $month
+     * @param string $destination Destination term slug. Empty means every destination.
+     * @param int    $guests
+     * @return array<string, array{open: int, hotels: int, status: string}>
+     */
+    public function getSearchMonth(int $year, int $month, string $destination = '', int $guests = 1): array
+    {
+        $year = max(2000, min(2100, $year));
+        $month = max(1, min(12, $month));
+        $guests = max(1, min(50, $guests));
+        $days = (int) gmdate('t', (int) strtotime(sprintf('%04d-%02d-01', $year, $month)));
+        $start = sprintf('%04d-%02d-01', $year, $month);
+        $end = sprintf('%04d-%02d-%02d', $year, $month, $days);
+        $ids = $this->publishedTourIds($destination);
+        $records = $this->indexedRecords($ids, $start, $end);
+        $hotelIds = $this->publishedHotelIds($destination);
+        $roomSeats = $this->hotelRoomSeats($hotelIds);
+        $roomIds = array_values(array_unique(array_map(static fn (array $seat): int => $seat['room'], $roomSeats)));
+        $roomRecords = $this->indexedRecords($roomIds, $start, $end, 'room');
+
+        $calendar = [];
+        for ($day = 1; $day <= $days; $day++) {
+            $date = sprintf('%04d-%02d-%02d', $year, $month, $day);
+            $open = 0;
+            foreach ($ids as $id) {
+                if ($this->tourHasSeats($records[$id . '|' . $date] ?? null, $this->getDefaultCapacity($id, 'tour'), $guests)) {
+                    $open++;
+                }
+            }
+            $hotels = count($this->hotelsOpenOnDate($roomSeats, $roomRecords, $date, $guests, $hotelIds));
+            $total = $open + $hotels;
+            $calendar[$date] = [
+                'open'   => $open,
+                'hotels' => $hotels,
+                'status' => $total <= 0 ? 'sold_out' : ($total <= 2 ? 'limited' : 'available'),
+            ];
+        }
+
+        return $calendar;
+    }
+
+    /**
+     * Published tours that can take this many guests on one date.
+     *
+     * @param string $date
+     * @param int    $guests
+     * @param string $destination
+     * @return array<int>
+     */
+    public function openTourIds(string $date, int $guests = 1, string $destination = ''): array
+    {
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
+            return [];
+        }
+
+        $guests = max(1, min(50, $guests));
+        $ids = $this->publishedTourIds($destination);
+        $records = $this->indexedRecords($ids, $date, $date);
+        $open = [];
+        foreach ($ids as $id) {
+            if ($this->tourHasSeats($records[$id . '|' . $date] ?? null, $this->getDefaultCapacity($id, 'tour'), $guests)) {
+                $open[] = $id;
+            }
+        }
+
+        return $open;
+    }
+
+    /**
+     * Published tours that can take this many guests on at least one day in the window.
+     *
+     * @param int $days
+     * @param int $guests
+     * @return array<int>
+     */
+    public function upcomingOpenTourIds(int $days = 45, int $guests = 1): array
+    {
+        $days = max(1, min(90, $days));
+        $guests = max(1, min(50, $guests));
+        $ids = $this->publishedTourIds('');
+        if ($ids === []) {
+            return [];
+        }
+
+        $start = wp_date('Y-m-d');
+        $startStamp = strtotime($start . ' 12:00:00');
+        if ($startStamp === false) {
+            return [];
+        }
+        $end = wp_date('Y-m-d', $startStamp + (($days - 1) * DAY_IN_SECONDS));
+        $records = $this->indexedRecords($ids, $start, $end);
+        $open = [];
+
+        foreach ($ids as $id) {
+            $capacity = $this->getDefaultCapacity($id, 'tour');
+            for ($offset = 0; $offset < $days; $offset++) {
+                $date = wp_date('Y-m-d', $startStamp + ($offset * DAY_IN_SECONDS));
+                if ($this->tourHasSeats($records[$id . '|' . $date] ?? null, $capacity, $guests)) {
+                    $open[] = $id;
+                    break;
+                }
+            }
+        }
+
+        return $open;
+    }
+
+    /**
+     * Hotels that match a search. An empty date returns published hotels in the destination.
+     * A date returns hotels with a room that can hold the guests and is open that night.
+     *
+     * @param string $date
+     * @param int    $guests
+     * @param string $destination
+     * @return array<int>
+     */
+    public function matchingHotelIds(string $date, int $guests = 1, string $destination = ''): array
+    {
+        $guests = max(1, min(50, $guests));
+        $hotelIds = $this->publishedHotelIds($destination);
+        if ($hotelIds === []) {
+            return [];
+        }
+        if ($date === '') {
+            return $hotelIds;
+        }
+        if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date) || $date < wp_date('Y-m-d')) {
+            return [];
+        }
+
+        $roomSeats = $this->hotelRoomSeats($hotelIds);
+        if ($roomSeats === []) {
+            return [];
+        }
+
+        $roomIds = array_values(array_unique(array_map(static fn (array $seat): int => $seat['room'], $roomSeats)));
+        $records = $this->indexedRecords($roomIds, $date, $date, 'room');
+
+        return $this->hotelsOpenOnDate($roomSeats, $records, $date, $guests, $hotelIds);
+    }
+
+    /**
+     * Rooms that can make their hotel bookable, loaded once for a search.
+     *
+     * @param array<int> $hotelIds
+     * @return array<int, array{room: int, parent: int, guests: int, capacity: int}>
+     */
+    private function hotelRoomSeats(array $hotelIds): array
+    {
+        $hotelIds = array_values(array_filter(array_map('intval', $hotelIds), static fn (int $id): bool => $id > 0));
+        if ($hotelIds === []) {
+            return [];
+        }
+
+        // phpcs:disable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+        $rooms = get_posts([
+            'post_type'      => 'tourivo_room',
+            'post_status'    => 'publish',
+            'posts_per_page' => 200,
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+            'meta_query'     => [
+                [
+                    'key'     => '_tourivo_parent_hotel_id',
+                    'value'   => $hotelIds,
+                    'compare' => 'IN',
+                    'type'    => 'NUMERIC',
+                ],
+            ],
+        ]);
+        // phpcs:enable WordPress.DB.SlowDBQuery.slow_db_query_meta_query
+
+        $seats = [];
+        foreach (array_map('intval', is_array($rooms) ? $rooms : []) as $roomId) {
+            if ($roomId <= 0) {
+                continue;
+            }
+            $parent = (int) get_post_meta($roomId, '_tourivo_parent_hotel_id', true);
+            if ($parent <= 0 || !in_array($parent, $hotelIds, true)) {
+                continue;
+            }
+            $room = new Room($roomId);
+            $quantity = $room->getQuantity();
+            $seats[] = [
+                'room'     => $roomId,
+                'parent'   => $parent,
+                'guests'   => $room->getMaxGuests(),
+                'capacity' => $quantity > 0 ? $quantity : 1,
+            ];
+        }
+
+        return $seats;
+    }
+
+    /**
+     * @param array<int, array{room: int, parent: int, guests: int, capacity: int}> $roomSeats
+     * @param array<string, object>                                                $records
+     * @param array<int>                                                           $hotelIds
+     * @return array<int>
+     */
+    private function hotelsOpenOnDate(array $roomSeats, array $records, string $date, int $guests, array $hotelIds): array
+    {
+        $open = [];
+        foreach ($roomSeats as $seat) {
+            $parent = $seat['parent'];
+            if (isset($open[$parent])) {
+                continue;
+            }
+            if ($seat['guests'] > 0 && $seat['guests'] < $guests) {
+                continue;
+            }
+            if ($this->tourHasSeats($records[$seat['room'] . '|' . $date] ?? null, $seat['capacity'], 1)) {
+                $open[$parent] = true;
+            }
+        }
+
+        $matched = [];
+        foreach ($hotelIds as $hotelId) {
+            if (isset($open[$hotelId])) {
+                $matched[] = $hotelId;
+            }
+        }
+
+        return $matched;
+    }
+
+    /**
+     * @param string $destination
+     * @return array<int>
+     */
+    private function publishedTourIds(string $destination): array
+    {
+        $args = [
+            'post_type'      => 'tourivo_tour',
+            'post_status'    => 'publish',
+            'posts_per_page' => 80,
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+            'orderby'        => 'title',
+            'order'          => 'ASC',
+        ];
+
+        $destination = sanitize_title($destination);
+        if ($destination !== '') {
+            $args['tax_query'] = [
+                [
+                    'taxonomy' => 'tourivo_destination',
+                    'field'    => 'slug',
+                    'terms'    => $destination,
+                ],
+            ];
+        }
+
+        $ids = get_posts($args);
+        return array_values(array_filter(array_map('intval', is_array($ids) ? $ids : [])));
+    }
+
+    /**
+     * @param string $destination
+     * @return array<int>
+     */
+    private function publishedHotelIds(string $destination): array
+    {
+        $args = [
+            'post_type'      => 'tourivo_hotel',
+            'post_status'    => 'publish',
+            'posts_per_page' => 80,
+            'fields'         => 'ids',
+            'no_found_rows'  => true,
+            'orderby'        => 'date',
+            'order'          => 'DESC',
+        ];
+
+        $destination = sanitize_title($destination);
+        if ($destination !== '') {
+            $args['tax_query'] = [
+                [
+                    'taxonomy' => 'tourivo_destination',
+                    'field'    => 'slug',
+                    'terms'    => $destination,
+                ],
+            ];
+        }
+
+        $ids = get_posts($args);
+
+        return array_values(array_filter(array_map('intval', is_array($ids) ? $ids : [])));
+    }
+
+    /**
+     * @param array<int> $ids
+     * @param string     $itemType
+     * @return array<string, object>
+     */
+    private function indexedRecords(array $ids, string $start, string $end, string $itemType = 'tour'): array
+    {
+        $indexed = [];
+        foreach ($this->repository->getRecordsForItems($ids, $itemType, $start, $end, 'all_day') as $record) {
+            $indexed[(int) $record->item_id . '|' . (string) $record->event_date] = $record;
+        }
+
+        return $indexed;
+    }
+
+    /**
+     * A missing inventory row is open at the tour's default capacity.
+     * A blocked day stays closed even when seats remain.
+     */
+    private function tourHasSeats(?object $record, int $defaultCapacity, int $guests): bool
+    {
+        if ($record && (string) $record->status === 'blocked') {
+            return false;
+        }
+
+        $capacity = $record ? (int) $record->total_capacity : $defaultCapacity;
+        $booked = $record ? (int) $record->booked_count : 0;
+        $reserved = $record ? (int) $record->reserved_count : 0;
+
+        return max(0, $capacity - $booked - $reserved) >= $guests;
+    }
 }

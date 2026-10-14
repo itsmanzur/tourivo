@@ -18,6 +18,13 @@ $tourivoBooking = isset($booking) && is_array($booking) ? $booking : [];
 $tourivoVoucher = isset($voucherUrl) && is_string($voucherUrl) ? $voucherUrl : '';
 $tourivoLookup  = isset($lookupUrl) && is_string($lookupUrl) ? $lookupUrl : '';
 $tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $additionalContent : '';
+$tourivoDate    = static function (string $value): string {
+    if ($value === '') {
+        return '';
+    }
+
+    return function_exists('tourivo_format_date') ? tourivo_format_date($value) : $value;
+};
 ?>
 <p style="font-size: 15px; margin-top: 0;">
     <?php
@@ -41,7 +48,7 @@ $tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $
         sprintf(
             /* translators: %s: Check-in date */
             __('Your reservation check-in date is on %s.', 'tourivo'),
-            $tourivoBooking['check_in'] ?? ''
+            $tourivoDate((string) ($tourivoBooking['check_in'] ?? ''))
         )
     );
     ?>
@@ -50,7 +57,7 @@ $tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $
 <div class="tourivo-info-card">
     <div class="tourivo-info-row">
         <span class="tourivo-info-label"><?php esc_html_e('Booking Reference:', 'tourivo'); ?></span>
-        <span class="tourivo-info-value" style="color: #0284c7;"><?php echo esc_html($tourivoBooking['booking_code'] ?? 'N/A'); ?></span>
+        <span class="tourivo-info-value" style="color: #0284c7;"><?php echo esc_html($tourivoBooking['booking_code'] ?? __('N/A', 'tourivo')); ?></span>
     </div>
     <?php if (!empty($tourivoBooking['item_title'])) : ?>
         <div class="tourivo-info-row">
@@ -61,13 +68,13 @@ $tourivoExtra   = isset($additionalContent) && is_string($additionalContent) ? $
     <?php if (!empty($tourivoBooking['check_in'])) : ?>
         <div class="tourivo-info-row">
             <span class="tourivo-info-label"><?php esc_html_e('Check-in Date:', 'tourivo'); ?></span>
-            <span class="tourivo-info-value"><?php echo esc_html($tourivoBooking['check_in']); ?></span>
+            <span class="tourivo-info-value"><?php echo esc_html($tourivoDate((string) $tourivoBooking['check_in'])); ?></span>
         </div>
     <?php endif; ?>
     <?php if (!empty($tourivoBooking['check_out'])) : ?>
         <div class="tourivo-info-row">
             <span class="tourivo-info-label"><?php esc_html_e('Check-out Date:', 'tourivo'); ?></span>
-            <span class="tourivo-info-value"><?php echo esc_html($tourivoBooking['check_out']); ?></span>
+            <span class="tourivo-info-value"><?php echo esc_html($tourivoDate((string) $tourivoBooking['check_out'])); ?></span>
         </div>
     <?php endif; ?>
     <div class="tourivo-info-row">

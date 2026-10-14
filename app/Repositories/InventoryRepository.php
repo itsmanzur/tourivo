@@ -96,6 +96,42 @@ class InventoryRepository
     }
 
     /**
+     * Inventory rows for many items across a date range, in one query.
+     *
+     * @param array<int> $itemIds
+     * @param string     $itemType
+     * @param string     $startDate
+     * @param string     $endDate
+     * @param string     $timeSlot
+     * @return array<object>
+     */
+    public function getRecordsForItems(array $itemIds, string $itemType, string $startDate, string $endDate, string $timeSlot = 'all_day'): array
+    {
+        if ($this->db === null) {
+            return [];
+        }
+
+        $ids = array_values(array_filter(array_map('intval', $itemIds), static fn (int $id): bool => $id > 0));
+        if ($ids === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '%d'));
+        $sql = "SELECT item_id, event_date, status, total_capacity, booked_count, reserved_count
+                FROM {$this->table}
+                WHERE item_type = %s AND time_slot = %s AND event_date >= %s AND event_date <= %s
+                AND item_id IN ({$placeholders})";
+
+        $prepared = $this->db->prepare($sql, ...array_merge([$itemType, $timeSlot, $startDate, $endDate], $ids));
+        if (!is_string($prepared)) {
+            return [];
+        }
+
+        $results = $this->db->get_results($prepared);
+        return is_array($results) ? $results : [];
+    }
+
+    /**
      * Check whether an item or list of items (e.g. rooms for a hotel) has available capacity in a date range.
      *
      * Evaluates in a single efficient query strategy:

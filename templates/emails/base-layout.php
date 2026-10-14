@@ -18,9 +18,14 @@ $tourivoSiteName     = isset($siteName) && is_string($siteName) ? $siteName : ge
 $tourivoPrimaryColor = isset($primaryColor) && is_string($primaryColor) ? $primaryColor : '#0d9488';
 $tourivoHeading      = isset($emailHeading) && is_string($emailHeading) ? $emailHeading : '';
 $tourivoIsTest       = !empty($isTest);
+$tourivoLang         = 'en';
+if (function_exists('tourivo_current_locale')) {
+    $tourivoLocale = tourivo_current_locale();
+    $tourivoLang = str_starts_with($tourivoLocale, 'bn') ? 'bn' : (substr($tourivoLocale, 0, 2) ?: 'en');
+}
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?php echo esc_attr($tourivoLang); ?>">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

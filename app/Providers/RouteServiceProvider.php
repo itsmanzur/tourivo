@@ -129,6 +129,13 @@ class RouteServiceProvider extends ServiceProvider
             'permission_callback' => '__return_true',
         ]);
 
+        // GET /wp-json/tourivo/v1/availability/search
+        register_rest_route(self::REST_NAMESPACE, '/availability/search', [
+            'methods'             => WP_REST_Server::READABLE,
+            'callback'            => [$controller, 'searchCalendar'],
+            'permission_callback' => '__return_true',
+        ]);
+
         // POST /wp-json/tourivo/v1/availability/hold
         register_rest_route(self::REST_NAMESPACE, '/availability/hold', [
             'methods'             => WP_REST_Server::CREATABLE,

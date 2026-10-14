@@ -784,6 +784,35 @@
     border: 1px solid var(--trv-border);
 }
 
+.tourivo-home-search {
+    max-width: 1100px;
+    margin: 8px auto 32px;
+}
+
+.tourivo-home-tours,
+.tourivo-home-hotels {
+    max-width: 1100px;
+    margin: 0 auto 40px;
+}
+
+.tourivo-home-tours-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 16px;
+    margin: 0 0 16px;
+}
+
+.tourivo-home-tours-head h2 {
+    margin: 0;
+    font-size: 28px;
+}
+
+.tourivo-home-tours-head a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
 .tourivo-search-form {
     display: flex;
     gap: 12px;
@@ -809,6 +838,97 @@
     border: 1px solid var(--trv-border);
     border-radius: 6px;
     font-size: 14px;
+}
+
+.tourivo-search-date {
+    position: relative;
+}
+
+.tourivo-search-date-btn {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--trv-border);
+    border-radius: 6px;
+    background: #fff;
+    font-size: 14px;
+    text-align: left;
+    cursor: pointer;
+}
+
+.tourivo-search-native {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+}
+
+.tourivo-search-date.is-native .tourivo-search-date-btn,
+.tourivo-search-date.is-native .tourivo-search-cal {
+    display: none;
+}
+
+.tourivo-search-date.is-native .tourivo-search-native {
+    position: static;
+    width: 100%;
+    height: auto;
+    clip: auto;
+    overflow: visible;
+}
+
+.tourivo-search-cal {
+    position: absolute;
+    z-index: 40;
+    top: calc(100% + 6px);
+    left: 0;
+    width: 320px;
+    max-width: 90vw;
+}
+
+.tourivo-search-cal .tourivo-cal {
+    background: #fff;
+    border: 1px solid var(--trv-border);
+    border-radius: 12px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.16);
+    padding: 12px;
+}
+
+.tourivo-search-cal .tourivo-cal-day {
+    min-height: 52px;
+}
+
+.tourivo-search-cal .tourivo-cal-spots {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+}
+
+.tourivo-cal-tours::after {
+    content: '·';
+    margin-left: 2px;
+    color: #94a3b8;
+}
+
+.tourivo-cal-hotels {
+    color: #0369a1;
+    font-weight: 700;
+}
+
+.tourivo-search-cal-hint {
+    margin: 8px 0 0;
+    font-size: 12px;
+    color: #64748b;
+}
+
+.tourivo-search-summary {
+    max-width: 1100px;
+    margin: 16px auto;
+    padding: 12px 16px;
+    background: #f0f9ff;
+    border: 1px solid #bae6fd;
+    border-radius: 8px;
+    font-weight: 600;
 }
 
 /* Inquiry CTA & Modal */

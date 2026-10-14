@@ -15,6 +15,13 @@ if (!defined('ABSPATH')) {
 $tourivoInquiry     = isset($inquiry) && is_array($inquiry) ? $inquiry : [];
 $tourivoExtra       = isset($additionalContent) && is_string($additionalContent) ? $additionalContent : '';
 $adminInquiriesUrl  = admin_url('admin.php?page=tourivo-inquiries');
+$tourivoDate = static function (string $value): string {
+    if ($value === '') {
+        return '';
+    }
+
+    return function_exists('tourivo_format_date') ? tourivo_format_date($value) : $value;
+};
 ?>
 <p style="font-size: 15px; margin-top: 0;">
     <strong><?php esc_html_e('Hello Administrator,', 'tourivo'); ?></strong>
@@ -26,11 +33,11 @@ $adminInquiriesUrl  = admin_url('admin.php?page=tourivo-inquiries');
 <div class="tourivo-info-card">
     <div class="tourivo-info-row">
         <span class="tourivo-info-label"><?php esc_html_e('Traveler Name:', 'tourivo'); ?></span>
-        <span class="tourivo-info-value"><?php echo esc_html($tourivoInquiry['name'] ?? 'N/A'); ?></span>
+        <span class="tourivo-info-value"><?php echo esc_html($tourivoInquiry['name'] ?? __('N/A', 'tourivo')); ?></span>
     </div>
     <div class="tourivo-info-row">
         <span class="tourivo-info-label"><?php esc_html_e('Email Address:', 'tourivo'); ?></span>
-        <span class="tourivo-info-value"><a href="mailto:<?php echo esc_attr($tourivoInquiry['email'] ?? ''); ?>"><?php echo esc_html($tourivoInquiry['email'] ?? 'N/A'); ?></a></span>
+        <span class="tourivo-info-value"><a href="mailto:<?php echo esc_attr($tourivoInquiry['email'] ?? ''); ?>"><?php echo esc_html($tourivoInquiry['email'] ?? __('N/A', 'tourivo')); ?></a></span>
     </div>
     <?php if (!empty($tourivoInquiry['phone'])) : ?>
         <div class="tourivo-info-row">
@@ -47,7 +54,7 @@ $adminInquiriesUrl  = admin_url('admin.php?page=tourivo-inquiries');
     <?php if (!empty($tourivoInquiry['travel_date'])) : ?>
         <div class="tourivo-info-row">
             <span class="tourivo-info-label"><?php esc_html_e('Expected Travel Date:', 'tourivo'); ?></span>
-            <span class="tourivo-info-value"><?php echo esc_html($tourivoInquiry['travel_date']); ?></span>
+            <span class="tourivo-info-value"><?php echo esc_html($tourivoDate((string) $tourivoInquiry['travel_date'])); ?></span>
         </div>
     <?php endif; ?>
     <?php if (!empty($tourivoInquiry['guests'])) : ?>
