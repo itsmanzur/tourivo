@@ -78,8 +78,8 @@ if (!isset($tour) || !($tour instanceof \Tourivo\Models\Tour)) {
             <div class="tourivo-price-box">
                 <span class="price-from"><?php esc_html_e('From', 'tourivo'); ?></span>
                 <span class="price-val"><?php echo esc_html($tour->getFormattedPrice()); ?></span>
-                <?php if ($tour->getSalePrice()) : ?>
-                    <del class="price-original">$<?php echo esc_html((string)$tour->getPrice()); ?></del>
+                <?php if ($tour->isOnSale()) : ?>
+                    <del class="price-original"><?php echo esc_html($tour->getFormattedRegularPrice()); ?></del>
                 <?php endif; ?>
             </div>
             <a href="<?php echo esc_url($tour->getPermalink()); ?>" class="tourivo-btn tourivo-btn-sm"><?php esc_html_e('Explore', 'tourivo'); ?> &rarr;</a>

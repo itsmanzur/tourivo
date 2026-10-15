@@ -537,6 +537,10 @@ msgstr "এখনই বুক করুন"
 msgid "Book Now (Pay Offline)"
 msgstr "এখনই বুক করুন (অফলাইনে পরিশোধ)"
 
+#: app/Providers/TemplateServiceProvider.php
+msgid "Book tours and hotels"
+msgstr "ট্যুর ও হোটেল বুক করুন"
+
 #: app/Admin/DocumentationPage.php
 msgid "Bookable Extra Addons & Upsells"
 msgstr "বুকিংযোগ্য অতিরিক্ত অ্যাড-অন ও আপসেল"
@@ -1440,6 +1444,10 @@ msgstr "রেটিং অনুযায়ী ফিল্টার"
 #: app/Admin/DocumentationPage.php
 msgid "Filters tours belonging only to a specific destination slug."
 msgstr "শুধুমাত্র একটি নির্দিষ্ট গন্তব্যের ট্যুরগুলো ফিল্টার করে দেখায়।"
+
+#: app/Providers/TemplateServiceProvider.php
+msgid "Find your next tour or hotel."
+msgstr "আপনার পরের ট্যুর বা হোটেল খুঁজুন।"
 
 #: languages/tourivo.pot
 msgid "Finish Setup"
@@ -2837,6 +2845,9 @@ msgstr "সার্চ ইঞ্জিন অপটিমাইজেশন (SE
 msgid "Search Hotels"
 msgstr "হোটেল খুঁজুন"
 
+msgid "Search trips"
+msgstr "ট্রিপ খুঁজুন"
+
 #: languages/tourivo.pot
 msgid "Search Now"
 msgstr "এখনই খুঁজুন"
@@ -3533,6 +3544,14 @@ msgstr "ট্যুরিতো চালানোর জন্য পিএই
 msgid "Tours"
 msgstr "ট্যুরসমূহ"
 
+msgctxt "public archive title"
+msgid "Tours"
+msgstr "ট্যুর"
+
+msgctxt "public archive title"
+msgid "Hotels"
+msgstr "হোটেল"
+
 #: app/PostTypes/TourPostType.php
 msgid "Tours & Packages"
 msgstr "ট্যুর ও প্যাকেজসমূহ"
@@ -3564,6 +3583,9 @@ msgstr "বুকিং ট্র্যাকিং ও ভাউচার প�
 #: templates/booking-lookup.php
 msgid "Track Reservation"
 msgstr "বুকিং ট্র্যাক করুন"
+
+msgid "Track My Booking"
+msgstr "আমার বুকিং ট্র্যাক করুন"
 
 #: app/Shortcodes/BookingLookupShortcode.php templates/booking-lookup.php
 msgid "Track Your Booking"
@@ -3628,6 +3650,12 @@ msgstr "ভ্রমণকারী:"
 #: app/Admin/BookingsTable.php templates/search-bar.php
 msgid "Travelers"
 msgstr "ভ্রমণকারীগণ"
+
+msgid "Fewer travelers"
+msgstr "অতিথি কমান"
+
+msgid "More travelers"
+msgstr "অতিথি বাড়ান"
 
 #: templates/emails/booking-confirmation.php
 msgid "Travelers / Guests:"
@@ -4847,6 +4875,15 @@ msgstr "%d টি হোটেল খালি"
 msgid "%1$d tours are open on %2$s for %3$d travelers."
 msgstr "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$d টি ট্যুর খালি।"
 
+msgid "%1$d tour is open on %2$s for %3$d travelers."
+msgstr "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$d টি ট্যুর খালি।"
+
+msgid "%1$d tours are open on %2$s for %3$d traveler."
+msgstr "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$d টি ট্যুর খালি।"
+
+msgid "%1$d tour is open on %2$s for %3$d traveler."
+msgstr "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$d টি ট্যুর খালি।"
+
 msgid "%d tour"
 msgstr "%d টি ট্যুর"
 
@@ -5104,6 +5141,12 @@ msgstr "থাকার জায়গা"
 
 msgid "See all hotels"
 msgstr "সব হোটেল দেখুন"
+
+msgid "More tours in %s"
+msgstr "%s-এ আরও ট্যুর"
+
+msgid "Places to stay in %s"
+msgstr "%s-এ থাকার জায়গা"
 
 
 

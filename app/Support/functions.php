@@ -20,6 +20,76 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+if (!function_exists('tourivo_template_header')) {
+    /**
+     * Open a single tour or hotel page with the active theme header.
+     * Block themes have no header.php, so the site menu is printed from the header template part.
+     */
+    function tourivo_template_header(): void
+    {
+        $blockTheme = function_exists('wp_is_block_theme') && wp_is_block_theme() && function_exists('block_header_area');
+        if (!$blockTheme) {
+            if (function_exists('get_header')) {
+                get_header();
+            }
+            return;
+        }
+
+        echo '<!DOCTYPE html><html ';
+        language_attributes();
+        echo '><head><meta charset="' . esc_attr(get_bloginfo('charset')) . '">';
+        echo '<meta name="viewport" content="width=device-width, initial-scale=1">';
+        wp_head();
+        echo '</head><body ';
+        body_class();
+        echo '>';
+        wp_body_open();
+        block_header_area();
+        echo '<main class="wp-block-group tourivo-block-main">';
+    }
+}
+
+if (!function_exists('tourivo_template_footer')) {
+    /**
+     * Close a single tour or hotel page with the active theme footer.
+     */
+    function tourivo_template_footer(): void
+    {
+        $blockTheme = function_exists('wp_is_block_theme') && wp_is_block_theme() && function_exists('block_footer_area');
+        if (!$blockTheme) {
+            if (function_exists('get_footer')) {
+                get_footer();
+            }
+            return;
+        }
+
+        echo '</main>';
+        block_footer_area();
+        wp_footer();
+        echo '</body></html>';
+    }
+}
+
+if (!function_exists('tourivo_place_search')) {
+    /**
+     * Print the trip search bar on a single tour or hotel page.
+     */
+    function tourivo_place_search(): void
+    {
+        echo apply_filters('tourivo/place_search', ''); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    }
+}
+
+if (!function_exists('tourivo_related_place')) {
+    /**
+     * Print other tours and hotels in the same destination.
+     */
+    function tourivo_related_place(): void
+    {
+        echo apply_filters('tourivo/related_place', ''); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+    }
+}
+
 if (!function_exists('tourivo_locate_template')) {
     /**
      * Locate a template and return the path for inclusion.

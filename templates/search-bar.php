@@ -19,7 +19,21 @@ $tourivoDestinations = get_terms([
     'hide_empty' => false,
 ]);
 
-$tourivoSelectedDest = isset($_GET['tourivo_destination']) ? sanitize_title(wp_unslash((string) $_GET['tourivo_destination'])) : '';
+$tourivoSelectedDest = '';
+$tourivoQueriedPlace = get_queried_object();
+if ($tourivoQueriedPlace instanceof \WP_Term && $tourivoQueriedPlace->taxonomy === 'tourivo_destination') {
+    $tourivoSelectedDest = $tourivoQueriedPlace->slug;
+} elseif (isset($_GET['tourivo_destination'])) {
+    $tourivoSelectedDest = sanitize_text_field(wp_unslash((string) $_GET['tourivo_destination']));
+} elseif (
+    $tourivoQueriedPlace instanceof \WP_Post
+    && in_array($tourivoQueriedPlace->post_type, ['tourivo_tour', 'tourivo_hotel'], true)
+) {
+    $tourivoPlaceTerms = get_the_terms($tourivoQueriedPlace, 'tourivo_destination');
+    if (is_array($tourivoPlaceTerms) && isset($tourivoPlaceTerms[0]) && $tourivoPlaceTerms[0] instanceof \WP_Term) {
+        $tourivoSelectedDest = $tourivoPlaceTerms[0]->slug;
+    }
+}
 $tourivoSelectedDate = '';
 if (isset($_GET['tourivo_date'])) {
     $tourivoRawDate = sanitize_text_field(wp_unslash((string) $_GET['tourivo_date']));
@@ -28,6 +42,8 @@ if (isset($_GET['tourivo_date'])) {
     }
 }
 $tourivoSelectedGuests = isset($_GET['tourivo_guests']) ? max(1, min(50, absint(wp_unslash((string) $_GET['tourivo_guests'])))) : 2;
+$tourivoBanglaDigits = (function_exists('tourivo_is_bengali') && tourivo_is_bengali())
+    || (bool) \Tourivo\Config\Config::get('use_bangla_digits', false);
 
 $tourivoDateLabel = __('Any day', 'tourivo');
 if ($tourivoSelectedDate !== '') {
@@ -40,6 +56,9 @@ if ($tourivoSelectedDate !== '') {
     ];
     if ($tourivoStamp > 0) {
         $tourivoDateLabel = (int) wp_date('j', $tourivoStamp) . ' ' . ($tourivoMonths[(int) wp_date('n', $tourivoStamp) - 1] ?? '');
+        if ($tourivoBanglaDigits && function_exists('tourivo_bn_number')) {
+            $tourivoDateLabel = tourivo_bn_number($tourivoDateLabel);
+        }
     }
 }
 ?>
@@ -78,7 +97,18 @@ if ($tourivoSelectedDate !== '') {
 
         <div class="search-field guests-field">
             <label><span class="dashicons dashicons-groups"></span> <?php esc_html_e('Travelers', 'tourivo'); ?></label>
-            <input type="number" name="tourivo_guests" min="1" max="50" value="<?php echo esc_attr((string) $tourivoSelectedGuests); ?>">
+            <div class="tourivo-guest-stepper">
+                <button type="button" class="tourivo-guest-minus" aria-label="<?php esc_attr_e('Fewer travelers', 'tourivo'); ?>">−</button>
+                <?php if ($tourivoBanglaDigits) : ?>
+                    <input type="text" class="tourivo-guest-digits" inputmode="numeric" autocomplete="off" value="<?php echo esc_attr(function_exists('tourivo_bn_number') ? tourivo_bn_number((string) $tourivoSelectedGuests) : (string) $tourivoSelectedGuests); ?>">
+                <?php else : ?>
+                    <input type="number" name="tourivo_guests" min="1" max="50" value="<?php echo esc_attr((string) $tourivoSelectedGuests); ?>">
+                <?php endif; ?>
+                <button type="button" class="tourivo-guest-plus" aria-label="<?php esc_attr_e('More travelers', 'tourivo'); ?>">+</button>
+            </div>
+            <?php if ($tourivoBanglaDigits) : ?>
+                <input type="hidden" name="tourivo_guests" value="<?php echo esc_attr((string) $tourivoSelectedGuests); ?>">
+            <?php endif; ?>
         </div>
 
         <input type="hidden" name="post_type" value="tourivo_tour">

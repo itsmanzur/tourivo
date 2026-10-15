@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-get_header();
+tourivo_template_header();
 
 $tourivoTourId = (int) get_the_ID();
 $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
@@ -19,9 +19,10 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
 
 <div id="tourivo-single-tour-<?php the_ID(); ?>" <?php post_class('tourivo-single-wrapper tourivo-single-tour'); ?>>
     <div class="tourivo-container">
+        <?php tourivo_place_search(); ?>
         <!-- Top Breadcrumbs / Back link -->
         <div class="tourivo-top-meta">
-            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_tour')); ?>" class="back-link">&larr; <?php esc_html_e('All Tours & Packages', 'tourivo'); ?></a>
+            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_tour')); ?>" class="back-link">&larr; <?php echo esc_html(_x('Tours', 'public archive title', 'tourivo')); ?></a>
             <?php if ($tourivoTour->getBadge()) : ?>
                 <span class="tourivo-ribbon-inline"><?php echo esc_html($tourivoTour->getBadge()); ?></span>
             <?php endif; ?>
@@ -197,7 +198,8 @@ $tourivoTour   = new \Tourivo\Models\Tour($tourivoTourId);
                 </div>
             </div>
         </div>
+        <?php tourivo_related_place(); ?>
     </div>
 </div>
 
-<?php get_footer();
+<?php tourivo_template_footer();

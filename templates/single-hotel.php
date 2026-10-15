@@ -11,7 +11,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-get_header();
+tourivo_template_header();
 
 $tourivoHotelId = (int) get_the_ID();
 $tourivoHotel   = new \Tourivo\Models\Hotel($tourivoHotelId);
@@ -21,9 +21,10 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
 
 <div id="tourivo-single-hotel-<?php the_ID(); ?>" <?php post_class('tourivo-single-wrapper tourivo-single-hotel'); ?>>
     <div class="tourivo-container">
+        <?php tourivo_place_search(); ?>
         <!-- Top Breadcrumbs / Back link -->
         <div class="tourivo-top-meta">
-            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_hotel')); ?>" class="back-link">&larr; <?php esc_html_e('All Hotels & Accommodations', 'tourivo'); ?></a>
+            <a href="<?php echo esc_url(get_post_type_archive_link('tourivo_hotel')); ?>" class="back-link">&larr; <?php echo esc_html(_x('Hotels', 'public archive title', 'tourivo')); ?></a>
         </div>
 
         <header class="tourivo-header-section">
@@ -162,7 +163,8 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
         <?php 
         tourivo_get_template('reviews-section.php', ['tourivoPostId' => $tourivoHotelId]); 
         ?>
+        <?php tourivo_related_place(); ?>
     </div>
 </div>
 
-<?php get_footer();
+<?php tourivo_template_footer();

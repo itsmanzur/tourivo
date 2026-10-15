@@ -52,6 +52,16 @@ class Tour extends Model
     }
 
     /**
+     * Whether the sale price is set and lower than the regular price.
+     */
+    public function isOnSale(): bool
+    {
+        $sale = $this->getSalePrice();
+
+        return $sale !== null && $sale > 0 && $sale < $this->getPrice();
+    }
+
+    /**
      * Get active price (sale price if set and lower, otherwise base price).
      *
      * @return float
@@ -59,9 +69,10 @@ class Tour extends Model
     public function getActivePrice(): float
     {
         $sale = $this->getSalePrice();
-        if ($sale !== null && $sale > 0 && $sale < $this->getPrice()) {
+        if ($this->isOnSale() && $sale !== null) {
             return $sale;
         }
+
         return $this->getPrice();
     }
 
@@ -73,6 +84,14 @@ class Tour extends Model
     public function getFormattedPrice(): string
     {
         return \Tourivo\Support\Money::format($this->getActivePrice());
+    }
+
+    /**
+     * Formatted regular price, shown crossed out while a lower sale price is active.
+     */
+    public function getFormattedRegularPrice(): string
+    {
+        return \Tourivo\Support\Money::format($this->getPrice());
     }
 
     /**

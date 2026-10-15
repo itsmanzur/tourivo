@@ -1507,6 +1507,53 @@ document.addEventListener('DOMContentLoaded', function () {
             }
             const guestInput = form.querySelector('[name="tourivo_guests"]');
             const destInput = form.querySelector('[name="tourivo_destination"]');
+            const shownGuests = form.querySelector('.tourivo-guest-digits');
+            if (shownGuests && guestInput) {
+                const guestAscii = { '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9' };
+                function readGuests(raw) {
+                    const ascii = String(raw).replace(/[০-৯]/g, function (digit) {
+                        return guestAscii[digit] || '';
+                    }).replace(/[^\d]/g, '');
+                    if (ascii === '') {
+                        return null;
+                    }
+                    const count = parseInt(ascii, 10);
+                    if (!Number.isFinite(count)) {
+                        return null;
+                    }
+                    return Math.max(1, Math.min(50, count));
+                }
+                function paintGuests(commit) {
+                    const parsed = readGuests(shownGuests.value);
+                    if (parsed === null) {
+                        if (!commit) {
+                            return;
+                        }
+                        const fallback = readGuests(guestInput.value) || 1;
+                        guestInput.value = String(fallback);
+                        shownGuests.value = digits(fallback);
+                        return;
+                    }
+                    const next = String(parsed);
+                    const pretty = digits(parsed);
+                    if (guestInput.value !== next) {
+                        guestInput.value = next;
+                        guestInput.dispatchEvent(new Event('change', { bubbles: true }));
+                    }
+                    if (shownGuests.value !== pretty) {
+                        shownGuests.value = pretty;
+                    }
+                }
+                shownGuests.addEventListener('input', function () {
+                    paintGuests(false);
+                });
+                shownGuests.addEventListener('blur', function () {
+                    paintGuests(true);
+                });
+                form.addEventListener('submit', function () {
+                    paintGuests(true);
+                });
+            }
             if (guestInput) {
                 guestInput.addEventListener('change', refresh);
             }
@@ -1539,6 +1586,74 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     initSearchCalendars();
+    initGuestSteppers();
 });
+
+function initGuestSteppers() {
+    const banglaDigits = ['০', '১', '২', '৩', '৪', '৫', '৬', '৭', '৮', '৯'];
+    const guestAscii = { '০': '0', '১': '1', '২': '2', '৩': '3', '৪': '4', '৫': '5', '৬': '6', '৭': '7', '৮': '8', '৯': '9' };
+
+    function toDigits(value) {
+        const raw = String(value);
+        if (!window.tourivoData || !window.tourivoData.money || !window.tourivoData.money.bangla) {
+            return raw;
+        }
+        return raw.replace(/\d/g, function (digit) {
+            return banglaDigits[digit];
+        });
+    }
+
+    function readGuests(raw) {
+        const ascii = String(raw).replace(/[০-৯]/g, function (digit) {
+            return guestAscii[digit] || '';
+        }).replace(/[^\d]/g, '');
+        if (ascii === '') {
+            return null;
+        }
+        const count = parseInt(ascii, 10);
+        if (!Number.isFinite(count)) {
+            return null;
+        }
+        return Math.max(1, Math.min(50, count));
+    }
+
+    document.querySelectorAll('.tourivo-guest-stepper').forEach(function (stepper) {
+        const field = stepper.closest('.guests-field') || stepper;
+        const shown = stepper.querySelector('.tourivo-guest-digits');
+        const named = field.querySelector('[name="tourivo_guests"]');
+        const minus = stepper.querySelector('.tourivo-guest-minus');
+        const plus = stepper.querySelector('.tourivo-guest-plus');
+        if (!named || !minus || !plus) {
+            return;
+        }
+
+        function current() {
+            const fromShown = shown ? readGuests(shown.value) : null;
+            return fromShown !== null ? fromShown : (readGuests(named.value) || 1);
+        }
+
+        function setCount(next) {
+            const count = Math.max(1, Math.min(50, next));
+            const value = String(count);
+            if (named.value !== value) {
+                named.value = value;
+                named.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+            if (shown) {
+                shown.value = toDigits(count);
+            }
+            minus.disabled = count <= 1;
+            plus.disabled = count >= 50;
+        }
+
+        minus.addEventListener('click', function () {
+            setCount(current() - 1);
+        });
+        plus.addEventListener('click', function () {
+            setCount(current() + 1);
+        });
+        setCount(current());
+    });
+}
 
 
