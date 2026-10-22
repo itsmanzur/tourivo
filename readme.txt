@@ -132,7 +132,8 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * **Open Dates & Availability Search:** Travelers can pick any open date; a month calendar shows how many tours and hotels are open each day, and totals are recalculated on the server.
 * **Search Across Listings:** The destination, date and traveler search now carries through tour and hotel archives, destination pages and single listings, with related tours and hotels in the same destination.
 * **Optional Travel Homepage Layout:** New setting (off by default, also offered in the Setup Wizard) that turns the homepage and footer into a travel storefront. Without it Tourivo leaves the homepage, footer and menus untouched.
-* **Developer:** New `tourivo/public_payment_methods` filter lets add-ons that collect payment themselves (such as a WooCommerce checkout) register their own method for public bookings, and `tourivo/travel_homepage` filter overrides the homepage layout setting.
+* **Itemised Price Breakdown:** Price changes made by add-ons (seasonal rates, group discounts, paid extras) now appear as their own named lines in the booking panel, and the lines always add up to the subtotal.
+* **Developer:** New `tourivo/public_payment_methods` filter lets add-ons that collect payment themselves (such as a WooCommerce checkout) register their own method for public bookings, and `tourivo/travel_homepage` filter overrides the homepage layout setting. `tourivo/booking_price` filters can return an `adjustments` list (title and amount, negative for discounts) to itemise their changes.
 * **Translations:** Built-in email subjects and headings are now in the translation template; translator comments added for every placeholder string.
 * **Fix:** Report date ranges and CSV export file names use explicit UTC dates.
 

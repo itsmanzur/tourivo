@@ -6430,7 +6430,7 @@ msgstr "নির্বাচিত রুম পাওয়া যায়ন
 msgid "%1$d Room(s) × %2$d Night(s)"
 msgstr "%1$d টি রুম × %2$d রাত"
 
-#: app/Services/PricingService.php:268
+#: app/Services/PricingService.php:301
 #: templates/booking-panel.php:179
 msgid "Tax"
 msgstr "কর"
@@ -7279,3 +7279,7 @@ msgstr "হ্যাঁ (বিনামূল্যে / আসনের চা
 #: views/admin/metaboxes/tour-metabox.php:140
 msgid "No (Charge Adult Price)"
 msgstr "না (প্রাপ্তবয়স্কের মূল্য নেওয়া হবে)"
+
+#: app/Services/PricingService.php:289
+msgid "Other adjustments"
+msgstr "অন্যান্য সমন্বয়"

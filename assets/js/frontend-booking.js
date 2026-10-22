@@ -549,10 +549,14 @@ document.addEventListener('DOMContentLoaded', function () {
                                         row.className = 'breakdown-row';
                                         const desc = document.createElement('span');
                                         desc.className = 'breakdown-desc';
-                                        desc.textContent = `${line.title} (${line.quantity} × ${formatPrice(line.rate, symbol)})`;
+                                        desc.textContent = line.adjustment
+                                            ? line.title
+                                            : `${line.title} (${line.quantity} × ${formatPrice(line.rate, symbol)})`;
                                         const val = document.createElement('span');
                                         val.className = 'breakdown-val';
-                                        val.textContent = formatPrice(line.total, symbol);
+                                        val.textContent = Number(line.total) < 0
+                                            ? '-' + formatPrice(-Number(line.total), symbol)
+                                            : formatPrice(line.total, symbol);
                                         row.append(desc, val);
                                         breakdownItems.appendChild(row);
                                     });
@@ -571,7 +575,9 @@ document.addEventListener('DOMContentLoaded', function () {
                                         couponMessage.textContent = '';
                                     }
                                 }
-                                const shownDiscount = couponAmount > 0 ? couponAmount : quote.discount;
+                                // Discounts already itemised as lines are not repeated in the discount row.
+                                const unlistedDiscount = Math.max(0, Number(quote.discount || 0) - Number(quote.line_discount || 0));
+                                const shownDiscount = couponAmount > 0 ? couponAmount : unlistedDiscount;
                                 const shownSubtotal = couponAmount > 0 ? quote.subtotal + couponAmount : quote.subtotal;
                                 if (subtotalRow && subtotalVal) {
                                     if (shownDiscount > 0 || quote.tax > 0) {

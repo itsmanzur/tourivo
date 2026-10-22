@@ -230,12 +230,15 @@ class PricingService
             ];
         }
 
-        // Apply Pro / 3rd-party Pricing Pipeline Filter
+        // Apply Pro / 3rd-party Pricing Pipeline Filter.
+        // A filter that changes total_price should also list each change in 'adjustments'
+        // ([['title' => string, 'total' => float], ...], negative for discounts) so the customer sees it itemised.
         $pricingData = apply_filters('tourivo/booking_price', [
             'unit_price'  => $avgUnitPrice,
             'total_price' => $rawSubtotal,
             'base_price'  => $rawSubtotal,
             'currency'    => $currency,
+            'adjustments' => [],
         ], [
             'item_id'   => $itemId,
             'item_type' => $itemType,
@@ -261,7 +264,37 @@ class PricingService
         $couponDiscount = max(0.0, (float) ($pricingData['coupon_discount'] ?? 0));
         $couponDiscount = min($couponDiscount, max(0.0, $merchandise));
         $subtotal = max(0.0, $merchandise - $couponDiscount);
-        $discount = max(0.0, $rawSubtotal - $subtotal);
+
+        // Itemise the filter's price changes. Discount lines are already visible, so only the coupon
+        // is shown again as a separate discount row; $discount still reports both for accounting.
+        $lineDiscount = 0.0;
+        $adjustments  = (isset($pricingData['adjustments']) && is_array($pricingData['adjustments'])) ? $pricingData['adjustments'] : [];
+        if ($adjustments !== []) {
+            $itemised = $rawSubtotal;
+            foreach ($adjustments as $adjustment) {
+                $amount = round((float) ($adjustment['total'] ?? 0), $decimals);
+                $title  = trim((string) ($adjustment['title'] ?? ''));
+                if ($amount == 0.0 || $title === '') {
+                    continue;
+                }
+                $lines[] = ['title' => $title, 'quantity' => 1, 'rate' => $amount, 'total' => $amount, 'adjustment' => true];
+                $itemised += $amount;
+                if ($amount < 0) {
+                    $lineDiscount -= $amount;
+                }
+            }
+            // Whatever the filter changed without itemising still has to add up on screen.
+            $unlisted = round($merchandise - $itemised, $decimals);
+            if (abs($unlisted) >= 0.01) {
+                $lines[] = ['title' => __('Other adjustments', 'tourivo'), 'quantity' => 1, 'rate' => $unlisted, 'total' => $unlisted, 'adjustment' => true];
+                if ($unlisted < 0) {
+                    $lineDiscount -= $unlisted;
+                }
+            }
+            $discount = $lineDiscount + $couponDiscount;
+        } else {
+            $discount = max(0.0, $rawSubtotal - $subtotal);
+        }
 
         // Tax Calculations
         $taxEnabled   = (bool) Config::get('tax_enabled', false);
@@ -313,6 +346,7 @@ class PricingService
             'item_type'       => $itemType,
             'subtotal'        => $subtotal,
             'discount'        => $discount,
+            'line_discount'   => round($lineDiscount, $decimals),
             'tax'             => $taxAmount,
             'tax_rate'        => $taxRate,
             'tax_label'       => $taxLabel,
