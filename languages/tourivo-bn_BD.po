@@ -5222,468 +5222,468 @@ msgstr ""
 
 #: app/Admin/BookingsTable.php:142
 msgid "🚨 Cancel Requested"
-msgstr ""
+msgstr "🚨 বাতিলের অনুরোধ"
 
 #: app/Admin/BookingsTable.php:143
 #: app/Admin/BookingsTable.php:507
 msgid "On Hold"
-msgstr ""
+msgstr "স্থগিত"
 
 #: app/Admin/BookingsTable.php:232
 #: app/Admin/BookingsTable.php:506
 #: templates/booking-lookup.php:67
 msgid "Cancel Requested"
-msgstr ""
+msgstr "বাতিলের অনুরোধ"
 
 #: app/Admin/BookingsTable.php:244
 msgid "Record received offline payment or mark paid"
-msgstr ""
+msgstr "অফলাইনে পাওয়া পেমেন্ট রেকর্ড করুন বা পরিশোধিত হিসেবে চিহ্নিত করুন"
 
 #: app/Admin/BookingsTable.php:247
 msgid "Invalidate previously shared voucher / calendar links"
-msgstr ""
+msgstr "আগে শেয়ার করা ভাউচার / ক্যালেন্ডার লিংক বাতিল করুন"
 
 #: app/Admin/BookingsTable.php:247
 msgid "Revoke Links"
-msgstr ""
+msgstr "লিংক বাতিল করুন"
 
 #. translators: %s: Number of bookings
 #: app/Admin/BookingsTable.php:283
 #, php-format
 msgid "%s booking"
 msgid_plural "%s bookings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%s টি বুকিং"
+msgstr[1] "%s টি বুকিং"
 
 #: app/Admin/BookingsTable.php:468
 msgid "Date Range Preset"
-msgstr ""
+msgstr "তারিখের সীমা (প্রিসেট)"
 
 #: app/Admin/BookingsTable.php:470
 #: app/Services/ExportService.php:457
 msgid "All Time"
-msgstr ""
+msgstr "সব সময়"
 
 #: app/Admin/BookingsTable.php:471
 #: app/Admin/ReportsPage.php:54
 #: app/Services/ReportingService.php:40
 #: views/admin/metaboxes/availability-metabox.php:31
 msgid "Today"
-msgstr ""
+msgstr "আজ"
 
 #: app/Admin/BookingsTable.php:472
 #: app/Admin/ReportsPage.php:55
 #: app/Services/ReportingService.php:58
 msgid "Last 7 Days"
-msgstr ""
+msgstr "গত ৭ দিন"
 
 #: app/Admin/BookingsTable.php:473
 #: app/Admin/ReportsPage.php:56
 #: app/Services/ReportingService.php:102
 msgid "This Month"
-msgstr ""
+msgstr "এই মাস"
 
 #: app/Admin/BookingsTable.php:474
 #: app/Admin/ReportsPage.php:57
 #: app/Services/ReportingService.php:68
 msgid "Last Month"
-msgstr ""
+msgstr "গত মাস"
 
 #: app/Admin/BookingsTable.php:475
 msgid "Custom Range"
-msgstr ""
+msgstr "নিজস্ব তারিখ সীমা"
 
 #: app/Admin/BookingsTable.php:482
 msgid "Filter Dates By"
-msgstr ""
+msgstr "তারিখ অনুযায়ী ফিল্টার"
 
 #: app/Admin/BookingsTable.php:484
 msgid "Booking Date (Created)"
-msgstr ""
+msgstr "বুকিংয়ের তারিখ (তৈরির দিন)"
 
 #: app/Admin/BookingsTable.php:485
 msgid "Travel Date (Check-in)"
-msgstr ""
+msgstr "ভ্রমণের তারিখ (চেক-ইন)"
 
 #: app/Admin/BookingsTable.php:489
 msgid "Start Date"
-msgstr ""
+msgstr "শুরুর তারিখ"
 
 #: app/Admin/BookingsTable.php:493
 msgid "End Date"
-msgstr ""
+msgstr "শেষের তারিখ"
 
 #: app/Admin/BookingsTable.php:503
 msgid "All Statuses"
-msgstr ""
+msgstr "সব স্ট্যাটাস"
 
 #: app/Admin/BookingsTable.php:515
 msgid "All Payment Statuses"
-msgstr ""
+msgstr "সব পেমেন্ট স্ট্যাটাস"
 
 #: app/Admin/BookingsTable.php:517
 #: app/Admin/BookingsTable.php:635
 msgid "Pending (Unpaid)"
-msgstr ""
+msgstr "অপেক্ষমান (অপরিশোধিত)"
 
 #: app/Admin/BookingsTable.php:519
 msgid "Failed"
-msgstr ""
+msgstr "ব্যর্থ"
 
 #: app/Admin/BookingsTable.php:527
 msgid "Specific Tour or Room"
-msgstr ""
+msgstr "নির্দিষ্ট ট্যুর বা রুম"
 
 #: app/Admin/BookingsTable.php:529
 msgid "-- All Tours & Rooms --"
-msgstr ""
+msgstr "-- সব ট্যুর ও রুম --"
 
 #: app/Admin/BookingsTable.php:547
 msgid "Search Keyword"
-msgstr ""
+msgstr "খোঁজার শব্দ"
 
 #: app/Admin/BookingsTable.php:548
 msgid "Name, email, phone, code..."
-msgstr ""
+msgstr "নাম, ইমেইল, ফোন, কোড..."
 
 #: app/Admin/BookingsTable.php:554
 msgid "Report Format & Detail Level"
-msgstr ""
+msgstr "রিপোর্টের ধরন ও বিস্তারিত মাত্রা"
 
 #: app/Admin/BookingsTable.php:558
 msgid "Bookings List"
-msgstr ""
+msgstr "বুকিং তালিকা"
 
 #: app/Admin/BookingsTable.php:558
 msgid "Standard manifest with customer & financial totals"
-msgstr ""
+msgstr "গ্রাহক ও আর্থিক মোটসহ সাধারণ তালিকা"
 
 #: app/Admin/BookingsTable.php:562
 msgid "Line-Item Manifest"
-msgstr ""
+msgstr "লাইন-আইটেম তালিকা"
 
 #: app/Admin/BookingsTable.php:562
 msgid "One row per room/tour line with travelers breakdown"
-msgstr ""
+msgstr "প্রতিটি রুম/ট্যুর লাইনের জন্য এক সারি, ভ্রমণকারীর বিভাজনসহ"
 
 #: app/Admin/BookingsTable.php:566
 msgid "Financial Summary"
-msgstr ""
+msgstr "আর্থিক সারসংক্ষেপ"
 
 #: app/Admin/BookingsTable.php:566
 msgid "Aggregated metrics: Gross value, taxes & net revenue"
-msgstr ""
+msgstr "সমষ্টিগত হিসাব: মোট মূল্য, কর ও নিট আয়"
 
 #: app/Admin/BookingsTable.php:573
 msgid "matching bookings found"
-msgstr ""
+msgstr "টি মিলে যাওয়া বুকিং পাওয়া গেছে"
 
 #: app/Admin/BookingsTable.php:574
 msgid "UTF-8 Excel Ready"
-msgstr ""
+msgstr "UTF-8, Excel-এ খোলার উপযোগী"
 
 #: app/Admin/BookingsTable.php:581
 msgid "Download CSV Report"
-msgstr ""
+msgstr "CSV রিপোর্ট ডাউনলোড করুন"
 
 #: app/Admin/BookingsTable.php:593
 msgid "Record Payment"
-msgstr ""
+msgstr "পেমেন্ট রেকর্ড করুন"
 
 #: app/Admin/BookingsTable.php:612
 msgid "Already Paid:"
-msgstr ""
+msgstr "ইতিমধ্যে পরিশোধিত:"
 
 #: app/Admin/BookingsTable.php:616
 msgid "Current Due:"
-msgstr ""
+msgstr "বর্তমান বকেয়া:"
 
 #: app/Admin/BookingsTable.php:623
 msgid "Payment Amount to Record"
-msgstr ""
+msgstr "রেকর্ড করার পেমেন্টের পরিমাণ"
 
 #: app/Admin/BookingsTable.php:625
 msgid "Defaults to the full or remaining due balance."
-msgstr ""
+msgstr "ডিফল্টভাবে সম্পূর্ণ বা অবশিষ্ট বকেয়া অঙ্ক বসানো থাকে।"
 
 #: app/Admin/BookingsTable.php:633
 msgid "Paid (Settled)"
-msgstr ""
+msgstr "পরিশোধিত (নিষ্পন্ন)"
 
 #: app/Admin/BookingsTable.php:634
 msgid "Partially Paid (Deposit)"
-msgstr ""
+msgstr "আংশিক পরিশোধিত (অগ্রিম)"
 
 #: app/Admin/BookingsTable.php:642
 msgid "Bank Transfer"
-msgstr ""
+msgstr "ব্যাংক ট্রান্সফার"
 
 #: app/Admin/BookingsTable.php:643
 msgid "Cash on Arrival"
-msgstr ""
+msgstr "পৌঁছানোর পর নগদ"
 
 #: app/Admin/BookingsTable.php:644
 msgid "Manual / Other Offline"
-msgstr ""
+msgstr "ম্যানুয়াল / অন্যান্য অফলাইন"
 
 #: app/Admin/BookingsTable.php:645
 msgid "POS / Reception Counter"
-msgstr ""
+msgstr "POS / রিসেপশন কাউন্টার"
 
 #: app/Admin/BookingsTable.php:652
 msgid "Transaction / Deposit Reference"
-msgstr ""
+msgstr "লেনদেন / জমার রেফারেন্স"
 
 #: app/Admin/BookingsTable.php:653
 msgid "e.g. BANK-TXN-882299, Slip #, bKash TrxID"
-msgstr ""
+msgstr "যেমন: BANK-TXN-882299, স্লিপ #, bKash TrxID"
 
 #: app/Admin/BookingsTable.php:660
 msgid "Automatically confirm reservation if currently in Pending status"
-msgstr ""
+msgstr "বুকিং বর্তমানে অপেক্ষমান থাকলে স্বয়ংক্রিয়ভাবে অনুমোদন করুন"
 
 #: app/Admin/BookingsTable.php:666
 msgid "Internal Audit Note"
-msgstr ""
+msgstr "অভ্যন্তরীণ অডিট নোট"
 
 #: app/Admin/BookingsTable.php:667
 msgid "Optional memo (e.g. Verified via City Bank Online portal)"
-msgstr ""
+msgstr "ঐচ্ছিক নোট (যেমন: City Bank অনলাইন পোর্টালে যাচাই করা হয়েছে)"
 
 #: app/Admin/BookingsTable.php:676
 msgid "Save Payment Record"
-msgstr ""
+msgstr "পেমেন্ট রেকর্ড সংরক্ষণ করুন"
 
 #: app/Admin/DocumentationPage.php:60
 msgid "7. 📅 Availability & Pricing Manager"
-msgstr ""
+msgstr "৭. 📅 অ্যাভেইলেবিলিটি ও মূল্য ব্যবস্থাপক"
 
 #: app/Admin/DocumentationPage.php:61
 msgid "8. Tourivo Pro Features"
-msgstr ""
+msgstr "৮. Tourivo Pro ফিচারসমূহ"
 
 #: app/Admin/DocumentationPage.php:452
 msgid "Customer Account / My Bookings Portal"
-msgstr ""
+msgstr "গ্রাহক অ্যাকাউন্ট / আমার বুকিং পোর্টাল"
 
 #: app/Admin/DocumentationPage.php:453
 msgid "Authenticated traveler portal showing past and upcoming reservations, status, calendar .ics, vouchers, and cancellation requests."
-msgstr ""
+msgstr "লগইন করা ভ্রমণকারীর পোর্টাল: আগের ও আসন্ন বুকিং, স্ট্যাটাস, ক্যালেন্ডার .ics, ভাউচার এবং বাতিলের অনুরোধ।"
 
 #: app/Admin/DocumentationPage.php:460
 msgid "Booking Confirmation & Thank You Page"
-msgstr ""
+msgstr "বুকিং কনফার্মেশন ও ধন্যবাদ পেজ"
 
 #: app/Admin/DocumentationPage.php:461
 msgid "Displays post-booking overview, token-secured printable voucher, and .ics calendar download."
-msgstr ""
+msgstr "বুকিংয়ের পরের সারসংক্ষেপ, টোকেন-সুরক্ষিত প্রিন্টযোগ্য ভাউচার এবং .ics ক্যালেন্ডার ডাউনলোড দেখায়।"
 
 #: app/Admin/DocumentationPage.php:520
 msgid "Advanced Export & Reporting (CSV):"
-msgstr ""
+msgstr "উন্নত এক্সপোর্ট ও রিপোর্টিং (CSV):"
 
 #: app/Admin/DocumentationPage.php:520
 msgid "Click \"📥 Export Bookings\" from the Dashboard or Bookings table to launch the export dialog. Filter by Booking vs Travel dates, booking/payment status, and specific tour/room. Generate standard booking lists, itemized line manifests, or financial summary reports with full Excel UTF-8 and formula-injection security."
-msgstr ""
+msgstr "এক্সপোর্ট ডায়ালগ খুলতে ড্যাশবোর্ড বা বুকিং টেবিল থেকে \"📥 বুকিং এক্সপোর্ট\" ক্লিক করুন। বুকিংয়ের তারিখ বা ভ্রমণের তারিখ, বুকিং/পেমেন্ট স্ট্যাটাস এবং নির্দিষ্ট ট্যুর/রুম দিয়ে ফিল্টার করুন। সাধারণ বুকিং তালিকা, আইটেমভিত্তিক লাইন তালিকা বা আর্থিক সারসংক্ষেপ রিপোর্ট তৈরি করুন, পূর্ণ Excel UTF-8 সাপোর্ট ও ফর্মুলা-ইনজেকশন সুরক্ষাসহ।"
 
 #: app/Admin/DocumentationPage.php:538
 msgid "Availability & Pricing Calendar Manager"
-msgstr ""
+msgstr "অ্যাভেইলেবিলিটি ও মূল্য ক্যালেন্ডার ব্যবস্থাপক"
 
 #: app/Admin/DocumentationPage.php:540
 msgid "Take total control of your tour departures and hotel room availability with our visual monthly calendar grid. Block dates for maintenance or holidays, adjust seasonal capacities, and set custom date pricing with bulk actions."
-msgstr ""
+msgstr "ভিজ্যুয়াল মাসিক ক্যালেন্ডার গ্রিড দিয়ে আপনার ট্যুর ডিপার্চার ও হোটেল রুমের অ্যাভেইলেবিলিটি পুরোপুরি নিয়ন্ত্রণ করুন। রক্ষণাবেক্ষণ বা ছুটির জন্য তারিখ বন্ধ করুন, মৌসুমি ধারণক্ষমতা বদলান এবং একসাথে অনেক তারিখে নিজস্ব মূল্য সেট করুন।"
 
 #: app/Admin/DocumentationPage.php:546
 msgid "Visual Monthly Grid"
-msgstr ""
+msgstr "ভিজ্যুয়াল মাসিক গ্রিড"
 
 #: app/Admin/DocumentationPage.php:547
 msgid "Found on every Tour and Room edit screen. Displays real-time capacity, booked spots, reserved holds, status, and active price."
-msgstr ""
+msgstr "প্রতিটি ট্যুর ও রুম এডিট স্ক্রিনে পাবেন। রিয়েল-টাইম ধারণক্ষমতা, বুক করা আসন, সাময়িক হোল্ড, স্ট্যাটাস এবং চালু মূল্য দেখায়।"
 
 #: app/Admin/DocumentationPage.php:551
 msgid "Block & Unblock Dates"
-msgstr ""
+msgstr "তারিখ বন্ধ ও চালু করুন"
 
 #: app/Admin/DocumentationPage.php:552
 msgid "Instantly close dates from receiving new bookings. Use the Force Block option to close dates that already contain reservations without affecting existing guests."
-msgstr ""
+msgstr "নতুন বুকিং নেওয়া থেকে তারিখ সঙ্গে সঙ্গে বন্ধ করুন। যেসব তারিখে আগে থেকেই বুকিং আছে সেগুলো বন্ধ করতে Force Block অপশন ব্যবহার করুন, এতে বিদ্যমান অতিথিদের কোনো প্রভাব পড়বে না।"
 
 #: app/Admin/DocumentationPage.php:556
 msgid "Seasonal Price Overrides"
-msgstr ""
+msgstr "মৌসুমি মূল্য পরিবর্তন"
 
 #: app/Admin/DocumentationPage.php:557
 msgid "Charge peak holiday rates or offer off-season promotions on specific dates without altering the global base price."
-msgstr ""
+msgstr "মূল বেস প্রাইস না বদলেই নির্দিষ্ট তারিখে ছুটির মৌসুমের বেশি দাম নিন বা অফ-সিজনে ছাড় দিন।"
 
 #: app/Admin/DocumentationPage.php:563
 msgid "How to Use the Availability Manager"
-msgstr ""
+msgstr "অ্যাভেইলেবিলিটি ব্যবস্থাপক যেভাবে ব্যবহার করবেন"
 
 #: app/Admin/DocumentationPage.php:565
 msgid "Navigate to Tour or Room Edit Screen:"
-msgstr ""
+msgstr "ট্যুর বা রুমের এডিট স্ক্রিনে যান:"
 
 #: app/Admin/DocumentationPage.php:565
 msgid "Open any published Tour or Room. Scroll down to the \"Availability & Pricing Calendar\" metabox."
-msgstr ""
+msgstr "যেকোনো প্রকাশিত ট্যুর বা রুম খুলুন। নিচে স্ক্রল করে \"অ্যাভেইলেবিলিটি ও মূল্য ক্যালেন্ডার\" মেটাবক্সে যান।"
 
 #: app/Admin/DocumentationPage.php:566
 msgid "Select Dates:"
-msgstr ""
+msgstr "তারিখ নির্বাচন করুন:"
 
 #: app/Admin/DocumentationPage.php:566
 msgid "Click any date to select it. Hold Shift and click another date to select an entire date range. Use the weekday checkboxes (Mo-Su) to filter your selection."
-msgstr ""
+msgstr "কোনো তারিখ নির্বাচন করতে সেটিতে ক্লিক করুন। পুরো তারিখের সীমা নির্বাচন করতে Shift চেপে ধরে আরেকটি তারিখে ক্লিক করুন। নির্বাচন ছাঁকতে সপ্তাহের দিনের চেকবক্স (সোম-রবি) ব্যবহার করুন।"
 
 #: app/Admin/DocumentationPage.php:567
 msgid "Choose Actions to Apply:"
-msgstr ""
+msgstr "কী প্রয়োগ করবেন বেছে নিন:"
 
 #: app/Admin/DocumentationPage.php:567
 msgid "In the right-hand panel, choose your Status action (Available or Blocked), adjust total capacity, or set a custom Price Override."
-msgstr ""
+msgstr "ডান পাশের প্যানেলে স্ট্যাটাস (খালি বা বন্ধ) বেছে নিন, মোট ধারণক্ষমতা বদলান অথবা নিজস্ব মূল্য সেট করুন।"
 
 #: app/Admin/DocumentationPage.php:568
 msgid "Apply Changes:"
-msgstr ""
+msgstr "পরিবর্তন প্রয়োগ করুন:"
 
 #: app/Admin/DocumentationPage.php:568
 msgid "Click \"Apply to Selected Dates\". The system updates the inventory atomically in a transaction, invalidates SEO caches, and writes an audit log."
-msgstr ""
+msgstr "\"নির্বাচিত তারিখে প্রয়োগ করুন\" ক্লিক করুন। সিস্টেম একটি ট্রানজ্যাকশনে ইনভেন্টরি আপডেট করে, SEO ক্যাশ মুছে দেয় এবং একটি অডিট লগ লেখে।"
 
 #: app/Admin/DocumentationPage.php:572
 msgid "💡 Developer Hook:"
-msgstr ""
+msgstr "💡 ডেভেলপার হুক:"
 
 #: app/Admin/DocumentationPage.php:574
 msgid "Listen to availability updates via:"
-msgstr ""
+msgstr "অ্যাভেইলেবিলিটি আপডেট শুনতে ব্যবহার করুন:"
 
 #: app/Admin/MetaBoxes/AvailabilityMetaBox.php:33
 msgid "Availability & Pricing Calendar"
-msgstr ""
+msgstr "অ্যাভেইলেবিলিটি ও মূল্য ক্যালেন্ডার"
 
 #: app/Admin/ReportsPage.php:32
 msgid "You do not have sufficient permissions to access this page."
-msgstr ""
+msgstr "এই পেজ দেখার জন্য আপনার যথেষ্ট অনুমতি নেই।"
 
 #: app/Admin/ReportsPage.php:58
 #: app/Services/ReportingService.php:77
 msgid "This Year"
-msgstr ""
+msgstr "এই বছর"
 
 #: app/Admin/ReportsPage.php:65
 msgid "Analytics & Business Reports"
-msgstr ""
+msgstr "অ্যানালিটিক্স ও ব্যবসায়িক রিপোর্ট"
 
 #. translators: 1: Filter date range label
 #: app/Admin/ReportsPage.php:70
 #, php-format
 msgid "Monitoring sales, occupancy rates, and tax filings for: %s"
-msgstr ""
+msgstr "বিক্রি, অকুপেন্সি হার এবং কর হিসাবের পর্যবেক্ষণ: %s"
 
 #: app/Admin/ReportsPage.php:85
 msgid "Export Accounting & Tax CSV"
-msgstr ""
+msgstr "হিসাব ও কর CSV এক্সপোর্ট করুন"
 
 #: app/Admin/ReportsPage.php:107
 msgid "From:"
-msgstr ""
+msgstr "থেকে:"
 
 #: app/Admin/ReportsPage.php:109
 msgid "To:"
-msgstr ""
+msgstr "পর্যন্ত:"
 
 #: app/Admin/ReportsPage.php:111
 msgid "Filter"
-msgstr ""
+msgstr "ফিল্টার"
 
 #. translators: 1: Confirmed bookings count, 2: Pending count
 #: app/Admin/ReportsPage.php:129
 #, php-format
 msgid "%1$d confirmed &bull; %2$d pending"
-msgstr ""
+msgstr "%1$d টি অনুমোদিত &bull; %2$d টি অপেক্ষমান"
 
 #: app/Admin/ReportsPage.php:142
 msgid "Gross Revenue"
-msgstr ""
+msgstr "মোট আয়"
 
 #. translators: 1: Net Revenue amount
 #: app/Admin/ReportsPage.php:148
 #, php-format
 msgid "Net: %s"
-msgstr ""
+msgstr "নিট: %s"
 
 #: app/Admin/ReportsPage.php:160
 msgid "Tax Collected"
-msgstr ""
+msgstr "সংগৃহীত কর"
 
 #. translators: 1: Discounts applied
 #: app/Admin/ReportsPage.php:166
 #, php-format
 msgid "Discounts: %s"
-msgstr ""
+msgstr "ছাড়: %s"
 
 #: app/Admin/ReportsPage.php:178
 msgid "Occupancy Rate"
-msgstr ""
+msgstr "অকুপেন্সি হার"
 
 #: app/Admin/ReportsPage.php:190
 msgid "Total Guests / Travelers"
-msgstr ""
+msgstr "মোট অতিথি / ভ্রমণকারী"
 
 #: app/Admin/ReportsPage.php:192
 msgid "Adults & children served"
-msgstr ""
+msgstr "সেবা পাওয়া প্রাপ্তবয়স্ক ও শিশু"
 
 #: app/Admin/ReportsPage.php:200
 msgid "Average Booking Value"
-msgstr ""
+msgstr "গড় বুকিং মূল্য"
 
 #. translators: 1: Outstanding due amount
 #: app/Admin/ReportsPage.php:206
 #, php-format
 msgid "Unpaid due: %s"
-msgstr ""
+msgstr "অপরিশোধিত বকেয়া: %s"
 
 #: app/Admin/ReportsPage.php:218
 msgid "Sales & Booking Volume Timeline"
-msgstr ""
+msgstr "বিক্রি ও বুকিংয়ের সময়রেখা"
 
 #: app/Admin/ReportsPage.php:220
 msgid "Daily Revenue"
-msgstr ""
+msgstr "দৈনিক আয়"
 
 #: app/Admin/ReportsPage.php:226
 msgid "No booking transactions recorded during this selected date range."
-msgstr ""
+msgstr "নির্বাচিত তারিখ সীমায় কোনো বুকিং লেনদেন নেই।"
 
 #: app/Admin/ReportsPage.php:261
 msgid "Top Tour Packages"
-msgstr ""
+msgstr "শীর্ষ ট্যুর প্যাকেজ"
 
 #: app/Admin/ReportsPage.php:265
 msgid "No tour bookings found in this period."
-msgstr ""
+msgstr "এই সময়ে কোনো ট্যুর বুকিং পাওয়া যায়নি।"
 
 #. translators: %d: count
 #: app/Admin/ReportsPage.php:287
 #, php-format
 msgid "%d ticket sold"
 msgid_plural "%d tickets sold"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d টি টিকিট বিক্রি হয়েছে"
+msgstr[1] "%d টি টিকিট বিক্রি হয়েছে"
 
 #. translators: %d: count
 #: app/Admin/ReportsPage.php:289
 #, php-format
 msgid "%d traveler"
 msgid_plural "%d travelers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d জন ভ্রমণকারী"
+msgstr[1] "%d জন ভ্রমণকারী"
 
 #. translators: %d: count
 #: app/Admin/ReportsPage.php:291
@@ -5691,1086 +5691,1086 @@ msgstr[1] ""
 #, php-format
 msgid "%d booking"
 msgid_plural "%d bookings"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d টি বুকিং"
+msgstr[1] "%d টি বুকিং"
 
 #: app/Admin/ReportsPage.php:304
 msgid "Top Hotel Stays & Rooms"
-msgstr ""
+msgstr "শীর্ষ হোটেল স্টে ও রুম"
 
 #: app/Admin/ReportsPage.php:308
 msgid "No hotel room bookings found in this period."
-msgstr ""
+msgstr "এই সময়ে কোনো হোটেল রুম বুকিং পাওয়া যায়নি।"
 
 #. translators: %d: count
 #: app/Admin/ReportsPage.php:330
 #, php-format
 msgid "%d night/unit"
 msgid_plural "%d nights/units"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d রাত/ইউনিট"
+msgstr[1] "%d রাত/ইউনিট"
 
 #. translators: %d: count
 #: app/Admin/ReportsPage.php:332
 #, php-format
 msgid "%d guest"
 msgid_plural "%d guests"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d জন অতিথি"
+msgstr[1] "%d জন অতিথি"
 
 #: app/Admin/SettingsPage.php:635
 msgid "Travel Homepage Layout"
-msgstr ""
+msgstr "ট্রাভেল হোমপেজ লেআউট"
 
 #: app/Admin/SettingsPage.php:639
 msgid "Turn the site homepage and footer into a travel storefront"
-msgstr ""
+msgstr "সাইটের হোমপেজ ও ফুটারকে একটি ট্রাভেল স্টোরফ্রন্টে পরিণত করুন"
 
 #: app/Admin/SettingsPage.php:641
 msgid "Adds the search bar, destinations, open tours and hotels to the homepage and hides the latest-posts list there. In the footer it shows a short tagline when yours is empty, replaces the default theme credit with your site name, and fills empty theme placeholder menus with booking links. Menus and footer text you have set yourself are kept. Leave this off if your theme already has its own homepage."
-msgstr ""
+msgstr "হোমপেজে সার্চ বার, গন্তব্য, খোলা ট্যুর ও হোটেল যোগ করে এবং সেখানে সাম্প্রতিক পোস্টের তালিকা লুকিয়ে রাখে। ফুটারে আপনার ট্যাগলাইন খালি থাকলে একটি ছোট ট্যাগলাইন দেখায়, থিমের ডিফল্ট ক্রেডিটের বদলে আপনার সাইটের নাম বসায় এবং থিমের খালি প্লেসহোল্ডার মেনুতে বুকিংয়ের লিংক যোগ করে। আপনি নিজে যে মেনু ও ফুটার লেখা সেট করেছেন সেগুলো অপরিবর্তিত থাকে। আপনার থিমে আগে থেকেই নিজস্ব হোমপেজ থাকলে এটি বন্ধ রাখুন।"
 
 #: app/Admin/SetupWizard.php:185
 msgid "Booking Confirmation / Thank You Page"
-msgstr ""
+msgstr "বুকিং কনফার্মেশন / ধন্যবাদ পেজ"
 
 #: app/Admin/SetupWizard.php:186
 msgid "Creates \"/booking-confirmation\" displaying booking summary, token-secured calendar .ics and vouchers."
-msgstr ""
+msgstr "\"/booking-confirmation\" পেজ তৈরি করে, যেখানে বুকিংয়ের সারসংক্ষেপ, টোকেন-সুরক্ষিত ক্যালেন্ডার .ics ও ভাউচার দেখায়।"
 
 #: app/Admin/SetupWizard.php:193
 msgid "Traveler Dashboard / My Bookings Page"
-msgstr ""
+msgstr "ভ্রমণকারী ড্যাশবোর্ড / আমার বুকিং পেজ"
 
 #: app/Admin/SetupWizard.php:194
 msgid "Creates \"/my-bookings\" allowing registered travelers to view past and upcoming trips, download vouchers, and manage reservations."
-msgstr ""
+msgstr "\"/my-bookings\" পেজ তৈরি করে, যেখানে নিবন্ধিত ভ্রমণকারীরা আগের ও আসন্ন ট্রিপ দেখতে, ভাউচার ডাউনলোড করতে এবং বুকিং পরিচালনা করতে পারেন।"
 
 #: app/Admin/SetupWizard.php:201
 msgid "Travel Homepage Layout (optional)"
-msgstr ""
+msgstr "ট্রাভেল হোমপেজ লেআউট (ঐচ্ছিক)"
 
 #: app/Admin/SetupWizard.php:202
 msgid "Adds the search bar, destinations, tours and hotels to your homepage and hides its latest-posts list. Leave unticked if your theme already has its own homepage. You can change this later in Settings."
-msgstr ""
+msgstr "আপনার হোমপেজে সার্চ বার, গন্তব্য, ট্যুর ও হোটেল যোগ করে এবং সেখানে সাম্প্রতিক পোস্টের তালিকা লুকিয়ে রাখে। আপনার থিমে আগে থেকেই নিজস্ব হোমপেজ থাকলে টিক দেবেন না। পরে সেটিংস থেকে এটি বদলাতে পারবেন।"
 
 #: app/Admin/SetupWizard.php:860
 msgid "Failed to import demo data. Please check logs."
-msgstr ""
+msgstr "ডেমো ডেটা ইমপোর্ট করা যায়নি। অনুগ্রহ করে লগ দেখুন।"
 
 #: app/Blocks/BlockManager.php:155
 msgid "Tourivo My Bookings Portal"
-msgstr ""
+msgstr "Tourivo আমার বুকিং পোর্টাল"
 
 #: app/Blocks/BlockManager.php:158
 msgid "Display traveler dashboard with upcoming trips, completed itineraries, and self-management actions."
-msgstr ""
+msgstr "আসন্ন ট্রিপ, সম্পন্ন ভ্রমণসূচি এবং নিজে পরিচালনার অপশনসহ ভ্রমণকারী ড্যাশবোর্ড দেখায়।"
 
 #: app/Controllers/Api/BookingController.php:79
 #: app/Services/BookingService.php:116
 msgid "Please add at least one adult or child."
-msgstr ""
+msgstr "অনুগ্রহ করে অন্তত একজন প্রাপ্তবয়স্ক বা শিশু যোগ করুন।"
 
 #: app/Controllers/Api/PricingController.php:76
 msgid "Valid published Item ID and check_in date are required."
-msgstr ""
+msgstr "একটি বৈধ প্রকাশিত আইটেম আইডি এবং check_in তারিখ প্রয়োজন।"
 
 #: app/Controllers/Api/PricingController.php:101
 msgid "Failed to compute pricing quote."
-msgstr ""
+msgstr "মূল্যের হিসাব করা যায়নি।"
 
 #: app/Database/Seeder.php:588
 msgid "Failed to insert demo item. Aborted and rolled back."
-msgstr ""
+msgstr "ডেমো আইটেম যোগ করা যায়নি। প্রক্রিয়া বন্ধ করে আগের অবস্থায় ফেরানো হয়েছে।"
 
 #: app/PostTypes/HotelPostType.php:42
 msgctxt "Post type general name"
 msgid "Hotels & Stays"
-msgstr ""
+msgstr "হোটেল ও থাকার জায়গা"
 
 #: app/PostTypes/HotelPostType.php:43
 msgctxt "Post type singular name"
 msgid "Hotel"
-msgstr ""
+msgstr "হোটেল"
 
 #: app/PostTypes/HotelPostType.php:44
 msgctxt "Admin Menu text"
 msgid "Hotels"
-msgstr ""
+msgstr "হোটেল"
 
 #: app/PostTypes/HotelPostType.php:45
 msgctxt "Add New on Toolbar"
 msgid "Hotel"
-msgstr ""
+msgstr "হোটেল"
 
 #: app/PostTypes/HotelPostType.php:55
 msgctxt "Overrides the \"Featured Image\" phrase"
 msgid "Hotel Cover Image"
-msgstr ""
+msgstr "হোটেলের কভার ছবি"
 
 #: app/PostTypes/HotelPostType.php:56
 msgctxt "Overrides the \"Set featured image\" phrase"
 msgid "Set hotel cover image"
-msgstr ""
+msgstr "হোটেলের কভার ছবি সেট করুন"
 
 #: app/PostTypes/HotelPostType.php:57
 msgctxt "Overrides the \"Remove featured image\" phrase"
 msgid "Remove hotel cover image"
-msgstr ""
+msgstr "হোটেলের কভার ছবি সরান"
 
 #: app/PostTypes/HotelPostType.php:58
 msgctxt "Overrides the \"Use as featured image\" phrase"
 msgid "Use as hotel cover image"
-msgstr ""
+msgstr "হোটেলের কভার ছবি হিসেবে ব্যবহার করুন"
 
 #: app/PostTypes/HotelPostType.php:90
 msgctxt "taxonomy general name"
 msgid "Amenities"
-msgstr ""
+msgstr "সুবিধাসমূহ"
 
 #: app/PostTypes/HotelPostType.php:91
 msgctxt "taxonomy singular name"
 msgid "Amenity"
-msgstr ""
+msgstr "সুবিধা"
 
 #: app/PostTypes/RoomPostType.php:30
 msgctxt "Post type general name"
 msgid "Rooms & Units"
-msgstr ""
+msgstr "রুম ও ইউনিট"
 
 #: app/PostTypes/RoomPostType.php:31
 msgctxt "Post type singular name"
 msgid "Room"
-msgstr ""
+msgstr "রুম"
 
 #: app/PostTypes/RoomPostType.php:32
 msgctxt "Admin Menu text"
 msgid "Rooms"
-msgstr ""
+msgstr "রুম"
 
 #: app/PostTypes/RoomPostType.php:33
 msgctxt "Add New on Toolbar"
 msgid "Room"
-msgstr ""
+msgstr "রুম"
 
 #: app/PostTypes/RoomPostType.php:43
 msgctxt "Overrides the \"Featured Image\" phrase"
 msgid "Room Photo"
-msgstr ""
+msgstr "রুমের ছবি"
 
 #: app/PostTypes/RoomPostType.php:44
 msgctxt "Overrides the \"Set featured image\" phrase"
 msgid "Set room photo"
-msgstr ""
+msgstr "রুমের ছবি সেট করুন"
 
 #: app/PostTypes/RoomPostType.php:45
 msgctxt "Overrides the \"Remove featured image\" phrase"
 msgid "Remove room photo"
-msgstr ""
+msgstr "রুমের ছবি সরান"
 
 #: app/PostTypes/RoomPostType.php:46
 msgctxt "Overrides the \"Use as featured image\" phrase"
 msgid "Use as room photo"
-msgstr ""
+msgstr "রুমের ছবি হিসেবে ব্যবহার করুন"
 
 #: app/PostTypes/TourPostType.php:44
 msgctxt "Post type general name"
 msgid "Tours & Packages"
-msgstr ""
+msgstr "ট্যুর ও প্যাকেজ"
 
 #: app/PostTypes/TourPostType.php:45
 msgctxt "Post type singular name"
 msgid "Tour"
-msgstr ""
+msgstr "ট্যুর"
 
 #: app/PostTypes/TourPostType.php:46
 msgctxt "Admin Menu text"
 msgid "Tours"
-msgstr ""
+msgstr "ট্যুর"
 
 #: app/PostTypes/TourPostType.php:47
 msgctxt "Add New on Toolbar"
 msgid "Tour"
-msgstr ""
+msgstr "ট্যুর"
 
 #: app/PostTypes/TourPostType.php:57
 msgctxt "Overrides the \"Featured Image\" phrase"
 msgid "Tour Cover Image"
-msgstr ""
+msgstr "ট্যুরের কভার ছবি"
 
 #: app/PostTypes/TourPostType.php:58
 msgctxt "Overrides the \"Set featured image\" phrase"
 msgid "Set tour cover image"
-msgstr ""
+msgstr "ট্যুরের কভার ছবি সেট করুন"
 
 #: app/PostTypes/TourPostType.php:59
 msgctxt "Overrides the \"Remove featured image\" phrase"
 msgid "Remove tour cover image"
-msgstr ""
+msgstr "ট্যুরের কভার ছবি সরান"
 
 #: app/PostTypes/TourPostType.php:60
 msgctxt "Overrides the \"Use as featured image\" phrase"
 msgid "Use as tour cover image"
-msgstr ""
+msgstr "ট্যুরের কভার ছবি হিসেবে ব্যবহার করুন"
 
 #: app/PostTypes/TourPostType.php:93
 msgctxt "taxonomy general name"
 msgid "Destinations"
-msgstr ""
+msgstr "গন্তব্যসমূহ"
 
 #: app/PostTypes/TourPostType.php:94
 msgctxt "taxonomy singular name"
 msgid "Destination"
-msgstr ""
+msgstr "গন্তব্য"
 
 #: app/PostTypes/TourPostType.php:117
 msgctxt "taxonomy general name"
 msgid "Activities & Categories"
-msgstr ""
+msgstr "অ্যাক্টিভিটি ও ক্যাটাগরি"
 
 #: app/PostTypes/TourPostType.php:118
 msgctxt "taxonomy singular name"
 msgid "Activity"
-msgstr ""
+msgstr "অ্যাক্টিভিটি"
 
 #: app/PostTypes/TourPostType.php:138
 msgctxt "taxonomy general name"
 msgid "Tour Features"
-msgstr ""
+msgstr "ট্যুরের ফিচার"
 
 #: app/PostTypes/TourPostType.php:139
 msgctxt "taxonomy singular name"
 msgid "Feature"
-msgstr ""
+msgstr "ফিচার"
 
 #: app/Providers/AdminServiceProvider.php:463
 msgid "Too many attempts. Please try again later."
-msgstr ""
+msgstr "অনেকবার চেষ্টা করা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।"
 
 #: app/Providers/AdminServiceProvider.php:472
 msgid "Email confirmation"
-msgstr ""
+msgstr "ইমেইল নিশ্চিতকরণ"
 
 #: app/Providers/AdminServiceProvider.php:519
 msgid "Failed to import sample demo data. Please check server logs."
-msgstr ""
+msgstr "স্যাম্পল ডেমো ডেটা ইমপোর্ট করা যায়নি। অনুগ্রহ করে সার্ভার লগ দেখুন।"
 
 #: app/Providers/AdminServiceProvider.php:525
 msgid "Demo content is already imported."
-msgstr ""
+msgstr "ডেমো কনটেন্ট আগেই ইমপোর্ট করা হয়েছে।"
 
 #: app/Providers/AdminServiceProvider.php:591
 msgid "Could not revoke the links for this booking."
-msgstr ""
+msgstr "এই বুকিংয়ের লিংকগুলো বাতিল করা যায়নি।"
 
 #: app/Providers/AdminServiceProvider.php:595
 msgid "Previously shared voucher links no longer work. New links are generated automatically."
-msgstr ""
+msgstr "আগে শেয়ার করা ভাউচার লিংক আর কাজ করবে না। নতুন লিংক স্বয়ংক্রিয়ভাবে তৈরি হবে।"
 
 #: app/Providers/AdminServiceProvider.php:949
 msgid "Access denied. Invalid calendar security token."
-msgstr ""
+msgstr "প্রবেশাধিকার নেই। ক্যালেন্ডারের সিকিউরিটি টোকেন অবৈধ।"
 
 #: app/Providers/AdminServiceProvider.php:954
 msgid "Could not generate calendar file."
-msgstr ""
+msgstr "ক্যালেন্ডার ফাইল তৈরি করা যায়নি।"
 
 #: app/Providers/AdminServiceProvider.php:985
 #: app/Services/InventoryService.php:691
 msgid "Invalid item ID."
-msgstr ""
+msgstr "অবৈধ আইটেম আইডি।"
 
 #: app/Providers/AdminServiceProvider.php:1024
 msgid "Please provide a valid item ID and date."
-msgstr ""
+msgstr "অনুগ্রহ করে একটি বৈধ আইটেম আইডি ও তারিখ দিন।"
 
 #: app/Providers/AdminServiceProvider.php:1057
 msgid "Failed to update availability."
-msgstr ""
+msgstr "অ্যাভেইলেবিলিটি আপডেট করা যায়নি।"
 
 #: app/Providers/AdminServiceProvider.php:1116
 msgid "Unauthorized permission to record payments."
-msgstr ""
+msgstr "পেমেন্ট রেকর্ড করার অনুমতি নেই।"
 
 #: app/Providers/AdminServiceProvider.php:1154
 msgid "Security verification failed. Please refresh the page."
-msgstr ""
+msgstr "নিরাপত্তা যাচাই ব্যর্থ হয়েছে। অনুগ্রহ করে পেজটি রিফ্রেশ করুন।"
 
 #: app/Providers/MetaBoxServiceProvider.php:139
 msgid "Loading availability calendar..."
-msgstr ""
+msgstr "অ্যাভেইলেবিলিটি ক্যালেন্ডার লোড হচ্ছে..."
 
 #: app/Providers/MetaBoxServiceProvider.php:140
 msgid "Applying changes..."
-msgstr ""
+msgstr "পরিবর্তন প্রয়োগ করা হচ্ছে..."
 
 #: app/Providers/MetaBoxServiceProvider.php:141
 msgid "Please select at least one date from the calendar."
-msgstr ""
+msgstr "অনুগ্রহ করে ক্যালেন্ডার থেকে অন্তত একটি তারিখ নির্বাচন করুন।"
 
 #: app/Providers/MetaBoxServiceProvider.php:142
 msgid "Please specify at least one change to apply (Status, Capacity, or Price)."
-msgstr ""
+msgstr "অনুগ্রহ করে প্রয়োগ করার জন্য অন্তত একটি পরিবর্তন দিন (স্ট্যাটাস, ধারণক্ষমতা বা মূল্য)।"
 
 #. translators: %d: number of selected dates
 #: app/Providers/MetaBoxServiceProvider.php:144
 #, php-format
 msgid "%d date(s) selected"
-msgstr ""
+msgstr "%d টি তারিখ নির্বাচিত"
 
 #: app/Providers/MetaBoxServiceProvider.php:145
 #: views/admin/metaboxes/availability-metabox.php:67
 msgid "Available"
-msgstr ""
+msgstr "খালি"
 
 #: app/Providers/MetaBoxServiceProvider.php:146
 #: views/admin/metaboxes/availability-metabox.php:68
 msgid "Blocked"
-msgstr ""
+msgstr "বন্ধ"
 
 #: app/Providers/MetaBoxServiceProvider.php:147
 #: views/admin/metaboxes/availability-metabox.php:69
 msgid "Sold Out"
-msgstr ""
+msgstr "বিক্রি শেষ"
 
 #: app/Providers/MetaBoxServiceProvider.php:148
 msgid "Selected dates contain active bookings. Are you sure you want to force block future bookings on these dates?"
-msgstr ""
+msgstr "নির্বাচিত তারিখগুলোতে সক্রিয় বুকিং আছে। আপনি কি নিশ্চিত যে এই তারিখগুলোতে ভবিষ্যতের বুকিং জোর করে বন্ধ করতে চান?"
 
 #: app/Providers/RouteServiceProvider.php:102
 msgid "Every 5 minutes (Tourivo)"
-msgstr ""
+msgstr "প্রতি ৫ মিনিটে (Tourivo)"
 
 #: app/Providers/RouteServiceProvider.php:183
 msgid "Invalid or missing security token."
-msgstr ""
+msgstr "সিকিউরিটি টোকেন অবৈধ বা অনুপস্থিত।"
 
 #: app/Services/BookingService.php:133
 msgid "Please provide valid dates in YYYY-MM-DD format."
-msgstr ""
+msgstr "অনুগ্রহ করে YYYY-MM-DD ফরম্যাটে বৈধ তারিখ দিন।"
 
 #: app/Services/BookingService.php:136
 msgid "The check-out date cannot be earlier than the check-in date."
-msgstr ""
+msgstr "চেক-আউটের তারিখ চেক-ইনের তারিখের আগে হতে পারে না।"
 
 #: app/Services/BookingService.php:142
 msgid "You must agree to the terms and privacy policy before completing this booking."
-msgstr ""
+msgstr "এই বুকিং সম্পন্ন করার আগে আপনাকে শর্তাবলি ও গোপনীয়তা নীতিতে সম্মতি দিতে হবে।"
 
 #: app/Services/BookingService.php:149
 msgid "Too many booking requests were made for this email address. Please try again later."
-msgstr ""
+msgstr "এই ইমেইল ঠিকানা দিয়ে অনেকবার বুকিংয়ের অনুরোধ করা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।"
 
 #: app/Services/BookingService.php:179
 msgid "Check-out must be at least one night after check-in."
-msgstr ""
+msgstr "চেক-আউট চেক-ইনের অন্তত এক রাত পরে হতে হবে।"
 
 #: app/Services/BookingService.php:258
 msgid "Failed to calculate price quote."
-msgstr ""
+msgstr "মূল্যের হিসাব করা যায়নি।"
 
 #: app/Services/BookingService.php:300
 msgid "This coupon could not be applied."
-msgstr ""
+msgstr "এই কুপনটি প্রয়োগ করা যায়নি।"
 
 #: app/Services/BookingService.php:480
 msgid "An unexpected error occurred while creating your booking. Please try again."
-msgstr ""
+msgstr "আপনার বুকিং তৈরির সময় একটি অপ্রত্যাশিত সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।"
 
 #. translators: %s: Booking reference code
 #: app/Services/BookingService.php:543
 #, php-format
 msgid "Almost done! Your booking code is #%s. Please open the confirmation link we emailed you to secure your reservation."
-msgstr ""
+msgstr "প্রায় শেষ! আপনার বুকিং কোড #%s। বুকিং নিশ্চিত করতে আমাদের পাঠানো ইমেইলের কনফার্মেশন লিংকটি খুলুন।"
 
 #. translators: 1: Current status, 2: Requested status
 #: app/Services/BookingService.php:610
 #, php-format
 msgid "A booking cannot move from %1$s to %2$s."
-msgstr ""
+msgstr "বুকিং %1$s থেকে %2$s অবস্থায় নেওয়া যায় না।"
 
 #: app/Services/BookingService.php:713
 msgid " (email address was never confirmed)"
-msgstr ""
+msgstr " (ইমেইল ঠিকানা কখনো নিশ্চিত করা হয়নি)"
 
 #: app/Services/BookingService.php:714
 msgid " (pending booking expired)"
-msgstr ""
+msgstr " (অপেক্ষমান বুকিংয়ের মেয়াদ শেষ)"
 
 #: app/Services/BookingService.php:765
 msgid "Voucher and calendar links were revoked by staff."
-msgstr ""
+msgstr "ভাউচার ও ক্যালেন্ডার লিংক স্টাফ বাতিল করেছেন।"
 
 #: app/Services/BookingService.php:910
 msgid "This confirmation link is invalid."
-msgstr ""
+msgstr "এই কনফার্মেশন লিংকটি অবৈধ।"
 
 #: app/Services/BookingService.php:929
 msgid "Your email address is already confirmed."
-msgstr ""
+msgstr "আপনার ইমেইল ঠিকানা আগেই নিশ্চিত করা হয়েছে।"
 
 #: app/Services/BookingService.php:933
 msgid "This booking was cancelled because the email address was not confirmed in time. Please make a new booking."
-msgstr ""
+msgstr "সময়মতো ইমেইল ঠিকানা নিশ্চিত না করায় এই বুকিং বাতিল হয়েছে। অনুগ্রহ করে নতুন বুকিং করুন।"
 
 #: app/Services/BookingService.php:952
 msgid "Customer confirmed their email address."
-msgstr ""
+msgstr "গ্রাহক তাদের ইমেইল ঠিকানা নিশ্চিত করেছেন।"
 
 #: app/Services/BookingService.php:956
 msgid "Thank you! Your email address is confirmed and your booking is secured."
-msgstr ""
+msgstr "ধন্যবাদ! আপনার ইমেইল ঠিকানা নিশ্চিত হয়েছে এবং আপনার বুকিং সুরক্ষিত।"
 
 #. translators: 1: Email type, 2: Recipient, 3: Attempt number
 #: app/Services/EmailService.php:368
 #, php-format
 msgid "Email [%1$s] sent successfully to %2$s (attempt %3$d)."
-msgstr ""
+msgstr "ইমেইল [%1$s] সফলভাবে %2$s ঠিকানায় পাঠানো হয়েছে (চেষ্টা %3$d)।"
 
 #. translators: 1: Email type, 2: Recipient, 3: Attempt number, 4: Error details
 #: app/Services/EmailService.php:380
 #, php-format
 msgid "Email [%1$s] failed to send to %2$s (attempt %3$d). Reason: %4$s"
-msgstr ""
+msgstr "ইমেইল [%1$s] %2$s ঠিকানায় পাঠানো যায়নি (চেষ্টা %3$d)। কারণ: %4$s"
 
 #: app/Services/EmailService.php:384
 msgid "Unknown mail error"
-msgstr ""
+msgstr "অজানা মেইল ত্রুটি"
 
 #: app/Services/ExportService.php:333
 #: templates/booking-panel.php:171
 msgid "Subtotal"
-msgstr ""
+msgstr "সাবটোটাল"
 
 #: app/Services/ExportService.php:334
 #: app/Services/ReportingService.php:464
 msgid "Tax Amount"
-msgstr ""
+msgstr "করের পরিমাণ"
 
 #: app/Services/ExportService.php:335
 #: app/Services/ReportingService.php:465
 msgid "Discount Amount"
-msgstr ""
+msgstr "ছাড়ের পরিমাণ"
 
 #: app/Services/ExportService.php:341
 #: app/Support/Privacy.php:269
 msgid "Customer Notes"
-msgstr ""
+msgstr "গ্রাহকের নোট"
 
 #: app/Services/ExportService.php:388
 msgid "Item ID"
-msgstr ""
+msgstr "আইটেম আইডি"
 
 #: app/Services/ExportService.php:389
 #: app/Services/ReportingService.php:460
 msgid "Item Title"
-msgstr ""
+msgstr "আইটেমের নাম"
 
 #: app/Services/ExportService.php:396
 msgid "Total Guests"
-msgstr ""
+msgstr "মোট অতিথি"
 
 #: app/Services/ExportService.php:397
 msgid "Unit Price"
-msgstr ""
+msgstr "একক মূল্য"
 
 #: app/Services/ExportService.php:398
 msgid "Line Total"
-msgstr ""
+msgstr "লাইনের মোট"
 
 #: app/Services/ExportService.php:401
 #: app/Services/ReportingService.php:455
 msgid "Booking Date"
-msgstr ""
+msgstr "বুকিংয়ের তারিখ"
 
 #: app/Services/ExportService.php:451
 msgid "Tourivo Bookings Financial Summary Report"
-msgstr ""
+msgstr "Tourivo বুকিং আর্থিক সারসংক্ষেপ রিপোর্ট"
 
 #: app/Services/ExportService.php:452
 msgid "Generated On"
-msgstr ""
+msgstr "তৈরির সময়"
 
 #: app/Services/ExportService.php:454
 msgid "Date Filter"
-msgstr ""
+msgstr "তারিখ ফিল্টার"
 
 #: app/Services/ExportService.php:459
 msgid "Status Filter"
-msgstr ""
+msgstr "স্ট্যাটাস ফিল্টার"
 
 #: app/Services/ExportService.php:462
 msgid "Metric"
-msgstr ""
+msgstr "মাপকাঠি"
 
 #: app/Services/ExportService.php:462
 msgid "Value"
-msgstr ""
+msgstr "মান"
 
 #: app/Services/ExportService.php:463
 msgid "Total Bookings Recorded"
-msgstr ""
+msgstr "মোট রেকর্ড করা বুকিং"
 
 #: app/Services/ExportService.php:464
 msgid "Confirmed / Active Bookings"
-msgstr ""
+msgstr "অনুমোদিত / সক্রিয় বুকিং"
 
 #: app/Services/ExportService.php:465
 msgid "Total Travelers / Guests"
-msgstr ""
+msgstr "মোট ভ্রমণকারী / অতিথি"
 
 #: app/Services/ExportService.php:466
 msgid "Gross Total Booking Value"
-msgstr ""
+msgstr "মোট বুকিং মূল্য (গ্রস)"
 
 #: app/Services/ExportService.php:467
 msgid "Total Revenue (Excluding Cancelled)"
-msgstr ""
+msgstr "মোট আয় (বাতিলকৃত বাদে)"
 
 #: app/Services/ExportService.php:468
 msgid "Total Tax Collected"
-msgstr ""
+msgstr "মোট সংগৃহীত কর"
 
 #: app/Services/ExportService.php:469
 msgid "Total Discounts Granted"
-msgstr ""
+msgstr "মোট প্রদত্ত ছাড়"
 
 #: app/Services/InquiryService.php:71
 msgid "You must agree to the terms and privacy policy before submitting an inquiry."
-msgstr ""
+msgstr "অনুসন্ধান পাঠানোর আগে আপনাকে শর্তাবলি ও গোপনীয়তা নীতিতে সম্মতি দিতে হবে।"
 
 #: app/Services/InventoryService.php:181
 msgid "This departure has no capacity configured yet."
-msgstr ""
+msgstr "এই ডিপার্চারের জন্য এখনো কোনো ধারণক্ষমতা সেট করা হয়নি।"
 
 #: app/Services/InventoryService.php:684
 msgid "Invalid item type. Must be tour or room."
-msgstr ""
+msgstr "অবৈধ আইটেমের ধরন। ট্যুর বা রুম হতে হবে।"
 
 #: app/Services/InventoryService.php:699
 msgid "Selected item was not found."
-msgstr ""
+msgstr "নির্বাচিত আইটেম পাওয়া যায়নি।"
 
 #: app/Services/InventoryService.php:707
 msgid "Selected item does not match the given item type."
-msgstr ""
+msgstr "নির্বাচিত আইটেম দেওয়া ধরনের সাথে মেলে না।"
 
 #: app/Services/InventoryService.php:715
 msgid "Capacity must be a non-negative whole number."
-msgstr ""
+msgstr "ধারণক্ষমতা অবশ্যই শূন্য বা তার বেশি পূর্ণসংখ্যা হতে হবে।"
 
 #: app/Services/InventoryService.php:724
 msgid "Price override must be a non-negative number."
-msgstr ""
+msgstr "মূল্য পরিবর্তন অবশ্যই শূন্য বা তার বেশি সংখ্যা হতে হবে।"
 
 #: app/Services/InventoryService.php:734
 msgid "Invalid date range specified. Range must be valid Y-m-d format and maximum 365 days."
-msgstr ""
+msgstr "অবৈধ তারিখ সীমা। সীমা অবশ্যই বৈধ Y-m-d ফরম্যাটে এবং সর্বোচ্চ ৩৬৫ দিনের হতে হবে।"
 
 #: app/Services/InventoryService.php:752
 msgid "No dates matched the day-of-week filter."
-msgstr ""
+msgstr "সপ্তাহের দিনের ফিল্টারের সাথে কোনো তারিখ মেলেনি।"
 
 #. translators: 1: Active booked count, 2: Date
 #: app/Services/InventoryService.php:789
 #, php-format
 msgid "Cannot set capacity below active bookings (%1$d booked/held on %2$s)."
-msgstr ""
+msgstr "সক্রিয় বুকিংয়ের চেয়ে কম ধারণক্ষমতা সেট করা যাবে না (%2$s তারিখে %1$d টি বুক/হোল্ড করা আছে)।"
 
 #. translators: 1: Date, 2: Active booked count
 #: app/Services/InventoryService.php:802
 #, php-format
 msgid "Date %1$s has active bookings (%2$d booked/held). Use the \"Force Block\" option to block future bookings without cancelling existing ones."
-msgstr ""
+msgstr "%1$s তারিখে সক্রিয় বুকিং আছে (%2$d টি বুক/হোল্ড করা)। বিদ্যমান বুকিং বাতিল না করে ভবিষ্যতের বুকিং বন্ধ করতে \"Force Block\" অপশন ব্যবহার করুন।"
 
 #. translators: %s: Date
 #: app/Services/InventoryService.php:846
 #, php-format
 msgid "Failed to save availability record for %s."
-msgstr ""
+msgstr "%s তারিখের অ্যাভেইলেবিলিটি রেকর্ড সংরক্ষণ করা যায়নি।"
 
 #. translators: %d: Number of updated days
 #: app/Services/InventoryService.php:897
 #, php-format
 msgid "Availability successfully updated for %d date(s)."
-msgstr ""
+msgstr "%d টি তারিখের অ্যাভেইলেবিলিটি সফলভাবে আপডেট হয়েছে।"
 
 #: app/Services/PaymentService.php:43
 msgid "Direct Bank Transfer"
-msgstr ""
+msgstr "সরাসরি ব্যাংক ট্রান্সফার"
 
 #: app/Services/PaymentService.php:44
 msgid "Make your payment directly into our bank account. Please use your Booking Reference Code as the payment reference."
-msgstr ""
+msgstr "সরাসরি আমাদের ব্যাংক অ্যাকাউন্টে পেমেন্ট করুন। পেমেন্টের রেফারেন্স হিসেবে আপনার বুকিং রেফারেন্স কোড ব্যবহার করুন।"
 
 #: app/Services/PaymentService.php:54
 msgid "Pay in cash or card at our welcome desk or tour guide upon arrival."
-msgstr ""
+msgstr "পৌঁছানোর পর আমাদের ওয়েলকাম ডেস্কে বা ট্যুর গাইডের কাছে নগদ বা কার্ডে পরিশোধ করুন।"
 
 #: app/Services/PaymentService.php:64
 msgid "Offline / Manual Payment"
-msgstr ""
+msgstr "অফলাইন / ম্যানুয়াল পেমেন্ট"
 
 #: app/Services/PaymentService.php:65
 msgid "Manual payment arrangement with tour operator."
-msgstr ""
+msgstr "ট্যুর অপারেটরের সাথে ম্যানুয়াল পেমেন্টের ব্যবস্থা।"
 
 #: app/Services/PaymentService.php:117
 msgid "Bank Account Details"
-msgstr ""
+msgstr "ব্যাংক অ্যাকাউন্টের বিবরণ"
 
 #: app/Services/PaymentService.php:123
 msgid "Bank Name:"
-msgstr ""
+msgstr "ব্যাংকের নাম:"
 
 #: app/Services/PaymentService.php:129
 msgid "Account Name:"
-msgstr ""
+msgstr "অ্যাকাউন্টের নাম:"
 
 #: app/Services/PaymentService.php:135
 msgid "Account Number:"
-msgstr ""
+msgstr "অ্যাকাউন্ট নম্বর:"
 
 #: app/Services/PaymentService.php:143
 msgid "IBAN:"
-msgstr ""
+msgstr "IBAN:"
 
 #: app/Services/PaymentService.php:149
 msgid "SWIFT / BIC / Routing:"
-msgstr ""
+msgstr "SWIFT / BIC / রাউটিং:"
 
 #: app/Services/PaymentService.php:155
 msgid "Branch:"
-msgstr ""
+msgstr "শাখা:"
 
 #: app/Services/PaymentService.php:196
 msgid "Please provide a valid booking code and transaction reference."
-msgstr ""
+msgstr "অনুগ্রহ করে একটি বৈধ বুকিং কোড ও লেনদেন রেফারেন্স দিন।"
 
 #: app/Services/PaymentService.php:212
 #: app/Shortcodes/ThankYouShortcode.php:127
 msgid "No reservation was found matching this reference code."
-msgstr ""
+msgstr "এই রেফারেন্স কোডের সাথে মেলে এমন কোনো বুকিং পাওয়া যায়নি।"
 
 #: app/Services/PaymentService.php:253
 msgid "Unauthorized access. Could not verify booking authorization."
-msgstr ""
+msgstr "প্রবেশাধিকার নেই। বুকিংয়ের অনুমোদন যাচাই করা যায়নি।"
 
 #: app/Services/PaymentService.php:259
 msgid "Customer submitted payment reference"
-msgstr ""
+msgstr "গ্রাহক পেমেন্ট রেফারেন্স জমা দিয়েছেন"
 
 #: app/Services/PaymentService.php:280
 msgid "Could not save the payment reference. Please try again."
-msgstr ""
+msgstr "পেমেন্ট রেফারেন্স সংরক্ষণ করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
 
 #. translators: 1: transaction reference, 2: booking code
 #: app/Services/PaymentService.php:287
 #, php-format
 msgid "Customer submitted transaction reference %1$s for booking #%2$s"
-msgstr ""
+msgstr "গ্রাহক বুকিং #%2$s এর জন্য লেনদেন রেফারেন্স %1$s জমা দিয়েছেন"
 
 #: app/Services/PaymentService.php:294
 msgid "Payment reference submitted successfully. Our accounts team will review and confirm your booking."
-msgstr ""
+msgstr "পেমেন্ট রেফারেন্স সফলভাবে জমা হয়েছে। আমাদের হিসাব বিভাগ যাচাই করে আপনার বুকিং নিশ্চিত করবে।"
 
 #: app/Services/PaymentService.php:310
 msgid "Unauthorized access. You do not have permission to record payments."
-msgstr ""
+msgstr "প্রবেশাধিকার নেই। পেমেন্ট রেকর্ড করার অনুমতি আপনার নেই।"
 
 #: app/Services/PaymentService.php:331
 msgid "Booking record not found."
-msgstr ""
+msgstr "বুকিংয়ের রেকর্ড পাওয়া যায়নি।"
 
 #: app/Services/PaymentService.php:363
 msgid "Payment Recorded"
-msgstr ""
+msgstr "পেমেন্ট রেকর্ড হয়েছে"
 
 #: app/Services/PaymentService.php:391
 msgid "Could not save the payment record. Please try again."
-msgstr ""
+msgstr "পেমেন্ট রেকর্ড সংরক্ষণ করা যায়নি। অনুগ্রহ করে আবার চেষ্টা করুন।"
 
 #. translators: 1: Amount formatted, 2: Payment status, 3: Method
 #: app/Services/PaymentService.php:400
 #, php-format
 msgid "Admin recorded payment of %1$s (%2$s) via %3$s."
-msgstr ""
+msgstr "অ্যাডমিন %3$s মাধ্যমে %1$s (%2$s) পেমেন্ট রেকর্ড করেছেন।"
 
 #: app/Services/PaymentService.php:423
 msgid "Payment record updated successfully."
-msgstr ""
+msgstr "পেমেন্ট রেকর্ড সফলভাবে আপডেট হয়েছে।"
 
 #: app/Services/PricingService.php:84
 msgid "Please provide a valid item ID and check-in date."
-msgstr ""
+msgstr "অনুগ্রহ করে একটি বৈধ আইটেম আইডি ও চেক-ইন তারিখ দিন।"
 
 #: app/Services/PricingService.php:103
 msgid "Selected tour could not be found."
-msgstr ""
+msgstr "নির্বাচিত ট্যুর পাওয়া যায়নি।"
 
 #. translators: %d: Minimum guests
 #: app/Services/PricingService.php:114
 #, php-format
 msgid "This tour requires a minimum of %d guests."
-msgstr ""
+msgstr "এই ট্যুরের জন্য কমপক্ষে %d জন অতিথি প্রয়োজন।"
 
 #. translators: %s: child age range
 #: app/Services/PricingService.php:162
 #, php-format
 msgid "Children (%s)"
-msgstr ""
+msgstr "শিশু (%s)"
 
 #: app/Services/PricingService.php:198
 msgid "Selected room could not be found."
-msgstr ""
+msgstr "নির্বাচিত রুম পাওয়া যায়নি।"
 
 #. translators: 1: Number of rooms, 2: Number of nights
 #: app/Services/PricingService.php:223
 #, php-format
 msgid "%1$d Room(s) × %2$d Night(s)"
-msgstr ""
+msgstr "%1$d টি রুম × %2$d রাত"
 
 #: app/Services/PricingService.php:268
 #: templates/booking-panel.php:179
 msgid "Tax"
-msgstr ""
+msgstr "কর"
 
 #: app/Services/ReportingService.php:49
 msgid "Yesterday"
-msgstr ""
+msgstr "গতকাল"
 
 #. translators: %d: item ID
 #: app/Services/ReportingService.php:312
 #: app/Services/ReportingService.php:328
 #, php-format
 msgid "Item #%d"
-msgstr ""
+msgstr "আইটেম #%d"
 
 #: app/Services/ReportingService.php:456
 msgid "Check-In Date"
-msgstr ""
+msgstr "চেক-ইনের তারিখ"
 
 #: app/Services/ReportingService.php:462
 msgid "Quantity"
-msgstr ""
+msgstr "পরিমাণ"
 
 #: app/Services/ReportingService.php:463
 msgid "Subtotal (Excl. Tax)"
-msgstr ""
+msgstr "সাবটোটাল (কর ছাড়া)"
 
 #: app/Services/ReportingService.php:466
 msgid "Gross Total"
-msgstr ""
+msgstr "মোট (গ্রস)"
 
 #: app/Services/ReportingService.php:469
 msgid "Transaction ID"
-msgstr ""
+msgstr "লেনদেন আইডি"
 
 #: app/Services/ReportingService.php:491
 msgid "Direct Booking"
-msgstr ""
+msgstr "সরাসরি বুকিং"
 
 #: app/Services/ReportingService.php:556
 msgid "Unauthorized access. You do not have permission to export reports."
-msgstr ""
+msgstr "প্রবেশাধিকার নেই। রিপোর্ট এক্সপোর্ট করার অনুমতি আপনার নেই।"
 
 #: app/Services/WebhookService.php:309
 msgid "Webhook was not sent because no signing secret is configured."
-msgstr ""
+msgstr "কোনো সাইনিং সিক্রেট সেট না থাকায় ওয়েবহুক পাঠানো হয়নি।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:111
 msgid "Security token expired. Please refresh the page and try again."
-msgstr ""
+msgstr "সিকিউরিটি টোকেনের মেয়াদ শেষ। অনুগ্রহ করে পেজটি রিফ্রেশ করে আবার চেষ্টা করুন।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:227
 msgid "Too many cancellation requests submitted. Please try again later."
-msgstr ""
+msgstr "অনেকবার বাতিলের অনুরোধ পাঠানো হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:235
 msgid "Please provide both a valid Booking Code and Email Address."
-msgstr ""
+msgstr "অনুগ্রহ করে বৈধ বুকিং কোড ও ইমেইল ঠিকানা দুটোই দিন।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:254
 msgid "No reservation found matching the provided Booking Code and Email Address."
-msgstr ""
+msgstr "দেওয়া বুকিং কোড ও ইমেইল ঠিকানার সাথে মেলে এমন কোনো বুকিং পাওয়া যায়নি।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:264
 msgid "This reservation has already been cancelled."
-msgstr ""
+msgstr "এই বুকিং আগেই বাতিল হয়েছে।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:273
 msgid "Online cancellation requests are disabled. Please contact customer support."
-msgstr ""
+msgstr "অনলাইনে বাতিলের অনুরোধ বন্ধ আছে। অনুগ্রহ করে গ্রাহক সহায়তার সাথে যোগাযোগ করুন।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:308
 msgid "Your reservation has been successfully cancelled and inventory released."
-msgstr ""
+msgstr "আপনার বুকিং সফলভাবে বাতিল হয়েছে এবং আসন খালি করা হয়েছে।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:315
 msgid "Could not cancel reservation."
-msgstr ""
+msgstr "বুকিং বাতিল করা যায়নি।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:325
 msgid "Your cancellation request has already been received. Our team will review and process it shortly."
-msgstr ""
+msgstr "আপনার বাতিলের অনুরোধ আগেই পাওয়া গেছে। আমাদের টিম শীঘ্রই এটি দেখে ব্যবস্থা নেবে।"
 
 #. translators: %s: Reason for cancellation
 #: app/Shortcodes/BookingLookupShortcode.php:347
 #, php-format
 msgid "Traveler submitted cancellation request via lookup portal. Reason: %s"
-msgstr ""
+msgstr "ভ্রমণকারী লুকআপ পোর্টাল থেকে বাতিলের অনুরোধ পাঠিয়েছেন। কারণ: %s"
 
 #: app/Shortcodes/BookingLookupShortcode.php:348
 msgid "No reason provided"
-msgstr ""
+msgstr "কোনো কারণ দেওয়া হয়নি"
 
 #: app/Shortcodes/BookingLookupShortcode.php:363
 #: templates/my-bookings.php:205
 msgid "Tour / Room"
-msgstr ""
+msgstr "ট্যুর / রুম"
 
 #: app/Shortcodes/BookingLookupShortcode.php:365
 msgid "No reason specified"
-msgstr ""
+msgstr "কোনো কারণ উল্লেখ নেই"
 
 #: app/Shortcodes/BookingLookupShortcode.php:376
 msgid "Your cancellation request has been received. Our team will review and process your request shortly."
-msgstr ""
+msgstr "আপনার বাতিলের অনুরোধ পাওয়া গেছে। আমাদের টিম শীঘ্রই আপনার অনুরোধ দেখে ব্যবস্থা নেবে।"
 
 #: app/Shortcodes/BookingLookupShortcode.php:432
 msgid "adults"
-msgstr ""
+msgstr "প্রাপ্তবয়স্ক"
 
 #: app/Shortcodes/BookingLookupShortcode.php:435
 msgid "children"
-msgstr ""
+msgstr "শিশু"
 
 #: app/Shortcodes/BookingLookupShortcode.php:438
 msgid "infants"
-msgstr ""
+msgstr "নবজাতক"
 
 #: app/Shortcodes/MyBookingsShortcode.php:60
 msgid "My Bookings & Trips"
-msgstr ""
+msgstr "আমার বুকিং ও ট্রিপ"
 
 #: app/Shortcodes/MyBookingsShortcode.php:307
 msgid "Please log in to manage your bookings."
-msgstr ""
+msgstr "আপনার বুকিং পরিচালনা করতে অনুগ্রহ করে লগইন করুন।"
 
 #: app/Shortcodes/MyBookingsShortcode.php:339
 msgid "You do not have permission to manage this booking."
-msgstr ""
+msgstr "এই বুকিং পরিচালনা করার অনুমতি আপনার নেই।"
 
 #: app/Shortcodes/MyBookingsShortcode.php:362
 msgid "Please log in to view booking details."
-msgstr ""
+msgstr "বুকিংয়ের বিস্তারিত দেখতে অনুগ্রহ করে লগইন করুন।"
 
 #: app/Shortcodes/MyBookingsShortcode.php:394
 msgid "You do not have permission to view this booking."
-msgstr ""
+msgstr "এই বুকিং দেখার অনুমতি আপনার নেই।"
 
 #: app/Shortcodes/MyBookingsShortcode.php:517
 msgid "Please log in to continue."
-msgstr ""
+msgstr "চালিয়ে যেতে অনুগ্রহ করে লগইন করুন।"
 
 #: app/Shortcodes/ThankYouShortcode.php:113
 msgid "Missing booking reference or security token."
-msgstr ""
+msgstr "বুকিং রেফারেন্স বা সিকিউরিটি টোকেন নেই।"
 
 #: app/Shortcodes/ThankYouShortcode.php:132
 msgid "We could not securely verify your booking confirmation link or the link has expired (links remain active for 72 hours)."
-msgstr ""
+msgstr "আপনার বুকিং কনফার্মেশন লিংক নিরাপদে যাচাই করা যায়নি অথবা লিংকের মেয়াদ শেষ হয়েছে (লিংক ৭২ ঘণ্টা সক্রিয় থাকে)।"
 
 #: app/Shortcodes/ThankYouShortcode.php:190
 msgid "Unable to Display Booking Details"
-msgstr ""
+msgstr "বুকিংয়ের বিস্তারিত দেখানো যাচ্ছে না"
 
 #: app/Shortcodes/ThankYouShortcode.php:195
 msgid "You can view and manage your reservation anytime by entering your booking reference code and email on our self-service portal:"
-msgstr ""
+msgstr "আমাদের সেলফ-সার্ভিস পোর্টালে বুকিং রেফারেন্স কোড ও ইমেইল দিয়ে যেকোনো সময় আপনার বুকিং দেখতে ও পরিচালনা করতে পারবেন:"
 
 #: app/Shortcodes/ThankYouShortcode.php:198
 msgid "Track My Booking on Lookup Portal"
-msgstr ""
+msgstr "লুকআপ পোর্টালে আমার বুকিং ট্র্যাক করুন"
 
 #: app/Shortcodes/ThankYouShortcode.php:228
 msgid "Tour / Hotel Reservation"
-msgstr ""
+msgstr "ট্যুর / হোটেল বুকিং"
 
 #. translators: 1: Item title, 2: Booking code
 #: app/Shortcodes/ThankYouShortcode.php:246
 #, php-format
 msgid "%1$s (Booking #%2$s)"
-msgstr ""
+msgstr "%1$s (বুকিং #%2$s)"
 
 #. translators: %s: Booking reference code
 #: app/Shortcodes/ThankYouShortcode.php:254
 #, php-format
 msgid "Reservation Reference: #%s"
-msgstr ""
+msgstr "বুকিং রেফারেন্স: #%s"
 
 #. translators: %s: Customer name
 #: app/Shortcodes/ThankYouShortcode.php:256
 #, php-format
 msgid "Traveler: %s"
-msgstr ""
+msgstr "ভ্রমণকারী: %s"
 
 #. translators: %s: Total amount
 #: app/Shortcodes/ThankYouShortcode.php:258
 #, php-format
 msgid "Total: %s"
-msgstr ""
+msgstr "মোট: %s"
 
 #. translators: %s: Site name
 #: app/Shortcodes/ThankYouShortcode.php:260
 #, php-format
 msgid "Organized by: %s"
-msgstr ""
+msgstr "আয়োজক: %s"
 
 #: app/Support/Privacy.php:82
 msgid "I agree to the {privacy} and {terms}"
-msgstr ""
+msgstr "আমি {privacy} ও {terms}-এ সম্মত"
 
 #: app/Support/Privacy.php:87
 #: app/Support/Privacy.php:88
 msgid "Privacy Policy"
-msgstr ""
+msgstr "গোপনীয়তা নীতি"
 
 #: app/Support/Privacy.php:91
 #: app/Support/Privacy.php:92
 msgid "Terms and Conditions"
-msgstr ""
+msgstr "শর্তাবলি"
 
 #: app/Support/Privacy.php:129
 msgid "Tourivo Bookings & Inquiries"
-msgstr ""
+msgstr "Tourivo বুকিং ও অনুসন্ধান"
 
 #: app/Support/Privacy.php:145
 msgid "Tourivo Personal Data Eraser"
-msgstr ""
+msgstr "Tourivo ব্যক্তিগত ডেটা মোছার টুল"
 
 #: app/Support/Privacy.php:177
 msgid "Personal Data Collected by Tourivo"
-msgstr ""
+msgstr "Tourivo যে ব্যক্তিগত ডেটা সংগ্রহ করে"
 
 #: app/Support/Privacy.php:178
 msgid "When travelers book a tour or submit a trip inquiry through Tourivo, we collect the following personal information: customer name, email address, phone number, billing address, and special customer requests. If IP address collection is enabled, IP addresses are logged alongside bookings for fraud detection and security auditing."
-msgstr ""
+msgstr "ভ্রমণকারীরা Tourivo-র মাধ্যমে ট্যুর বুক করলে বা ট্রিপের অনুসন্ধান পাঠালে আমরা নিচের ব্যক্তিগত তথ্য সংগ্রহ করি: গ্রাহকের নাম, ইমেইল ঠিকানা, ফোন নম্বর, বিলিং ঠিকানা এবং গ্রাহকের বিশেষ অনুরোধ। IP ঠিকানা সংগ্রহ চালু থাকলে প্রতারণা শনাক্ত ও নিরাপত্তা অডিটের জন্য বুকিংয়ের সাথে IP ঠিকানা রাখা হয়।"
 
 #: app/Support/Privacy.php:180
 msgid "Purpose of Data Processing"
-msgstr ""
+msgstr "ডেটা প্রক্রিয়াকরণের উদ্দেশ্য"
 
 #: app/Support/Privacy.php:181
 msgid "Personal data is collected strictly to process travel reservations, coordinate room and tour availability, verify customer identity for booking lookups, generate booking vouchers and invoices, and deliver booking confirmation and reminder emails."
-msgstr ""
+msgstr "ব্যক্তিগত ডেটা শুধু ভ্রমণের বুকিং প্রক্রিয়া করতে, রুম ও ট্যুরের অ্যাভেইলেবিলিটি সমন্বয় করতে, বুকিং লুকআপের জন্য গ্রাহকের পরিচয় যাচাই করতে, বুকিং ভাউচার ও ইনভয়েস তৈরি করতে এবং বুকিং কনফার্মেশন ও রিমাইন্ডার ইমেইল পাঠাতে সংগ্রহ করা হয়।"
 
 #: app/Support/Privacy.php:183
 msgid "Data Retention & Anonymization"
-msgstr ""
+msgstr "ডেটা সংরক্ষণ ও বেনামীকরণ"
 
 #: app/Support/Privacy.php:184
 msgid "Booking financial records (order totals, taxes, and line items) are retained for statutory accounting. When an erasure request is executed or retention schedules expire, personal identifiers (name, email, phone, billing address, notes, payment references, and IP address) are permanently erased, and voucher links are revoked."
-msgstr ""
+msgstr "আইনগত হিসাবের জন্য বুকিংয়ের আর্থিক রেকর্ড (অর্ডারের মোট, কর ও লাইন আইটেম) রাখা হয়। মোছার অনুরোধ কার্যকর হলে বা সংরক্ষণের সময়সীমা শেষ হলে ব্যক্তিগত পরিচয়সূচক তথ্য (নাম, ইমেইল, ফোন, বিলিং ঠিকানা, নোট, পেমেন্ট রেফারেন্স ও IP ঠিকানা) স্থায়ীভাবে মুছে ফেলা হয় এবং ভাউচার লিংক বাতিল করা হয়।"
 
 #: app/Support/Privacy.php:186
 msgid "Cookies & Local Browser Storage"
-msgstr ""
+msgstr "কুকি ও ব্রাউজারের লোকাল স্টোরেজ"
 
 #: app/Support/Privacy.php:187
 msgid "Tourivo utilizes browser local storage (localStorage) exclusively for client-side user experience enhancements, including favorite wishlist tours and selected currency preferences. No sensitive personal information is stored in client cookies."
-msgstr ""
+msgstr "Tourivo ব্রাউজারের লোকাল স্টোরেজ (localStorage) শুধু ব্যবহারকারীর অভিজ্ঞতা উন্নত করতে ব্যবহার করে, যেমন উইশলিস্টের প্রিয় ট্যুর ও বেছে নেওয়া কারেন্সি। কোনো সংবেদনশীল ব্যক্তিগত তথ্য কুকিতে রাখা হয় না।"
 
 #: app/Support/Privacy.php:189
 msgid "Security & Rate Limiting"
-msgstr ""
+msgstr "নিরাপত্তা ও রেট লিমিটিং"
 
 #: app/Support/Privacy.php:190
 msgid "To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Tourivo stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes)."
-msgstr ""
+msgstr "স্প্যাম, স্বয়ংক্রিয় অপব্যবহার ও ব্রুট-ফোর্স চেষ্টা থেকে বুকিং এন্ডপয়েন্ট রক্ষা করতে Tourivo ক্লায়েন্টের IP ঠিকানার সাময়িক ক্রিপ্টোগ্রাফিক হ্যাশ সংরক্ষণ করে। এই নিরাপত্তা ডেটা অল্প সময়ের মধ্যে (১০ মিনিট) নিজে থেকে মুছে যায়।"
 
 #: app/Support/Privacy.php:196
 msgid "External Webhook Automations"
-msgstr ""
+msgstr "বাহ্যিক ওয়েবহুক অটোমেশন"
 
 #. translators: 1: webhook endpoint domain
 #: app/Support/Privacy.php:199
 #, php-format
 msgid "This site is configured to transmit booking and inquiry event payloads to an external automated endpoint (%1$s) via secure HTTPS webhooks for third-party CRM and calendar synchronization."
-msgstr ""
+msgstr "থার্ড-পার্টি CRM ও ক্যালেন্ডার সিঙ্কের জন্য এই সাইট নিরাপদ HTTPS ওয়েবহুকের মাধ্যমে বুকিং ও অনুসন্ধানের ইভেন্ট ডেটা একটি বাহ্যিক স্বয়ংক্রিয় এন্ডপয়েন্টে (%1$s) পাঠানোর জন্য কনফিগার করা আছে।"
 
 #: app/Support/Privacy.php:258
 msgid "Tourivo Bookings"
-msgstr ""
+msgstr "Tourivo বুকিং"
 
 #: app/Support/Privacy.php:263
 #: app/Support/Privacy.php:297
 msgid "Email Address"
-msgstr ""
+msgstr "ইমেইল ঠিকানা"
 
 #: app/Support/Privacy.php:264
 #: app/Support/Privacy.php:298
 msgid "Phone Number"
-msgstr ""
+msgstr "ফোন নম্বর"
 
 #: app/Support/Privacy.php:265
 msgid "Billing Address"
-msgstr ""
+msgstr "বিলিং ঠিকানা"
 
 #: app/Support/Privacy.php:270
 #: app/Support/Privacy.php:300
 msgid "IP Address"
-msgstr ""
+msgstr "IP ঠিকানা"
 
 #: app/Support/Privacy.php:271
 #: app/Support/Privacy.php:301
 msgid "Consent Given At"
-msgstr ""
+msgstr "সম্মতি দেওয়ার সময়"
 
 #: app/Support/Privacy.php:272
 msgid "Created Date"
-msgstr ""
+msgstr "তৈরির তারিখ"
 
 #: app/Support/Privacy.php:293
 msgid "Tourivo Inquiries"
-msgstr ""
+msgstr "Tourivo অনুসন্ধান"
 
 #: app/Support/Privacy.php:296
 msgid "Inquirer Name"
-msgstr ""
+msgstr "অনুসন্ধানকারীর নাম"
 
 #: app/Support/Privacy.php:299
 msgid "Message"
-msgstr ""
+msgstr "বার্তা"
 
 #: app/Support/Privacy.php:302
 msgid "Submitted At"
-msgstr ""
+msgstr "জমা দেওয়ার সময়"
 
 #: app/Support/Privacy.php:399
 msgid "Financial booking records have been anonymized and retained for legal and tax accounting obligations."
-msgstr ""
+msgstr "আইনগত ও কর হিসাবের দায়বদ্ধতার জন্য বুকিংয়ের আর্থিক রেকর্ড বেনামী করে রাখা হয়েছে।"
 
 #: templates/booking-lookup.php:16
 msgid "Enter your booking reference code and email to check your reservation status, download your voucher, or request cancellation."
-msgstr ""
+msgstr "বুকিংয়ের অবস্থা দেখতে, ভাউচার ডাউনলোড করতে বা বাতিলের অনুরোধ করতে আপনার বুকিং রেফারেন্স কোড ও ইমেইল দিন।"
 
 #: templates/booking-lookup.php:92
 #: templates/my-bookings.php:246
 msgid "Cancel Booking"
-msgstr ""
+msgstr "বুকিং বাতিল করুন"
 
 #: templates/booking-lookup.php:100
 msgid "Submit Cancellation Request"
-msgstr ""
+msgstr "বাতিলের অনুরোধ পাঠান"
 
 #: templates/booking-lookup.php:103
 msgid "Are you sure you wish to cancel this reservation? Please provide a reason below:"
-msgstr ""
+msgstr "আপনি কি নিশ্চিত যে এই বুকিং বাতিল করতে চান? অনুগ্রহ করে নিচে কারণ লিখুন:"
 
 #: templates/booking-lookup.php:105
 msgid "Reason for cancellation (optional)..."
-msgstr ""
+msgstr "বাতিলের কারণ (ঐচ্ছিক)..."
 
 #: templates/booking-lookup.php:108
 #: templates/booking-lookup.php:452
@@ -6780,502 +6780,502 @@ msgstr ""
 #: templates/my-bookings.php:492
 #: templates/my-bookings.php:514
 msgid "Confirm Cancellation"
-msgstr ""
+msgstr "বাতিল নিশ্চিত করুন"
 
 #: templates/booking-lookup.php:111
 msgid "Keep My Booking"
-msgstr ""
+msgstr "আমার বুকিং রাখুন"
 
 #: templates/booking-lookup.php:458
 msgid "Request submitted successfully."
-msgstr ""
+msgstr "অনুরোধ সফলভাবে জমা হয়েছে।"
 
 #: templates/booking-lookup.php:474
 msgid "Failed to submit cancellation request."
-msgstr ""
+msgstr "বাতিলের অনুরোধ পাঠানো যায়নি।"
 
 #: templates/booking-panel.php:149
 msgid "Under 2 (Free)"
-msgstr ""
+msgstr "২ বছরের নিচে (বিনামূল্যে)"
 
 #: templates/booking-panel.php:149
 msgid "Under 2"
-msgstr ""
+msgstr "২ বছরের নিচে"
 
 #: templates/booking-panel.php:175
 msgid "Discount"
-msgstr ""
+msgstr "ছাড়"
 
 #: templates/booking-voucher.php:379
 msgid "Amount Due:"
-msgstr ""
+msgstr "বকেয়া পরিমাণ:"
 
 #: templates/my-bookings.php:42
 msgid "Please log in to your account to view your travel itineraries, download vouchers, or manage your bookings."
-msgstr ""
+msgstr "আপনার ভ্রমণসূচি দেখতে, ভাউচার ডাউনলোড করতে বা বুকিং পরিচালনা করতে অনুগ্রহ করে আপনার অ্যাকাউন্টে লগইন করুন।"
 
 #: templates/my-bookings.php:47
 msgid "Log in to Your Account"
-msgstr ""
+msgstr "আপনার অ্যাকাউন্টে লগইন করুন"
 
 #: templates/my-bookings.php:51
 msgid "Register an Account"
-msgstr ""
+msgstr "অ্যাকাউন্ট খুলুন"
 
 #: templates/my-bookings.php:58
 msgid "Booked as a guest without an account?"
-msgstr ""
+msgstr "অ্যাকাউন্ট ছাড়া গেস্ট হিসেবে বুক করেছেন?"
 
 #: templates/my-bookings.php:60
 msgid "Track Your Booking with Reference Code →"
-msgstr ""
+msgstr "রেফারেন্স কোড দিয়ে আপনার বুকিং ট্র্যাক করুন →"
 
 #. translators: %s: Traveler display name
 #: templates/my-bookings.php:77
 #, php-format
 msgid "Welcome back, %s 👋"
-msgstr ""
+msgstr "আবার স্বাগতম, %s 👋"
 
 #: templates/my-bookings.php:87
 msgid "Quick Booking Lookup"
-msgstr ""
+msgstr "দ্রুত বুকিং খুঁজুন"
 
 #: templates/my-bookings.php:100
 msgid "Total Trips"
-msgstr ""
+msgstr "মোট ট্রিপ"
 
 #: templates/my-bookings.php:108
 msgid "Upcoming Trips"
-msgstr ""
+msgstr "আসন্ন ট্রিপ"
 
 #: templates/my-bookings.php:116
 msgid "Completed Trips"
-msgstr ""
+msgstr "সম্পন্ন ট্রিপ"
 
 #: templates/my-bookings.php:124
 msgid "Total Spent"
-msgstr ""
+msgstr "মোট খরচ"
 
 #: templates/my-bookings.php:137
 msgid "Upcoming"
-msgstr ""
+msgstr "আসন্ন"
 
 #: templates/my-bookings.php:155
 msgid "No bookings found yet"
-msgstr ""
+msgstr "এখনো কোনো বুকিং নেই"
 
 #: templates/my-bookings.php:156
 msgid "When you reserve a tour package or hotel stay, it will appear here in your dashboard."
-msgstr ""
+msgstr "আপনি কোনো ট্যুর প্যাকেজ বা হোটেল বুক করলে তা এখানে আপনার ড্যাশবোর্ডে দেখা যাবে।"
 
 #: templates/my-bookings.php:210
 msgid "Date / Duration"
-msgstr ""
+msgstr "তারিখ / সময়কাল"
 
 #: templates/my-bookings.php:215
 msgid "Time Slot"
-msgstr ""
+msgstr "টাইম স্লট"
 
 #: templates/my-bookings.php:220
 msgid "Guests / Qty"
-msgstr ""
+msgstr "অতিথি / পরিমাণ"
 
 #: templates/my-bookings.php:232
 msgid "View Details"
-msgstr ""
+msgstr "বিস্তারিত দেখুন"
 
 #: templates/my-bookings.php:236
 msgid "Download Voucher"
-msgstr ""
+msgstr "ভাউচার ডাউনলোড করুন"
 
 #: templates/my-bookings.php:240
 msgid "Add to Calendar"
-msgstr ""
+msgstr "ক্যালেন্ডারে যোগ করুন"
 
 #: templates/my-bookings.php:250
 msgid "Cancellation Requested"
-msgstr ""
+msgstr "বাতিলের অনুরোধ করা হয়েছে"
 
 #: templates/my-bookings.php:264
 msgid "Reservation Details"
-msgstr ""
+msgstr "বুকিংয়ের বিস্তারিত"
 
 #: templates/my-bookings.php:268
 msgid "Loading details..."
-msgstr ""
+msgstr "বিস্তারিত লোড হচ্ছে..."
 
 #: templates/my-bookings.php:287
 msgid "Are you sure you wish to cancel this reservation? Depending on our cancellation policy and booking status, this will either immediately release your reservation or submit a review request to our operations team."
-msgstr ""
+msgstr "আপনি কি নিশ্চিত যে এই বুকিং বাতিল করতে চান? আমাদের বাতিল নীতি ও বুকিংয়ের অবস্থা অনুযায়ী এটি হয় সঙ্গে সঙ্গে আপনার বুকিং বাতিল করবে, নয়তো আমাদের অপারেশন টিমের কাছে পর্যালোচনার অনুরোধ পাঠাবে।"
 
 #: templates/my-bookings.php:291
 msgid "Reason for Cancellation (optional):"
-msgstr ""
+msgstr "বাতিলের কারণ (ঐচ্ছিক):"
 
 #: templates/my-bookings.php:293
 msgid "e.g., Changed travel dates, medical reason..."
-msgstr ""
+msgstr "যেমন: ভ্রমণের তারিখ বদলেছে, চিকিৎসাজনিত কারণ..."
 
 #: templates/my-bookings.php:299
 msgid "Nevermind, Keep Booking"
-msgstr ""
+msgstr "থাক, বুকিং রাখুন"
 
 #: templates/my-bookings.php:499
 msgid "Cancellation submitted successfully."
-msgstr ""
+msgstr "বাতিলের অনুরোধ সফলভাবে জমা হয়েছে।"
 
 #: templates/my-bookings.php:509
 msgid "Failed to process cancellation."
-msgstr ""
+msgstr "বাতিল প্রক্রিয়া করা যায়নি।"
 
 #: templates/my-bookings.php:518
 msgid "A network error occurred. Please try again."
-msgstr ""
+msgstr "একটি নেটওয়ার্ক সমস্যা হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।"
 
 #: templates/my-bookings.php:526
 msgid "Loading booking details..."
-msgstr ""
+msgstr "বুকিংয়ের বিস্তারিত লোড হচ্ছে..."
 
 #: templates/my-bookings.php:553
 msgid "Placed on:"
-msgstr ""
+msgstr "বুকিংয়ের তারিখ:"
 
 #: templates/my-bookings.php:556
 msgid "Reserved Items"
-msgstr ""
+msgstr "বুক করা আইটেম"
 
 #: templates/my-bookings.php:570
 msgid "Payment & Financial Summary"
-msgstr ""
+msgstr "পেমেন্ট ও আর্থিক সারসংক্ষেপ"
 
 #: templates/my-bookings.php:574
 msgid "Tax:"
-msgstr ""
+msgstr "কর:"
 
 #: templates/my-bookings.php:575
 msgid "Total:"
-msgstr ""
+msgstr "মোট:"
 
 #: templates/my-bookings.php:579
 msgid "Your Notes:"
-msgstr ""
+msgstr "আপনার নোট:"
 
 #: templates/my-bookings.php:585
 msgid "Failed to load booking details."
-msgstr ""
+msgstr "বুকিংয়ের বিস্তারিত লোড করা যায়নি।"
 
 #: templates/my-bookings.php:589
 msgid "A network error occurred."
-msgstr ""
+msgstr "একটি নেটওয়ার্ক সমস্যা হয়েছে।"
 
 #: templates/thank-you.php:39
 msgid "Thank You! Your Reservation is Placed"
-msgstr ""
+msgstr "ধন্যবাদ! আপনার বুকিং সম্পন্ন হয়েছে"
 
 #: templates/thank-you.php:41
 msgid "A confirmation summary has been dispatched to your email address."
-msgstr ""
+msgstr "আপনার ইমেইল ঠিকানায় একটি কনফার্মেশন সারসংক্ষেপ পাঠানো হয়েছে।"
 
 #: templates/thank-you.php:69
 msgid "Reservation Summary"
-msgstr ""
+msgstr "বুকিংয়ের সারসংক্ষেপ"
 
 #: templates/thank-you.php:76
 msgid "Tour Experience"
-msgstr ""
+msgstr "ট্যুর অভিজ্ঞতা"
 
 #: templates/thank-you.php:91
 msgid "Time Slot:"
-msgstr ""
+msgstr "টাইম স্লট:"
 
 #: templates/thank-you.php:93
 msgid "Party:"
-msgstr ""
+msgstr "দল:"
 
 #. translators: %d: Number of adults
 #: templates/thank-you.php:97
 #, php-format
 msgid "%d Adult"
 msgid_plural "%d Adults"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d জন প্রাপ্তবয়স্ক"
+msgstr[1] "%d জন প্রাপ্তবয়স্ক"
 
 #. translators: %d: Number of children
 #: templates/thank-you.php:101
 #, php-format
 msgid "%d Child"
 msgid_plural "%d Children"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d জন শিশু"
+msgstr[1] "%d জন শিশু"
 
 #. translators: %d: Number of infants
 #: templates/thank-you.php:105
 #, php-format
 msgid "%d Infant"
 msgid_plural "%d Infants"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "%d জন নবজাতক"
+msgstr[1] "%d জন নবজাতক"
 
 #. translators: %d: number of travelers
 #: templates/thank-you.php:107
 #, php-format
 msgid "%d Travelers"
-msgstr ""
+msgstr "%d জন ভ্রমণকারী"
 
 #: templates/thank-you.php:116
 msgid "Primary Booker Information"
-msgstr ""
+msgstr "প্রধান বুকিংকারীর তথ্য"
 
 #: templates/thank-you.php:129
 msgid "Payment Summary"
-msgstr ""
+msgstr "পেমেন্টের সারসংক্ষেপ"
 
 #: templates/thank-you.php:183
 msgid "Your payment will be collected in cash or card upon arrival at our reception / tour counter."
-msgstr ""
+msgstr "আমাদের রিসেপশন / ট্যুর কাউন্টারে পৌঁছানোর পর নগদ বা কার্ডে আপনার পেমেন্ট নেওয়া হবে।"
 
 #: templates/thank-you.php:191
 msgid "Already completed your transfer or deposit?"
-msgstr ""
+msgstr "ট্রান্সফার বা জমা দেওয়া ইতিমধ্যে সম্পন্ন করেছেন?"
 
 #: templates/thank-you.php:193
 msgid "Submit your deposit slip, bank transaction reference, or mobile banking TrxID below for fast verification."
-msgstr ""
+msgstr "দ্রুত যাচাইয়ের জন্য নিচে আপনার জমার স্লিপ, ব্যাংক লেনদেনের রেফারেন্স বা মোবাইল ব্যাংকিংয়ের TrxID দিন।"
 
 #: templates/thank-you.php:198
 msgid "Submitted Reference:"
-msgstr ""
+msgstr "জমা দেওয়া রেফারেন্স:"
 
 #: templates/thank-you.php:200
 msgid "(Under review by accounts team)"
-msgstr ""
+msgstr "(হিসাব বিভাগ যাচাই করছে)"
 
 #: templates/thank-you.php:213
 msgid "Transaction Reference / Slip # / TrxID *"
-msgstr ""
+msgstr "লেনদেন রেফারেন্স / স্লিপ # / TrxID *"
 
 #: templates/thank-you.php:215
 #: templates/thank-you.php:243
 #: templates/thank-you.php:259
 msgid "Submit Reference"
-msgstr ""
+msgstr "রেফারেন্স জমা দিন"
 
 #: templates/thank-you.php:280
 msgid "Add to Calendar (.ics)"
-msgstr ""
+msgstr "ক্যালেন্ডারে যোগ করুন (.ics)"
 
 #: templates/thank-you.php:293
 msgid "What Happens Next?"
-msgstr ""
+msgstr "এরপর কী হবে?"
 
 #: templates/thank-you.php:297
 msgid "Check Your Email"
-msgstr ""
+msgstr "আপনার ইমেইল দেখুন"
 
 #: templates/thank-you.php:298
 msgid "A full breakdown with printable access and reference details has been delivered to your inbox."
-msgstr ""
+msgstr "প্রিন্টযোগ্য বিবরণ ও রেফারেন্সসহ পূর্ণ বিভাজন আপনার ইনবক্সে পাঠানো হয়েছে।"
 
 #: templates/thank-you.php:302
 msgid "Save Your Voucher"
-msgstr ""
+msgstr "আপনার ভাউচার সংরক্ষণ করুন"
 
 #: templates/thank-you.php:303
 msgid "Download or print your official voucher to present upon arrival or departure check-in."
-msgstr ""
+msgstr "পৌঁছানো বা যাত্রার চেক-ইনের সময় দেখানোর জন্য আপনার অফিসিয়াল ভাউচার ডাউনলোড বা প্রিন্ট করুন।"
 
 #: templates/thank-you.php:307
 msgid "Need Help or Changes?"
-msgstr ""
+msgstr "সাহায্য বা পরিবর্তন দরকার?"
 
 #: templates/thank-you.php:308
 msgid "Use our online lookup portal anytime to check live status or submit trip inquiries."
-msgstr ""
+msgstr "লাইভ অবস্থা দেখতে বা ট্রিপের অনুসন্ধান পাঠাতে যেকোনো সময় আমাদের অনলাইন লুকআপ পোর্টাল ব্যবহার করুন।"
 
 #: views/admin/metaboxes/availability-metabox.php:21
 msgid "Previous Month"
-msgstr ""
+msgstr "আগের মাস"
 
 #: views/admin/metaboxes/availability-metabox.php:27
 msgid "Next Month"
-msgstr ""
+msgstr "পরের মাস"
 
 #: views/admin/metaboxes/availability-metabox.php:38
 msgid "Default Capacity:"
-msgstr ""
+msgstr "ডিফল্ট ধারণক্ষমতা:"
 
 #: views/admin/metaboxes/availability-metabox.php:43
 msgid "Base Price:"
-msgstr ""
+msgstr "বেস প্রাইস:"
 
 #: views/admin/metaboxes/availability-metabox.php:62
 msgid "Availability Calendar"
-msgstr ""
+msgstr "অ্যাভেইলেবিলিটি ক্যালেন্ডার"
 
 #: views/admin/metaboxes/availability-metabox.php:70
 msgid "Custom Price Override"
-msgstr ""
+msgstr "নিজস্ব মূল্য"
 
 #: views/admin/metaboxes/availability-metabox.php:73
 msgid "Click a date to select, or hold Shift to select a date range. Use Arrow keys to navigate."
-msgstr ""
+msgstr "তারিখ নির্বাচন করতে ক্লিক করুন, অথবা তারিখের সীমা নির্বাচন করতে Shift চেপে ধরুন। চলাচলের জন্য Arrow কী ব্যবহার করুন।"
 
 #: views/admin/metaboxes/availability-metabox.php:82
 msgid "Bulk Availability & Pricing"
-msgstr ""
+msgstr "একসাথে অ্যাভেইলেবিলিটি ও মূল্য"
 
 #: views/admin/metaboxes/availability-metabox.php:85
 msgid "0 dates selected"
-msgstr ""
+msgstr "০ টি তারিখ নির্বাচিত"
 
 #: views/admin/metaboxes/availability-metabox.php:91
 msgid "Filter Selected Dates by Day:"
-msgstr ""
+msgstr "সপ্তাহের দিন অনুযায়ী নির্বাচিত তারিখ ছাঁকুন:"
 
 #: views/admin/metaboxes/availability-metabox.php:93
 msgid "Mo"
-msgstr ""
+msgstr "সোম"
 
 #: views/admin/metaboxes/availability-metabox.php:94
 msgid "Tu"
-msgstr ""
+msgstr "মঙ্গল"
 
 #: views/admin/metaboxes/availability-metabox.php:95
 msgid "We"
-msgstr ""
+msgstr "বুধ"
 
 #: views/admin/metaboxes/availability-metabox.php:96
 msgid "Th"
-msgstr ""
+msgstr "বৃহঃ"
 
 #: views/admin/metaboxes/availability-metabox.php:97
 msgid "Fr"
-msgstr ""
+msgstr "শুক্র"
 
 #: views/admin/metaboxes/availability-metabox.php:98
 msgid "Sa"
-msgstr ""
+msgstr "শনি"
 
 #: views/admin/metaboxes/availability-metabox.php:99
 msgid "Su"
-msgstr ""
+msgstr "রবি"
 
 #: views/admin/metaboxes/availability-metabox.php:106
 msgid "Status Action:"
-msgstr ""
+msgstr "স্ট্যাটাস:"
 
 #: views/admin/metaboxes/availability-metabox.php:108
 msgid "— No Status Change —"
-msgstr ""
+msgstr "— স্ট্যাটাস অপরিবর্তিত —"
 
 #: views/admin/metaboxes/availability-metabox.php:109
 msgid "🟢 Mark as Available (Open)"
-msgstr ""
+msgstr "🟢 খালি হিসেবে চিহ্নিত করুন (খোলা)"
 
 #: views/admin/metaboxes/availability-metabox.php:110
 msgid "🔴 Mark as Blocked (Closed)"
-msgstr ""
+msgstr "🔴 বন্ধ হিসেবে চিহ্নিত করুন"
 
 #: views/admin/metaboxes/availability-metabox.php:115
 msgid "Adjust Total Capacity:"
-msgstr ""
+msgstr "মোট ধারণক্ষমতা বদলান:"
 
 #: views/admin/metaboxes/availability-metabox.php:116
 msgid "Leave blank to keep current"
-msgstr ""
+msgstr "বর্তমানটি রাখতে খালি রাখুন"
 
 #: views/admin/metaboxes/availability-metabox.php:120
 msgid "Date Price Override:"
-msgstr ""
+msgstr "তারিখের নিজস্ব মূল্য:"
 
 #: views/admin/metaboxes/availability-metabox.php:121
 msgid "e.g. 199.00"
-msgstr ""
+msgstr "যেমন: 199.00"
 
 #: views/admin/metaboxes/availability-metabox.php:124
 msgid "Reset price override to default base price"
-msgstr ""
+msgstr "নিজস্ব মূল্য মুছে ডিফল্ট বেস প্রাইসে ফিরুন"
 
 #: views/admin/metaboxes/availability-metabox.php:132
 msgid "Force Block Booked Dates"
-msgstr ""
+msgstr "বুক করা তারিখও জোর করে বন্ধ করুন"
 
 #: views/admin/metaboxes/availability-metabox.php:133
 msgid "Allows closing dates that already contain bookings (existing reservations remain valid)."
-msgstr ""
+msgstr "যেসব তারিখে আগে থেকে বুকিং আছে সেগুলোও বন্ধ করা যায় (বিদ্যমান বুকিং বহাল থাকে)।"
 
 #: views/admin/metaboxes/availability-metabox.php:141
 msgid "Apply to Selected Dates"
-msgstr ""
+msgstr "নির্বাচিত তারিখে প্রয়োগ করুন"
 
 #: views/admin/metaboxes/availability-metabox.php:144
 msgid "Clear Selection"
-msgstr ""
+msgstr "নির্বাচন মুছুন"
 
 #: views/admin/metaboxes/tour-metabox.php:86
 msgid "Maximum travelers in a single booking."
-msgstr ""
+msgstr "একটি বুকিংয়ে সর্বোচ্চ ভ্রমণকারী।"
 
 #: views/admin/metaboxes/tour-metabox.php:91
 msgid "Seats per Departure"
-msgstr ""
+msgstr "প্রতি ডিপার্চারে আসন"
 
 #: views/admin/metaboxes/tour-metabox.php:92
 msgid "Same as group size"
-msgstr ""
+msgstr "গ্রুপের আকারের সমান"
 
 #: views/admin/metaboxes/tour-metabox.php:93
 msgid "Total seats sold per date across all bookings. Leave empty to use the group size."
-msgstr ""
+msgstr "সব বুকিং মিলিয়ে প্রতি তারিখে বিক্রি হওয়া মোট আসন। গ্রুপের আকার ব্যবহার করতে খালি রাখুন।"
 
 #: views/admin/metaboxes/tour-metabox.php:101
 msgid "Free / no-charge tour (allow bookings with a total of 0)"
-msgstr ""
+msgstr "বিনামূল্যের ট্যুর (মোট ০ হলেও বুকিং নেওয়া যাবে)"
 
 #: views/admin/metaboxes/tour-metabox.php:106
 msgid "Child & Infant Pricing"
-msgstr ""
+msgstr "শিশু ও নবজাতকের মূল্য"
 
 #: views/admin/metaboxes/tour-metabox.php:111
 msgid "Child Price Rule"
-msgstr ""
+msgstr "শিশুর মূল্যের নিয়ম"
 
 #: views/admin/metaboxes/tour-metabox.php:113
 msgid "Full Adult Price (100%)"
-msgstr ""
+msgstr "প্রাপ্তবয়স্কের পূর্ণ মূল্য (১০০%)"
 
 #: views/admin/metaboxes/tour-metabox.php:114
 msgid "Percentage of Adult Price (%)"
-msgstr ""
+msgstr "প্রাপ্তবয়স্কের মূল্যের শতাংশ (%)"
 
 #: views/admin/metaboxes/tour-metabox.php:115
 msgid "Fixed Price per Child"
-msgstr ""
+msgstr "প্রতি শিশুর নির্দিষ্ট মূল্য"
 
 #: views/admin/metaboxes/tour-metabox.php:116
 msgid "Free for Children"
-msgstr ""
+msgstr "শিশুদের জন্য বিনামূল্যে"
 
 #: views/admin/metaboxes/tour-metabox.php:122
 msgid "Child Value (% or Fixed $)"
-msgstr ""
+msgstr "শিশুর মান (% বা নির্দিষ্ট $)"
 
 #: views/admin/metaboxes/tour-metabox.php:131
 msgid "Child Age Range Label"
-msgstr ""
+msgstr "শিশুর বয়সসীমার লেবেল"
 
 #: views/admin/metaboxes/tour-metabox.php:132
 msgid "e.g. Age 2-11"
-msgstr ""
+msgstr "যেমন: বয়স ২-১১"
 
 #: views/admin/metaboxes/tour-metabox.php:137
 msgid "Infants Free of Charge?"
-msgstr ""
+msgstr "নবজাতক কি বিনামূল্যে?"
 
 #: views/admin/metaboxes/tour-metabox.php:139
 msgid "Yes (Free / No Seat Fee)"
-msgstr ""
+msgstr "হ্যাঁ (বিনামূল্যে / আসনের চার্জ নেই)"
 
 #: views/admin/metaboxes/tour-metabox.php:140
 msgid "No (Charge Adult Price)"
-msgstr ""
+msgstr "না (প্রাপ্তবয়স্কের মূল্য নেওয়া হবে)"
