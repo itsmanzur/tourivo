@@ -1,10 +1,10 @@
 === Tourivo ===
-Contributors: tourivo
+Contributors: itsmanzur
 Tags: travel, tour booking, hotel booking, booking engine, accommodation
 Requires at least: 6.0
 Tested up to: 7.1
 Requires PHP: 8.0
-Stable tag: 1.4.3
+Stable tag: 1.5.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -31,26 +31,34 @@ Unlike traditional heavy booking plugins, Tourivo is built with a **Zero-jQuery 
 
 ---
 
-### 🚀 Tourivo Pro (Available Extension)
-Upgrade to **Tourivo Pro** for advanced enterprise features:
-* **Tour + Hotel Combo Bundles:** Upsell hotel rooms directly inside tour checkouts with bundle discounts.
-* **Full WooCommerce Bridge:** Connect 100+ WooCommerce payment gateways, deposits, and partial payments.
-* **2-Way iCal Calendar Sync:** Sync bookings automatically with Airbnb, Booking.com, VRBO, and Google Calendar.
-* **Dynamic Pricing Engine:** Set seasonal rates, weekend hiking, early bird and last-minute discount rules.
-* **QR-Code Tickets & PDF Invoices:** Auto-generate downloadable PDF vouchers and mobile-scannable QR tickets.
-* **WhatsApp & SMS Notifications:** Instant booking updates via WhatsApp Cloud API and Twilio.
+### 🏠 Optional Travel Homepage
 
----
+Tourivo never changes your homepage, footer or menus on its own. If you want a ready-made travel storefront, turn on **Travel Homepage Layout** in the Setup Wizard or under **Tourivo -> Settings**: it adds the search bar, destinations, open tours and hotels to the homepage and fills empty theme placeholder menus with booking links.
 
-== Shortcodes ==
+### 🚀 Tourivo Pro (Separate Paid Add-on)
+Everything above is free and fully functional. **Tourivo Pro** is a separate plugin that adds:
+* **WooCommerce Payment Bridge:** Take payment through any WooCommerce payment gateway; the booking is confirmed when the order is paid.
+* **Paid Extras & Add-ons:** Sell extras such as airport transfers or extra beds, priced per booking, per night, per person or per person per night.
+* **Child & Infant Rates, Group and Seasonal Pricing:** Separate traveler rates, group discounts and seasonal or weekend price rules.
+* **Promo Codes & Custom Checkout Fields:** Coupons with usage limits and expiry, plus extra fields on the booking form.
+* **PDF Invoices, Tickets & QR Check-in:** Downloadable PDF documents with a QR code staff can scan to check guests in.
+* **iCal Room Sync:** Import and export room calendars with Airbnb, Booking.com, VRBO and Google Calendar.
+* **Customer Dashboard:** A traveler portal for trips, tickets and cancellation requests.
+
+= Shortcodes =
 
 Tourivo comes with built-in shortcodes to embed anywhere in your posts or pages:
 
 * `[tourivo_tours columns="3" count="6" destination="bali"]` – Display tour packages in a responsive grid.
 * `[tourivo_hotels columns="3" count="6" destination="maldives"]` – Display hotels & resorts in a grid.
 * `[tourivo_search_bar]` – Embed the destination, date, and traveler filter search bar.
+* `[tourivo_filter_search type="tour"]` – Search page with live destination, price and rating filters.
 * `[tourivo_booking_panel item_id="123" item_type="tour"]` – Embed the interactive booking panel for a specific item.
+* `[tourivo_booking_lookup]` – Let travelers look up a booking by code and email and print the voucher.
+* `[tourivo_thank_you]` – Booking confirmation page.
 * `[tourivo_my_bookings per_page="10" show_stats="yes"]` – Customer account portal for travelers to manage bookings, vouchers, and cancellations.
+* `[tourivo_wishlist]` – Traveler wishlist of saved tours and hotels.
+* `[tourivo_currency_switcher]` – Let visitors view prices in another currency.
 
 ---
 
@@ -70,6 +78,9 @@ No! The free version of Tourivo includes its own standalone direct booking and c
 
 = Can I customize the single tour and single hotel layouts? =
 Yes. Tourivo uses a clean template hierarchy. Simply copy `templates/single-tour.php` or `templates/single-hotel.php` to `your-theme/tourivo/` to customize the layout.
+
+= Will Tourivo change my homepage or footer? =
+No. Tourivo only adds its own pages, blocks and shortcodes. The optional **Travel Homepage Layout** setting (off by default) is the only thing that changes the homepage, footer tagline, theme credit and empty placeholder menus, and it can be switched off again at any time.
 
 = What is the minimum PHP version required? =
 Tourivo requires PHP 8.0 or higher (fully compatible with PHP 8.1, 8.2, and 8.3+).
@@ -116,6 +127,14 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 ---
 
 == Changelog ==
+
+= 1.5.0 =
+* **Open Dates & Availability Search:** Travelers can pick any open date; a month calendar shows how many tours and hotels are open each day, and totals are recalculated on the server.
+* **Search Across Listings:** The destination, date and traveler search now carries through tour and hotel archives, destination pages and single listings, with related tours and hotels in the same destination.
+* **Optional Travel Homepage Layout:** New setting (off by default, also offered in the Setup Wizard) that turns the homepage and footer into a travel storefront. Without it Tourivo leaves the homepage, footer and menus untouched.
+* **Developer:** New `tourivo/public_payment_methods` filter lets add-ons that collect payment themselves (such as a WooCommerce checkout) register their own method for public bookings, and `tourivo/travel_homepage` filter overrides the homepage layout setting.
+* **Translations:** Built-in email subjects and headings are now in the translation template; translator comments added for every placeholder string.
+* **Fix:** Report date ranges and CSV export file names use explicit UTC dates.
 
 = 1.4.3 =
 * **Offline Payment Method Expansion (Bank Transfer & Cash on Arrival):** Added dedicated offline payment method configuration allowing tour operators and hoteliers to accept direct bank deposits and cash on arrival.
@@ -178,6 +197,9 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * 1-Click Sample Travel & Accommodation Data Seeder.
 
 == Upgrade Notice ==
+
+= 1.5.0 =
+Open-date availability search across all listings. The homepage, footer and menu changes are now an opt-in setting: if you relied on them, turn on Travel Homepage Layout under Tourivo -> Settings after updating.
 
 = 1.4.3 =
 Introduces the Offline Payment Expansion suite (Structured Bank Transfer & Cash on Arrival), customer payment reference submission, and Admin payment recording tool.

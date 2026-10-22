@@ -104,7 +104,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
                                     /* translators: %d: Number of infants */
                                     $partyParts[] = sprintf(_n('%d Infant', '%d Infants', (int) $item->infants_count, 'tourivo'), (int) $item->infants_count);
                                 }
-                                echo esc_html(!empty($partyParts) ? implode(', ', $partyParts) : sprintf(__('%d Travelers', 'tourivo'), (int) $item->quantity));
+                                echo esc_html(!empty($partyParts) ? implode(', ', $partyParts) : sprintf(/* translators: %d: number of travelers */ __('%d Travelers', 'tourivo'), (int) $item->quantity));
                             ?></span>
                         </div>
                     </div>

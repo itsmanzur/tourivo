@@ -615,7 +615,7 @@ class DocumentationPage
                             <div class="pro-feature-item">
                                 <div class="pro-icon"><span class="dashicons dashicons-update"></span></div>
                                 <h4><?php esc_html_e('5. Two-Way iCal Calendar Sync (Airbnb, Booking.com)', 'tourivo'); ?></h4>
-                                <p><?php esc_html_e('Export and auto-import iCal feeds to sync room and tour availability with Airbnb, Booking.com, VRBO, and Google Calendar.', 'tourivo'); ?></p>
+                                <p><?php esc_html_e('Export and auto-import iCal feeds to sync hotel room availability with Airbnb, Booking.com, VRBO, and Google Calendar.', 'tourivo'); ?></p>
                             </div>
 
                             <div class="pro-feature-item">

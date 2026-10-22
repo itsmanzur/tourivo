@@ -284,11 +284,11 @@ class ReportsPage
                                         <div class="ranked-progress-fill" style="width: <?php echo esc_attr((string) $share); ?>%;"></div>
                                     </div>
                                     <div class="ranked-meta">
-                                        <span><?php echo esc_html(sprintf(_n('%d ticket sold', '%d tickets sold', $tour['units_sold'], 'tourivo'), $tour['units_sold'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d ticket sold', '%d tickets sold', $tour['units_sold'], 'tourivo'), $tour['units_sold'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(_n('%d traveler', '%d travelers', $tour['traveler_count'], 'tourivo'), $tour['traveler_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d traveler', '%d travelers', $tour['traveler_count'], 'tourivo'), $tour['traveler_count'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(_n('%d booking', '%d bookings', $tour['bookings_count'], 'tourivo'), $tour['bookings_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d booking', '%d bookings', $tour['bookings_count'], 'tourivo'), $tour['bookings_count'])); ?></span>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -327,11 +327,11 @@ class ReportsPage
                                         <div class="ranked-progress-fill ranked-fill-room" style="width: <?php echo esc_attr((string) $share); ?>%;"></div>
                                     </div>
                                     <div class="ranked-meta">
-                                        <span><?php echo esc_html(sprintf(_n('%d night/unit', '%d nights/units', $room['units_sold'], 'tourivo'), $room['units_sold'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d night/unit', '%d nights/units', $room['units_sold'], 'tourivo'), $room['units_sold'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(_n('%d guest', '%d guests', $room['traveler_count'], 'tourivo'), $room['traveler_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d guest', '%d guests', $room['traveler_count'], 'tourivo'), $room['traveler_count'])); ?></span>
                                         <span>&bull;</span>
-                                        <span><?php echo esc_html(sprintf(_n('%d booking', '%d bookings', $room['bookings_count'], 'tourivo'), $room['bookings_count'])); ?></span>
+                                        <span><?php echo esc_html(sprintf(/* translators: %d: count */ _n('%d booking', '%d bookings', $room['bookings_count'], 'tourivo'), $room['bookings_count'])); ?></span>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

@@ -194,6 +194,14 @@ class SetupWizard
                                     <span><?php esc_html_e('Creates "/my-bookings" allowing registered travelers to view past and upcoming trips, download vouchers, and manage reservations.', 'tourivo'); ?></span>
                                 </div>
                             </label>
+
+                            <label class="wizard-check-item">
+                                <input type="checkbox" name="pages[]" value="travel_homepage">
+                                <div class="check-text">
+                                    <strong>🏠 <?php esc_html_e('Travel Homepage Layout (optional)', 'tourivo'); ?></strong>
+                                    <span><?php esc_html_e('Adds the search bar, destinations, tours and hotels to your homepage and hides its latest-posts list. Leave unticked if your theme already has its own homepage. You can change this later in Settings.', 'tourivo'); ?></span>
+                                </div>
+                            </label>
                         </div>
 
                         <div class="wizard-footer">
@@ -828,6 +836,7 @@ class SetupWizard
         if (in_array('thankyou', $requested, true)) {
             $currentSettings['redirect_after_booking'] = 'thankyou';
         }
+        $currentSettings['travel_homepage'] = in_array('travel_homepage', $requested, true) ? 1 : 0;
 
         update_option('tourivo_settings', $currentSettings);
         wp_send_json_success(['pages' => $created]);

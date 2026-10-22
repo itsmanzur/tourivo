@@ -190,7 +190,7 @@ class Privacy
         $output .= '<p>' . esc_html__('To protect our booking endpoints against spam, automated abuse, and brute-force attempts, Tourivo stores transient cryptographic hash representations of client IP addresses. These security transients expire automatically within short windows (10 minutes).', 'tourivo') . '</p>';
 
         if (!empty($webhookUrl)) {
-            $parsedHost = parse_url($webhookUrl, PHP_URL_HOST);
+            $parsedHost = wp_parse_url($webhookUrl, PHP_URL_HOST);
             $targetHost = $parsedHost ? esc_html($parsedHost) : esc_html($webhookUrl);
 
             $output .= '<h3>' . esc_html__('External Webhook Automations', 'tourivo') . '</h3>';

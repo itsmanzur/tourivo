@@ -140,6 +140,7 @@ class MetaBoxServiceProvider extends ServiceProvider
                 'applying'        => __('Applying changes...', 'tourivo'),
                 'noDatesSelected' => __('Please select at least one date from the calendar.', 'tourivo'),
                 'noChanges'       => __('Please specify at least one change to apply (Status, Capacity, or Price).', 'tourivo'),
+                /* translators: %d: number of selected dates */
                 'selectedCount'   => __('%d date(s) selected', 'tourivo'),
                 'statusAvailable' => __('Available', 'tourivo'),
                 'statusBlocked'   => __('Blocked', 'tourivo'),

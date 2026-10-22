@@ -73,6 +73,7 @@ class Config
             'webhook_events'        => ['booking.created', 'booking.status_changed', 'inquiry.created'],
             'plugin_language'       => 'default', // 'default' (WP site default), 'en' (English), 'bn' (বাংলা)
             'use_bangla_digits'     => false,
+            'travel_homepage'       => false, // opt-in: homepage search/listings, footer tagline/credit, placeholder menus
             'tax_enabled'           => false,
             'tax_label'             => 'Tax',
             'tax_rate'              => 0.0,

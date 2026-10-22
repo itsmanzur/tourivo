@@ -1,13 +1,13 @@
 <?php
 /**
  * Plugin Name:       Tourivo
- * Plugin URI:        https://tourivo.com
+ * Plugin URI:        https://thereadscope.com/tourivo
  * Description:       The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress.
- * Version:           1.4.3
+ * Version:           1.5.0
  * Requires at least: 6.0
  * Requires PHP:      8.0
- * Author:            Tourivo Team
- * Author URI:        https://tourivo.com
+ * Author:            itsmanzur
+ * Author URI:        https://thereadscope.com
  * License:           GPL v2 or later
  * License URI:       https://www.gnu.org/licenses/gpl-2.0.html
  * Text Domain:       tourivo
@@ -21,7 +21,7 @@ if (!defined('ABSPATH')) {
 }
 
 // 1. Define Global Constants
-define('TOURIVO_VERSION', '1.4.3');
+define('TOURIVO_VERSION', '1.5.0');
 define('TOURIVO_MIN_PHP_VER', '8.0');
 define('TOURIVO_PLUGIN_FILE', __FILE__);
 define('TOURIVO_PLUGIN_DIR', plugin_dir_path(__FILE__));

@@ -656,7 +656,35 @@ class EmailService
             tourivo_load_plugin_textdomain();
         }
 
-        return __($stock, 'tourivo');
+        return $this->stockCopyTranslations()[$settingKey] ?? $value;
+    }
+
+    /**
+     * Translated built-in subjects and headings. Literal strings so they reach the translation catalog;
+     * each must stay identical to its default in Config::getDefaults().
+     *
+     * @return array<string, string>
+     */
+    private function stockCopyTranslations(): array
+    {
+        return [
+            'email_customer_booking_received_subject'  => __('Your Booking Request Received #{booking_code} - {site_name}', 'tourivo'),
+            'email_customer_booking_received_heading'  => __('Booking Request Received', 'tourivo'),
+            'email_customer_booking_confirmed_subject' => __('Your Booking Confirmation #{booking_code} - {site_name}', 'tourivo'),
+            'email_customer_booking_confirmed_heading' => __('Booking Confirmed!', 'tourivo'),
+            'email_customer_verify_email_subject'      => __('Please confirm your booking #{booking_code} - {site_name}', 'tourivo'),
+            'email_customer_verify_email_heading'      => __('Confirm Your Email Address', 'tourivo'),
+            'email_customer_booking_cancelled_subject' => __('Your Booking #{booking_code} has been Cancelled - {site_name}', 'tourivo'),
+            'email_customer_booking_cancelled_heading' => __('Booking Cancelled', 'tourivo'),
+            'email_customer_trip_reminder_subject'     => __('Upcoming Trip Reminder: #{booking_code} - {site_name}', 'tourivo'),
+            'email_customer_trip_reminder_heading'     => __('Your Trip is Coming Up Soon!', 'tourivo'),
+            'email_admin_new_booking_subject'          => __('[New Booking] #{booking_code} by {customer_name}', 'tourivo'),
+            'email_admin_new_booking_heading'          => __('New Booking Received', 'tourivo'),
+            'email_admin_booking_cancelled_subject'    => __('[Booking Cancelled] #{booking_code} - {customer_name}', 'tourivo'),
+            'email_admin_booking_cancelled_heading'    => __('Booking Cancelled Notification', 'tourivo'),
+            'email_admin_new_inquiry_subject'          => __('[New Inquiry] {item_title} from {customer_name}', 'tourivo'),
+            'email_admin_new_inquiry_heading'          => __('New Traveler Trip Inquiry', 'tourivo'),
+        ];
     }
 
     /**

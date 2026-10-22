@@ -284,7 +284,7 @@ class PaymentService
         LogService::log(
             (int) $booking->id,
             'payment_reference_submitted',
-            sprintf(__('Customer submitted transaction reference %1$s for booking #%2$s', 'tourivo'), $cleanTxn, $cleanCode)
+            sprintf(/* translators: 1: transaction reference, 2: booking code */ __('Customer submitted transaction reference %1$s for booking #%2$s', 'tourivo'), $cleanTxn, $cleanCode)
         );
 
         do_action('tourivo/payment_reference_submitted', (int) $booking->id, $cleanTxn);

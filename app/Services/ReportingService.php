@@ -30,7 +30,7 @@ class ReportingService
      */
     public function resolveDateRange(string $period = 'this_month', ?string $startDate = null, ?string $endDate = null): array
     {
-        $today = date('Y-m-d');
+        $today = gmdate('Y-m-d');
 
         switch ($period) {
             case 'today':
@@ -42,7 +42,7 @@ class ReportingService
                 ];
 
             case 'yesterday':
-                $yesterday = date('Y-m-d', strtotime('-1 day'));
+                $yesterday = gmdate('Y-m-d', strtotime('-1 day'));
                 return [
                     'start'  => $yesterday . ' 00:00:00',
                     'end'    => $yesterday . ' 23:59:59',
@@ -51,7 +51,7 @@ class ReportingService
                 ];
 
             case 'last_7_days':
-                $sevenDaysAgo = date('Y-m-d', strtotime('-6 days'));
+                $sevenDaysAgo = gmdate('Y-m-d', strtotime('-6 days'));
                 return [
                     'start'  => $sevenDaysAgo . ' 00:00:00',
                     'end'    => $today . ' 23:59:59',
@@ -60,8 +60,8 @@ class ReportingService
                 ];
 
             case 'last_month':
-                $startLastMonth = date('Y-m-01', strtotime('first day of last month'));
-                $endLastMonth   = date('Y-m-t', strtotime('last day of last month'));
+                $startLastMonth = gmdate('Y-m-01', strtotime('first day of last month'));
+                $endLastMonth   = gmdate('Y-m-t', strtotime('last day of last month'));
                 return [
                     'start'  => $startLastMonth . ' 00:00:00',
                     'end'    => $endLastMonth . ' 23:59:59',
@@ -70,7 +70,7 @@ class ReportingService
                 ];
 
             case 'this_year':
-                $startYear = date('Y-01-01');
+                $startYear = gmdate('Y-01-01');
                 return [
                     'start'  => $startYear . ' 00:00:00',
                     'end'    => $today . ' 23:59:59',
@@ -79,7 +79,7 @@ class ReportingService
                 ];
 
             case 'custom':
-                $cleanStart = !empty($startDate) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) ? $startDate : date('Y-m-01');
+                $cleanStart = !empty($startDate) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $startDate) ? $startDate : gmdate('Y-m-01');
                 $cleanEnd   = !empty($endDate) && preg_match('/^\d{4}-\d{2}-\d{2}$/', $endDate) ? $endDate : $today;
                 if ($cleanStart > $cleanEnd) {
                     $tmp        = $cleanStart;
@@ -95,7 +95,7 @@ class ReportingService
 
             case 'this_month':
             default:
-                $startMonth = date('Y-m-01');
+                $startMonth = gmdate('Y-m-01');
                 return [
                     'start'  => $startMonth . ' 00:00:00',
                     'end'    => $today . ' 23:59:59',
@@ -309,7 +309,7 @@ class ReportingService
                 if (!isset($roomMap[$itemId])) {
                     $roomMap[$itemId] = [
                         'item_id'        => $itemId,
-                        'item_title'     => $title ?: sprintf(__('Item #%d', 'tourivo'), $itemId),
+                        'item_title'     => $title ?: sprintf(/* translators: %d: item ID */ __('Item #%d', 'tourivo'), $itemId),
                         'item_type'      => $type,
                         'bookings_count' => 0,
                         'units_sold'     => 0,
@@ -325,7 +325,7 @@ class ReportingService
                 if (!isset($tourMap[$itemId])) {
                     $tourMap[$itemId] = [
                         'item_id'        => $itemId,
-                        'item_title'     => $title ?: sprintf(__('Item #%d', 'tourivo'), $itemId),
+                        'item_title'     => $title ?: sprintf(/* translators: %d: item ID */ __('Item #%d', 'tourivo'), $itemId),
                         'item_type'      => $type,
                         'bookings_count' => 0,
                         'units_sold'     => 0,
@@ -384,7 +384,7 @@ class ReportingService
             if (!isset($timeline[$day])) {
                 $timeline[$day] = [
                     'date'          => $day,
-                    'label'         => date('M j', strtotime($day)),
+                    'label'         => gmdate('M j', strtotime($day)),
                     'booking_count' => 0,
                     'revenue'       => 0.0,
                 ];
@@ -447,7 +447,7 @@ class ReportingService
         }
 
         // 1. Output UTF-8 BOM for Microsoft Excel Unicode & Bengali rendering
-        fwrite($stream, "\xEF\xBB\xBF");
+        fwrite($stream, "\xEF\xBB\xBF"); // phpcs:ignore WordPress.WP.AlternativeFunctions.file_system_operations_fwrite -- streams the CSV download to php://output, not the filesystem
 
         // 2. Accounting Report Headers
         $headers = [
@@ -566,7 +566,7 @@ class ReportingService
         // phpcs:enable WordPress.Security.NonceVerification.Missing, WordPress.Security.NonceVerification.Recommended
 
         $range    = $this->resolveDateRange($period, $startDate, $endDate);
-        $filename = 'tourivo-accounting-report-' . date('Ymd-His') . '.csv';
+        $filename = 'tourivo-accounting-report-' . gmdate('Ymd-His') . '.csv';
 
         if (!headers_sent()) {
             header('Content-Type: text/csv; charset=UTF-8');

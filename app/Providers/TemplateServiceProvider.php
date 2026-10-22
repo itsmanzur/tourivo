@@ -40,25 +40,29 @@ class TemplateServiceProvider extends ServiceProvider
         $this->addFilter('template_include', [$this, 'loadPostTemplates']);
         $this->addFilter('get_the_archive_title', [$this, 'cleanArchiveTitle'], 10, 3);
         $this->addFilter('document_title_parts', [$this, 'cleanArchiveDocumentTitle']);
-        $this->addFilter('block_core_navigation_render_fallback', [$this, 'guestNavigationFallback']);
-        $this->addFilter('block_core_navigation_render_inner_blocks', [$this, 'guestFooterNavigation']);
-        $this->addFilter('pre_render_block', [$this, 'watchFooterScope'], 20, 2);
-        $this->addFilter('render_block', [$this, 'replaceThemeFooterCredit'], 12, 2);
-        $this->addFilter('render_block', [$this, 'fillFooterTagline'], 13, 2);
 
-        // Frontend assets
+        // Frontend assets and Tourivo's own listing pages
         $this->addAction('wp_enqueue_scripts', [$this, 'enqueueFrontendAssets']);
         $this->addAction('pre_get_posts', [$this, 'filterTourSearch']);
         $this->addFilter('render_block', [$this, 'prependSearchSummary'], 10, 2);
         $this->addFilter('render_block', [$this, 'appendDestinationChips'], 10, 2);
         $this->addFilter('tourivo/place_search', [$this, 'listingSearchMarkup']);
         $this->addFilter('tourivo/related_place', [$this, 'relatedPlaceMarkup']);
-        $this->addFilter('render_block', [$this, 'prependHomeSearch'], 9, 2);
-        $this->addFilter('render_block', [$this, 'hideHomeBlog'], 11, 2);
-        $this->addAction('pre_get_posts', [$this, 'hideClassicHomePosts']);
-        $this->addFilter('the_content', [$this, 'prependHomeSearchToContent']);
         $this->addAction('loop_start', [$this, 'renderTourSearchSummary']);
-        $this->addAction('loop_start', [$this, 'renderHomeSearch']);
+
+        // The site's homepage, footer and menus belong to the owner: change them only when they opt in.
+        if ((bool) apply_filters('tourivo/travel_homepage', (bool) \Tourivo\Config\Config::get('travel_homepage', false))) {
+            $this->addFilter('block_core_navigation_render_fallback', [$this, 'guestNavigationFallback']);
+            $this->addFilter('block_core_navigation_render_inner_blocks', [$this, 'guestFooterNavigation']);
+            $this->addFilter('pre_render_block', [$this, 'watchFooterScope'], 20, 2);
+            $this->addFilter('render_block', [$this, 'replaceThemeFooterCredit'], 12, 2);
+            $this->addFilter('render_block', [$this, 'fillFooterTagline'], 13, 2);
+            $this->addFilter('render_block', [$this, 'prependHomeSearch'], 9, 2);
+            $this->addFilter('render_block', [$this, 'hideHomeBlog'], 11, 2);
+            $this->addAction('pre_get_posts', [$this, 'hideClassicHomePosts']);
+            $this->addFilter('the_content', [$this, 'prependHomeSearchToContent']);
+            $this->addAction('loop_start', [$this, 'renderHomeSearch']);
+        }
 
         // Live Filter AJAX
         $this->addAction('wp_ajax_tourivo_filter_items', [$this, 'handleFilterItems']);
@@ -262,7 +266,7 @@ class TemplateServiceProvider extends ServiceProvider
         $labels = [];
         foreach ($sources as $source) {
             $labels[] = $source;
-            $labels[] = __($source, 'twentytwentyfive');
+            $labels[] = $this->themeText($source);
         }
 
         return array_values(array_unique($labels));
@@ -436,7 +440,7 @@ class TemplateServiceProvider extends ServiceProvider
     {
         return array_values(array_unique([
             'Twenty Twenty-Five',
-            __('Twenty Twenty-Five', 'twentytwentyfive'),
+            $this->themeText('Twenty Twenty-Five'),
         ]));
     }
 
@@ -447,8 +451,19 @@ class TemplateServiceProvider extends ServiceProvider
     {
         return array_values(array_unique([
             'Designed with WordPress',
-            sprintf(__('Designed with %s', 'twentytwentyfive'), 'WordPress'),
+            sprintf($this->themeText('Designed with %s'), 'WordPress'),
         ]));
+    }
+
+    /**
+     * The default theme's own translation of one of its strings, used only to recognise its placeholder text.
+     * Read from the theme's loaded catalog so these strings are not added to Tourivo's.
+     */
+    private function themeText(string $text): string
+    {
+        $translated = get_translations_for_domain('twentytwentyfive')->translate($text);
+
+        return is_string($translated) ? $translated : $text;
     }
 
     /**
@@ -678,14 +693,18 @@ class TemplateServiceProvider extends ServiceProvider
                     __('December', 'tourivo'),
                 ],
                 'soldOut'      => __('Sold out', 'tourivo'),
+                /* translators: %d: seats left */
                 'left'         => __('%d left', 'tourivo'),
                 'anyDay'       => __('Any day', 'tourivo'),
+                /* translators: %d: number of tours */
                 'toursOpen'    => __('%d tours open', 'tourivo'),
+                /* translators: %d: number of hotels */
                 'hotelsOpen'   => __('%d hotels open', 'tourivo'),
                 'datesHint'    => __('Each date shows open tours, then open hotels.', 'tourivo'),
                 'loading'      => __('Loading dates...', 'tourivo'),
                 'pickCheckout' => __('Now choose a check-out date.', 'tourivo'),
                 'closedRange'  => __('Those nights are not fully open. Choose another check-out.', 'tourivo'),
+                /* translators: 1: check-in date, 2: check-out date */
                 'range'        => __('Check-in: %1$s | Check-out: %2$s', 'tourivo'),
             ],
         ]);
@@ -829,7 +848,7 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $text = trim(wp_strip_all_tags((string) ($block['innerHTML'] ?? '')));
-        $label = __('Blog', 'twentytwentyfive');
+        $label = $this->themeText('Blog');
 
         return $text !== '' && ($text === $label || $text === 'Blog');
     }
@@ -1239,7 +1258,6 @@ class TemplateServiceProvider extends ServiceProvider
             'order'            => 'DESC',
             'fields'           => 'ids',
             'no_found_rows'    => true,
-            'suppress_filters' => true,
             'tax_query'        => [
                 [
                     'taxonomy' => 'tourivo_destination',
@@ -1385,28 +1403,28 @@ class TemplateServiceProvider extends ServiceProvider
             $pretty = $stamp > 0
                 ? ((int) wp_date('j', $stamp)) . ' ' . ($months[(int) wp_date('n', $stamp) - 1] ?? '')
                 : $date;
-            $tourBit = sprintf(_n('%d tour', '%d tours', $count, 'tourivo'), $count);
-            $hotelBit = sprintf(_n('%d hotel', '%d hotels', $hotelCount, 'tourivo'), $hotelCount);
+            $tourBit = sprintf(/* translators: %d: number of tours */ _n('%d tour', '%d tours', $count, 'tourivo'), $count);
+            $hotelBit = sprintf(/* translators: %d: number of hotels */ _n('%d hotel', '%d hotels', $hotelCount, 'tourivo'), $hotelCount);
             if ($count > 0 && $hotelCount > 0) {
-                $message = sprintf(__('%1$s and %2$s are open on %3$s for %4$d travelers.', 'tourivo'), $tourBit, $hotelBit, $pretty, $guests);
+                $message = sprintf(/* translators: 1: tour count text, 2: hotel count text, 3: date, 4: number of travelers */ __('%1$s and %2$s are open on %3$s for %4$d travelers.', 'tourivo'), $tourBit, $hotelBit, $pretty, $guests);
             } elseif ($count > 0) {
                 $tourPattern = $guests === 1
-                    ? _n('%1$d tour is open on %2$s for %3$d traveler.', '%1$d tours are open on %2$s for %3$d traveler.', $count, 'tourivo')
-                    : _n('%1$d tour is open on %2$s for %3$d travelers.', '%1$d tours are open on %2$s for %3$d travelers.', $count, 'tourivo');
+                    ? /* translators: 1: number of tours, 2: date, 3: number of travelers */ _n('%1$d tour is open on %2$s for %3$d traveler.', '%1$d tours are open on %2$s for %3$d traveler.', $count, 'tourivo')
+                    : /* translators: 1: number of tours, 2: date, 3: number of travelers */ _n('%1$d tour is open on %2$s for %3$d travelers.', '%1$d tours are open on %2$s for %3$d travelers.', $count, 'tourivo');
                 $message = sprintf($tourPattern, $count, $pretty, $guests);
             } elseif ($hotelCount > 0) {
-                $message = sprintf(_n('%1$s is open on %2$s for %3$d travelers.', '%1$s are open on %2$s for %3$d travelers.', $hotelCount, 'tourivo'), $hotelBit, $pretty, $guests);
+                $message = sprintf(/* translators: 1: hotel count text, 2: date, 3: number of travelers */ _n('%1$s is open on %2$s for %3$d travelers.', '%1$s are open on %2$s for %3$d travelers.', $hotelCount, 'tourivo'), $hotelBit, $pretty, $guests);
             } else {
                 $message = __('No tours or hotels are open on that day. Try another date.', 'tourivo');
             }
             if ($place !== '') {
-                $message .= ' ' . sprintf(__('Destination: %s', 'tourivo'), $place);
+                $message .= ' ' . sprintf(/* translators: %s: destination */ __('Destination: %s', 'tourivo'), $place);
             }
         } elseif ($destination !== '') {
             $label = $place !== '' ? $place : $destination;
             $message = $hotelCount > 0
-                ? sprintf(__('Tours and hotels in %s.', 'tourivo'), $label)
-                : sprintf(__('Tours in %s.', 'tourivo'), $label);
+                ? sprintf(/* translators: %s: destination */ __('Tours and hotels in %s.', 'tourivo'), $label)
+                : sprintf(/* translators: %s: destination */ __('Tours in %s.', 'tourivo'), $label);
         } else {
             $message = '';
         }

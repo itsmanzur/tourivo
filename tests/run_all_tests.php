@@ -38,6 +38,7 @@ require_once __DIR__ . '/Integration/MyBookingsPortalTest.php';
 require_once __DIR__ . '/Integration/ExportReportingTest.php';
 require_once __DIR__ . '/Integration/ReportsAnalyticsTest.php';
 require_once __DIR__ . '/Integration/OfflinePaymentTest.php';
+require_once __DIR__ . '/Integration/TravelHomepageOptInTest.php';
 
 echo "=====================================================\n";
 echo "           Tourivo Automated Test Suite\n";
@@ -68,6 +69,7 @@ $testClasses = [
     \Tourivo\Tests\Integration\ExportReportingTest::class,
     \Tourivo\Tests\Integration\ReportsAnalyticsTest::class,
     \Tourivo\Tests\Integration\OfflinePaymentTest::class,
+    \Tourivo\Tests\Integration\TravelHomepageOptInTest::class,
 ];
 
 $totalTests = 0;

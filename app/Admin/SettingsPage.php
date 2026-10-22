@@ -99,7 +99,8 @@ class SettingsPage
             'thousand_separator'      => self::choice('thousand_separator', [',', '.', ' ', ''], ','),
             'plugin_language'         => self::choice('plugin_language', ['default', 'en', 'bn'], 'default'),
             'use_bangla_digits'       => isset($_POST['use_bangla_digits']) ? 1 : 0,
-            'tax_enabled'             => isset($_POST['tax_enabled']) ? 1 : 0,
+            'travel_homepage'         => isset($_POST['travel_homepage']) ? 1 : 0,
+            'tax_enabled'           => isset($_POST['tax_enabled']) ? 1 : 0,
             'tax_label'               => sanitize_text_field(wp_unslash($_POST['tax_label'] ?? 'Tax')),
             'tax_rate'                => min(100.0, max(0.0, (float) sanitize_text_field(wp_unslash($_POST['tax_rate'] ?? '0')))),
             'tax_mode'                => self::choice('tax_mode', ['exclusive', 'inclusive'], 'exclusive'),
@@ -215,7 +216,8 @@ class SettingsPage
         $thousandSep       = (string) Config::get('thousand_separator', ',');
         $pluginLanguage    = Config::get('plugin_language', 'default');
         $useBanglaDigits   = Config::get('use_bangla_digits', 0);
-        $taxEnabled        = Config::get('tax_enabled', 0);
+        $travelHomepage    = Config::get('travel_homepage', 0);
+        $taxEnabled      = Config::get('tax_enabled', 0);
         $taxLabel          = Config::get('tax_label', 'Tax');
         $taxRate           = Config::get('tax_rate', 0.0);
         $taxMode           = Config::get('tax_mode', 'exclusive');
@@ -626,6 +628,17 @@ class SettingsPage
                                         <input name="use_bangla_digits" type="checkbox" id="use_bangla_digits" value="1" <?php checked($useBanglaDigits, 1); ?>>
                                         <?php esc_html_e('Render prices and counters in Bengali digits (যেমন: ৳১,৫০০, ৩ জন)', 'tourivo'); ?>
                                     </label>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Travel Homepage Layout', 'tourivo'); ?></th>
+                                <td>
+                                    <label for="travel_homepage">
+                                        <input name="travel_homepage" type="checkbox" id="travel_homepage" value="1" <?php checked($travelHomepage, 1); ?>>
+                                        <?php esc_html_e('Turn the site homepage and footer into a travel storefront', 'tourivo'); ?>
+                                    </label>
+                                    <p class="description"><?php esc_html_e('Adds the search bar, destinations, open tours and hotels to the homepage and hides the latest-posts list there. In the footer it shows a short tagline when yours is empty, replaces the default theme credit with your site name, and fills empty theme placeholder menus with booking links. Menus and footer text you have set yourself are kept. Leave this off if your theme already has its own homepage.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
                         </table>

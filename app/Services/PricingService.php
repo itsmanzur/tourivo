@@ -159,7 +159,7 @@ class PricingService
             if ($children > 0) {
                 $childLabel = $tour->getChildAgeLabel();
                 $lines[] = [
-                    'title'    => !empty($childLabel) ? sprintf(__('Children (%s)', 'tourivo'), $childLabel) : __('Children', 'tourivo'),
+                    'title'    => !empty($childLabel) ? sprintf(/* translators: %s: child age range */ __('Children (%s)', 'tourivo'), $childLabel) : __('Children', 'tourivo'),
                     'quantity' => $children,
                     'rate'     => $childDailyRate,
                     'total'    => $childSubtotal,
