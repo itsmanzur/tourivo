@@ -905,6 +905,26 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 $this->rows_affected = 1;
                 return 1;
             }
+
+            public function delete(string $table, array $where, ?array $where_format = null): int|bool {
+                $deleted = 0;
+                if (stripos($table, 'tourivo_booking_items') !== false) {
+                    foreach ($this->booking_items as $k => $item) {
+                        if (isset($where['booking_id']) && (int) $item['booking_id'] === (int) $where['booking_id']) {
+                            unset($this->booking_items[$k]);
+                            $deleted++;
+                        }
+                    }
+                } elseif (stripos($table, 'tourivo_bookings') !== false) {
+                    $id = (int) ($where['id'] ?? 0);
+                    if (isset($this->bookings[$id])) {
+                        unset($this->bookings[$id]);
+                        $deleted = 1;
+                    }
+                }
+                $this->rows_affected = $deleted;
+                return $deleted;
+            }
         }
     }
 

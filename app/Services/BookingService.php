@@ -335,8 +335,9 @@ class BookingService
         } else {
             $bookingStatus        = $this->defaultBookingStatus();
             $paymentStatus        = 'pending';
-            $allowedPublicMethods = ['offline', 'bank_transfer', 'cash_on_arrival'];
-            $reqMethod            = sanitize_text_field((string) ($data['payment_method'] ?? 'offline'));
+            // Add-ons that collect payment themselves (e.g. a WooCommerce checkout) register their method here.
+            $allowedPublicMethods = (array) apply_filters('tourivo/public_payment_methods', ['offline', 'bank_transfer', 'cash_on_arrival'], $data);
+            $reqMethod           = sanitize_text_field((string) ($data['payment_method'] ?? 'offline'));
             $paymentMethod        = in_array($reqMethod, $allowedPublicMethods, true) ? $reqMethod : 'offline';
         }
 
