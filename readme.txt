@@ -136,6 +136,9 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * **Developer:** New `tourivo/public_payment_methods` filter lets add-ons that collect payment themselves (such as a WooCommerce checkout) register their own method for public bookings, and `tourivo/travel_homepage` filter overrides the homepage layout setting. `tourivo/booking_price` filters can return an `adjustments` list (title and amount, negative for discounts) to itemise their changes.
 * **Translations:** Built-in email subjects and headings are now in the translation template; translator comments added for every placeholder string.
 * **Fix:** Report date ranges and CSV export file names use explicit UTC dates.
+* **Typography:** Tourivo now uses your theme's font by default, so booking panels and listings look like part of your site, and shows Bengali text in Anek Bangla on every site (the font downloads only on pages with Bengali). New Font setting under Appearance: theme font, Anek Bangla everywhere, or the device font.
+* **Typography:** One type scale (7 sizes instead of 20, nothing below 12px, sizes follow the visitor's browser text size), calmer weights, more line height for Bengali, aligned numbers in prices and calendars, and 16px form fields on phones so they no longer zoom the page.
+* **Typography:** Hind Siliguri replaced by Anek Bangla (one variable file for all weights); Tourivo no longer overrides the WordPress admin font with `!important`.
 
 = 1.4.3 =
 * **Offline Payment Method Expansion (Bank Transfer & Cash on Arrival):** Added dedicated offline payment method configuration allowing tour operators and hoteliers to accept direct bank deposits and cash on arrival.
@@ -225,5 +228,5 @@ Initial release of Tourivo.
 
 == Credits ==
 
-* **Hind Siliguri Font** by Indian Type Foundry (https://github.com/itfoundry/hind-siliguri), licensed under SIL Open Font License 1.1 (assets/fonts/OFL.txt).
+* **Anek Bangla Font** by The Anek Project Authors / Ek Type (https://github.com/EkType/Anek), licensed under SIL Open Font License 1.1 (assets/fonts/OFL.txt).
 

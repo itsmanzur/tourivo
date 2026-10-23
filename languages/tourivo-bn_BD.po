@@ -19,7 +19,7 @@ msgid " | %d Travelers"
 msgstr " | %d জন ভ্রমণকারী"
 
 #. translators: 1: Adults count, 2: Children count
-#: app/Providers/MetaBoxServiceProvider.php:291
+#: app/Providers/MetaBoxServiceProvider.php:284
 #, php-format
 msgid "%1$d Adults, %2$d Children"
 msgstr "%1$d জন প্রাপ্তবয়স্ক, %2$d জন শিশু"
@@ -169,7 +169,7 @@ msgstr "৮+ দিন"
 msgid "About this Property"
 msgstr "এই প্রপার্টি সম্পর্কে"
 
-#: app/Admin/SettingsPage.php:752
+#: app/Admin/SettingsPage.php:754
 msgid "Accent / Badge Color"
 msgstr "অ্যাকসেন্ট / ব্যাজের রঙ"
 
@@ -177,7 +177,7 @@ msgstr "অ্যাকসেন্ট / ব্যাজের রঙ"
 msgid "Accept Stripe, PayPal, bKash, Nagad, Mollie, Razorpay, Authorize.net, and COD with automated inventory commit on payment."
 msgstr "Stripe, PayPal, বিকাশ, নগদ, Mollie, Razorpay, Authorize.net এবং ক্যাশ অন ডেলিভারির মাধ্যমে পেমেন্ট গ্রহণ করুন।"
 
-#: app/Providers/AdminServiceProvider.php:896
+#: app/Providers/AdminServiceProvider.php:889
 msgid "Access denied. Invalid voucher security token."
 msgstr "প্রবেশাধিকার প্রত্যাখ্যাত। অবৈধ ভাউচার সিকিউরিটি টোকেন।"
 
@@ -294,7 +294,7 @@ msgstr "প্রাপ্তবয়স্ক"
 msgid "Adults *"
 msgstr "প্রাপ্তবয়স্ক *"
 
-#: app/Admin/SettingsPage.php:367
+#: app/Admin/SettingsPage.php:369
 msgid "Advanced & System"
 msgstr "অ্যাডভান্সড ও সিস্টেম"
 
@@ -441,11 +441,11 @@ msgstr "পেছনে"
 msgid "Base Currency"
 msgstr "মূল মুদ্রা"
 
-#: app/Admin/SettingsPage.php:378
+#: app/Admin/SettingsPage.php:380
 msgid "Base Currency & Pricing Options"
 msgstr "মূল মুদ্রা ও মূল্য নির্ধারণ বিকল্প"
 
-#: app/Admin/SettingsPage.php:381
+#: app/Admin/SettingsPage.php:383
 msgid "Base Currency Code"
 msgstr "মূল মুদ্রার কোড"
 
@@ -477,11 +477,11 @@ msgstr "বেড কনফিগারেশন"
 msgid "Bed Styles & Dimensions"
 msgstr "বেড স্টাইল ও সাইজ"
 
-#: app/Admin/SettingsPage.php:1173
+#: app/Admin/SettingsPage.php:1186
 msgid "Behind Cloudflare / Reverse Proxy"
 msgstr "ক্লাউডফ্লেয়ার / রিভার্স প্রক্সির পেছনে"
 
-#: app/Admin/SettingsPage.php:625
+#: app/Admin/SettingsPage.php:627
 msgid "Bengali Numbers / বাংলা সংখ্যা"
 msgstr "বাংলা সংখ্যা"
 
@@ -489,7 +489,7 @@ msgstr "বাংলা সংখ্যা"
 msgid "Book Now (Pay Offline)"
 msgstr "এখনই বুক করুন (অফলাইনে পরিশোধ)"
 
-#: app/Providers/TemplateServiceProvider.php:362
+#: app/Providers/TemplateServiceProvider.php:363
 msgid "Book tours and hotels"
 msgstr "ট্যুর ও হোটেল বুক করুন"
 
@@ -598,8 +598,8 @@ msgstr "বুকিং ভাউচার #%1$s — %2$s"
 msgid "Booking created successfully! Your booking code is #%s."
 msgstr "বুকিং সফলভাবে সম্পন্ন হয়েছে! আপনার বুকিং কোড হলো #%s।"
 
-#: app/Providers/AdminServiceProvider.php:887
-#: app/Providers/AdminServiceProvider.php:939
+#: app/Providers/AdminServiceProvider.php:880
+#: app/Providers/AdminServiceProvider.php:932
 #: app/Services/BookingService.php:585
 #: app/Shortcodes/MyBookingsShortcode.php:325
 #: app/Shortcodes/MyBookingsShortcode.php:380
@@ -626,7 +626,7 @@ msgstr "বুকিং স্ট্যাটাস ইতিমধ্যে প
 msgid "Booking status unchanged."
 msgstr "বুকিং স্ট্যাটাস অপরিবর্তিত রয়েছে।"
 
-#: app/Providers/TemplateServiceProvider.php:663
+#: app/Providers/TemplateServiceProvider.php:657
 msgid "Booking successful!"
 msgstr "বুকিং সফল হয়েছে!"
 
@@ -635,7 +635,7 @@ msgstr "বুকিং সফল হয়েছে!"
 msgid "Bookings"
 msgstr "বুকিং তালিকা"
 
-#: app/Admin/SettingsPage.php:732
+#: app/Admin/SettingsPage.php:734
 msgid "Brand Color Customizer & Styling"
 msgstr "ব্র্যান্ড কালার ও স্টাইলিং কাস্টমাইজার"
 
@@ -651,7 +651,7 @@ msgstr "রুম ও হোটেলসমূহ দেখুন"
 msgid "Browse travel packages"
 msgstr "ট্যুর প্যাকেজগুলো ঘুরে দেখুন"
 
-#: app/Admin/SettingsPage.php:760
+#: app/Admin/SettingsPage.php:762
 msgid "Button Text Color"
 msgstr "বাটনের লেখার রঙ"
 
@@ -673,11 +673,11 @@ msgstr "বাতিলকৃত"
 msgid "Cannot reactivate booking. Required inventory spots are no longer available."
 msgstr "বুকিং পুনরায় সক্রিয় করা সম্ভব নয়। প্রয়োজনীয় খালি আসন আর উপলব্ধ নেই।"
 
-#: app/Providers/MetaBoxServiceProvider.php:258
+#: app/Providers/MetaBoxServiceProvider.php:251
 msgid "Capacity"
 msgstr "ধারণক্ষমতা"
 
-#: app/Admin/SettingsPage.php:1201
+#: app/Admin/SettingsPage.php:1214
 msgid "Check this box if you want to completely erase custom database tables and settings when the plugin is deleted."
 msgstr "প্লাগইন ডিলিট করার সময় কাস্টম ডাটাবেজ টেবিল এবং সেটিংস সম্পূর্ণ মুছে ফেলতে চাইলে টিক দিন।"
 
@@ -700,7 +700,7 @@ msgstr "চেক-ইন তারিখ:"
 
 #. translators: 1: check-in date, 2: check-out date
 #. translators: 1: Check-in time, 2: Check-out time
-#: app/Providers/TemplateServiceProvider.php:708
+#: app/Providers/TemplateServiceProvider.php:702
 #: templates/single-hotel.php:48
 #, php-format
 msgid "Check-in: %1$s | Check-out: %2$s"
@@ -739,11 +739,11 @@ msgstr "শিশু"
 msgid "Children"
 msgstr "শিশু"
 
-#: app/Admin/SettingsPage.php:620
+#: app/Admin/SettingsPage.php:622
 msgid "Choose whether Tourivo displays in English or Bengali across the admin panel, booking forms, vouchers, and notifications."
 msgstr "অ্যাডমিন প্যানেল, বুকিং ফর্ম, ভাউচার এবং বিজ্ঞপ্তিতে ট্যুরিতো ইংরেজি নাকি বাংলায় প্রদর্শিত হবে তা বেছে নিন।"
 
-#: app/Providers/MetaBoxServiceProvider.php:213
+#: app/Providers/MetaBoxServiceProvider.php:206
 msgid "City"
 msgstr "শহর"
 
@@ -784,7 +784,7 @@ msgstr "বন্ধ করুন"
 msgid "Closed"
 msgstr "সম্পন্ন / বন্ধ"
 
-#: app/Admin/SettingsPage.php:1177
+#: app/Admin/SettingsPage.php:1190
 msgid "Cloudflare (Trust CF-Connecting-IP only from Cloudflare IPs)"
 msgstr "ক্লাউডফ্লেয়ার (শুধুমাত্র ক্লাউডফ্লেয়ার আইপি থেকে CF-Connecting-IP গ্রহণ করুন)"
 
@@ -819,7 +819,7 @@ msgstr "সেটিংস কনফিগার করুন"
 msgid "Configure your business name and default pricing currency."
 msgstr "আপনার ব্যবসা প্রতিষ্ঠানের নাম এবং ডিফল্ট মুদ্রা কনফিগার করুন।"
 
-#: app/Admin/SettingsPage.php:345
+#: app/Admin/SettingsPage.php:347
 msgid "Configure your currency rates, booking defaults, design styling, SEO, and Webhooks."
 msgstr "আপনার মুদ্রার হার, বুকিং ডিফল্ট, ডিজাইন স্টাইল, এসইও এবং ওয়েবহুক কনফিগার করুন।"
 
@@ -938,12 +938,12 @@ msgstr "\"/wishlist\" পেজ তৈরি করে যার মাধ্য
 msgid "Creating Pages..."
 msgstr "পেজ তৈরি করা হচ্ছে..."
 
-#: app/Admin/SettingsPage.php:489
+#: app/Admin/SettingsPage.php:491
 #: app/Services/ExportService.php:337
 msgid "Currency"
 msgstr "মুদ্রা / কারেন্সি"
 
-#: app/Admin/SettingsPage.php:398
+#: app/Admin/SettingsPage.php:400
 #: app/Admin/SetupWizard.php:109
 msgid "Currency Symbol"
 msgstr "মুদ্রার প্রতীক"
@@ -952,7 +952,7 @@ msgstr "মুদ্রার প্রতীক"
 msgid "Custom Item ID (Leave 0 for Current Page)"
 msgstr "কাস্টম আইটেম আইডি (বর্তমান পেজের জন্য ০ রাখুন)"
 
-#: app/Admin/SettingsPage.php:1184
+#: app/Admin/SettingsPage.php:1197
 msgid "Custom Trusted Proxies"
 msgstr "কাস্টম বিশ্বস্ত প্রক্সিসমূহ"
 
@@ -1018,11 +1018,11 @@ msgstr "গ্রাহক:"
 msgid "Dashboard"
 msgstr "ড্যাশবোর্ড"
 
-#: app/Admin/SettingsPage.php:1194
+#: app/Admin/SettingsPage.php:1207
 msgid "Data Deletion on Uninstall"
 msgstr "আনইনস্টল করার সময় ডাটা মুছে ফেলা"
 
-#: app/Admin/SettingsPage.php:1226
+#: app/Admin/SettingsPage.php:1239
 msgid "Database Schema Version"
 msgstr "ডাটাবেজ স্কিমা ভার্সন"
 
@@ -1073,7 +1073,7 @@ msgstr "দৈনিক ভ্রমণসূচি"
 msgid "Dedicated traveler portal displaying upcoming trips, past itineraries, 1-click PDF vouchers, and guest lookup form."
 msgstr "ভ্রমণকারীদের নিজস্ব পোর্টাল যেখানে আসন্ন ট্রিপ, অতীত ভ্রমণ ইতিহাস, ১-ক্লিক পিডিএফ ভাউচার ও অতিথি অনুসন্ধান সুবিধা রয়েছে।"
 
-#: app/Admin/SettingsPage.php:510
+#: app/Admin/SettingsPage.php:512
 msgid "Default Booking Status"
 msgstr "ডিফল্ট বুকিং স্ট্যাটাস"
 
@@ -1093,7 +1093,7 @@ msgstr "ডেমো কন্টেন্ট ইতিমধ্যে ইমপ
 msgid "Description & Details"
 msgstr "বিবরণ ও বিস্তারিত"
 
-#: app/Admin/SettingsPage.php:355
+#: app/Admin/SettingsPage.php:357
 msgid "Design & SEO"
 msgstr "ডিজাইন ও এসইও"
 
@@ -1110,7 +1110,7 @@ msgid "Destination, date and traveler search filter bar."
 msgstr "গন্তব্য, তারিখ ও ভ্রমণকারী অনুসন্ধানের ফিল্টার বার।"
 
 #: app/PostTypes/TourPostType.php:103
-#: app/Providers/TemplateServiceProvider.php:1004
+#: app/Providers/TemplateServiceProvider.php:998
 msgid "Destinations"
 msgstr "গন্তব্যসমূহ"
 
@@ -1122,7 +1122,7 @@ msgstr "সেই দিনের বিস্তারিত কার্যক
 msgid "Details"
 msgstr "বিস্তারিত"
 
-#: app/Admin/SettingsPage.php:1176
+#: app/Admin/SettingsPage.php:1189
 msgid "Disabled (Standard direct connection / REMOTE_ADDR)"
 msgstr "নিষ্ক্রিয় (সরাসরি সাধারণ সংযোগ / REMOTE_ADDR)"
 
@@ -1163,7 +1163,7 @@ msgstr "স্টার রেটিং এবং প্রারম্ভিক
 msgid "Docs & Features"
 msgstr "ডকুমেন্টেশন ও ফিচার"
 
-#: app/Providers/AdminServiceProvider.php:352
+#: app/Providers/AdminServiceProvider.php:345
 msgid "Docs & Features Hub"
 msgstr "ডকুমেন্টেশন ও ফিচার হাব"
 
@@ -1179,7 +1179,7 @@ msgstr "ড্রপ-অফ লোকেশন"
 msgid "Drop-off Point:"
 msgstr "ড্রপ-অফ স্থান:"
 
-#: app/Providers/MetaBoxServiceProvider.php:167
+#: app/Providers/MetaBoxServiceProvider.php:160
 #: app/Shortcodes/FilterSearchShortcode.php:104
 msgid "Duration"
 msgstr "সময়কাল"
@@ -1240,7 +1240,7 @@ msgstr "এলিমেন্টর পেজ বিল্ডার"
 msgid "Email Address *"
 msgstr "ইমেইল ঠিকানা *"
 
-#: app/Admin/SettingsPage.php:358
+#: app/Admin/SettingsPage.php:360
 msgid "Email Notifications"
 msgstr "ইমেল নোটিফিকেশন"
 
@@ -1254,15 +1254,15 @@ msgstr "ইমেইল:"
 msgid "Embed a direct booking box anywhere."
 msgstr "যেকোনো জায়গায় সরাসরি বুকিং বক্স যুক্ত করুন।"
 
-#: app/Admin/SettingsPage.php:788
+#: app/Admin/SettingsPage.php:801
 msgid "Enable automatic Schema.org structured data on Tour and Hotel pages."
 msgstr "ট্যুর ও হোটেল পেজগুলোতে স্বয়ংক্রিয় Schema.org স্ট্রাকচার্ড ডাটা সক্রিয় করুন।"
 
-#: app/Admin/SettingsPage.php:798
+#: app/Admin/SettingsPage.php:811
 msgid "Enable rich social sharing preview cards on Facebook, WhatsApp, and Twitter / X."
 msgstr "ফেসবুক, হোয়াটসঅ্যাপ এবং টুইটার / এক্স-এ আকর্ষণীয় সোশ্যাল শেয়ারিং প্রিভিউ কার্ড সক্রিয় করুন।"
 
-#: app/Admin/SettingsPage.php:1180
+#: app/Admin/SettingsPage.php:1193
 msgid "Enable this if your website is behind Cloudflare, AWS CloudFront, Nginx reverse proxy, or load balancers for accurate client IP detection."
 msgstr "সঠিক ক্লায়েন্ট আইপি শনাক্তকরণের জন্য আপনার সাইট ক্লাউডফ্লেয়ার বা রিভার্স প্রক্সির পেছনে থাকলে এটি সক্রিয় করুন।"
 
@@ -1288,11 +1288,11 @@ msgstr "ঠিকানা, শহর, ফোন নম্বর এবং ই�
 msgid "Enter your booking reference code and email to check your reservation status and download your voucher."
 msgstr "আপনার বুকিং রেফারেন্স কোড ও ইমেইল দিয়ে স্ট্যাটাস জানুন এবং ভাউচার ডাউনলোড করুন।"
 
-#: app/Admin/SettingsPage.php:1197
+#: app/Admin/SettingsPage.php:1210
 msgid "Erase Data on Delete"
 msgstr "প্লাগইন মুছে ফেলার সাথে ডাটা সম্পূর্ণ মুছুন"
 
-#: app/Admin/SettingsPage.php:491
+#: app/Admin/SettingsPage.php:493
 msgid "Exchange Rate (vs 1 Base)"
 msgstr "বিনিময় হার (১ মূল মুদ্রার সাপেক্ষে)"
 
@@ -1366,15 +1366,15 @@ msgstr "ফ্রি কোর"
 msgid "Failed to commit inventory. Selected slots are no longer available."
 msgstr "ইনভেন্টরি নিশ্চিত করতে ব্যর্থ হয়েছে। নির্বাচিত স্লটগুলো আর ফাঁকা নেই।"
 
-#: app/Providers/AdminServiceProvider.php:662
+#: app/Providers/AdminServiceProvider.php:655
 msgid "Failed to create manual booking."
 msgstr "ম্যানুয়াল বুকিং তৈরি করতে ব্যর্থ হয়েছে।"
 
-#: app/Providers/AdminServiceProvider.php:722
+#: app/Providers/AdminServiceProvider.php:715
 msgid "Failed to delete inquiry."
 msgstr "ইনকোয়ারি মুছতে ব্যর্থ হয়েছে।"
 
-#: app/Providers/AdminServiceProvider.php:856
+#: app/Providers/AdminServiceProvider.php:849
 msgid "Failed to record note."
 msgstr "নোট সংরক্ষণ করতে ব্যর্থ হয়েছে।"
 
@@ -1382,7 +1382,7 @@ msgstr "নোট সংরক্ষণ করতে ব্যর্থ হয়�
 msgid "Failed to save your inquiry. Please try again later."
 msgstr "আপনার অনুসন্ধান সংরক্ষণ করা যায়নি। অনুগ্রহ করে পরবর্তীতে আবার চেষ্টা করুন।"
 
-#: app/Providers/AdminServiceProvider.php:701
+#: app/Providers/AdminServiceProvider.php:694
 msgid "Failed to update inquiry status."
 msgstr "ইনকোয়ারি স্ট্যাটাস আপডেট করতে ব্যর্থ হয়েছে।"
 
@@ -1399,19 +1399,19 @@ msgstr "নতুন, উত্তর দেওয়া হয়েছে, বা �
 msgid "Filters tours belonging only to a specific destination slug."
 msgstr "শুধুমাত্র একটি নির্দিষ্ট গন্তব্যের ট্যুরগুলো ফিল্টার করে দেখায়।"
 
-#: app/Providers/TemplateServiceProvider.php:940
+#: app/Providers/TemplateServiceProvider.php:934
 msgid "Find your next tour or hotel."
 msgstr "আপনার পরের ট্যুর বা হোটেল খুঁজুন।"
 
-#: app/Admin/SettingsPage.php:1010
+#: app/Admin/SettingsPage.php:1023
 msgid "Fired when a booking status changes (confirmed, cancelled, completed)."
 msgstr "বুকিংয়ের স্ট্যাটাস পরিবর্তিত হলে (নিশ্চিত, বাতিল, সম্পন্ন) ট্রিগার হয়।"
 
-#: app/Admin/SettingsPage.php:1014
+#: app/Admin/SettingsPage.php:1027
 msgid "Fired when a customer inquiry is received."
 msgstr "নতুন কোনো কাস্টমার ইনকোয়ারি পাওয়া গেলে ট্রিগার হয়।"
 
-#: app/Admin/SettingsPage.php:1006
+#: app/Admin/SettingsPage.php:1019
 msgid "Fired when a new tour or hotel booking is submitted."
 msgstr "নতুন কোনো ট্যুর বা হোটেল বুকিং সম্পন্ন হলে ট্রিগার হয়।"
 
@@ -1463,7 +1463,7 @@ msgstr "জিপিএস কোঅর্ডিনেট:"
 msgid "GPS Map Coordinates & Pickup Points"
 msgstr "জিপিএস ম্যাপ কোঅর্ডিনেট ও পিকআপ পয়েন্ট"
 
-#: app/Admin/SettingsPage.php:352
+#: app/Admin/SettingsPage.php:354
 msgid "General & Currency"
 msgstr "সাধারণ ও মুদ্রা"
 
@@ -1485,7 +1485,7 @@ msgstr "সাধারণ ভ্রমণ অনুসন্ধান"
 msgid "Generate Pages & Next →"
 msgstr "পেজ তৈরি করুন এবং পরবর্তীতে যান →"
 
-#: app/Admin/SettingsPage.php:995
+#: app/Admin/SettingsPage.php:1008
 msgid "Generate Secret"
 msgstr "সিক্রেট কী তৈরি করুন"
 
@@ -1493,11 +1493,11 @@ msgstr "সিক্রেট কী তৈরি করুন"
 msgid "Generate beautiful PDF boarding passes with secure HMAC-verified QR codes for mobile smartphone scanning."
 msgstr "স্মার্টফোনে স্ক্যানযোগ্য নিরাপদ HMAC-ভেরিফাইড QR কোড সহ চমৎকার PDF বোর্ডিং পাস তৈরি করুন।"
 
-#: app/Admin/SettingsPage.php:790
+#: app/Admin/SettingsPage.php:803
 msgid "Generates TouristTrip and Hotel JSON-LD metadata so Google can display rich search snippets, prices, and star ratings."
 msgstr "TouristTrip এবং Hotel JSON-LD মেটাডাটা তৈরি করে যাতে গুগল সার্চে রিচ স্নিপেট, মূল্য ও স্টার রেটিং প্রদর্শন করতে পারে।"
 
-#: app/Providers/AdminServiceProvider.php:343
+#: app/Providers/AdminServiceProvider.php:336
 msgid "Get started in seconds! Import 3 complete tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to test booking forms, filters, and calendars immediately."
 msgstr "কয়েক সেকেন্ডে শুরু করুন! বুকিং ফর্ম, ফিল্টার এবং ক্যালেন্ডার পরীক্ষা করতে ৩টি ট্যুর ও ২টি হোটেল রুম সহ ডেমো ইমপোর্ট করুন।"
 
@@ -1734,11 +1734,11 @@ msgstr "জিজ্ঞাসা / ইনকোয়ারি"
 msgid "Inquiry Message"
 msgstr "অনুসন্ধানের বার্তা"
 
-#: app/Providers/AdminServiceProvider.php:720
+#: app/Providers/AdminServiceProvider.php:713
 msgid "Inquiry deleted."
 msgstr "ইনকোয়ারি মুছে ফেলা হয়েছে।"
 
-#: app/Providers/AdminServiceProvider.php:699
+#: app/Providers/AdminServiceProvider.php:692
 msgid "Inquiry status updated."
 msgstr "ইনকোয়ারি স্ট্যাটাস আপডেট হয়েছে।"
 
@@ -1746,7 +1746,7 @@ msgstr "ইনকোয়ারি স্ট্যাটাস আপডেট হ
 msgid "Instant Confirmation"
 msgstr "তাৎক্ষণিক নিশ্চিতকরণ"
 
-#: app/Admin/SettingsPage.php:514
+#: app/Admin/SettingsPage.php:516
 msgid "Instant Confirmed"
 msgstr "তাৎক্ষণিক নিশ্চিতকৃত"
 
@@ -1786,20 +1786,20 @@ msgstr "একক পেজে বিস্তারিত ৫★ থেকে �
 msgid "Internal Notes"
 msgstr "অভ্যন্তরীণ নোট"
 
-#: app/Providers/AdminServiceProvider.php:809
+#: app/Providers/AdminServiceProvider.php:802
 msgid "Internal Staff Note"
 msgstr "অভ্যন্তরীণ স্টাফ নোট"
 
-#: app/Providers/AdminServiceProvider.php:854
+#: app/Providers/AdminServiceProvider.php:847
 msgid "Internal note added successfully."
 msgstr "অভ্যন্তরীণ নোট সফলভাবে যুক্ত করা হয়েছে।"
 
-#: app/Providers/AdminServiceProvider.php:562
+#: app/Providers/AdminServiceProvider.php:555
 msgid "Invalid booking ID or status."
 msgstr "অবৈধ বুকিং আইডি বা স্ট্যাটাস।"
 
-#: app/Providers/AdminServiceProvider.php:794
-#: app/Providers/AdminServiceProvider.php:1121
+#: app/Providers/AdminServiceProvider.php:787
+#: app/Providers/AdminServiceProvider.php:1114
 #: app/Services/BookingService.php:564
 #: app/Services/PaymentService.php:317
 #: app/Shortcodes/MyBookingsShortcode.php:475
@@ -1815,8 +1815,8 @@ msgstr "অবৈধ বুকিং আইটেমের ধরন।"
 msgid "Invalid date range specified."
 msgstr "অবৈধ তারিখের পরিসীমা উল্লেখ করা হয়েছে।"
 
-#: app/Providers/AdminServiceProvider.php:873
-#: app/Providers/AdminServiceProvider.php:925
+#: app/Providers/AdminServiceProvider.php:866
+#: app/Providers/AdminServiceProvider.php:918
 msgid "Invalid or missing booking reference code."
 msgstr "অবৈধ বা অনুপস্থিত বুকিং রেফারেন্স কোড।"
 
@@ -1872,7 +1872,7 @@ msgstr "আইটেম: #%1$d (%2$s) | তারিখ: %3$s"
 msgid "Itinerary Builder"
 msgstr "ভ্রমণ পরিকল্পনা (আইটিনারারি)"
 
-#: app/Admin/SettingsPage.php:602
+#: app/Admin/SettingsPage.php:604
 msgid "Language & Localization / ভাষা ও লোকালাইজেশন"
 msgstr "ভাষা ও লোকালাইজেশন"
 
@@ -1884,7 +1884,7 @@ msgstr "অক্ষাংশ (Latitude)"
 msgid "Latitude and Longitude for map markers."
 msgstr "ম্যাপ মার্কারের জন্য অক্ষাংশ ও দ্রাঘিমাংশ।"
 
-#: app/Admin/SettingsPage.php:1212
+#: app/Admin/SettingsPage.php:1225
 msgid "Launch Setup Wizard"
 msgstr "সেটআপ উইজার্ড চালু করুন"
 
@@ -1900,7 +1900,7 @@ msgstr "বুকিং প্যানেলে সরাসরি লিড �
 msgid "Left ($100)"
 msgstr "বামে ($১০০)"
 
-#: app/Admin/SettingsPage.php:408
+#: app/Admin/SettingsPage.php:410
 msgid "Left ($99)"
 msgstr "বামে ($৯৯)"
 
@@ -1908,7 +1908,7 @@ msgstr "বামে ($৯৯)"
 msgid "Left with space ($ 100)"
 msgstr "বামে স্পেস সহ ($ ১০০)"
 
-#: app/Admin/SettingsPage.php:410
+#: app/Admin/SettingsPage.php:412
 msgid "Left with space ($ 99)"
 msgstr "বামে স্পেস সহ ($ ৯৯)"
 
@@ -1953,7 +1953,7 @@ msgid "Log phone, WhatsApp, and walk-in offline bookings with inventory lock enf
 msgstr "ফোন, হোয়াটসঅ্যাপ এবং সরাসরি আসা অফলাইন বুকিং ইনভেন্টরি লক ও রেফারেন্স কোড সহ এন্ট্রি করুন।"
 
 #. translators: %s: Staff or user display name
-#: app/Providers/AdminServiceProvider.php:817
+#: app/Providers/AdminServiceProvider.php:810
 #, php-format
 msgid "Logged by: %s"
 msgstr "লগ করেছেন: %s"
@@ -1962,7 +1962,7 @@ msgstr "লগ করেছেন: %s"
 msgid "Longitude (GPS)"
 msgstr "দ্রাঘিমাংশ (Longitude)"
 
-#: app/Providers/AdminServiceProvider.php:753
+#: app/Providers/AdminServiceProvider.php:746
 msgid "Mail sending failed. Please verify your WordPress SMTP settings."
 msgstr "ইমেইল পাঠানো ব্যর্থ হয়েছে। অনুগ্রহ করে আপনার ওয়ার্ডপ্রেস SMTP সেটিংস যাচাই করুন।"
 
@@ -1975,7 +1975,7 @@ msgid "Managing Traveler Bookings & Inquiries"
 msgstr "ভ্রমণকারীদের বুকিং ও অনুসন্ধান পরিচালনা"
 
 #. translators: %s: Booking Reference Code
-#: app/Providers/AdminServiceProvider.php:658
+#: app/Providers/AdminServiceProvider.php:651
 #, php-format
 msgid "Manual booking created successfully! Reference Code: #%s"
 msgstr "ম্যানুয়াল বুকিং সফলভাবে তৈরি হয়েছে! রেফারেন্স কোড: #%s"
@@ -1988,7 +1988,7 @@ msgstr "ম্যাপ অক্ষাংশ (Latitude)"
 msgid "Map Longitude (GPS)"
 msgstr "ম্যাপ দ্রাঘিমাংশ (Longitude)"
 
-#: app/Admin/SettingsPage.php:733
+#: app/Admin/SettingsPage.php:735
 msgid "Match Tourivo booking widgets, cards, and buttons with your active WordPress theme styling."
 msgstr "ট্যুরিতোর বুকিং উইজেট, কার্ড ও বাটনগুলোকে আপনার ওয়ার্ডপ্রেস থিমের রঙের সাথে মানানসই করুন।"
 
@@ -2036,7 +2036,7 @@ msgstr "সর্বনিম্ন অতিথি"
 msgid "Min: %1$d | Max: %2$d Pax"
 msgstr "সর্বনিম্ন: %1$d | সর্বোচ্চ: %2$d জন"
 
-#: app/Admin/SettingsPage.php:771
+#: app/Admin/SettingsPage.php:773
 msgid "Modern Rounded (8px - Default)"
 msgstr "মডার্ন রাউন্ডেড (৮ পিক্সেল - ডিফল্ট)"
 
@@ -2069,11 +2069,11 @@ msgstr "নাম:"
 msgid "Navigate to Tours -> Add New Tour in your WordPress admin menu. Tourivo uses a structured tabbed interface:"
 msgstr "আপনার ওয়ার্ডপ্রেস অ্যাডমিন মেনু থেকে ট্যুর -> নতুন ট্যুর যোগ করুন-এ যান। ট্যুরিতো একটি গোছানো ট্যাব ইন্টারফেস ব্যবহার করে:"
 
-#: app/Admin/SettingsPage.php:1210
+#: app/Admin/SettingsPage.php:1223
 msgid "Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?"
 msgstr "প্রয়োজনীয় পেজ তৈরি, মুদ্রা পরিবর্তন বা ডেমো ট্যুর ও হোটেল পুনরায় ইমপোর্ট করতে চান?"
 
-#: app/Admin/SettingsPage.php:1170
+#: app/Admin/SettingsPage.php:1183
 msgid "Network & Proxy Configuration"
 msgstr "নেটওয়ার্ক ও প্রক্সি কনফিগারেশন"
 
@@ -2115,7 +2115,7 @@ msgstr "নতুনগুলো আগে"
 msgid "Night"
 msgstr "রাত"
 
-#: app/Providers/AdminServiceProvider.php:826
+#: app/Providers/AdminServiceProvider.php:819
 msgid "No activity logs recorded yet for this booking."
 msgstr "এই বুকিংয়ের জন্য এখনও কোনো অ্যাক্টিভিটি লগ নেই।"
 
@@ -2183,7 +2183,7 @@ msgstr "কোনো ট্যুর পাওয়া যায়নি।"
 msgid "No tours found."
 msgstr "কোনো ট্যুর পাওয়া যায়নি।"
 
-#: app/Providers/AdminServiceProvider.php:848
+#: app/Providers/AdminServiceProvider.php:841
 msgid "Note content cannot be empty."
 msgstr "নোটের বিষয়বস্তু খালি রাখা যাবে না।"
 
@@ -2207,15 +2207,15 @@ msgstr "ট্যুরিতো -> বুকিংস-এ যান:"
 msgid "Open Tourivo -> Inquiries:"
 msgstr "ট্যুরিতো -> ইনকোয়ারিজ-এ যান:"
 
-#: app/Admin/SettingsPage.php:794
+#: app/Admin/SettingsPage.php:807
 msgid "OpenGraph & Twitter Cards"
 msgstr "OpenGraph ও Twitter Cards"
 
-#: app/Admin/SettingsPage.php:1187
+#: app/Admin/SettingsPage.php:1200
 msgid "Optional comma- or newline-separated list of trusted upstream proxy/load balancer IPs or CIDR subnets."
 msgstr "কমা বা নতুন লাইন দিয়ে বিশ্বস্ত প্রক্সি/লোড ব্যালেন্সার আইপি বা CIDR সাবনেটের ঐচ্ছিক তালিকা।"
 
-#: app/Admin/SettingsPage.php:996
+#: app/Admin/SettingsPage.php:1009
 msgid "Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification."
 msgstr "পে-লোড যাচাইয়ের জন্য X-Tourivo-Signature HTTP হেডার তৈরিতে ব্যবহৃত ঐচ্ছিক সিক্রেট কী।"
 
@@ -2227,11 +2227,11 @@ msgstr "অর্ডার ও বুকিং টেবিল"
 msgid "Our smart inventory engine automatically prevents two travelers from booking the same room or seat at the same time."
 msgstr "আমাদের স্মার্ট ইনভেন্টরি ইঞ্জিন একই সময়ে একাধিক ভ্রমণকারী কর্তৃক একই রুম বা সিট বুকিং হওয়া স্বয়ংক্রিয়ভাবে প্রতিহত করে।"
 
-#: app/Admin/SettingsPage.php:979
+#: app/Admin/SettingsPage.php:992
 msgid "Outbound Webhooks (Zapier, Make, n8n, CRMs)"
 msgstr "আউটবাউন্ড ওয়েবহুক (Zapier, Make, n8n, CRMs)"
 
-#: app/Admin/SettingsPage.php:1230
+#: app/Admin/SettingsPage.php:1243
 msgid "PHP Version"
 msgstr "পিএইচপি (PHP) ভার্সন"
 
@@ -2260,7 +2260,7 @@ msgstr "মূল গন্তব্য"
 msgid "Parent Destination:"
 msgstr "মূল গন্তব্য:"
 
-#: app/Providers/MetaBoxServiceProvider.php:256
+#: app/Providers/MetaBoxServiceProvider.php:249
 msgid "Parent Hotel"
 msgstr "মূল হোটেল"
 
@@ -2313,7 +2313,7 @@ msgstr "পেমেন্টের অবস্থা:"
 msgid "Pending"
 msgstr "অপেক্ষমান"
 
-#: app/Admin/SettingsPage.php:513
+#: app/Admin/SettingsPage.php:515
 msgid "Pending (Awaiting Admin Confirmation)"
 msgstr "অপেক্ষমান (অ্যাডমিন অনুমোদনের অপেক্ষায়)"
 
@@ -2359,7 +2359,7 @@ msgstr "পিকআপ / সাক্ষাতের স্থান:"
 msgid "Pickup Point / Meeting Place"
 msgstr "পিকআপ পয়েন্ট / সাক্ষাতের স্থান"
 
-#: app/Admin/SettingsPage.php:773
+#: app/Admin/SettingsPage.php:775
 msgid "Pill Curved (16px)"
 msgstr "পিল কার্ভড (১৬ পিক্সেল)"
 
@@ -2367,7 +2367,7 @@ msgstr "পিল কার্ভড (১৬ পিক্সেল)"
 msgid "Please enter a valid Booking Reference Code and Email Address."
 msgstr "অনুগ্রহ করে একটি সঠিক বুকিং রেফারেন্স কোড ও ইমেইল ঠিকানা লিখুন।"
 
-#: app/Providers/AdminServiceProvider.php:741
+#: app/Providers/AdminServiceProvider.php:734
 msgid "Please enter a valid email address."
 msgstr "একটি সঠিক ইমেইল ঠিকানা লিখুন।"
 
@@ -2379,7 +2379,7 @@ msgstr "অনুগ্রহ করে আপনার বুকিং কো�
 msgid "Please fill in all required fields (Name, Email, Message)."
 msgstr "অনুগ্রহ করে সকল প্রয়োজনীয় ঘর পূরণ করুন (নাম, ইমেইল, বার্তা)।"
 
-#: app/Providers/AdminServiceProvider.php:625
+#: app/Providers/AdminServiceProvider.php:618
 msgid "Please fill in all required fields."
 msgstr "অনুগ্রহ করে সকল প্রয়োজনীয় ঘর পূরণ করুন।"
 
@@ -2408,7 +2408,7 @@ msgstr "রুম বুকিংয়ের জন্য একটি সঠি�
 msgid "Please specify a valid item ID. Example: wp tourivo inventory 15"
 msgstr "একটি সঠিক আইটেম আইডি উল্লেখ করুন। যেমন: wp tourivo inventory 15"
 
-#: app/Admin/SettingsPage.php:605
+#: app/Admin/SettingsPage.php:607
 msgid "Plugin Language / প্লাগিনের ভাষা"
 msgstr "প্লাগিনের ভাষা"
 
@@ -2428,11 +2428,11 @@ msgstr "পোস্টাল / জিপ কোড"
 msgid "Pre-sale Leads:"
 msgstr "প্রাক-বিক্রয় লিডস:"
 
-#: app/Providers/MetaBoxServiceProvider.php:166
+#: app/Providers/MetaBoxServiceProvider.php:159
 msgid "Price"
 msgstr "মূল্য"
 
-#: app/Providers/MetaBoxServiceProvider.php:257
+#: app/Providers/MetaBoxServiceProvider.php:250
 msgid "Price / Night"
 msgstr "মূল্য / রাত"
 
@@ -2456,11 +2456,11 @@ msgstr "মূল্য ও ধারণক্ষমতা"
 msgid "Pricing & General"
 msgstr "মূল্য ও সাধারণ সেটিংস"
 
-#: app/Admin/SettingsPage.php:737
+#: app/Admin/SettingsPage.php:739
 msgid "Primary Brand Color"
 msgstr "মূল ব্র্যান্ডের রঙ"
 
-#: app/Admin/SettingsPage.php:745
+#: app/Admin/SettingsPage.php:747
 msgid "Primary Hover Color"
 msgstr "প্রাইমারি হোভারের রঙ"
 
@@ -2475,7 +2475,7 @@ msgstr "বুকিং ভাউচার প্রিন্ট করুন"
 msgid "Printable PDF Tickets & QR Check-in"
 msgstr "প্রিন্টযোগ্য পিডিএফ টিকিট ও কিউআর কোড চেক-ইন"
 
-#: app/Providers/TemplateServiceProvider.php:662
+#: app/Providers/TemplateServiceProvider.php:656
 #: templates/booking-lookup.php:439
 #: templates/my-bookings.php:477
 msgid "Processing..."
@@ -2514,7 +2514,7 @@ msgstr "প্রশ্ন ও উত্তর"
 msgid "Quick Actions"
 msgstr "কুইক অ্যাকশন"
 
-#: app/Admin/SettingsPage.php:1209
+#: app/Admin/SettingsPage.php:1222
 msgid "Quick Onboarding & Sample Data"
 msgstr "দ্রুত শুরু ও ডেমো ডাটা"
 
@@ -2526,7 +2526,7 @@ msgstr "দ্রুত সেটআপ ও কনফিগারেশন উ�
 msgid "Quickly test Tourivo by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms."
 msgstr "তৈরি ট্যুর (কক্সবাজার, সাজেক ভ্যালি, শ্রীমঙ্গল) এবং বুটিক হোটেল ও রুম ইমপোর্ট করে ট্যুরিতো দ্রুত পরখ করুন।"
 
-#: app/Providers/MetaBoxServiceProvider.php:212
+#: app/Providers/MetaBoxServiceProvider.php:205
 msgid "Rating"
 msgstr "রেটিং"
 
@@ -2558,7 +2558,7 @@ msgstr "সাম্প্রতিক বুকিং"
 msgid "Refunded"
 msgstr "ফেরতকৃত"
 
-#: app/Admin/SettingsPage.php:629
+#: app/Admin/SettingsPage.php:631
 msgid "Render prices and counters in Bengali digits (যেমন: ৳১,৫০০, ৩ জন)"
 msgstr "মূল্য এবং কাউন্টারে বাংলা সংখ্যা প্রদর্শন করুন (যেমন: ৳১,৫০০, ৩ জন)"
 
@@ -2588,7 +2588,7 @@ msgstr "রিসেট"
 msgid "Responsive card styling and star badges."
 msgstr "রেসপন্সিভ কার্ড স্টাইলিং ও স্টার ব্যাজ।"
 
-#: app/Admin/SettingsPage.php:1178
+#: app/Admin/SettingsPage.php:1191
 msgid "Reverse Proxy / Load Balancer (Trust X-Forwarded-For)"
 msgstr "রিভার্স প্রক্সি / লোড ব্যালেন্সার (X-Forwarded-For গ্রহণ করুন)"
 
@@ -2596,7 +2596,7 @@ msgstr "রিভার্স প্রক্সি / লোড ব্যাল�
 msgid "Right (100$)"
 msgstr "ডানে (১০০$)"
 
-#: app/Admin/SettingsPage.php:409
+#: app/Admin/SettingsPage.php:411
 msgid "Right (99$)"
 msgstr "ডানে (৯৯$)"
 
@@ -2604,7 +2604,7 @@ msgstr "ডানে (৯৯$)"
 msgid "Right with space (100 $)"
 msgstr "ডানে স্পেস সহ (১০০ $)"
 
-#: app/Admin/SettingsPage.php:411
+#: app/Admin/SettingsPage.php:413
 msgid "Right with space (99 $)"
 msgstr "ডানে স্পেস সহ (৯৯ $)"
 
@@ -2624,7 +2624,7 @@ msgstr "রুম স্পেসিফিকেশন ও বেড"
 msgid "Room Types"
 msgstr "রুমের ধরন"
 
-#: app/Providers/MetaBoxServiceProvider.php:214
+#: app/Providers/MetaBoxServiceProvider.php:207
 #: templates/booking-panel.php:97
 msgid "Rooms"
 msgstr "রুম / কক্ষসমূহ"
@@ -2639,7 +2639,7 @@ msgstr "অফার মূল্য ($)"
 
 #. translators: 1: Tours count, 2: Hotels count, 3: Rooms count
 #: app/Database/Seeder.php:651
-#: app/Providers/AdminServiceProvider.php:536
+#: app/Providers/AdminServiceProvider.php:529
 #, php-format
 msgid "Sample data successfully imported! Created %1$d Tours, %2$d Hotels, and %3$d Rooms."
 msgstr "ডেমো ডাটা সফলভাবে ইমপোর্ট হয়েছে! %1$d টি ট্যুর, %2$d টি হোটেল এবং %3$d টি রুম তৈরি হয়েছে।"
@@ -2649,7 +2649,7 @@ msgstr "ডেমো ডাটা সফলভাবে ইমপোর্ট �
 msgid "Save"
 msgstr "সংরক্ষণ করুন"
 
-#: app/Admin/SettingsPage.php:1243
+#: app/Admin/SettingsPage.php:1256
 msgid "Save Changes"
 msgstr "পরিবর্তন সংরক্ষণ করুন"
 
@@ -2658,13 +2658,13 @@ msgstr "পরিবর্তন সংরক্ষণ করুন"
 msgid "Save to Wishlist"
 msgstr "উইশলিস্টে রাখুন"
 
-#: app/Providers/TemplateServiceProvider.php:665
+#: app/Providers/TemplateServiceProvider.php:659
 #: app/Support/functions.php:410
 #: app/Support/functions.php:411
 msgid "Save to wishlist"
 msgstr "উইশলিস্টে রাখুন"
 
-#: app/Providers/TemplateServiceProvider.php:664
+#: app/Providers/TemplateServiceProvider.php:658
 msgid "Saved to wishlist"
 msgstr "উইশলিস্টে সংরক্ষিত"
 
@@ -2672,7 +2672,7 @@ msgstr "উইশলিস্টে সংরক্ষিত"
 msgid "Saving..."
 msgstr "সংরক্ষণ করা হচ্ছে..."
 
-#: app/Admin/SettingsPage.php:784
+#: app/Admin/SettingsPage.php:797
 msgid "Schema.org JSON-LD"
 msgstr "স্কিমা.অর্গ JSON-LD"
 
@@ -2714,7 +2714,7 @@ msgstr "সার্চ বার:"
 msgid "Search Destinations"
 msgstr "গন্তব্যসমূহ খুঁজুন"
 
-#: app/Admin/SettingsPage.php:781
+#: app/Admin/SettingsPage.php:794
 msgid "Search Engine Optimization (SEO) & Social Sharing"
 msgstr "সার্চ ইঞ্জিন অপটিমাইজেশন (SEO) ও সোশ্যাল শেয়ারিং"
 
@@ -2722,7 +2722,7 @@ msgstr "সার্চ ইঞ্জিন অপটিমাইজেশন (SE
 msgid "Search Hotels"
 msgstr "হোটেল খুঁজুন"
 
-#: app/Providers/TemplateServiceProvider.php:284
+#: app/Providers/TemplateServiceProvider.php:285
 msgid "Search trips"
 msgstr "ট্রিপ খুঁজুন"
 
@@ -2754,7 +2754,7 @@ msgstr "ট্যুর, কিওয়ার্ড খুঁজুন..."
 msgid "Searching..."
 msgstr "খোঁজা হচ্ছে..."
 
-#: app/Admin/SettingsPage.php:992
+#: app/Admin/SettingsPage.php:1005
 msgid "Secret Key (HMAC SHA-256)"
 msgstr "সিক্রেট কী (HMAC SHA-256)"
 
@@ -2840,19 +2840,19 @@ msgstr "একদিনের রোমাঞ্চকর ভ্রমণ বা
 msgid "Send Inquiry to Specialists"
 msgstr "বিশেষজ্ঞদের কাছে অনুসন্ধান পাঠান"
 
-#: app/Admin/SettingsPage.php:969
+#: app/Admin/SettingsPage.php:982
 msgid "Send Test Email"
 msgstr "টেস্ট ইমেইল পাঠান"
 
-#: app/Admin/SettingsPage.php:1045
+#: app/Admin/SettingsPage.php:1058
 msgid "Send Test Ping Payload"
 msgstr "টেস্ট পিং পে-লোড পাঠান"
 
-#: app/Admin/SettingsPage.php:1041
+#: app/Admin/SettingsPage.php:1054
 msgid "Send a test ping payload to your webhook target URL to verify connectivity."
 msgstr "সংযুক্ততা যাচাই করতে আপনার ওয়েবহুক টার্গেট URL-এ একটি টেস্ট পে-লোড পাঠান।"
 
-#: app/Admin/SettingsPage.php:980
+#: app/Admin/SettingsPage.php:993
 msgid "Send real-time JSON payloads to external webhooks whenever reservations are created or updated."
 msgstr "বুকিং তৈরি বা আপডেট হলে এক্সটার্নাল ওয়েবহুকে রিয়েল-টাইম JSON পে-লোড পাঠান।"
 
@@ -2897,7 +2897,7 @@ msgstr "রাতপ্রতি মূল ভাড়া নির্ধার
 msgid "Settings"
 msgstr "সেটিংস"
 
-#: app/Admin/SettingsPage.php:208
+#: app/Admin/SettingsPage.php:209
 #: app/Admin/SetupWizard.php:736
 msgid "Settings saved successfully."
 msgstr "সেটিংস সফলভাবে সংরক্ষিত হয়েছে।"
@@ -2908,11 +2908,11 @@ msgstr "সেটিংস সফলভাবে সংরক্ষিত হয়
 msgid "Setup Wizard"
 msgstr "সেটআপ উইজার্ড"
 
-#: app/Admin/SettingsPage.php:1207
+#: app/Admin/SettingsPage.php:1220
 msgid "Setup Wizard & Demo Tools"
 msgstr "সেটআপ উইজার্ড ও ডেমো টুলস"
 
-#: app/Admin/SettingsPage.php:770
+#: app/Admin/SettingsPage.php:772
 msgid "Sharp (4px)"
 msgstr "শার্প (৪ পিক্সেল)"
 
@@ -2933,7 +2933,7 @@ msgid "Single-Day, Multi-Day, Hourly Activity, or Fixed Departure."
 msgstr "একদিনের, একাধিক দিনের, ঘন্টায় অ্যাক্টিভিটি বা নির্দিষ্ট যাত্রার ট্যুর।"
 
 #. translators: %s: Active WordPress locale code
-#: app/Admin/SettingsPage.php:612
+#: app/Admin/SettingsPage.php:614
 #, php-format
 msgid "Site Default (WordPress Locale: %s)"
 msgstr "সাইটের ডিফল্ট (ওয়ার্ডপ্রেস লোকেল: %s)"
@@ -2946,7 +2946,7 @@ msgstr "ডেমো ইমপোর্ট এড়িয়ে যান"
 msgid "Skip Setup"
 msgstr "সেটআপ এড়িয়ে যান"
 
-#: app/Admin/SettingsPage.php:772
+#: app/Admin/SettingsPage.php:774
 msgid "Smooth Curved (12px)"
 msgstr "স্মুথ কার্ভড (১২ পিক্সেল)"
 
@@ -3025,11 +3025,11 @@ msgstr "জমা দেওয়া অবরুদ্ধ করা হয়েছ�
 msgid "Submit Review"
 msgstr "রিভিউ জমা দিন"
 
-#: app/Providers/TemplateServiceProvider.php:666
+#: app/Providers/TemplateServiceProvider.php:660
 msgid "Submitting..."
 msgstr "জমা দেওয়া হচ্ছে..."
 
-#: app/Admin/SettingsPage.php:1001
+#: app/Admin/SettingsPage.php:1014
 msgid "Subscribed Events"
 msgstr "সাবস্ক্রাইব করা ইভেন্টসমূহ"
 
@@ -3038,24 +3038,24 @@ msgstr "সাবস্ক্রাইব করা ইভেন্টসমূ�
 msgid "Subtotal:"
 msgstr "সাবটোটাল:"
 
-#: app/Admin/SettingsPage.php:483
+#: app/Admin/SettingsPage.php:485
 msgid "Supported Multi-Currencies for Frontend Switcher"
 msgstr "ফ্রন্টএন্ড সুইচারের জন্য সমর্থিত বহু-মুদ্রা"
 
-#: app/Admin/SettingsPage.php:490
+#: app/Admin/SettingsPage.php:492
 msgid "Symbol"
 msgstr "প্রতীক"
 
-#: app/Admin/SettingsPage.php:405
+#: app/Admin/SettingsPage.php:407
 #: app/Admin/SetupWizard.php:114
 msgid "Symbol Position"
 msgstr "প্রতীকের অবস্থান"
 
-#: app/Providers/AdminServiceProvider.php:804
+#: app/Providers/AdminServiceProvider.php:797
 msgid "System / Guest"
 msgstr "সিস্টেম / অতিথি"
 
-#: app/Admin/SettingsPage.php:1218
+#: app/Admin/SettingsPage.php:1231
 msgid "System Information"
 msgstr "সিস্টেমের তথ্য"
 
@@ -3068,16 +3068,16 @@ msgstr "টেস্ট নোটিফিকেশন"
 msgid "Tell us about your questions or custom trip preferences..."
 msgstr "আপনার প্রশ্ন বা কাস্টম ভ্রমণ পছন্দ সম্পর্কে লিখুন..."
 
-#: app/Admin/SettingsPage.php:958
+#: app/Admin/SettingsPage.php:971
 msgid "Test Email Dispatcher"
 msgstr "টেস্ট ইমেইল প্রেরক"
 
-#: app/Admin/SettingsPage.php:1040
+#: app/Admin/SettingsPage.php:1053
 msgid "Test Webhook Dispatcher"
 msgstr "টেস্ট ওয়েবহুক প্রেরক"
 
 #. translators: %s: Email address
-#: app/Providers/AdminServiceProvider.php:750
+#: app/Providers/AdminServiceProvider.php:743
 #, php-format
 msgid "Test email successfully dispatched to %s!"
 msgstr "%s ঠিকানায় টেস্ট ইমেইল সফলভাবে পাঠানো হয়েছে!"
@@ -3103,11 +3103,11 @@ msgstr "পরিপূর্ণ এজেন্সি গাইড ও ফি�
 msgid "The Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress."
 msgstr "ওয়ার্ডপ্রেসের জন্য আধুনিক ও স্বয়ংসম্পূর্ণ ভ্রমণ, ট্যুর ও হোটেল বুকিং ইঞ্জিন।"
 
-#: app/Admin/SettingsPage.php:393
+#: app/Admin/SettingsPage.php:395
 msgid "The main currency used to store prices in the database."
 msgstr "ডাটাবেজে মূল্য সংরক্ষণের জন্য ব্যবহৃত মূল মুদ্রা।"
 
-#: app/Admin/SettingsPage.php:484
+#: app/Admin/SettingsPage.php:486
 msgid "These exchange rates are used when travelers switch currencies with [tourivo_currency_switcher]:"
 msgstr "ভ্রমণকারীরা [tourivo_currency_switcher] ব্যবহার করে মুদ্রা পরিবর্তন করলে এই বিনিময় হারগুলো প্রযোজ্য হবে:"
 
@@ -3268,7 +3268,7 @@ msgstr "ট্যুরিতো বুকিং প্যানেল"
 msgid "Tourivo Booking Panel:"
 msgstr "ট্যুরিতো বুকিং প্যানেল:"
 
-#: app/Admin/SettingsPage.php:1222
+#: app/Admin/SettingsPage.php:1235
 msgid "Tourivo Core Version"
 msgstr "ট্যুরিতো কোর ভার্সন"
 
@@ -3312,7 +3312,7 @@ msgstr "ট্যুরিতো সার্চ বার"
 msgid "Tourivo Search Bar:"
 msgstr "ট্যুরিতো সার্চ বার:"
 
-#: app/Admin/SettingsPage.php:344
+#: app/Admin/SettingsPage.php:346
 msgid "Tourivo Settings"
 msgstr "ট্যুরিতো সেটিংস"
 
@@ -3362,15 +3362,15 @@ msgstr "ট্যুরিতো হল ওয়ার্ডপ্রেসের 
 msgid "Tourivo requires PHP version %1$s or greater. You are running version %2$s. Please upgrade your PHP version."
 msgstr "ট্যুরিতো চালানোর জন্য পিএইচপি ভার্সন %1$s বা তদূর্ধ্ব প্রয়োজন। আপনি ভার্সন %2$s চালাচ্ছেন। অনুগ্রহ করে পিএইচপি আপডেট করুন।"
 
-#: app/Providers/TemplateServiceProvider.php:128
-#: app/Providers/TemplateServiceProvider.php:184
+#: app/Providers/TemplateServiceProvider.php:129
+#: app/Providers/TemplateServiceProvider.php:185
 #: templates/single-tour.php:25
 msgctxt "public archive title"
 msgid "Tours"
 msgstr "ট্যুর"
 
-#: app/Providers/TemplateServiceProvider.php:131
-#: app/Providers/TemplateServiceProvider.php:185
+#: app/Providers/TemplateServiceProvider.php:132
+#: app/Providers/TemplateServiceProvider.php:186
 #: templates/single-hotel.php:27
 msgctxt "public archive title"
 msgid "Hotels"
@@ -3405,7 +3405,7 @@ msgstr "বুকিং ট্র্যাকিং ও ভাউচার প�
 msgid "Track Reservation"
 msgstr "বুকিং ট্র্যাক করুন"
 
-#: app/Providers/TemplateServiceProvider.php:186
+#: app/Providers/TemplateServiceProvider.php:187
 #: templates/thank-you.php:284
 msgid "Track My Booking"
 msgstr "আমার বুকিং ট্র্যাক করুন"
@@ -3544,12 +3544,12 @@ msgstr "আস্থা, রিভিউ ও কাস্টমার লিড 
 msgid "Try adjusting your keywords, budget, or destination criteria."
 msgstr "আপনার কিওয়ার্ড, বাজেট বা গন্তব্য পরিবর্তন করে দেখুন।"
 
-#: app/Providers/MetaBoxServiceProvider.php:165
+#: app/Providers/MetaBoxServiceProvider.php:158
 #: app/Services/ExportService.php:329
 msgid "Type"
 msgstr "ধরন"
 
-#: app/Providers/MetaBoxServiceProvider.php:281
+#: app/Providers/MetaBoxServiceProvider.php:274
 msgid "Unassigned"
 msgstr "অনির্ধারিত"
 
@@ -3557,26 +3557,26 @@ msgstr "অনির্ধারিত"
 #: app/Admin/SetupWizard.php:711
 #: app/Admin/SetupWizard.php:747
 #: app/Admin/SetupWizard.php:853
-#: app/Providers/AdminServiceProvider.php:433
-#: app/Providers/AdminServiceProvider.php:734
-#: app/Providers/AdminServiceProvider.php:765
-#: app/Providers/AdminServiceProvider.php:789
-#: app/Providers/AdminServiceProvider.php:841
+#: app/Providers/AdminServiceProvider.php:426
+#: app/Providers/AdminServiceProvider.php:727
+#: app/Providers/AdminServiceProvider.php:758
+#: app/Providers/AdminServiceProvider.php:782
+#: app/Providers/AdminServiceProvider.php:834
 #: app/Services/ExportService.php:480
 #: app/Services/ExportService.php:528
 msgid "Unauthorized access."
 msgstr "অননুমোদিত প্রবেশাধিকার।"
 
-#: app/Providers/AdminServiceProvider.php:496
-#: app/Providers/AdminServiceProvider.php:512
-#: app/Providers/AdminServiceProvider.php:555
-#: app/Providers/AdminServiceProvider.php:583
-#: app/Providers/AdminServiceProvider.php:606
-#: app/Providers/AdminServiceProvider.php:691
-#: app/Providers/AdminServiceProvider.php:713
-#: app/Providers/AdminServiceProvider.php:989
-#: app/Providers/AdminServiceProvider.php:1028
-#: app/Providers/AdminServiceProvider.php:1071
+#: app/Providers/AdminServiceProvider.php:489
+#: app/Providers/AdminServiceProvider.php:505
+#: app/Providers/AdminServiceProvider.php:548
+#: app/Providers/AdminServiceProvider.php:576
+#: app/Providers/AdminServiceProvider.php:599
+#: app/Providers/AdminServiceProvider.php:684
+#: app/Providers/AdminServiceProvider.php:706
+#: app/Providers/AdminServiceProvider.php:982
+#: app/Providers/AdminServiceProvider.php:1021
+#: app/Providers/AdminServiceProvider.php:1064
 msgid "Unauthorized permission."
 msgstr "অননুমোদিত পারমিশন।"
 
@@ -3642,11 +3642,11 @@ msgstr "পেজ রিফ্রেশ ছাড়াই তাৎক্ষণি
 msgid "Usage: wp tourivo booking set-status <id> <status>"
 msgstr "ব্যবহারবিধি: wp tourivo booking set-status <id> <status>"
 
-#: app/Admin/SettingsPage.php:741
+#: app/Admin/SettingsPage.php:743
 msgid "Used for primary booking buttons, price tags, active calendar dates, and highlights."
 msgstr "মূল বুকিং বোতাম, প্রাইস ট্যাগ, ক্যালেন্ডারের সক্রিয় তারিখ এবং হাইলাইটের জন্য ব্যবহৃত হয়।"
 
-#: app/Admin/SettingsPage.php:756
+#: app/Admin/SettingsPage.php:758
 msgid "Used for promotional ribbons, star ratings, and discount tags."
 msgstr "প্রমোশনাল রিবন, স্টার রেটিং এবং ডিসকাউন্ট ট্যাগের জন্য ব্যবহৃত হয়।"
 
@@ -3719,7 +3719,7 @@ msgstr "সংখ্যা নির্ধারণ, কলাম সিলে�
 msgid "Voucher"
 msgstr "ভাউচার"
 
-#: app/Admin/SettingsPage.php:984
+#: app/Admin/SettingsPage.php:997
 msgid "Webhook Target URL"
 msgstr "ওয়েবহুক টার্গেট URL"
 
@@ -3735,7 +3735,7 @@ msgstr "ওয়েবহুক [%1$s] সফলভাবে প্রেরিত
 msgid "Webhook [%1$s] delivery failed (Reason: %2$s, attempt %3$d)."
 msgstr "ওয়েবহুক [%1$s] প্রেরণে ব্যর্থ হয়েছে (কারণ: %2$s, প্রচেষ্টা %3$d)।"
 
-#: app/Admin/SettingsPage.php:361
+#: app/Admin/SettingsPage.php:363
 msgid "Webhooks & API"
 msgstr "ওয়েবহুক ও এপিআই"
 
@@ -3743,7 +3743,7 @@ msgstr "ওয়েবহুক ও এপিআই"
 msgid "Welcome back! Overview of your travel packages, hotel rooms, and live booking activity."
 msgstr "স্বাগতম! আপনার ট্যুর প্যাকেজ, হোটেল রুম এবং সাম্প্রতিক বুকিং কার্যক্রমের সামগ্রিক বিবরণ।"
 
-#: app/Providers/AdminServiceProvider.php:340
+#: app/Providers/AdminServiceProvider.php:333
 msgid "Welcome to Tourivo! Want to explore with ready-made demo content?"
 msgstr "ট্যুরিতোতে স্বাগতম! তৈরি ডেমো কন্টেন্ট নিয়ে পরীক্ষা করতে চান?"
 
@@ -3772,7 +3772,7 @@ msgstr "কখন?"
 msgid "Where to?"
 msgstr "কোথায় যাবেন?"
 
-#: app/Admin/SettingsPage.php:767
+#: app/Admin/SettingsPage.php:769
 msgid "Widget Border Radius"
 msgstr "উইজেটের বর্ডার রেডিয়াস"
 
@@ -3780,7 +3780,7 @@ msgstr "উইজেটের বর্ডার রেডিয়াস"
 msgid "WooCommerce 100+ Gateways Bridge"
 msgstr "উকমার্স ১০০+ পেমেন্ট গেটওয়ে ব্রিজ"
 
-#: app/Admin/SettingsPage.php:1234
+#: app/Admin/SettingsPage.php:1247
 msgid "WordPress Version"
 msgstr "ওয়ার্ডপ্রেস ভার্সন"
 
@@ -3828,7 +3828,7 @@ msgstr "আপনার রিভিউ / মতামত *"
 msgid "Your Wishlist is Empty"
 msgstr "আপনার উইশলিস্ট খালি"
 
-#: app/Admin/SettingsPage.php:987
+#: app/Admin/SettingsPage.php:1000
 msgid "Your external automation endpoint URL that receives POST requests."
 msgstr "আপনার বাহ্যিক অটোমেশন এন্ডপয়েন্ট URL যা POST রিকোয়েস্ট গ্রহণ করবে।"
 
@@ -3880,13 +3880,13 @@ msgstr "টি আইটেম পাওয়া গেছে"
 msgid "items saved"
 msgstr "টি সংরক্ষিত"
 
-#: app/Providers/TemplateServiceProvider.php:667
+#: app/Providers/TemplateServiceProvider.php:661
 #: templates/cards/hotel-card.php:81
 #: templates/single-hotel.php:138
 msgid "night"
 msgstr "রাত"
 
-#: app/Providers/TemplateServiceProvider.php:668
+#: app/Providers/TemplateServiceProvider.php:662
 msgid "person"
 msgstr "জন"
 
@@ -3899,7 +3899,7 @@ msgstr "রিভিউসমূহ"
 msgid "your-email@domain.com"
 msgstr "your-email@domain.com"
 
-#: app/Providers/AdminServiceProvider.php:349
+#: app/Providers/AdminServiceProvider.php:342
 msgid "⚡ Import Starter Demo Content"
 msgstr "⚡ স্টার্টার ডেমো কন্টেন্ট ইমপোর্ট করুন"
 
@@ -3919,451 +3919,451 @@ msgstr "✨ ট্যুরিতোর সম্পূর্ণ ফিচার
 msgid "🚀 4-Step Quick Launch Checklist"
 msgstr "🚀 ৪-ধাপের দ্রুত চালুকরণ চেকলিস্ট"
 
-#: app/Admin/SettingsPage.php:277
+#: app/Admin/SettingsPage.php:279
 msgid "Customer: Booking Request Received (Pending)"
 msgstr "গ্রাহক: বুকিং অনুরোধ গৃহীত (অপেক্ষমাণ)"
 
-#: app/Admin/SettingsPage.php:278
-#: app/Admin/SettingsPage.php:287
-#: app/Admin/SettingsPage.php:296
-#: app/Admin/SettingsPage.php:305
+#: app/Admin/SettingsPage.php:280
+#: app/Admin/SettingsPage.php:289
+#: app/Admin/SettingsPage.php:298
+#: app/Admin/SettingsPage.php:307
 msgid "Customer (Booker)"
 msgstr "গ্রাহক (বুকিংকারী)"
 
-#: app/Admin/SettingsPage.php:279
+#: app/Admin/SettingsPage.php:281
 msgid "Sent to traveler immediately when a new booking is placed in Pending status."
 msgstr "নতুন বুকিং অপেক্ষমাণ অবস্থায় তৈরি হলেই ভ্রমণকারীকে পাঠানো হয়।"
 
-#: app/Admin/SettingsPage.php:286
+#: app/Admin/SettingsPage.php:288
 msgid "Customer: Booking Confirmed"
 msgstr "গ্রাহক: বুকিং নিশ্চিত"
 
-#: app/Admin/SettingsPage.php:288
+#: app/Admin/SettingsPage.php:290
 msgid "Sent to traveler when a booking is confirmed. Includes printable voucher access."
 msgstr "বুকিং নিশ্চিত হলে ভ্রমণকারীকে পাঠানো হয়। প্রিন্টযোগ্য ভাউচারের লিংক থাকে।"
 
-#: app/Admin/SettingsPage.php:295
+#: app/Admin/SettingsPage.php:297
 msgid "Customer: Booking Cancelled"
 msgstr "গ্রাহক: বুকিং বাতিল"
 
-#: app/Admin/SettingsPage.php:297
+#: app/Admin/SettingsPage.php:299
 msgid "Sent to traveler when a reservation is cancelled."
 msgstr "রিজার্ভেশন বাতিল হলে ভ্রমণকারীকে পাঠানো হয়।"
 
-#: app/Admin/SettingsPage.php:304
+#: app/Admin/SettingsPage.php:306
 msgid "Customer: Upcoming Trip Reminder"
 msgstr "গ্রাহক: আসন্ন ভ্রমণের রিমাইন্ডার"
 
-#: app/Admin/SettingsPage.php:306
+#: app/Admin/SettingsPage.php:308
 msgid "Automated reminder dispatched X days prior to check-in/departure."
 msgstr "চেক-ইন বা যাত্রার কয়েক দিন আগে স্বয়ংক্রিয় রিমাইন্ডার পাঠানো হয়।"
 
-#: app/Admin/SettingsPage.php:313
+#: app/Admin/SettingsPage.php:315
 msgid "Admin: New Booking Notification"
 msgstr "অ্যাডমিন: নতুন বুকিং নোটিফিকেশন"
 
-#: app/Admin/SettingsPage.php:314
-#: app/Admin/SettingsPage.php:323
-#: app/Admin/SettingsPage.php:332
-#: app/Admin/SettingsPage.php:836
+#: app/Admin/SettingsPage.php:316
+#: app/Admin/SettingsPage.php:325
+#: app/Admin/SettingsPage.php:334
+#: app/Admin/SettingsPage.php:849
 msgid "Admin Notification Recipient"
 msgstr "অ্যাডমিন নোটিফিকেশনের প্রাপক"
 
-#: app/Admin/SettingsPage.php:315
+#: app/Admin/SettingsPage.php:317
 msgid "Sent to site administrator when a new booking is submitted."
 msgstr "নতুন বুকিং জমা হলে সাইট অ্যাডমিনিস্ট্রেটরকে পাঠানো হয়।"
 
-#: app/Admin/SettingsPage.php:322
+#: app/Admin/SettingsPage.php:324
 msgid "Admin: Booking Cancelled Alert"
 msgstr "অ্যাডমিন: বুকিং বাতিলের সতর্কতা"
 
-#: app/Admin/SettingsPage.php:324
+#: app/Admin/SettingsPage.php:326
 msgid "Sent to site administrator when a booking is cancelled."
 msgstr "বুকিং বাতিল হলে সাইট অ্যাডমিনিস্ট্রেটরকে পাঠানো হয়।"
 
-#: app/Admin/SettingsPage.php:331
+#: app/Admin/SettingsPage.php:333
 msgid "Admin: New Customer Inquiry"
 msgstr "অ্যাডমিন: নতুন গ্রাহক অনুসন্ধান"
 
-#: app/Admin/SettingsPage.php:333
+#: app/Admin/SettingsPage.php:335
 msgid "Sent to site administrator when a traveler submits the trip inquiry popup form."
 msgstr "ভ্রমণকারী ট্রিপ অনুসন্ধান ফর্ম জমা দিলে সাইট অ্যাডমিনিস্ট্রেটরকে পাঠানো হয়।"
 
-#: app/Admin/SettingsPage.php:364
+#: app/Admin/SettingsPage.php:366
 msgid "Privacy & GDPR"
 msgstr "গোপনীয়তা ও জিডিপিআর"
 
-#: app/Admin/SettingsPage.php:416
+#: app/Admin/SettingsPage.php:418
 msgid "Number Format"
 msgstr "সংখ্যার ফরম্যাট"
 
-#: app/Admin/SettingsPage.php:419
+#: app/Admin/SettingsPage.php:421
 msgid "decimals"
 msgstr "দশমিক"
 
-#: app/Admin/SettingsPage.php:421
+#: app/Admin/SettingsPage.php:423
 msgid "Decimal separator"
 msgstr "দশমিক বিভাজক"
 
-#: app/Admin/SettingsPage.php:422
+#: app/Admin/SettingsPage.php:424
 msgid "Decimal: . (period)"
 msgstr "দশমিক: . (বিন্দু)"
 
-#: app/Admin/SettingsPage.php:423
+#: app/Admin/SettingsPage.php:425
 msgid "Decimal: , (comma)"
 msgstr "দশমিক: , (কমা)"
 
-#: app/Admin/SettingsPage.php:425
+#: app/Admin/SettingsPage.php:427
 msgid "Thousands separator"
 msgstr "হাজারের বিভাজক"
 
-#: app/Admin/SettingsPage.php:426
+#: app/Admin/SettingsPage.php:428
 msgid "Thousands: , (comma)"
 msgstr "হাজার: , (কমা)"
 
-#: app/Admin/SettingsPage.php:427
+#: app/Admin/SettingsPage.php:429
 msgid "Thousands: . (period)"
 msgstr "হাজার: . (বিন্দু)"
 
-#: app/Admin/SettingsPage.php:428
+#: app/Admin/SettingsPage.php:430
 msgid "Thousands: space"
 msgstr "হাজার: স্পেস"
 
-#: app/Admin/SettingsPage.php:429
+#: app/Admin/SettingsPage.php:431
 msgid "Thousands: none"
 msgstr "হাজার: নেই"
 
-#: app/Admin/SettingsPage.php:437
+#: app/Admin/SettingsPage.php:439
 msgid "Tax & VAT Configuration"
 msgstr "ট্যাক্স ও ভ্যাট সেটিংস"
 
-#: app/Admin/SettingsPage.php:440
+#: app/Admin/SettingsPage.php:442
 msgid "Enable Tax"
 msgstr "ট্যাক্স চালু করুন"
 
-#: app/Admin/SettingsPage.php:444
+#: app/Admin/SettingsPage.php:446
 msgid "Calculate tax on bookings"
 msgstr "বুকিংয়ে ট্যাক্স হিসাব করুন"
 
-#: app/Admin/SettingsPage.php:449
+#: app/Admin/SettingsPage.php:451
 msgid "Tax Name / Label"
 msgstr "ট্যাক্সের নাম / লেবেল"
 
-#: app/Admin/SettingsPage.php:451
+#: app/Admin/SettingsPage.php:453
 msgid "e.g. VAT / GST / Sales Tax"
 msgstr "যেমন: ভ্যাট / জিএসটি / সেলস ট্যাক্স"
 
-#: app/Admin/SettingsPage.php:455
+#: app/Admin/SettingsPage.php:457
 msgid "Tax Rate (%)"
 msgstr "ট্যাক্স হার (%)"
 
-#: app/Admin/SettingsPage.php:461
+#: app/Admin/SettingsPage.php:463
 msgid "Tax Mode"
 msgstr "ট্যাক্স মোড"
 
-#: app/Admin/SettingsPage.php:464
+#: app/Admin/SettingsPage.php:466
 msgid "Exclusive (Tax added on top of subtotal)"
 msgstr "এক্সক্লুসিভ (সাবটোটালের ওপর ট্যাক্স যোগ হয়)"
 
-#: app/Admin/SettingsPage.php:465
+#: app/Admin/SettingsPage.php:467
 msgid "Inclusive (Tax extracted from price)"
 msgstr "ইনক্লুসিভ (দামের ভেতর থেকে ট্যাক্স বের করা হয়)"
 
-#: app/Admin/SettingsPage.php:470
+#: app/Admin/SettingsPage.php:472
 msgid "Tax Applies To"
 msgstr "ট্যাক্স প্রযোজ্য"
 
-#: app/Admin/SettingsPage.php:473
+#: app/Admin/SettingsPage.php:475
 msgid "All Bookings (Tours & Rooms)"
 msgstr "সব বুকিং (ট্যুর ও রুম)"
 
-#: app/Admin/SettingsPage.php:474
+#: app/Admin/SettingsPage.php:476
 msgid "Tours Only"
 msgstr "শুধু ট্যুর"
 
-#: app/Admin/SettingsPage.php:475
+#: app/Admin/SettingsPage.php:477
 msgid "Rooms / Accommodations Only"
 msgstr "শুধু রুম / আবাসন"
 
-#: app/Admin/SettingsPage.php:507
+#: app/Admin/SettingsPage.php:509
 msgid "Booking Defaults & Post-Booking Experience"
 msgstr "বুকিং ডিফল্ট ও বুকিং-পরবর্তী অভিজ্ঞতা"
 
-#: app/Admin/SettingsPage.php:519
+#: app/Admin/SettingsPage.php:521
 msgid "Post-Booking Action"
 msgstr "বুকিং-পরবর্তী কাজ"
 
-#: app/Admin/SettingsPage.php:522
+#: app/Admin/SettingsPage.php:524
 msgid "Inline Message (Stay on Booking Page)"
 msgstr "ইনলাইন বার্তা (বুকিং পেজেই থাকুন)"
 
-#: app/Admin/SettingsPage.php:523
+#: app/Admin/SettingsPage.php:525
 msgid "Redirect to Dedicated Thank You / Confirmation Page"
 msgstr "আলাদা ধন্যবাদ / নিশ্চিতকরণ পেজে নিয়ে যান"
 
-#: app/Admin/SettingsPage.php:525
+#: app/Admin/SettingsPage.php:527
 msgid "Choose what happens immediately after a customer submits the frontend booking form."
 msgstr "গ্রাহক ফ্রন্টএন্ড বুকিং ফর্ম জমা দেওয়ার পরপর কী হবে, তা বেছে নিন।"
 
-#: app/Admin/SettingsPage.php:529
+#: app/Admin/SettingsPage.php:531
 msgid "Thank You / Confirmation Page"
 msgstr "ধন্যবাদ / নিশ্চিতকরণ পেজ"
 
-#: app/Admin/SettingsPage.php:536
+#: app/Admin/SettingsPage.php:538
 msgid "— Select Page with [tourivo_thank_you] —"
 msgstr "— [tourivo_thank_you] শর্টকোডযুক্ত পেজ বেছে নিন —"
 
-#: app/Admin/SettingsPage.php:540
+#: app/Admin/SettingsPage.php:542
 msgid "Page containing the [tourivo_thank_you] shortcode where travelers are redirected."
 msgstr "যে পেজে [tourivo_thank_you] শর্টকোড আছে, ভ্রমণকারীকে সেখানে নিয়ে যাওয়া হবে।"
 
-#: app/Admin/SettingsPage.php:547
+#: app/Admin/SettingsPage.php:549
 msgid "Traveler Self-Service & Cancellation Policy"
 msgstr "ভ্রমণকারীর সেলফ-সার্ভিস ও বাতিল নীতি"
 
-#: app/Admin/SettingsPage.php:550
+#: app/Admin/SettingsPage.php:552
 msgid "Allow Cancellation Requests"
 msgstr "বাতিলের অনুরোধ অনুমতি দিন"
 
-#: app/Admin/SettingsPage.php:554
+#: app/Admin/SettingsPage.php:556
 msgid "Allow travelers to request cancellation via the booking lookup portal."
 msgstr "বুকিং খোঁজার পোর্টাল থেকে ভ্রমণকারী বাতিলের অনুরোধ করতে পারবেন।"
 
-#: app/Admin/SettingsPage.php:556
+#: app/Admin/SettingsPage.php:558
 msgid "When enabled, travelers can initiate a cancellation request on the track booking page."
 msgstr "চালু থাকলে ভ্রমণকারী ট্র্যাক বুকিং পেজ থেকে বাতিলের অনুরোধ শুরু করতে পারবেন।"
 
-#: app/Admin/SettingsPage.php:560
+#: app/Admin/SettingsPage.php:562
 msgid "Self-Cancellation Window (Hours Before Check-in)"
 msgstr "নিজে বাতিলের সময়সীমা (চেক-ইনের কত ঘণ্টা আগে)"
 
-#: app/Admin/SettingsPage.php:563
+#: app/Admin/SettingsPage.php:565
 msgid "hours before trip departure / hotel check-in."
 msgstr "ঘণ্টা আগে, যাত্রা বা হোটেল চেক-ইনের।"
 
-#: app/Admin/SettingsPage.php:564
+#: app/Admin/SettingsPage.php:566
 msgid "Set to 0 (default) to require admin review for all cancellations. If set to > 0, unpaid bookings can be instantly cancelled by the traveler if check-in is at least N hours away, immediately releasing inventory."
 msgstr "০ রাখলে (ডিফল্ট) সব বাতিল অ্যাডমিনের অনুমোদন লাগবে। ০-এর বেশি দিলে, চেক-ইন অন্তত সেই ঘণ্টা দূরে থাকলে ভ্রমণকারী অপরিশোধিত বুকিং সাথে সাথে বাতিল করতে পারবেন এবং সিট খালি হয়ে যাবে।"
 
-#: app/Admin/SettingsPage.php:571
+#: app/Admin/SettingsPage.php:573
 msgid "Booking Hygiene & Anti-Abuse"
 msgstr "বুকিং সুরক্ষা ও অপব্যবহার রোধ"
 
-#: app/Admin/SettingsPage.php:574
+#: app/Admin/SettingsPage.php:576
 msgid "Require Email Confirmation"
 msgstr "ইমেইল নিশ্চিতকরণ বাধ্যতামূলক"
 
-#: app/Admin/SettingsPage.php:578
+#: app/Admin/SettingsPage.php:580
 msgid "Travelers must click a link emailed to them before the booking is secured."
 msgstr "বুকিং নিশ্চিত হওয়ার আগে ভ্রমণকারীকে ইমেইলে পাঠানো লিংকে ক্লিক করতে হবে।"
 
-#: app/Admin/SettingsPage.php:580
+#: app/Admin/SettingsPage.php:582
 msgid "Stops fake bookings from locking your inventory and from spamming third-party inboxes. Staff alerts are sent only after confirmation."
 msgstr "ভুয়া বুকিং যাতে ইনভেন্টরি আটকে না রাখে এবং অন্যের ইনবক্সে স্প্যাম না হয়। স্টাফকে সতর্কবার্তা যায় নিশ্চিতকরণের পরে।"
 
-#: app/Admin/SettingsPage.php:584
+#: app/Admin/SettingsPage.php:586
 msgid "Unconfirmed Booking Expiry"
 msgstr "অনিশ্চিত বুকিংয়ের মেয়াদ"
 
-#: app/Admin/SettingsPage.php:587
+#: app/Admin/SettingsPage.php:589
 msgid "minutes, then the booking is cancelled and its spots released."
 msgstr "মিনিট পর বুকিং বাতিল হবে এবং সিট খালি হবে।"
 
-#: app/Admin/SettingsPage.php:591
+#: app/Admin/SettingsPage.php:593
 msgid "Auto-Cancel Unpaid Pending Bookings"
 msgstr "অপরিশোধিত অপেক্ষমাণ বুকিং স্বয়ংক্রিয় বাতিল"
 
-#: app/Admin/SettingsPage.php:594
+#: app/Admin/SettingsPage.php:596
 msgid "hours after creation."
 msgstr "ঘণ্টা পর, তৈরি হওয়ার।"
 
-#: app/Admin/SettingsPage.php:595
+#: app/Admin/SettingsPage.php:597
 msgid "0 (default) keeps pending bookings until you confirm or cancel them manually."
 msgstr "০ (ডিফল্ট) রাখলে অপেক্ষমাণ বুকিং থেকে যায়, যতক্ষণ না আপনি নিজে নিশ্চিত বা বাতিল করেন।"
 
-#: app/Admin/SettingsPage.php:648
+#: app/Admin/SettingsPage.php:650
 msgid "Offline Payment Methods (Bank Transfer & Cash on Arrival)"
 msgstr "অফলাইন পেমেন্ট (ব্যাংক ট্রান্সফার ও পৌঁছে পরিশোধ)"
 
-#: app/Admin/SettingsPage.php:649
+#: app/Admin/SettingsPage.php:651
 msgid "Configure structured bank details for direct wire transfer and Pay-on-Arrival terms for bookings without online payment gateways."
 msgstr "অনলাইন গেটওয়ে ছাড়া বুকিংয়ের জন্য ব্যাংক ট্রান্সফারের তথ্য এবং পৌঁছে পরিশোধের শর্ত সেট করুন।"
 
-#: app/Admin/SettingsPage.php:652
+#: app/Admin/SettingsPage.php:654
 msgid "Direct Bank Transfer (Wire / Deposit)"
 msgstr "সরাসরি ব্যাংক ট্রান্সফার (ওয়্যার / ডিপোজিট)"
 
-#: app/Admin/SettingsPage.php:655
+#: app/Admin/SettingsPage.php:657
 msgid "Enable Bank Transfer"
 msgstr "ব্যাংক ট্রান্সফার চালু করুন"
 
-#: app/Admin/SettingsPage.php:659
+#: app/Admin/SettingsPage.php:661
 msgid "Allow travelers to select Bank Transfer during reservation."
 msgstr "রিজার্ভেশনের সময় ভ্রমণকারী ব্যাংক ট্রান্সফার বেছে নিতে পারবেন।"
 
-#: app/Admin/SettingsPage.php:664
+#: app/Admin/SettingsPage.php:666
 msgid "Bank Name"
 msgstr "ব্যাংকের নাম"
 
-#: app/Admin/SettingsPage.php:670
+#: app/Admin/SettingsPage.php:672
 msgid "Account Name / Beneficiary"
 msgstr "অ্যাকাউন্টের নাম / সুবিধাভোগী"
 
-#: app/Admin/SettingsPage.php:676
+#: app/Admin/SettingsPage.php:678
 msgid "Account Number"
 msgstr "অ্যাকাউন্ট নম্বর"
 
-#: app/Admin/SettingsPage.php:682
+#: app/Admin/SettingsPage.php:684
 msgid "IBAN (International)"
 msgstr "আইবান (আন্তর্জাতিক)"
 
-#: app/Admin/SettingsPage.php:688
+#: app/Admin/SettingsPage.php:690
 msgid "SWIFT / BIC / Routing Code"
 msgstr "সুইফট / বিআইসি / রাউটিং কোড"
 
-#: app/Admin/SettingsPage.php:694
+#: app/Admin/SettingsPage.php:696
 msgid "Branch Name & Address"
 msgstr "শাখার নাম ও ঠিকানা"
 
-#: app/Admin/SettingsPage.php:700
+#: app/Admin/SettingsPage.php:702
 msgid "Bank Transfer Instructions"
 msgstr "ব্যাংক ট্রান্সফারের নির্দেশনা"
 
-#: app/Admin/SettingsPage.php:702
+#: app/Admin/SettingsPage.php:704
 msgid "e.g. Please include your Booking Reference # in your transfer remarks and submit transaction reference on Thank You page."
 msgstr "যেমন: ট্রান্সফারের মন্তব্যে বুকিং রেফারেন্স নম্বর লিখুন এবং ধন্যবাদ পেজে লেনদেনের রেফারেন্স জমা দিন।"
 
-#: app/Admin/SettingsPage.php:708
+#: app/Admin/SettingsPage.php:710
 #: app/Services/PaymentService.php:53
 #: templates/thank-you.php:177
 msgid "Cash on Arrival / Pay at Check-in"
 msgstr "পৌঁছে নগদ / চেক-ইনে পরিশোধ"
 
-#: app/Admin/SettingsPage.php:711
+#: app/Admin/SettingsPage.php:713
 msgid "Enable Cash on Arrival"
 msgstr "পৌঁছে নগদ পরিশোধ চালু করুন"
 
-#: app/Admin/SettingsPage.php:715
+#: app/Admin/SettingsPage.php:717
 msgid "Allow travelers to pay in cash or card at the tour desk / hotel front reception."
 msgstr "ভ্রমণকারী ট্যুর ডেস্ক বা হোটেল রিসেপশনে নগদ বা কার্ডে পরিশোধ করতে পারবেন।"
 
-#: app/Admin/SettingsPage.php:720
+#: app/Admin/SettingsPage.php:722
 msgid "Arrival Payment Instructions"
 msgstr "পৌঁছে পরিশোধের নির্দেশনা"
 
-#: app/Admin/SettingsPage.php:722
+#: app/Admin/SettingsPage.php:724
 msgid "e.g. Payment is collected at the tour reception desk before boarding. Cash and all major debit/credit cards accepted."
 msgstr "যেমন: গাড়িতে ওঠার আগে ট্যুর রিসেপশনে পেমেন্ট নেওয়া হয়। নগদ এবং প্রধান ডেবিট/ক্রেডিট কার্ড গ্রহণযোগ্য।"
 
-#: app/Admin/SettingsPage.php:666
+#: app/Admin/SettingsPage.php:668
 msgid "e.g. Standard Chartered / City Bank"
 msgstr "যেমন: স্ট্যান্ডার্ড চার্টার্ড / সিটি ব্যাংক"
 
-#: app/Admin/SettingsPage.php:672
+#: app/Admin/SettingsPage.php:674
 msgid "e.g. Tourivo Holidays Ltd."
 msgstr "যেমন: ট্যুরিভো হলিডেজ লিমিটেড"
 
-#: app/Admin/SettingsPage.php:678
+#: app/Admin/SettingsPage.php:680
 msgid "e.g. 01-2345678-01"
 msgstr "যেমন: 01-2345678-01"
 
-#: app/Admin/SettingsPage.php:684
+#: app/Admin/SettingsPage.php:686
 msgid "e.g. GB29NWBK60161331926819"
 msgstr "যেমন: GB29NWBK60161331926819"
 
-#: app/Admin/SettingsPage.php:690
+#: app/Admin/SettingsPage.php:692
 msgid "e.g. CIBLBDDH"
 msgstr "যেমন: CIBLBDDH"
 
-#: app/Admin/SettingsPage.php:696
+#: app/Admin/SettingsPage.php:698
 msgid "e.g. Principal Branch, Dhaka"
 msgstr "যেমন: প্রিন্সিপাল শাখা, ঢাকা"
 
-#: app/Admin/SettingsPage.php:803
+#: app/Admin/SettingsPage.php:816
 msgid "Google Tag Manager / DataLayer"
 msgstr "গুগল ট্যাগ ম্যানেজার / ডেটালেয়ার"
 
-#: app/Admin/SettingsPage.php:807
+#: app/Admin/SettingsPage.php:820
 msgid "Enable eCommerce conversion tracking dataLayer event on Thank You page."
 msgstr "ধন্যবাদ পেজে ই-কমার্স কনভার্শন ট্র্যাকিংয়ের ডেটালেয়ার ইভেন্ট চালু করুন।"
 
-#: app/Admin/SettingsPage.php:809
+#: app/Admin/SettingsPage.php:822
 msgid "Pushes a privacy-friendly tourivo_booking event (booking_id, value, currency) to window.dataLayer without customer PII."
 msgstr "গ্রাহকের ব্যক্তিগত তথ্য ছাড়া window.dataLayer-এ tourivo_booking ইভেন্ট (booking_id, value, currency) পাঠায়।"
 
-#: app/Admin/SettingsPage.php:819
+#: app/Admin/SettingsPage.php:832
 msgid "Sender Details & Routing"
 msgstr "প্রেরকের তথ্য ও রাউটিং"
 
-#: app/Admin/SettingsPage.php:822
+#: app/Admin/SettingsPage.php:835
 msgid "Sender \"From\" Name"
 msgstr "প্রেরকের \"প্রেরক\" নাম"
 
-#: app/Admin/SettingsPage.php:825
+#: app/Admin/SettingsPage.php:838
 msgid "The name appearing in traveler inboxes (e.g. Your Agency Name)."
 msgstr "ভ্রমণকারীর ইনবক্সে যে নাম দেখা যাবে (যেমন: আপনার এজেন্সির নাম)।"
 
-#: app/Admin/SettingsPage.php:829
+#: app/Admin/SettingsPage.php:842
 msgid "Sender \"From\" Email"
 msgstr "প্রেরকের ইমেইল"
 
-#: app/Admin/SettingsPage.php:832
+#: app/Admin/SettingsPage.php:845
 msgid "The outbound email address used in the From and Reply-To headers."
 msgstr "প্রেরক ও রিপ্লাই-টু হেডারে ব্যবহৃত ইমেইল ঠিকানা।"
 
-#: app/Admin/SettingsPage.php:839
+#: app/Admin/SettingsPage.php:852
 msgid "Internal staff / operator email that receives new booking alerts, cancellation notices, and customer inquiries."
 msgstr "নতুন বুকিং, বাতিল এবং গ্রাহকের অনুসন্ধান যে স্টাফ বা অপারেটরের ইমেইলে যাবে।"
 
-#: app/Admin/SettingsPage.php:846
+#: app/Admin/SettingsPage.php:859
 msgid "General Email & Reminder Settings"
 msgstr "সাধারণ ইমেইল ও রিমাইন্ডার সেটিংস"
 
-#: app/Admin/SettingsPage.php:849
+#: app/Admin/SettingsPage.php:862
 msgid "Upcoming Trip Reminder (Days Before)"
 msgstr "আসন্ন ভ্রমণের রিমাইন্ডার (কত দিন আগে)"
 
-#: app/Admin/SettingsPage.php:852
+#: app/Admin/SettingsPage.php:865
 msgid "days before tour departure or hotel check-in date."
 msgstr "দিন আগে, ট্যুর যাত্রা বা হোটেল চেক-ইনের।"
 
-#: app/Admin/SettingsPage.php:853
+#: app/Admin/SettingsPage.php:866
 msgid "Set to 0 to disable automated daily trip reminder emails. Tourivo runs a daily background cron check to dispatch reminders."
 msgstr "০ দিলে স্বয়ংক্রিয় রিমাইন্ডার ইমেইল বন্ধ থাকবে। ট্যুরিভো প্রতিদিন ব্যাকগ্রাউন্ডে চেক করে রিমাইন্ডার পাঠায়।"
 
-#: app/Admin/SettingsPage.php:857
+#: app/Admin/SettingsPage.php:870
 msgid "Customer Booking Lookup Page"
 msgstr "গ্রাহকের বুকিং খোঁজার পেজ"
 
-#: app/Admin/SettingsPage.php:864
+#: app/Admin/SettingsPage.php:877
 msgid "— Select Page with [tourivo_booking_lookup] —"
 msgstr "— [tourivo_booking_lookup] শর্টকোডযুক্ত পেজ বেছে নিন —"
 
-#: app/Admin/SettingsPage.php:868
+#: app/Admin/SettingsPage.php:881
 msgid "Selected page is used to construct the {lookup_url} placeholder so travelers can look up and self-manage reservations."
 msgstr "নির্বাচিত পেজ দিয়ে {lookup_url} তৈরি হয়, যাতে ভ্রমণকারী রিজার্ভেশন খুঁজে নিজে পরিচালনা করতে পারেন।"
 
-#: app/Admin/SettingsPage.php:872
+#: app/Admin/SettingsPage.php:885
 msgid "Customer Account / My Bookings Page"
 msgstr "গ্রাহক অ্যাকাউন্ট / আমার বুকিং পেজ"
 
-#: app/Admin/SettingsPage.php:879
+#: app/Admin/SettingsPage.php:892
 msgid "— Select Page with [tourivo_my_bookings] —"
 msgstr "— [tourivo_my_bookings] শর্টকোডযুক্ত পেজ বেছে নিন —"
 
-#: app/Admin/SettingsPage.php:883
+#: app/Admin/SettingsPage.php:896
 msgid "Selected page is used as the authenticated traveler account dashboard displaying upcoming trips, vouchers, and reservation management."
 msgstr "নির্বাচিত পেজ লগইন করা ভ্রমণকারীর ড্যাশবোর্ড, যেখানে আসন্ন ভ্রমণ, ভাউচার ও রিজার্ভেশন পরিচালনা দেখা যায়।"
 
-#: app/Admin/SettingsPage.php:887
+#: app/Admin/SettingsPage.php:900
 msgid "Offline / Manual Payment Instructions"
 msgstr "অফলাইন / ম্যানুয়াল পেমেন্টের নির্দেশনা"
 
-#: app/Admin/SettingsPage.php:890
+#: app/Admin/SettingsPage.php:903
 msgid "Included in Pending Booking emails via the {offline_payment_instructions} placeholder for manual bank wire, bKash, or pay-on-arrival instructions."
 msgstr "অপেক্ষমাণ বুকিং ইমেইলে {offline_payment_instructions} দিয়ে ব্যাংক, বিকাশ বা পৌঁছে পরিশোধের নির্দেশনা যায়।"
 
-#: app/Admin/SettingsPage.php:889
+#: app/Admin/SettingsPage.php:902
 msgid ""
 "Bank Transfer Details:\n"
 "Bank: City Bank\n"
@@ -4375,211 +4375,211 @@ msgstr ""
 "অ্যাকাউন্ট: 123456789\n"
 "অথবা বিকাশ মার্চেন্ট: 01700000000 (রেফারেন্স হিসেবে বুকিং কোড ব্যবহার করুন)"
 
-#: app/Admin/SettingsPage.php:897
+#: app/Admin/SettingsPage.php:910
 msgid "Available Template Placeholders"
 msgstr "ব্যবহারযোগ্য টেমপ্লেট প্লেসহোল্ডার"
 
-#: app/Admin/SettingsPage.php:898
+#: app/Admin/SettingsPage.php:911
 msgid "Use these tags inside email subjects, headings, and additional content. They will be dynamically replaced with real booking data:"
 msgstr "ইমেইলের বিষয়, শিরোনাম ও অতিরিক্ত লেখায় এই ট্যাগ ব্যবহার করুন। এগুলো আসল বুকিং তথ্য দিয়ে বদলে যাবে:"
 
-#: app/Admin/SettingsPage.php:901
+#: app/Admin/SettingsPage.php:914
 msgid "For inquiry notifications: {inquiry_name}, {inquiry_email}, {inquiry_phone}, {inquiry_message}, {item_title}, {site_name}."
 msgstr "অনুসন্ধানের নোটিফিকেশনে: {inquiry_name}, {inquiry_email}, {inquiry_phone}, {inquiry_message}, {item_title}, {site_name}।"
 
-#: app/Admin/SettingsPage.php:906
+#: app/Admin/SettingsPage.php:919
 msgid "Email Templates Configuration"
 msgstr "ইমেইল টেমপ্লেট সেটিংস"
 
-#: app/Admin/SettingsPage.php:907
+#: app/Admin/SettingsPage.php:920
 msgid "Customize the subject lines, headings, and additional notes for all automated emails. You can also override email layouts in your active WordPress theme under your-theme/tourivo/emails/."
 msgstr "সব স্বয়ংক্রিয় ইমেইলের বিষয়, শিরোনাম ও অতিরিক্ত নোট বদলান। থিমের your-theme/tourivo/emails/ ফোল্ডার থেকে লেআউটও বদলানো যায়।"
 
-#: app/Admin/SettingsPage.php:924
+#: app/Admin/SettingsPage.php:937
 msgid "Test This Email"
 msgstr "এই ইমেইল পরীক্ষা করুন"
 
-#: app/Admin/SettingsPage.php:934
+#: app/Admin/SettingsPage.php:947
 msgid "Email Subject Line"
 msgstr "ইমেইলের বিষয়"
 
-#: app/Admin/SettingsPage.php:940
+#: app/Admin/SettingsPage.php:953
 msgid "Email Main Heading"
 msgstr "ইমেইলের মূল শিরোনাম"
 
-#: app/Admin/SettingsPage.php:948
+#: app/Admin/SettingsPage.php:961
 msgid "Additional Content / Custom Notes"
 msgstr "অতিরিক্ত লেখা / কাস্টম নোট"
 
-#: app/Admin/SettingsPage.php:950
+#: app/Admin/SettingsPage.php:963
 msgid "Optional custom message, arrival guidelines, or policy instructions..."
 msgstr "ঐচ্ছিক কাস্টম বার্তা, পৌঁছানোর নির্দেশনা, বা নীতিমালা..."
 
-#: app/Admin/SettingsPage.php:959
+#: app/Admin/SettingsPage.php:972
 msgid "Send a sample email to verify your WordPress mail server setup and layout rendering."
 msgstr "ওয়ার্ডপ্রেস মেইল সার্ভার ও লেআউট ঠিক আছে কিনা দেখতে একটি নমুনা ইমেইল পাঠান।"
 
-#: app/Admin/SettingsPage.php:967
+#: app/Admin/SettingsPage.php:980
 msgid "your-email@example.com"
 msgstr "your-email@example.com"
 
-#: app/Admin/SettingsPage.php:1021
+#: app/Admin/SettingsPage.php:1034
 msgid "Payload Data Minimization"
 msgstr "পেলোডে তথ্য কমানো"
 
-#: app/Admin/SettingsPage.php:1026
+#: app/Admin/SettingsPage.php:1039
 msgid "Include customer phone numbers in webhook payloads."
 msgstr "ওয়েবহুক পেলোডে গ্রাহকের ফোন নম্বর রাখুন।"
 
-#: app/Admin/SettingsPage.php:1030
+#: app/Admin/SettingsPage.php:1043
 msgid "Include custom traveler inquiry messages in inquiry webhook payloads."
 msgstr "অনুসন্ধানের ওয়েবহুক পেলোডে ভ্রমণকারীর বার্তা রাখুন।"
 
-#: app/Admin/SettingsPage.php:1033
+#: app/Admin/SettingsPage.php:1046
 msgid "Uncheck to strip personal communication details and phone numbers from external automated webhooks for privacy minimization."
 msgstr "গোপনীয়তার জন্য আনচেক করলে বাইরের অটোমেশনে ফোন নম্বর ও ব্যক্তিগত যোগাযোগের তথ্য যাবে না।"
 
-#: app/Admin/SettingsPage.php:986
+#: app/Admin/SettingsPage.php:999
 msgid "https://hooks.zapier.com/hooks/catch/..."
 msgstr "https://hooks.zapier.com/hooks/catch/..."
 
-#: app/Admin/SettingsPage.php:994
+#: app/Admin/SettingsPage.php:1007
 msgid "e.g. secret_trv_xxxx"
 msgstr "যেমন: secret_trv_xxxx"
 
-#: app/Admin/SettingsPage.php:1055
+#: app/Admin/SettingsPage.php:1068
 msgid "User Consent & Terms Agreement"
 msgstr "ব্যবহারকারীর সম্মতি ও শর্তাবলি"
 
-#: app/Admin/SettingsPage.php:1056
+#: app/Admin/SettingsPage.php:1069
 msgid "Require travelers to explicitly agree to your Terms and Privacy Policy before submitting bookings or trip inquiries."
 msgstr "বুকিং বা ট্রিপ অনুসন্ধান জমা দেওয়ার আগে ভ্রমণকারীকে শর্তাবলি ও গোপনীয়তা নীতিতে সম্মতি দিতে হবে।"
 
-#: app/Admin/SettingsPage.php:1060
+#: app/Admin/SettingsPage.php:1073
 msgid "Require Consent"
 msgstr "সম্মতি বাধ্যতামূলক"
 
-#: app/Admin/SettingsPage.php:1064
+#: app/Admin/SettingsPage.php:1077
 msgid "Require checkbox agreement before checkout and inquiry submission."
 msgstr "চেকআউট ও অনুসন্ধান জমা দেওয়ার আগে চেকবক্সে সম্মতি লাগবে।"
 
-#: app/Admin/SettingsPage.php:1066
+#: app/Admin/SettingsPage.php:1079
 msgid "When enabled, bookings and inquiries cannot proceed without agreeing to terms. Tourivo records the exact timestamp and policy version SHA-256 hash."
 msgstr "চালু থাকলে শর্তে সম্মতি ছাড়া বুকিং বা অনুসন্ধান এগোবে না। ট্যুরিভো সময় ও নীতির SHA-256 হ্যাশ সংরক্ষণ করে।"
 
-#: app/Admin/SettingsPage.php:1070
+#: app/Admin/SettingsPage.php:1083
 msgid "Privacy Policy Page"
 msgstr "গোপনীয়তা নীতির পেজ"
 
-#: app/Admin/SettingsPage.php:1077
+#: app/Admin/SettingsPage.php:1090
 msgid "— Use WordPress Core Privacy Policy Page —"
 msgstr "— ওয়ার্ডপ্রেসের নিজস্ব গোপনীয়তা নীতির পেজ ব্যবহার করুন —"
 
-#: app/Admin/SettingsPage.php:1081
+#: app/Admin/SettingsPage.php:1094
 msgid "By default, Tourivo links to the WordPress site privacy policy defined under Settings → Privacy."
 msgstr "ডিফল্টভাবে ট্যুরিভো সেটিংস → গোপনীয়তায় নির্ধারিত ওয়ার্ডপ্রেস গোপনীয়তা নীতির লিংক দেয়।"
 
-#: app/Admin/SettingsPage.php:1085
+#: app/Admin/SettingsPage.php:1098
 msgid "Terms & Conditions Page"
 msgstr "শর্তাবলির পেজ"
 
-#: app/Admin/SettingsPage.php:1092
+#: app/Admin/SettingsPage.php:1105
 msgid "— Select Terms and Conditions Page —"
 msgstr "— শর্তাবলির পেজ বেছে নিন —"
 
-#: app/Admin/SettingsPage.php:1099
+#: app/Admin/SettingsPage.php:1112
 msgid "Consent Checkbox Label"
 msgstr "সম্মতি চেকবক্সের লেবেল"
 
-#: app/Admin/SettingsPage.php:1102
+#: app/Admin/SettingsPage.php:1115
 msgid "Placeholders {privacy} and {terms} will be automatically transformed into clickable links."
 msgstr "{privacy} ও {terms} প্লেসহোল্ডার স্বয়ংক্রিয়ভাবে ক্লিকযোগ্য লিংক হবে।"
 
-#: app/Admin/SettingsPage.php:1109
+#: app/Admin/SettingsPage.php:1122
 msgid "IP Storage & Data Minimization"
 msgstr "আইপি সংরক্ষণ ও তথ্য কমানো"
 
-#: app/Admin/SettingsPage.php:1112
+#: app/Admin/SettingsPage.php:1125
 msgid "Store IP Addresses"
 msgstr "আইপি ঠিকানা সংরক্ষণ"
 
-#: app/Admin/SettingsPage.php:1116
+#: app/Admin/SettingsPage.php:1129
 msgid "Log client IP addresses with booking and inquiry records."
 msgstr "বুকিং ও অনুসন্ধানের সাথে গ্রাহকের আইপি ঠিকানা রাখুন।"
 
-#: app/Admin/SettingsPage.php:1118
+#: app/Admin/SettingsPage.php:1131
 msgid "If disabled, the IP address column will remain blank in the database. Rate limiting defenses continue securely using one-way transient hashes."
 msgstr "বন্ধ থাকলে ডাটাবেসে আইপি কলাম খালি থাকবে। রেট লিমিট তখনও ওয়ান-ওয়ে হ্যাশ দিয়ে চলবে।"
 
-#: app/Admin/SettingsPage.php:1125
+#: app/Admin/SettingsPage.php:1138
 msgid "Scheduled Data Retention & Anonymization Routine"
 msgstr "নির্ধারিত ডেটা সংরক্ষণ ও বেনামীকরণ"
 
-#: app/Admin/SettingsPage.php:1126
+#: app/Admin/SettingsPage.php:1139
 msgid "Automate GDPR storage limitation compliance. Bookings are safely anonymized (retaining financial amounts and lines for tax laws), while inquiries are permanently deleted."
 msgstr "জিডিপিআর অনুযায়ী পুরনো তথ্য স্বয়ংক্রিয়ভাবে সীমিত করুন। বুকিং বেনামী হয় (ট্যাক্সের জন্য টাকার হিসাব থাকে), অনুসন্ধান স্থায়ীভাবে মুছে যায়।"
 
-#: app/Admin/SettingsPage.php:1130
+#: app/Admin/SettingsPage.php:1143
 msgid "Anonymize Completed Bookings After"
 msgstr "সম্পন্ন বুকিং বেনামী হবে"
 
-#: app/Admin/SettingsPage.php:1133
+#: app/Admin/SettingsPage.php:1146
 msgid "months (Set to 0 to disable automated anonymization)."
 msgstr "মাস পর (০ দিলে স্বয়ংক্রিয় বেনামীকরণ বন্ধ)।"
 
-#: app/Admin/SettingsPage.php:1134
+#: app/Admin/SettingsPage.php:1147
 msgid "Replaces customer name, email, phone, billing address, notes, payment references, and IP with anonymized values, revokes voucher links, and keeps revenue totals intact."
 msgstr "গ্রাহকের নাম, ইমেইল, ফোন, বিলিং ঠিকানা, নোট, পেমেন্ট রেফারেন্স ও আইপি বেনামী হয়, ভাউচার লিংক বাতিল হয়, এবং আয়ের হিসাব অক্ষুণ্ণ থাকে।"
 
-#: app/Admin/SettingsPage.php:1138
+#: app/Admin/SettingsPage.php:1151
 msgid "Delete Old Inquiries After"
 msgstr "পুরনো অনুসন্ধান মুছে যাবে"
 
-#: app/Admin/SettingsPage.php:1141
+#: app/Admin/SettingsPage.php:1154
 msgid "months (Set to 0 to retain inquiries indefinitely)."
 msgstr "মাস পর (০ দিলে অনুসন্ধান অনির্দিষ্টকাল থাকবে)।"
 
-#: app/Admin/SettingsPage.php:1147
+#: app/Admin/SettingsPage.php:1160
 msgid "Retention Routine Dry-Run Preview"
 msgstr "রিটেনশন রুটিনের প্রিভিউ"
 
-#: app/Admin/SettingsPage.php:1148
+#: app/Admin/SettingsPage.php:1161
 msgid "Check how many expired records are currently eligible for scheduled retention actions without modifying data."
 msgstr "কোনো তথ্য না বদলে দেখুন এখন কতগুলো মেয়াদোত্তীর্ণ রেকর্ড রিটেনশনের জন্য প্রস্তুত।"
 
-#: app/Admin/SettingsPage.php:1150
+#: app/Admin/SettingsPage.php:1163
 msgid "Check Eligible Records Count"
 msgstr "প্রস্তুত রেকর্ডের সংখ্যা দেখুন"
 
-#: app/Admin/SettingsPage.php:1157
+#: app/Admin/SettingsPage.php:1170
 msgid "WordPress Core Privacy Tools Integration"
 msgstr "ওয়ার্ডপ্রেস গোপনীয়তা টুলের সাথে সংযোগ"
 
-#: app/Admin/SettingsPage.php:1158
+#: app/Admin/SettingsPage.php:1171
 msgid "Tourivo is fully integrated with standard WordPress privacy compliance features:"
 msgstr "ট্যুরিভো ওয়ার্ডপ্রেসের আদর্শ গোপনীয়তা ফিচারের সাথে যুক্ত:"
 
-#: app/Admin/SettingsPage.php:1160
+#: app/Admin/SettingsPage.php:1173
 msgid "Export Personal Data:"
 msgstr "ব্যক্তিগত তথ্য এক্সপোর্ট:"
 
-#: app/Admin/SettingsPage.php:1160
+#: app/Admin/SettingsPage.php:1173
 msgid "Exports traveler bookings and trip inquiries when requested via Tools → Export Personal Data."
 msgstr "টুলস → ব্যক্তিগত তথ্য এক্সপোর্ট থেকে চাইলে ভ্রমণকারীর বুকিং ও অনুসন্ধান বের হয়।"
 
-#: app/Admin/SettingsPage.php:1161
+#: app/Admin/SettingsPage.php:1174
 msgid "Erase Personal Data:"
 msgstr "ব্যক্তিগত তথ্য মুছুন:"
 
-#: app/Admin/SettingsPage.php:1161
+#: app/Admin/SettingsPage.php:1174
 msgid "Erases inquiry submissions and wishlist user meta, and anonymizes booking financial records for tax/statutory compliance via Tools → Erase Personal Data."
 msgstr "টুলস → ব্যক্তিগত তথ্য মুছুন থেকে অনুসন্ধান ও উইশলিস্ট মুছে যায়, এবং ট্যাক্স আইনের জন্য বুকিংয়ের আর্থিক রেকর্ড বেনামী হয়।"
 
-#: app/Admin/SettingsPage.php:1162
+#: app/Admin/SettingsPage.php:1175
 msgid "Privacy Policy Guide:"
 msgstr "গোপনীয়তা নীতি গাইড:"
 
-#: app/Admin/SettingsPage.php:1162
+#: app/Admin/SettingsPage.php:1175
 msgid "Suggested disclosures are automatically registered in the WordPress Privacy Policy Guide under Settings → Privacy."
 msgstr "প্রস্তাবিত প্রকাশনা সেটিংস → গোপনীয়তার নীতি গাইডে স্বয়ংক্রিয়ভাবে যুক্ত হয়।"
 
@@ -4601,11 +4601,11 @@ msgstr "বুকিং এক্সপোর্ট"
 msgid "Export Bookings & Generate Reports"
 msgstr "বুকিং এক্সপোর্ট ও রিপোর্ট"
 
-#: app/Providers/AdminServiceProvider.php:397
+#: app/Providers/AdminServiceProvider.php:390
 msgid "Your site sits behind another server. Without a quick fix, real customers can get blocked after only a few bookings."
 msgstr "আপনার সাইট আরেকটি সার্ভারের আড়ালে চলছে। একবার ঠিক না করলে অল্প কিছু বুকিংয়ের পর আসল গ্রাহকও আটকে যেতে পারেন।"
 
-#: app/Providers/AdminServiceProvider.php:402
+#: app/Providers/AdminServiceProvider.php:395
 msgid "Fix this for me"
 msgstr "এক ক্লিকে ঠিক করুন"
 
@@ -4623,168 +4623,168 @@ msgstr "আগের মাস"
 msgid "Next month"
 msgstr "পরের মাস"
 
-#: app/Providers/MetaBoxServiceProvider.php:136
-#: app/Providers/TemplateServiceProvider.php:673
+#: app/Providers/MetaBoxServiceProvider.php:129
+#: app/Providers/TemplateServiceProvider.php:667
 #: views/admin/metaboxes/availability-metabox.php:59
 msgid "Sun"
 msgstr "রবি"
 
-#: app/Providers/MetaBoxServiceProvider.php:130
-#: app/Providers/TemplateServiceProvider.php:674
+#: app/Providers/MetaBoxServiceProvider.php:123
+#: app/Providers/TemplateServiceProvider.php:668
 #: views/admin/metaboxes/availability-metabox.php:53
 msgid "Mon"
 msgstr "সোম"
 
-#: app/Providers/MetaBoxServiceProvider.php:131
-#: app/Providers/TemplateServiceProvider.php:675
+#: app/Providers/MetaBoxServiceProvider.php:124
+#: app/Providers/TemplateServiceProvider.php:669
 #: views/admin/metaboxes/availability-metabox.php:54
 msgid "Tue"
 msgstr "মঙ্গল"
 
-#: app/Providers/MetaBoxServiceProvider.php:132
-#: app/Providers/TemplateServiceProvider.php:676
+#: app/Providers/MetaBoxServiceProvider.php:125
+#: app/Providers/TemplateServiceProvider.php:670
 #: views/admin/metaboxes/availability-metabox.php:55
 msgid "Wed"
 msgstr "বুধ"
 
-#: app/Providers/MetaBoxServiceProvider.php:133
-#: app/Providers/TemplateServiceProvider.php:677
+#: app/Providers/MetaBoxServiceProvider.php:126
+#: app/Providers/TemplateServiceProvider.php:671
 #: views/admin/metaboxes/availability-metabox.php:56
 msgid "Thu"
 msgstr "বৃহঃ"
 
-#: app/Providers/MetaBoxServiceProvider.php:134
-#: app/Providers/TemplateServiceProvider.php:678
+#: app/Providers/MetaBoxServiceProvider.php:127
+#: app/Providers/TemplateServiceProvider.php:672
 #: views/admin/metaboxes/availability-metabox.php:57
 msgid "Fri"
 msgstr "শুক্র"
 
-#: app/Providers/MetaBoxServiceProvider.php:135
-#: app/Providers/TemplateServiceProvider.php:679
+#: app/Providers/MetaBoxServiceProvider.php:128
+#: app/Providers/TemplateServiceProvider.php:673
 #: views/admin/metaboxes/availability-metabox.php:58
 msgid "Sat"
 msgstr "শনি"
 
-#: app/Providers/MetaBoxServiceProvider.php:116
-#: app/Providers/TemplateServiceProvider.php:682
-#: app/Providers/TemplateServiceProvider.php:1398
+#: app/Providers/MetaBoxServiceProvider.php:109
+#: app/Providers/TemplateServiceProvider.php:676
+#: app/Providers/TemplateServiceProvider.php:1392
 #: app/Support/functions.php:450
 #: templates/search-bar.php:52
 msgid "January"
 msgstr "জানুয়ারি"
 
-#: app/Providers/MetaBoxServiceProvider.php:117
-#: app/Providers/TemplateServiceProvider.php:683
-#: app/Providers/TemplateServiceProvider.php:1398
+#: app/Providers/MetaBoxServiceProvider.php:110
+#: app/Providers/TemplateServiceProvider.php:677
+#: app/Providers/TemplateServiceProvider.php:1392
 #: app/Support/functions.php:450
 #: templates/search-bar.php:52
 msgid "February"
 msgstr "ফেব্রুয়ারি"
 
-#: app/Providers/MetaBoxServiceProvider.php:118
-#: app/Providers/TemplateServiceProvider.php:684
-#: app/Providers/TemplateServiceProvider.php:1398
+#: app/Providers/MetaBoxServiceProvider.php:111
+#: app/Providers/TemplateServiceProvider.php:678
+#: app/Providers/TemplateServiceProvider.php:1392
 #: app/Support/functions.php:450
 #: templates/search-bar.php:52
 msgid "March"
 msgstr "মার্চ"
 
-#: app/Providers/MetaBoxServiceProvider.php:119
-#: app/Providers/TemplateServiceProvider.php:685
-#: app/Providers/TemplateServiceProvider.php:1399
+#: app/Providers/MetaBoxServiceProvider.php:112
+#: app/Providers/TemplateServiceProvider.php:679
+#: app/Providers/TemplateServiceProvider.php:1393
 #: app/Support/functions.php:451
 #: templates/search-bar.php:53
 msgid "April"
 msgstr "এপ্রিল"
 
-#: app/Providers/MetaBoxServiceProvider.php:120
-#: app/Providers/TemplateServiceProvider.php:686
-#: app/Providers/TemplateServiceProvider.php:1399
+#: app/Providers/MetaBoxServiceProvider.php:113
+#: app/Providers/TemplateServiceProvider.php:680
+#: app/Providers/TemplateServiceProvider.php:1393
 #: app/Support/functions.php:451
 #: templates/search-bar.php:53
 msgid "May"
 msgstr "মে"
 
-#: app/Providers/MetaBoxServiceProvider.php:121
-#: app/Providers/TemplateServiceProvider.php:687
-#: app/Providers/TemplateServiceProvider.php:1399
+#: app/Providers/MetaBoxServiceProvider.php:114
+#: app/Providers/TemplateServiceProvider.php:681
+#: app/Providers/TemplateServiceProvider.php:1393
 #: app/Support/functions.php:451
 #: templates/search-bar.php:53
 msgid "June"
 msgstr "জুন"
 
-#: app/Providers/MetaBoxServiceProvider.php:122
-#: app/Providers/TemplateServiceProvider.php:688
-#: app/Providers/TemplateServiceProvider.php:1400
+#: app/Providers/MetaBoxServiceProvider.php:115
+#: app/Providers/TemplateServiceProvider.php:682
+#: app/Providers/TemplateServiceProvider.php:1394
 #: app/Support/functions.php:452
 #: templates/search-bar.php:54
 msgid "July"
 msgstr "জুলাই"
 
-#: app/Providers/MetaBoxServiceProvider.php:123
-#: app/Providers/TemplateServiceProvider.php:689
-#: app/Providers/TemplateServiceProvider.php:1400
+#: app/Providers/MetaBoxServiceProvider.php:116
+#: app/Providers/TemplateServiceProvider.php:683
+#: app/Providers/TemplateServiceProvider.php:1394
 #: app/Support/functions.php:452
 #: templates/search-bar.php:54
 msgid "August"
 msgstr "আগস্ট"
 
-#: app/Providers/MetaBoxServiceProvider.php:124
-#: app/Providers/TemplateServiceProvider.php:690
-#: app/Providers/TemplateServiceProvider.php:1400
+#: app/Providers/MetaBoxServiceProvider.php:117
+#: app/Providers/TemplateServiceProvider.php:684
+#: app/Providers/TemplateServiceProvider.php:1394
 #: app/Support/functions.php:452
 #: templates/search-bar.php:54
 msgid "September"
 msgstr "সেপ্টেম্বর"
 
-#: app/Providers/MetaBoxServiceProvider.php:125
-#: app/Providers/TemplateServiceProvider.php:691
-#: app/Providers/TemplateServiceProvider.php:1401
+#: app/Providers/MetaBoxServiceProvider.php:118
+#: app/Providers/TemplateServiceProvider.php:685
+#: app/Providers/TemplateServiceProvider.php:1395
 #: app/Support/functions.php:453
 #: templates/search-bar.php:55
 msgid "October"
 msgstr "অক্টোবর"
 
-#: app/Providers/MetaBoxServiceProvider.php:126
-#: app/Providers/TemplateServiceProvider.php:692
-#: app/Providers/TemplateServiceProvider.php:1401
+#: app/Providers/MetaBoxServiceProvider.php:119
+#: app/Providers/TemplateServiceProvider.php:686
+#: app/Providers/TemplateServiceProvider.php:1395
 #: app/Support/functions.php:453
 #: templates/search-bar.php:55
 msgid "November"
 msgstr "নভেম্বর"
 
-#: app/Providers/MetaBoxServiceProvider.php:127
-#: app/Providers/TemplateServiceProvider.php:693
-#: app/Providers/TemplateServiceProvider.php:1401
+#: app/Providers/MetaBoxServiceProvider.php:120
+#: app/Providers/TemplateServiceProvider.php:687
+#: app/Providers/TemplateServiceProvider.php:1395
 #: app/Support/functions.php:453
 #: templates/search-bar.php:55
 msgid "December"
 msgstr "ডিসেম্বর"
 
-#: app/Providers/TemplateServiceProvider.php:695
+#: app/Providers/TemplateServiceProvider.php:689
 msgid "Sold out"
 msgstr "ভর্তি"
 
 #. translators: %d: seats left
-#: app/Providers/TemplateServiceProvider.php:697
+#: app/Providers/TemplateServiceProvider.php:691
 #, php-format
 msgid "%d left"
 msgstr "%d বাকি"
 
 #. translators: %d: number of tours
-#: app/Providers/TemplateServiceProvider.php:700
+#: app/Providers/TemplateServiceProvider.php:694
 #, php-format
 msgid "%d tours open"
 msgstr "%d টি ট্যুর খালি"
 
 #. translators: %d: number of hotels
-#: app/Providers/TemplateServiceProvider.php:702
+#: app/Providers/TemplateServiceProvider.php:696
 #, php-format
 msgid "%d hotels open"
 msgstr "%d টি হোটেল খালি"
 
 #. translators: 1: number of tours, 2: date, 3: number of travelers
-#: app/Providers/TemplateServiceProvider.php:1413
+#: app/Providers/TemplateServiceProvider.php:1407
 #, php-format
 msgid "%1$d tour is open on %2$s for %3$d travelers."
 msgid_plural "%1$d tours are open on %2$s for %3$d travelers."
@@ -4792,7 +4792,7 @@ msgstr[0] "%2$s তারিখে %3$d জন ভ্রমণকারীর �
 msgstr[1] "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$d টি ট্যুর খালি।"
 
 #. translators: 1: number of tours, 2: date, 3: number of travelers
-#: app/Providers/TemplateServiceProvider.php:1412
+#: app/Providers/TemplateServiceProvider.php:1406
 #, php-format
 msgid "%1$d tour is open on %2$s for %3$d traveler."
 msgid_plural "%1$d tours are open on %2$s for %3$d traveler."
@@ -4800,7 +4800,7 @@ msgstr[0] "%2$s তারিখে %3$d জন ভ্রমণকারীর �
 msgstr[1] "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$d টি ট্যুর খালি।"
 
 #. translators: %d: number of tours
-#: app/Providers/TemplateServiceProvider.php:1406
+#: app/Providers/TemplateServiceProvider.php:1400
 #, php-format
 msgid "%d tour"
 msgid_plural "%d tours"
@@ -4808,7 +4808,7 @@ msgstr[0] "%d টি ট্যুর"
 msgstr[1] "%d টি ট্যুর"
 
 #. translators: %d: number of hotels
-#: app/Providers/TemplateServiceProvider.php:1407
+#: app/Providers/TemplateServiceProvider.php:1401
 #, php-format
 msgid "%d hotel"
 msgid_plural "%d hotels"
@@ -4816,64 +4816,64 @@ msgstr[0] "%d টি হোটেল"
 msgstr[1] "%d টি হোটেল"
 
 #. translators: 1: tour count text, 2: hotel count text, 3: date, 4: number of travelers
-#: app/Providers/TemplateServiceProvider.php:1409
+#: app/Providers/TemplateServiceProvider.php:1403
 #, php-format
 msgid "%1$s and %2$s are open on %3$s for %4$d travelers."
 msgstr "%3$s তারিখে %4$d জন ভ্রমণকারীর জন্য %1$s ও %2$s খালি।"
 
 #. translators: 1: hotel count text, 2: date, 3: number of travelers
-#: app/Providers/TemplateServiceProvider.php:1416
+#: app/Providers/TemplateServiceProvider.php:1410
 #, php-format
 msgid "%1$s is open on %2$s for %3$d travelers."
 msgid_plural "%1$s are open on %2$s for %3$d travelers."
 msgstr[0] "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$s খালি।"
 msgstr[1] "%2$s তারিখে %3$d জন ভ্রমণকারীর জন্য %1$s খালি।"
 
-#: app/Providers/TemplateServiceProvider.php:698
+#: app/Providers/TemplateServiceProvider.php:692
 #: templates/search-bar.php:48
 msgid "Any day"
 msgstr "যেকোনো দিন"
 
 #. translators: %s: destination
-#: app/Providers/TemplateServiceProvider.php:1421
+#: app/Providers/TemplateServiceProvider.php:1415
 #, php-format
 msgid "Destination: %s"
 msgstr "গন্তব্য: %s"
 
-#: app/Providers/TemplateServiceProvider.php:703
+#: app/Providers/TemplateServiceProvider.php:697
 #: templates/search-bar.php:93
 msgid "Each date shows open tours, then open hotels."
 msgstr "প্রতিটি তারিখে আগে খালি ট্যুর, তারপর খালি হোটেল দেখায়।"
 
-#: app/Providers/TemplateServiceProvider.php:1418
+#: app/Providers/TemplateServiceProvider.php:1412
 msgid "No tours or hotels are open on that day. Try another date."
 msgstr "এই দিনে কোনো ট্যুর বা হোটেল খালি নেই। অন্য তারিখ বেছে নিন।"
 
 #. translators: %s: destination
-#: app/Providers/TemplateServiceProvider.php:1427
+#: app/Providers/TemplateServiceProvider.php:1421
 #, php-format
 msgid "Tours in %s."
 msgstr "%s-এর ট্যুর।"
 
 #. translators: %s: destination
-#: app/Providers/TemplateServiceProvider.php:1426
+#: app/Providers/TemplateServiceProvider.php:1420
 #, php-format
 msgid "Tours and hotels in %s."
 msgstr "%s-এ ট্যুর ও হোটেল।"
 
-#: app/Providers/TemplateServiceProvider.php:704
+#: app/Providers/TemplateServiceProvider.php:698
 msgid "Loading dates..."
 msgstr "তারিখ আসছে..."
 
-#: app/Providers/TemplateServiceProvider.php:705
+#: app/Providers/TemplateServiceProvider.php:699
 msgid "Now choose a check-out date."
 msgstr "এখন চেক-আউটের তারিখ বেছে নিন।"
 
-#: app/Providers/TemplateServiceProvider.php:706
+#: app/Providers/TemplateServiceProvider.php:700
 msgid "Those nights are not fully open. Choose another check-out."
 msgstr "এই রাতগুলো পুরো খালি নেই। অন্য চেক-আউট বেছে নিন।"
 
-#: app/Providers/TemplateServiceProvider.php:669
+#: app/Providers/TemplateServiceProvider.php:663
 msgid "Calculating the price..."
 msgstr "হিসাব হচ্ছে..."
 
@@ -5171,36 +5171,36 @@ msgstr "অপরিশোধিত"
 msgid "Partial"
 msgstr "আংশিক"
 
-#: app/Providers/TemplateServiceProvider.php:1046
-#: app/Providers/TemplateServiceProvider.php:1543
+#: app/Providers/TemplateServiceProvider.php:1040
+#: app/Providers/TemplateServiceProvider.php:1537
 msgid "Tours you can book"
 msgstr "যে ট্যুর এখন বুক করা যায়"
 
-#: app/Providers/TemplateServiceProvider.php:1047
-#: app/Providers/TemplateServiceProvider.php:1214
-#: app/Providers/TemplateServiceProvider.php:1544
+#: app/Providers/TemplateServiceProvider.php:1041
+#: app/Providers/TemplateServiceProvider.php:1208
+#: app/Providers/TemplateServiceProvider.php:1538
 msgid "See all tours"
 msgstr "সব ট্যুর দেখুন"
 
-#: app/Providers/TemplateServiceProvider.php:1090
-#: app/Providers/TemplateServiceProvider.php:1633
+#: app/Providers/TemplateServiceProvider.php:1084
+#: app/Providers/TemplateServiceProvider.php:1627
 msgid "Places to stay"
 msgstr "থাকার জায়গা"
 
-#: app/Providers/TemplateServiceProvider.php:1091
-#: app/Providers/TemplateServiceProvider.php:1215
-#: app/Providers/TemplateServiceProvider.php:1634
+#: app/Providers/TemplateServiceProvider.php:1085
+#: app/Providers/TemplateServiceProvider.php:1209
+#: app/Providers/TemplateServiceProvider.php:1628
 msgid "See all hotels"
 msgstr "সব হোটেল দেখুন"
 
 #. translators: %s: destination name
-#: app/Providers/TemplateServiceProvider.php:1205
+#: app/Providers/TemplateServiceProvider.php:1199
 #, php-format
 msgid "More tours in %s"
 msgstr "%s-এ আরও ট্যুর"
 
 #. translators: %s: destination name
-#: app/Providers/TemplateServiceProvider.php:1210
+#: app/Providers/TemplateServiceProvider.php:1204
 #, php-format
 msgid "Places to stay in %s"
 msgstr "%s-এ থাকার জায়গা"
@@ -5718,15 +5718,15 @@ msgid_plural "%d guests"
 msgstr[0] "%d জন অতিথি"
 msgstr[1] "%d জন অতিথি"
 
-#: app/Admin/SettingsPage.php:635
+#: app/Admin/SettingsPage.php:637
 msgid "Travel Homepage Layout"
 msgstr "ট্রাভেল হোমপেজ লেআউট"
 
-#: app/Admin/SettingsPage.php:639
+#: app/Admin/SettingsPage.php:641
 msgid "Turn the site homepage and footer into a travel storefront"
 msgstr "সাইটের হোমপেজ ও ফুটারকে একটি ট্রাভেল স্টোরফ্রন্টে পরিণত করুন"
 
-#: app/Admin/SettingsPage.php:641
+#: app/Admin/SettingsPage.php:643
 msgid "Adds the search bar, destinations, open tours and hotels to the homepage and hides the latest-posts list there. In the footer it shows a short tagline when yours is empty, replaces the default theme credit with your site name, and fills empty theme placeholder menus with booking links. Menus and footer text you have set yourself are kept. Leave this off if your theme already has its own homepage."
 msgstr "হোমপেজে সার্চ বার, গন্তব্য, খোলা ট্যুর ও হোটেল যোগ করে এবং সেখানে সাম্প্রতিক পোস্টের তালিকা লুকিয়ে রাখে। ফুটারে আপনার ট্যাগলাইন খালি থাকলে একটি ছোট ট্যাগলাইন দেখায়, থিমের ডিফল্ট ক্রেডিটের বদলে আপনার সাইটের নাম বসায় এবং থিমের খালি প্লেসহোল্ডার মেনুতে বুকিংয়ের লিংক যোগ করে। আপনি নিজে যে মেনু ও ফুটার লেখা সেট করেছেন সেগুলো অপরিবর্তিত থাকে। আপনার থিমে আগে থেকেই নিজস্ব হোমপেজ থাকলে এটি বন্ধ রাখুন।"
 
@@ -5943,97 +5943,97 @@ msgctxt "taxonomy singular name"
 msgid "Feature"
 msgstr "ফিচার"
 
-#: app/Providers/AdminServiceProvider.php:463
+#: app/Providers/AdminServiceProvider.php:456
 msgid "Too many attempts. Please try again later."
 msgstr "অনেকবার চেষ্টা করা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।"
 
-#: app/Providers/AdminServiceProvider.php:472
+#: app/Providers/AdminServiceProvider.php:465
 msgid "Email confirmation"
 msgstr "ইমেইল নিশ্চিতকরণ"
 
-#: app/Providers/AdminServiceProvider.php:519
+#: app/Providers/AdminServiceProvider.php:512
 msgid "Failed to import sample demo data. Please check server logs."
 msgstr "স্যাম্পল ডেমো ডেটা ইমপোর্ট করা যায়নি। অনুগ্রহ করে সার্ভার লগ দেখুন।"
 
-#: app/Providers/AdminServiceProvider.php:525
+#: app/Providers/AdminServiceProvider.php:518
 msgid "Demo content is already imported."
 msgstr "ডেমো কনটেন্ট আগেই ইমপোর্ট করা হয়েছে।"
 
-#: app/Providers/AdminServiceProvider.php:591
+#: app/Providers/AdminServiceProvider.php:584
 msgid "Could not revoke the links for this booking."
 msgstr "এই বুকিংয়ের লিংকগুলো বাতিল করা যায়নি।"
 
-#: app/Providers/AdminServiceProvider.php:595
+#: app/Providers/AdminServiceProvider.php:588
 msgid "Previously shared voucher links no longer work. New links are generated automatically."
 msgstr "আগে শেয়ার করা ভাউচার লিংক আর কাজ করবে না। নতুন লিংক স্বয়ংক্রিয়ভাবে তৈরি হবে।"
 
-#: app/Providers/AdminServiceProvider.php:949
+#: app/Providers/AdminServiceProvider.php:942
 msgid "Access denied. Invalid calendar security token."
 msgstr "প্রবেশাধিকার নেই। ক্যালেন্ডারের সিকিউরিটি টোকেন অবৈধ।"
 
-#: app/Providers/AdminServiceProvider.php:954
+#: app/Providers/AdminServiceProvider.php:947
 msgid "Could not generate calendar file."
 msgstr "ক্যালেন্ডার ফাইল তৈরি করা যায়নি।"
 
-#: app/Providers/AdminServiceProvider.php:985
+#: app/Providers/AdminServiceProvider.php:978
 #: app/Services/InventoryService.php:691
 msgid "Invalid item ID."
 msgstr "অবৈধ আইটেম আইডি।"
 
-#: app/Providers/AdminServiceProvider.php:1024
+#: app/Providers/AdminServiceProvider.php:1017
 msgid "Please provide a valid item ID and date."
 msgstr "অনুগ্রহ করে একটি বৈধ আইটেম আইডি ও তারিখ দিন।"
 
-#: app/Providers/AdminServiceProvider.php:1057
+#: app/Providers/AdminServiceProvider.php:1050
 msgid "Failed to update availability."
 msgstr "অ্যাভেইলেবিলিটি আপডেট করা যায়নি।"
 
-#: app/Providers/AdminServiceProvider.php:1116
+#: app/Providers/AdminServiceProvider.php:1109
 msgid "Unauthorized permission to record payments."
 msgstr "পেমেন্ট রেকর্ড করার অনুমতি নেই।"
 
-#: app/Providers/AdminServiceProvider.php:1154
+#: app/Providers/AdminServiceProvider.php:1147
 msgid "Security verification failed. Please refresh the page."
 msgstr "নিরাপত্তা যাচাই ব্যর্থ হয়েছে। অনুগ্রহ করে পেজটি রিফ্রেশ করুন।"
 
-#: app/Providers/MetaBoxServiceProvider.php:139
+#: app/Providers/MetaBoxServiceProvider.php:132
 msgid "Loading availability calendar..."
 msgstr "অ্যাভেইলেবিলিটি ক্যালেন্ডার লোড হচ্ছে..."
 
-#: app/Providers/MetaBoxServiceProvider.php:140
+#: app/Providers/MetaBoxServiceProvider.php:133
 msgid "Applying changes..."
 msgstr "পরিবর্তন প্রয়োগ করা হচ্ছে..."
 
-#: app/Providers/MetaBoxServiceProvider.php:141
+#: app/Providers/MetaBoxServiceProvider.php:134
 msgid "Please select at least one date from the calendar."
 msgstr "অনুগ্রহ করে ক্যালেন্ডার থেকে অন্তত একটি তারিখ নির্বাচন করুন।"
 
-#: app/Providers/MetaBoxServiceProvider.php:142
+#: app/Providers/MetaBoxServiceProvider.php:135
 msgid "Please specify at least one change to apply (Status, Capacity, or Price)."
 msgstr "অনুগ্রহ করে প্রয়োগ করার জন্য অন্তত একটি পরিবর্তন দিন (স্ট্যাটাস, ধারণক্ষমতা বা মূল্য)।"
 
 #. translators: %d: number of selected dates
-#: app/Providers/MetaBoxServiceProvider.php:144
+#: app/Providers/MetaBoxServiceProvider.php:137
 #, php-format
 msgid "%d date(s) selected"
 msgstr "%d টি তারিখ নির্বাচিত"
 
-#: app/Providers/MetaBoxServiceProvider.php:145
+#: app/Providers/MetaBoxServiceProvider.php:138
 #: views/admin/metaboxes/availability-metabox.php:67
 msgid "Available"
 msgstr "খালি"
 
-#: app/Providers/MetaBoxServiceProvider.php:146
+#: app/Providers/MetaBoxServiceProvider.php:139
 #: views/admin/metaboxes/availability-metabox.php:68
 msgid "Blocked"
 msgstr "বন্ধ"
 
-#: app/Providers/MetaBoxServiceProvider.php:147
+#: app/Providers/MetaBoxServiceProvider.php:140
 #: views/admin/metaboxes/availability-metabox.php:69
 msgid "Sold Out"
 msgstr "বিক্রি শেষ"
 
-#: app/Providers/MetaBoxServiceProvider.php:148
+#: app/Providers/MetaBoxServiceProvider.php:141
 msgid "Selected dates contain active bookings. Are you sure you want to force block future bookings on these dates?"
 msgstr "নির্বাচিত তারিখগুলোতে সক্রিয় বুকিং আছে। আপনি কি নিশ্চিত যে এই তারিখগুলোতে ভবিষ্যতের বুকিং জোর করে বন্ধ করতে চান?"
 
@@ -7283,3 +7283,23 @@ msgstr "না (প্রাপ্তবয়স্কের মূল্য �
 #: app/Services/PricingService.php:289
 msgid "Other adjustments"
 msgstr "অন্যান্য সমন্বয়"
+
+#: app/Admin/SettingsPage.php:780
+msgid "Font"
+msgstr "ফন্ট"
+
+#: app/Admin/SettingsPage.php:783
+msgid "Theme font, Bengali in Anek Bangla (Default)"
+msgstr "থিমের ফন্ট, বাংলা Anek Bangla-তে (ডিফল্ট)"
+
+#: app/Admin/SettingsPage.php:784
+msgid "Anek Bangla for everything"
+msgstr "সব জায়গায় Anek Bangla"
+
+#: app/Admin/SettingsPage.php:785
+msgid "Device font, Bengali in Anek Bangla"
+msgstr "ডিভাইসের ফন্ট, বাংলা Anek Bangla-তে"
+
+#: app/Admin/SettingsPage.php:787
+msgid "By default Tourivo uses your theme's font so it looks like part of your site, and shows Bengali text in Anek Bangla. The Bengali font is loaded only on pages that contain Bengali."
+msgstr "ডিফল্টভাবে Tourivo আপনার থিমের ফন্ট ব্যবহার করে, যাতে এটি সাইটেরই অংশ মনে হয়, আর বাংলা লেখা দেখায় Anek Bangla-তে। বাংলা ফন্ট শুধু সেই পেজেই লোড হয় যেখানে বাংলা লেখা আছে।"

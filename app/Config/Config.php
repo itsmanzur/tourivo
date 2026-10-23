@@ -67,6 +67,7 @@ class Config
             'primary_hover'         => '#0f766e',
             'accent_color'          => '#f59e0b',
             'border_radius'         => '8px',
+            'font_family'           => 'theme',
             'button_text_color'     => '#ffffff',
             'webhook_url'           => '',
             'webhook_secret'        => '',

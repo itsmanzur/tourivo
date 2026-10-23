@@ -170,6 +170,7 @@ class SettingsPage
             'primary_hover'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_hover'] ?? '#0f766e'))) ?: '#0f766e',
             'accent_color'               => sanitize_hex_color(wp_unslash((string)($_POST['accent_color'] ?? '#f59e0b'))) ?: '#f59e0b',
             'border_radius'              => self::borderRadius(sanitize_text_field(wp_unslash($_POST['border_radius'] ?? ''))),
+            'font_family'                => self::choice('font_family', \Tourivo\Support\Typography::MODES, 'theme'),
             'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
             'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
             'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
@@ -261,6 +262,7 @@ class SettingsPage
         $primaryHover      = Config::get('primary_hover', '#0f766e');
         $accentColor       = Config::get('accent_color', '#f59e0b');
         $borderRadius      = Config::get('border_radius', '8px');
+        $fontFamily        = \Tourivo\Support\Typography::mode();
         $btnTextColor      = Config::get('button_text_color', '#ffffff');
         $enableSchema      = Config::get('enable_schema', 1);
         $enableOpenGraph   = Config::get('enable_opengraph', 1);
@@ -772,6 +774,17 @@ class SettingsPage
                                         <option value="12px" <?php selected($borderRadius, '12px'); ?>><?php esc_html_e('Smooth Curved (12px)', 'tourivo'); ?></option>
                                         <option value="16px" <?php selected($borderRadius, '16px'); ?>><?php esc_html_e('Pill Curved (16px)', 'tourivo'); ?></option>
                                     </select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><label for="font_family"><?php esc_html_e('Font', 'tourivo'); ?></label></th>
+                                <td>
+                                    <select name="font_family" id="font_family">
+                                        <option value="theme" <?php selected($fontFamily, 'theme'); ?>><?php esc_html_e('Theme font, Bengali in Anek Bangla (Default)', 'tourivo'); ?></option>
+                                        <option value="anek" <?php selected($fontFamily, 'anek'); ?>><?php esc_html_e('Anek Bangla for everything', 'tourivo'); ?></option>
+                                        <option value="system" <?php selected($fontFamily, 'system'); ?>><?php esc_html_e('Device font, Bengali in Anek Bangla', 'tourivo'); ?></option>
+                                    </select>
+                                    <p class="description"><?php esc_html_e('By default Tourivo uses your theme\'s font so it looks like part of your site, and shows Bengali text in Anek Bangla. The Bengali font is loaded only on pages that contain Bengali.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
                         </table>

@@ -43,6 +43,7 @@ class TemplateServiceProvider extends ServiceProvider
 
         // Frontend assets and Tourivo's own listing pages
         $this->addAction('wp_enqueue_scripts', [$this, 'enqueueFrontendAssets']);
+        \Tourivo\Support\Typography::registerThemeFontScript();
         $this->addAction('pre_get_posts', [$this, 'filterTourSearch']);
         $this->addFilter('render_block', [$this, 'prependSearchSummary'], 10, 2);
         $this->addFilter('render_block', [$this, 'appendDestinationChips'], 10, 2);
@@ -605,14 +606,7 @@ class TemplateServiceProvider extends ServiceProvider
             $cssVer
         );
 
-        if (function_exists('tourivo_is_bengali') && tourivo_is_bengali()) {
-            wp_enqueue_style(
-                'tourivo-bengali-font',
-                TOURIVO_PLUGIN_URL . 'assets/css/tourivo-bengali-font.css',
-                [],
-                TOURIVO_VERSION
-            );
-        }
+        \Tourivo\Support\Typography::enqueue();
 
         $primaryColor = (string) \Tourivo\Config\Config::get('primary_color', '#0d9488');
         $primaryHover = (string) \Tourivo\Config\Config::get('primary_hover', '#0f766e');

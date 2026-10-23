@@ -90,14 +90,7 @@ class MetaBoxServiceProvider extends ServiceProvider
             TOURIVO_VERSION
         );
 
-        if (function_exists('tourivo_is_bengali') && tourivo_is_bengali()) {
-            wp_enqueue_style(
-                'tourivo-bengali-font',
-                TOURIVO_PLUGIN_URL . 'assets/css/tourivo-bengali-font.css',
-                [],
-                TOURIVO_VERSION
-            );
-        }
+        \Tourivo\Support\Typography::enqueue();
 
         wp_enqueue_script(
             'tourivo-admin-metabox',

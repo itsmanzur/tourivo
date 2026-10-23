@@ -15,15 +15,82 @@
     --trv-bg-light: #f8fafc;
     --trv-radius: 8px;
     --trv-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+
+    /* Type scale. max() keeps the designed size as a floor (themes that shrink the root font) and grows
+       with the visitor's own browser text size. */
+    --trv-text-xs: max(12px, 0.75rem);
+    --trv-text-sm: max(14px, 0.875rem);
+    --trv-text-base: max(16px, 1rem);
+    --trv-text-lg: max(18px, 1.125rem);
+    --trv-text-xl: max(20px, 1.25rem);
+    --trv-text-2xl: max(24px, 1.5rem);
+    --trv-text-3xl: max(30px, 1.875rem);
+    --trv-text-display: max(48px, 3rem);
+    --trv-text-input: var(--trv-text-sm);
+    --trv-weight-regular: 400;
+    --trv-weight-medium: 500;
+    --trv-weight-semibold: 600;
+    --trv-weight-bold: 700;
+    --trv-leading: 1.6;
+    --trv-leading-tight: 1.3;
+}
+
+/* Phones zoom into form fields set below 16px; keep fields at 16px there. */
+@media (max-width: 782px) {
+    :root {
+        --trv-text-input: var(--trv-text-base);
+    }
+}
+
+/* Every Tourivo element uses the Tourivo font stack (theme font + Anek Bangla for Bengali by default).
+   :where() keeps this at zero specificity, so any font-family set below still wins. */
+:where([class^="tourivo-"]:not(html, body), [class*=" tourivo-"]:not(html, body)) {
+    font-family: var(--trv-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
+}
+
+:where([class^="tourivo-"], [class*=" tourivo-"]) :where(input, select, textarea, button) {
+    font-family: inherit;
+}
+
+/* Bengali needs more room for vowel signs above and below the line, and no extra letter spacing
+   (it breaks conjuncts in some browsers). */
+:where([class^="tourivo-"], [class*=" tourivo-"]):lang(bn) {
+    --trv-leading: 1.7;
+    --trv-leading-tight: 1.45;
+    letter-spacing: normal;
+}
+
+/* Headings sit tighter than running text. */
+.tourivo-title,
+.section-heading,
+.tourivo-home-tours-head h2,
+.tourivo-wishlist-header h2,
+.tourivo-modal-content .modal-header h3,
+.tourivo-leave-review-form-wrap h3 {
+    line-height: var(--trv-leading-tight);
+}
+
+/* Prices, dates and counts line up in columns. */
+.panel-price-box .price-amount,
+.tourivo-price-box .price-val,
+.tourivo-price-box .price-original,
+.total-amount-val,
+.breakdown-row,
+.tourivo-cal-num,
+.counter-controls input,
+.tourivo-price-display,
+.score-number {
+    font-variant-numeric: tabular-nums;
 }
 
 .tourivo-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 20px 15px;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+    font-family: var(--trv-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
     color: var(--trv-text-main);
-    line-height: 1.6;
+    font-size: var(--trv-text-base);
+    line-height: var(--trv-leading);
 }
 
 .tourivo-block-main {
@@ -41,8 +108,8 @@
 .tourivo-top-meta .back-link {
     color: var(--trv-text-muted);
     text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-medium);
 }
 
 .tourivo-top-meta .back-link:hover {
@@ -50,8 +117,8 @@
 }
 
 .tourivo-title {
-    font-size: 32px;
-    font-weight: 700;
+    font-size: var(--trv-text-3xl);
+    font-weight: var(--trv-weight-semibold);
     margin: 0 0 12px 0;
     color: var(--trv-text-main);
 }
@@ -61,7 +128,7 @@
     flex-wrap: wrap;
     gap: 15px;
     margin-bottom: 24px;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: var(--trv-text-muted);
 }
 
@@ -133,8 +200,8 @@
 }
 
 .section-heading {
-    font-size: 20px;
-    font-weight: 700;
+    font-size: var(--trv-text-xl);
+    font-weight: var(--trv-weight-semibold);
     margin: 0 0 16px 0;
     padding-bottom: 10px;
     border-bottom: 1px solid var(--trv-border);
@@ -158,7 +225,7 @@
     border-radius: 50%;
     background: var(--trv-primary);
     color: #fff;
-    font-weight: 700;
+    font-weight: var(--trv-weight-bold);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -166,14 +233,14 @@
 }
 
 .step-title {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: var(--trv-text-base);
+    font-weight: var(--trv-weight-semibold);
     margin: 0 0 6px 0;
 }
 
 .step-meals {
     display: inline-block;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     background: #f1f5f9;
     padding: 2px 8px;
     border-radius: 4px;
@@ -184,7 +251,7 @@
 .step-desc {
     margin: 0;
     color: #475569;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
 }
 
 /* Inclusions & Exclusions */
@@ -211,7 +278,7 @@
     align-items: center;
     gap: 8px;
     margin-bottom: 8px;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
 }
 
 .inc-box li .dashicons { color: var(--trv-success); }
@@ -232,14 +299,14 @@
 }
 
 .faq-question {
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
     cursor: pointer;
-    font-size: 15px;
+    font-size: var(--trv-text-base);
 }
 
 .faq-answer {
     margin-top: 10px;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: #475569;
 }
 
@@ -262,21 +329,21 @@
 }
 
 .panel-price-box .price-amount {
-    font-size: 24px;
-    font-weight: 800;
+    font-size: var(--trv-text-2xl);
+    font-weight: var(--trv-weight-bold);
     color: var(--trv-primary);
 }
 
 .panel-price-box .price-suffix {
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: var(--trv-text-muted);
 }
 
 .status-badge {
-    font-size: 11px;
+    font-size: var(--trv-text-xs);
     padding: 3px 8px;
     border-radius: 4px;
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
     background: #dcfce7;
     color: #15803d;
 }
@@ -287,8 +354,8 @@
 
 .section-label {
     display: block;
-    font-weight: 600;
-    font-size: 13px;
+    font-weight: var(--trv-weight-semibold);
+    font-size: var(--trv-text-sm);
     margin-bottom: 6px;
 }
 
@@ -309,12 +376,12 @@
     padding: 8px 12px 8px 36px;
     border: 1px solid var(--trv-border);
     border-radius: 6px;
-    font-size: 14px;
+    font-size: var(--trv-text-input);
 }
 
 .tourivo-cal-summary {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
     margin: 0 0 8px;
 }
 
@@ -338,8 +405,8 @@
 }
 
 .tourivo-cal-title {
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: var(--trv-weight-semibold);
+    font-size: var(--trv-text-sm);
 }
 
 .tourivo-cal-prev,
@@ -370,8 +437,8 @@
 
 .tourivo-cal-weekdays span {
     text-align: center;
-    font-size: 10px;
-    font-weight: 700;
+    font-size: var(--trv-text-xs);
+    font-weight: var(--trv-weight-semibold);
     color: var(--trv-text-muted);
     padding: 2px 0 4px;
     overflow: hidden;
@@ -399,13 +466,13 @@
 }
 
 .tourivo-cal-num {
-    font-size: 13px;
-    font-weight: 700;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
     line-height: 1.1;
 }
 
 .tourivo-cal-spots {
-    font-size: 9px;
+    font-size: var(--trv-text-xs);
     line-height: 1.1;
     color: var(--trv-text-muted);
     max-width: 100%;
@@ -416,7 +483,7 @@
 
 .tourivo-cal-day.is-limited .tourivo-cal-spots {
     color: #b45309;
-    font-weight: 700;
+    font-weight: var(--trv-weight-semibold);
 }
 
 .tourivo-cal-day.is-soldout,
@@ -464,8 +531,8 @@
 
 .tourivo-cal-note {
     margin: 8px 0 0;
-    font-size: 12px;
-    line-height: 1.4;
+    font-size: var(--trv-text-xs);
+    line-height: var(--trv-leading-tight);
     color: var(--trv-text-muted);
 }
 
@@ -481,7 +548,7 @@
     grid-column: 1 / -1;
     text-align: center;
     color: var(--trv-text-muted);
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     margin: 12px 0;
 }
 
@@ -526,8 +593,8 @@
     border-radius: 6px;
 }
 
-.guest-type strong { display: block; font-size: 13px; }
-.guest-type small { font-size: 11px; color: var(--trv-text-muted); }
+.guest-type strong { display: block; font-size: var(--trv-text-sm); }
+.guest-type small { font-size: var(--trv-text-xs); color: var(--trv-text-muted); }
 
 .counter-controls {
     display: flex;
@@ -542,7 +609,7 @@
     background: #fff;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: 700;
+    font-weight: var(--trv-weight-bold);
     font-size: 16px;
     line-height: 1;
 }
@@ -552,8 +619,8 @@
     text-align: center;
     border: 0;
     background: transparent;
-    font-weight: 700;
-    font-size: 14px;
+    font-weight: var(--trv-weight-semibold);
+    font-size: var(--trv-text-input);
 }
 
 /* Price Breakdown */
@@ -562,7 +629,7 @@
     border-radius: 6px;
     padding: 12px;
     margin-bottom: 16px;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
 }
 
 .breakdown-row {
@@ -575,7 +642,7 @@
     margin-top: 8px;
     padding-top: 8px;
     border-top: 1px dashed var(--trv-border);
-    font-size: 15px;
+    font-size: var(--trv-text-base);
 }
 
 .price-breakdown-box.is-calculating .breakdown-val,
@@ -585,14 +652,14 @@
 
 .tourivo-calculating {
     margin: 8px 0 0;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: var(--trv-text-xs);
+    font-weight: var(--trv-weight-semibold);
     color: var(--trv-primary);
 }
 
 .total-amount-val {
     color: var(--trv-primary);
-    font-size: 17px;
+    font-size: var(--trv-text-lg);
 }
 
 /* Checkout fields inside panel */
@@ -601,8 +668,8 @@
 }
 
 .checkout-fields-title {
-    font-size: 14px;
-    font-weight: 700;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
     margin: 0 0 10px 0;
 }
 
@@ -615,7 +682,7 @@
     padding: 8px 10px;
     border: 1px solid var(--trv-border);
     border-radius: 6px;
-    font-size: 13px;
+    font-size: var(--trv-text-input);
 }
 
 /* Buttons */
@@ -630,8 +697,8 @@
     border-radius: var(--trv-radius, 6px);
     border: 0;
     text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: var(--trv-weight-semibold);
+    font-size: var(--trv-text-sm);
     cursor: pointer;
     transition: background 0.2s ease, transform 0.15s ease;
 }
@@ -643,20 +710,20 @@
 
 .tourivo-btn-sm {
     padding: 6px 12px;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
 }
 
 .tourivo-btn-block {
     width: 100%;
     padding: 12px;
-    font-size: 15px;
+    font-size: var(--trv-text-base);
 }
 
 .panel-alert {
     margin-top: 12px;
     padding: 10px 12px;
     border-radius: 6px;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
 }
 
 .panel-alert.alert-success { background: #dcfce7; color: #15803d; }
@@ -710,8 +777,8 @@
     left: 12px;
     background: #f97316;
     color: #fff;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: var(--trv-text-xs);
+    font-weight: var(--trv-weight-semibold);
     padding: 3px 8px;
     border-radius: 4px;
     text-transform: uppercase;
@@ -723,7 +790,7 @@
     left: 12px;
     background: rgba(0,0,0,0.65);
     color: #fff;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     padding: 2px 8px;
     border-radius: 4px;
 }
@@ -736,8 +803,8 @@
     color: #854d0e;
     padding: 2px 8px;
     border-radius: 4px;
-    font-size: 12px;
-    font-weight: 700;
+    font-size: var(--trv-text-xs);
+    font-weight: var(--trv-weight-semibold);
 }
 
 .tourivo-card-body {
@@ -750,16 +817,16 @@
 .tourivo-card-meta {
     display: flex;
     gap: 12px;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     color: var(--trv-text-muted);
     margin-bottom: 8px;
 }
 
 .tourivo-card-title {
-    font-size: 16px;
-    font-weight: 700;
+    font-size: var(--trv-text-base);
+    font-weight: var(--trv-weight-semibold);
     margin: 0 0 12px 0;
-    line-height: 1.4;
+    line-height: var(--trv-leading-tight);
     flex: 1;
 }
 
@@ -776,11 +843,11 @@
     padding-top: 12px;
 }
 
-.tourivo-price-box .price-from { font-size: 11px; color: var(--trv-text-muted); display: block; }
-.tourivo-price-box .price-val { font-size: 18px; font-weight: 800; color: var(--trv-primary); }
+.tourivo-price-box .price-from { font-size: var(--trv-text-xs); color: var(--trv-text-muted); display: block; }
+.tourivo-price-box .price-val { font-size: var(--trv-text-lg); font-weight: var(--trv-weight-bold); color: var(--trv-primary); }
 .tourivo-price-box .price-original {
     display: block;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     color: var(--trv-text-muted);
 }
 
@@ -800,9 +867,9 @@
 
 .tourivo-home-welcome {
     margin: 4px 0 16px;
-    font-size: clamp(22px, 2.6vw, 32px);
-    font-weight: 700;
-    line-height: 1.3;
+    font-size: clamp(var(--trv-text-xl), 2.6vw, var(--trv-text-3xl));
+    font-weight: var(--trv-weight-semibold);
+    line-height: var(--trv-leading-tight);
 }
 
 .tourivo-home-places {
@@ -819,9 +886,9 @@
     border-radius: 999px;
     background: #fff;
     color: inherit;
-    font-size: 14px;
-    font-weight: 600;
-    line-height: 1.3;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
+    line-height: var(--trv-leading-tight);
     text-decoration: none;
 }
 
@@ -858,7 +925,7 @@
 }
 
 .tourivo-related-place .tourivo-home-tours-head h2 {
-    font-size: 20px;
+    font-size: var(--trv-text-xl);
 }
 
 .tourivo-home-tours,
@@ -883,11 +950,11 @@
 
 .tourivo-home-tours-head h2 {
     margin: 0;
-    font-size: 28px;
+    font-size: var(--trv-text-3xl);
 }
 
 .tourivo-home-tours-head a {
-    font-weight: 700;
+    font-weight: var(--trv-weight-semibold);
     text-decoration: none;
 }
 
@@ -905,8 +972,8 @@
 
 .tourivo-search-form label {
     display: block;
-    font-weight: 600;
-    font-size: 13px;
+    font-weight: var(--trv-weight-semibold);
+    font-size: var(--trv-text-sm);
     margin-bottom: 4px;
 }
 
@@ -915,7 +982,7 @@
     padding: 8px 10px;
     border: 1px solid var(--trv-border);
     border-radius: 6px;
-    font-size: 14px;
+    font-size: var(--trv-text-input);
 }
 
 .tourivo-guest-stepper {
@@ -972,7 +1039,7 @@
     border: 1px solid var(--trv-border);
     border-radius: 6px;
     background: #fff;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     text-align: left;
     cursor: pointer;
 }
@@ -1034,12 +1101,12 @@
 
 .tourivo-cal-hotels {
     color: #0369a1;
-    font-weight: 700;
+    font-weight: var(--trv-weight-semibold);
 }
 
 .tourivo-search-cal-hint {
     margin: 8px 0 0;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     color: #64748b;
 }
 
@@ -1050,7 +1117,7 @@
     background: #f0f9ff;
     border: 1px solid #bae6fd;
     border-radius: 8px;
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
 }
 
 /* Inquiry CTA & Modal */
@@ -1063,8 +1130,8 @@
     background: transparent;
     border: none;
     color: var(--trv-primary, #0284c7);
-    font-size: 13.5px;
-    font-weight: 600;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
     cursor: pointer;
     text-decoration: underline;
     transition: color 0.2s ease;
@@ -1126,8 +1193,8 @@
 
 .tourivo-modal-content .modal-header h3 {
     margin: 0;
-    font-size: 17px;
-    font-weight: 700;
+    font-size: var(--trv-text-lg);
+    font-weight: var(--trv-weight-semibold);
     color: #0f172a;
 }
 
@@ -1149,10 +1216,10 @@
 }
 
 .modal-subtitle {
-    font-size: 13.5px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
     margin: 0 0 16px 0;
-    line-height: 1.5;
+    line-height: var(--trv-leading);
 }
 
 .inquiry-field-row {
@@ -1165,7 +1232,7 @@
     padding: 10px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
-    font-size: 14px;
+    font-size: var(--trv-text-input);
     box-sizing: border-box;
 }
 
@@ -1180,7 +1247,7 @@
     display: block;
     margin-bottom: 4px;
     color: #475569;
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
 }
 
 .inquiry-field-row-grid input {
@@ -1188,14 +1255,14 @@
     padding: 9px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
-    font-size: 13.5px;
+    font-size: var(--trv-text-input);
     box-sizing: border-box;
 }
 
 .inquiry-alert {
     padding: 10px 14px;
     border-radius: 6px;
-    font-size: 13.5px;
+    font-size: var(--trv-text-sm);
     margin-top: 12px;
 }
 
@@ -1269,8 +1336,8 @@
     color: #475569;
     padding: 4px 12px;
     border-radius: 20px;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
     cursor: pointer;
     transition: all 0.2s ease;
 }
@@ -1291,7 +1358,7 @@
 /* Card Rating Tag */
 .meta-rating {
     color: #b45309 !important;
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
 }
 .meta-rating .rating-star {
     color: #f59e0b;
@@ -1299,7 +1366,7 @@
 .meta-rating-link {
     color: #b45309 !important;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
 }
 .meta-rating-link:hover {
     text-decoration: underline;
@@ -1331,11 +1398,15 @@
 .tourivo-filter-col label {
     display: block;
     margin-bottom: 6px;
-    font-size: 12.5px;
-    font-weight: 700;
+    font-size: var(--trv-text-xs);
+    font-weight: var(--trv-weight-semibold);
     color: #475569;
     text-transform: uppercase;
     letter-spacing: 0.3px;
+}
+
+.tourivo-filter-col label:lang(bn) {
+    letter-spacing: normal;
 }
 
 .tourivo-filter-input,
@@ -1344,7 +1415,7 @@
     padding: 8px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 13.5px;
+    font-size: var(--trv-text-input);
     box-sizing: border-box;
     background: #f8fafc;
     transition: all 0.2s;
@@ -1366,7 +1437,7 @@
 }
 
 .tourivo-price-display {
-    font-size: 13.5px;
+    font-size: var(--trv-text-sm);
     color: var(--trv-primary);
 }
 
@@ -1387,8 +1458,8 @@
     background: #f1f5f9;
     border: 1px solid #cbd5e1;
     color: #475569;
-    font-size: 13px;
-    font-weight: 600;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
     cursor: pointer;
     transition: all 0.2s;
 }
@@ -1407,9 +1478,9 @@
 
 .tourivo-results-counter {
     margin: 0;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
-    font-weight: 500;
+    font-weight: var(--trv-weight-medium);
     display: flex;
     align-items: center;
     gap: 6px;
@@ -1456,14 +1527,14 @@
 
 .tourivo-wishlist-header h2 {
     margin: 0;
-    font-size: 24px;
-    font-weight: 800;
+    font-size: var(--trv-text-2xl);
+    font-weight: var(--trv-weight-semibold);
 }
 
 .tourivo-wishlist-count-label {
     margin: 0;
     color: #64748b;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
 }
 
 /* =======================================================
@@ -1476,8 +1547,8 @@
 }
 
 .reviews-total-badge {
-    font-size: 16px;
-    font-weight: 600;
+    font-size: var(--trv-text-base);
+    font-weight: var(--trv-weight-semibold);
     color: #64748b;
 }
 
@@ -1517,8 +1588,8 @@
 
 .score-number {
     display: block;
-    font-size: 48px;
-    font-weight: 800;
+    font-size: var(--trv-text-display);
+    font-weight: var(--trv-weight-bold);
     color: #0f172a;
     line-height: 1;
 }
@@ -1537,7 +1608,7 @@
 }
 
 .score-subtext {
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
 }
 
@@ -1546,12 +1617,12 @@
     align-items: center;
     gap: 12px;
     margin-bottom: 8px;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
 }
 
 .bar-star-label {
     width: 40px;
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
     color: #475569;
 }
 
@@ -1574,7 +1645,7 @@
     width: 30px;
     text-align: right;
     color: #64748b;
-    font-weight: 600;
+    font-weight: var(--trv-weight-semibold);
 }
 
 /* Reviews List */
@@ -1611,8 +1682,8 @@
 
 .review-author-info .author-name {
     margin: 0 0 2px 0;
-    font-size: 15px;
-    font-weight: 700;
+    font-size: var(--trv-text-base);
+    font-weight: var(--trv-weight-semibold);
     color: #0f172a;
     display: flex;
     align-items: center;
@@ -1623,15 +1694,15 @@
 .verified-badge {
     background: #dcfce7;
     color: #15803d;
-    font-size: 11px;
-    font-weight: 700;
+    font-size: var(--trv-text-xs);
+    font-weight: var(--trv-weight-semibold);
     padding: 2px 8px;
     border-radius: 10px;
     display: inline-block;
 }
 
 .review-date {
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     color: #64748b;
 }
 
@@ -1643,9 +1714,9 @@
 }
 
 .review-content {
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: #334155;
-    line-height: 1.6;
+    line-height: var(--trv-leading);
 }
 
 .review-content p:last-child {
@@ -1663,8 +1734,8 @@
 
 .tourivo-leave-review-form-wrap h3 {
     margin: 0 0 16px 0;
-    font-size: 18px;
-    font-weight: 700;
+    font-size: var(--trv-text-lg);
+    font-weight: var(--trv-weight-semibold);
 }
 
 .tourivo-star-picker {
@@ -1696,7 +1767,7 @@
     padding: 9px 12px;
     border: 1px solid #cbd5e1;
     border-radius: 6px;
-    font-size: 13.5px;
+    font-size: var(--trv-text-input);
     box-sizing: border-box;
     font-family: inherit;
 }
@@ -1737,8 +1808,8 @@
 .tourivo-currency-select {
     border: none;
     background: transparent;
-    font-size: 13px;
-    font-weight: 700;
+    font-size: var(--trv-text-input);
+    font-weight: var(--trv-weight-semibold);
     color: #1e293b;
     cursor: pointer;
     outline: none;
@@ -1793,7 +1864,7 @@
 
 .tourivo-lightbox-caption {
     color: #f1f5f9;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     margin-top: 12px;
     text-align: center;
     max-width: 600px;
