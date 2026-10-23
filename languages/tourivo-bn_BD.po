@@ -397,7 +397,7 @@ msgstr "ডাবল-বুকিং প্রতিরোধ সুরক্ষ
 msgid "Any Duration"
 msgstr "যেকোনো সময়কাল"
 
-#: templates/booking-panel.php:269
+#: templates/booking-panel.php:280
 msgid "Ask an Expert / Custom Trip Inquiry"
 msgstr "বিশেষজ্ঞের পরামর্শ / কাস্টম ভ্রমণ অনুসন্ধান"
 
@@ -485,7 +485,7 @@ msgstr "ক্লাউডফ্লেয়ার / রিভার্স প�
 msgid "Bengali Numbers / বাংলা সংখ্যা"
 msgstr "বাংলা সংখ্যা"
 
-#: templates/booking-panel.php:251
+#: templates/booking-panel.php:262
 msgid "Book Now (Pay Offline)"
 msgstr "এখনই বুক করুন (অফলাইনে পরিশোধ)"
 
@@ -1308,7 +1308,7 @@ msgstr "ট্যুরের বহির্ভূত বিষয়সমূহ"
 msgid "Exclusions:"
 msgstr "বহির্ভূত বিষয়সমূহ:"
 
-#: templates/booking-panel.php:293
+#: templates/booking-panel.php:304
 msgid "Expected Travel Date"
 msgstr "সম্ভাব্য ভ্রমণের তারিখ"
 
@@ -1545,11 +1545,11 @@ msgstr "অতিথি / ভ্রমণকারী"
 msgid "Gutenberg Block Editor"
 msgstr "গুটেনবার্গ ব্লক এডিটর"
 
-#: templates/booking-panel.php:257
+#: templates/booking-panel.php:268
 msgid "Have questions? Ask a Travel Specialist"
 msgstr "প্রশ্ন আছে? ভ্রমণ বিশেষজ্ঞের সাথে কথা বলুন"
 
-#: templates/booking-panel.php:281
+#: templates/booking-panel.php:292
 msgid "Have special requests or group questions? Send your inquiry directly to our travel specialists."
 msgstr "কোনো বিশেষ অনুরোধ বা গ্রুপ প্রশ্ন থাকলে সরাসরি আমাদের ভ্রমণ বিশেষজ্ঞদের পাঠান।"
 
@@ -2280,7 +2280,7 @@ msgstr "পেমেন্ট"
 #: app/Admin/BookingsTable.php:640
 #: app/Services/ExportService.php:338
 #: app/Services/ReportingService.php:468
-#: templates/booking-panel.php:224
+#: templates/booking-panel.php:238
 msgid "Payment Method"
 msgstr "পেমেন্ট মেথড"
 
@@ -2333,7 +2333,7 @@ msgstr "ফোন / হোয়াটসঅ্যাপ"
 msgid "Phone / WhatsApp *"
 msgstr "ফোন / হোয়াটসঅ্যাপ *"
 
-#: templates/booking-panel.php:289
+#: templates/booking-panel.php:300
 msgid "Phone / WhatsApp Number"
 msgstr "ফোন / হোয়াটসঅ্যাপ নম্বর"
 
@@ -2836,7 +2836,7 @@ msgstr "জনপ্রতি ও রাতপ্রতি গণনার স�
 msgid "Sell single-day adventures or multi-day guided trips with day-by-day itineraries, included meals, pickup locations, and passenger caps."
 msgstr "একদিনের রোমাঞ্চকর ভ্রমণ বা একাধিক দিনের গাইডেড ট্যুর বিক্রি করুন বিস্তারিত আইটিনারারি, খাবার, পিকআপ লোকেশন ও যাত্রী সীমা সহ।"
 
-#: templates/booking-panel.php:316
+#: templates/booking-panel.php:327
 msgid "Send Inquiry to Specialists"
 msgstr "বিশেষজ্ঞদের কাছে অনুসন্ধান পাঠান"
 
@@ -3064,7 +3064,7 @@ msgstr "সিস্টেমের তথ্য"
 msgid "TEST NOTIFICATION"
 msgstr "টেস্ট নোটিফিকেশন"
 
-#: templates/booking-panel.php:302
+#: templates/booking-panel.php:313
 msgid "Tell us about your questions or custom trip preferences..."
 msgstr "আপনার প্রশ্ন বা কাস্টম ভ্রমণ পছন্দ সম্পর্কে লিখুন..."
 
@@ -3496,7 +3496,7 @@ msgstr "অতিথি বাড়ান"
 msgid "Travelers / Guests:"
 msgstr "ভ্রমণকারী / অতিথি:"
 
-#: templates/booking-panel.php:297
+#: templates/booking-panel.php:308
 msgid "Travelers Count"
 msgstr "ভ্রমণকারীর সংখ্যা"
 
@@ -3804,11 +3804,11 @@ msgstr "আপনার বুকিং ইঞ্জিন প্রস্তু
 msgid "Your Email *"
 msgstr "আপনার ইমেইল *"
 
-#: templates/booking-panel.php:286
+#: templates/booking-panel.php:297
 msgid "Your Email Address *"
 msgstr "আপনার ইমেইল ঠিকানা *"
 
-#: templates/booking-panel.php:283
+#: templates/booking-panel.php:294
 msgid "Your Full Name *"
 msgstr "আপনার পূর্ণ নাম *"
 
@@ -7289,17 +7289,17 @@ msgid "Font"
 msgstr "ফন্ট"
 
 #: app/Admin/SettingsPage.php:783
-msgid "Theme font, Bengali in Anek Bangla (Default)"
-msgstr "থিমের ফন্ট, বাংলা Anek Bangla-তে (ডিফল্ট)"
+msgid "Anek Bangla, headings in your theme's font (Default)"
+msgstr "Anek Bangla, হেডিং থিমের ফন্টে (ডিফল্ট)"
 
 #: app/Admin/SettingsPage.php:784
-msgid "Anek Bangla for everything"
-msgstr "সব জায়গায় Anek Bangla"
+msgid "Anek Bangla for text and headings"
+msgstr "লেখা আর হেডিং দুটোই Anek Bangla-তে"
 
 #: app/Admin/SettingsPage.php:785
-msgid "Device font, Bengali in Anek Bangla"
-msgstr "ডিভাইসের ফন্ট, বাংলা Anek Bangla-তে"
+msgid "Your theme's fonts, Bengali in Anek Bangla"
+msgstr "থিমের ফন্ট, বাংলা Anek Bangla-তে"
 
 #: app/Admin/SettingsPage.php:787
-msgid "By default Tourivo uses your theme's font so it looks like part of your site, and shows Bengali text in Anek Bangla. The Bengali font is loaded only on pages that contain Bengali."
-msgstr "ডিফল্টভাবে Tourivo আপনার থিমের ফন্ট ব্যবহার করে, যাতে এটি সাইটেরই অংশ মনে হয়, আর বাংলা লেখা দেখায় Anek Bangla-তে। বাংলা ফন্ট শুধু সেই পেজেই লোড হয় যেখানে বাংলা লেখা আছে।"
+msgid "Anek Bangla keeps forms, prices and buttons crisp on any theme and covers Bengali and English. Headings follow your theme so Tourivo pages still look like your site. Choose your theme's fonts only if its text font is a clear sans-serif with several weights."
+msgstr "Anek Bangla যেকোনো থিমে ফর্ম, দাম আর বাটন পরিষ্কার রাখে এবং বাংলা ও ইংরেজি দুটোই দেখায়। হেডিং আপনার থিমের ফন্টে থাকে, তাই Tourivo-র পেজও আপনার সাইটের মতোই দেখায়। থিমের লেখার ফন্ট স্পষ্ট sans-serif হলে এবং একাধিক weight থাকলে তবেই থিমের ফন্ট বেছে নিন।"

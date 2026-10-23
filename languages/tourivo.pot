@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-23T12:06:22+00:00\n"
+"POT-Creation-Date: 2026-10-23T13:05:37+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: tourivo\n"
@@ -654,7 +654,7 @@ msgstr ""
 #: app/Admin/BookingsTable.php:640
 #: app/Services/ExportService.php:338
 #: app/Services/ReportingService.php:468
-#: templates/booking-panel.php:224
+#: templates/booking-panel.php:238
 msgid "Payment Method"
 msgstr ""
 
@@ -2501,19 +2501,19 @@ msgid "Font"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:783
-msgid "Theme font, Bengali in Anek Bangla (Default)"
+msgid "Anek Bangla, headings in your theme's font (Default)"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:784
-msgid "Anek Bangla for everything"
+msgid "Anek Bangla for text and headings"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:785
-msgid "Device font, Bengali in Anek Bangla"
+msgid "Your theme's fonts, Bengali in Anek Bangla"
 msgstr ""
 
 #: app/Admin/SettingsPage.php:787
-msgid "By default Tourivo uses your theme's font so it looks like part of your site, and shows Bengali text in Anek Bangla. The Bengali font is loaded only on pages that contain Bengali."
+msgid "Anek Bangla keeps forms, prices and buttons crisp on any theme and covers Bengali and English. Headings follow your theme so Tourivo pages still look like your site. Choose your theme's fonts only if its text font is a clear sans-serif with several weights."
 msgstr ""
 
 #: app/Admin/SettingsPage.php:794
@@ -5867,47 +5867,47 @@ msgstr ""
 msgid "Special requests or notes..."
 msgstr ""
 
-#: templates/booking-panel.php:251
+#: templates/booking-panel.php:262
 msgid "Book Now (Pay Offline)"
 msgstr ""
 
-#: templates/booking-panel.php:257
+#: templates/booking-panel.php:268
 msgid "Have questions? Ask a Travel Specialist"
 msgstr ""
 
-#: templates/booking-panel.php:269
+#: templates/booking-panel.php:280
 msgid "Ask an Expert / Custom Trip Inquiry"
 msgstr ""
 
-#: templates/booking-panel.php:281
+#: templates/booking-panel.php:292
 msgid "Have special requests or group questions? Send your inquiry directly to our travel specialists."
 msgstr ""
 
-#: templates/booking-panel.php:283
+#: templates/booking-panel.php:294
 msgid "Your Full Name *"
 msgstr ""
 
-#: templates/booking-panel.php:286
+#: templates/booking-panel.php:297
 msgid "Your Email Address *"
 msgstr ""
 
-#: templates/booking-panel.php:289
+#: templates/booking-panel.php:300
 msgid "Phone / WhatsApp Number"
 msgstr ""
 
-#: templates/booking-panel.php:293
+#: templates/booking-panel.php:304
 msgid "Expected Travel Date"
 msgstr ""
 
-#: templates/booking-panel.php:297
+#: templates/booking-panel.php:308
 msgid "Travelers Count"
 msgstr ""
 
-#: templates/booking-panel.php:302
+#: templates/booking-panel.php:313
 msgid "Tell us about your questions or custom trip preferences..."
 msgstr ""
 
-#: templates/booking-panel.php:316
+#: templates/booking-panel.php:327
 msgid "Send Inquiry to Specialists"
 msgstr ""
 

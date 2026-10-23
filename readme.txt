@@ -136,9 +136,12 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * **Developer:** New `tourivo/public_payment_methods` filter lets add-ons that collect payment themselves (such as a WooCommerce checkout) register their own method for public bookings, and `tourivo/travel_homepage` filter overrides the homepage layout setting. `tourivo/booking_price` filters can return an `adjustments` list (title and amount, negative for discounts) to itemise their changes.
 * **Translations:** Built-in email subjects and headings are now in the translation template; translator comments added for every placeholder string.
 * **Fix:** Report date ranges and CSV export file names use explicit UTC dates.
-* **Typography:** Tourivo now uses your theme's font by default, so booking panels and listings look like part of your site, and shows Bengali text in Anek Bangla on every site (the font downloads only on pages with Bengali). New Font setting under Appearance: theme font, Anek Bangla everywhere, or the device font.
+* **Typography:** Text, forms, prices and buttons now use Anek Bangla (bundled, one variable file with every weight) so they stay crisp on any theme, while headings follow your theme's heading font; Bengali shows in Anek Bangla on every site. New Font setting under Appearance: Anek Bangla with theme headings (default), Anek Bangla everywhere, or your theme's fonts.
 * **Typography:** One type scale (7 sizes instead of 20, nothing below 12px, sizes follow the visitor's browser text size), calmer weights, more line height for Bengali, aligned numbers in prices and calendars, and 16px form fields on phones so they no longer zoom the page.
-* **Typography:** Hind Siliguri replaced by Anek Bangla (one variable file for all weights); Tourivo no longer overrides the WordPress admin font with `!important`.
+* **Typography:** Hind Siliguri replaced by Anek Bangla; Tourivo no longer overrides the WordPress admin font with `!important`.
+* **Booking panel:** One payment list: add-ons add their online choices next to the offline methods through the new `tourivo/booking_panel_payment_options` filter and `tourivo_booking_panel_after_payment_options` action. Fields no longer spill out of the panel on themes without border-box sizing.
+* **Hotel page:** Room types are laid out as cards (photo, details, price and reserve button; the reservation form opens full width), and the bed size shows its icon.
+* **Cards:** Price and button no longer collide; tours and hotels without a photo show a centered placeholder.
 
 = 1.4.3 =
 * **Offline Payment Method Expansion (Bank Transfer & Cash on Arrival):** Added dedicated offline payment method configuration allowing tour operators and hoteliers to accept direct bank deposits and cash on arrival.

@@ -204,10 +204,10 @@ if ($tourivoItemType === 'tour') {
             </div>
             <?php do_action('tourivo_booking_panel_checkout_fields', $tourivoItemId, $tourivoItemType); ?>
             <?php if (\Tourivo\Config\Config::get('require_consent', false)) : ?>
-                <div class="field-row tourivo-consent-row" style="margin-top:10px; display:flex; align-items:flex-start; gap:8px;">
-                    <input type="checkbox" name="consent" id="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required style="margin-top:3px;">
-                    <label for="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" style="font-size:13px; line-height:1.4;">
-                        <?php echo wp_kses_post(\Tourivo\Support\Privacy::getRenderedConsentLabel()); ?> <span class="required" style="color:#ef4444;">*</span>
+                <div class="field-row tourivo-consent-row">
+                    <input type="checkbox" name="consent" id="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required>
+                    <label for="tourivo-booking-consent-<?php echo esc_attr((string) $tourivoItemId); ?>">
+                        <?php echo wp_kses_post(\Tourivo\Support\Privacy::getRenderedConsentLabel()); ?> <span class="required">*</span>
                     </label>
                 </div>
             <?php endif; ?>
@@ -216,31 +216,42 @@ if ($tourivoItemType === 'tour') {
             $paymentService = \Tourivo\Common\Container::getInstance()->has(\Tourivo\Services\PaymentService::class)
                 ? \Tourivo\Common\Container::getInstance()->get(\Tourivo\Services\PaymentService::class)
                 : new \Tourivo\Services\PaymentService();
-            $offlineMethods = $paymentService->getOfflinePaymentMethods();
+            $tourivoPaymentOptions = [];
+            foreach ($paymentService->getOfflinePaymentMethods() as $mId => $method) {
+                $tourivoPaymentOptions[] = [
+                    'value'       => (string) $mId,
+                    'title'       => (string) $method['title'],
+                    'description' => (string) $method['description'],
+                    'data'        => [],
+                ];
+            }
+            /**
+             * Payment choices on the booking panel. Add-ons that take payment themselves add their own entries
+             * (value, title, description, and data-* attributes for their script).
+             *
+             * @param array<int, array{value: string, title: string, description: string, data: array<string, string>}> $tourivoPaymentOptions
+             */
+            $tourivoPaymentOptions = (array) apply_filters('tourivo/booking_panel_payment_options', $tourivoPaymentOptions, $tourivoItemId, $tourivoItemType);
             ?>
-            <?php if (!empty($offlineMethods)) : ?>
-                <div class="field-row tourivo-payment-methods-selector" style="margin-top: 14px; border-top: 1px solid #e2e8f0; padding-top: 12px;">
-                    <label style="display: block; font-weight: 600; font-size: 13.5px; margin-bottom: 8px; color: #1e293b;">
-                        💳 <?php esc_html_e('Payment Method', 'tourivo'); ?>
-                    </label>
-                    <div style="display: flex; flex-direction: column; gap: 8px;">
-                        <?php
-                        $isFirst = true;
-                        foreach ($offlineMethods as $mId => $method) :
-                        ?>
-                            <label style="display: flex; align-items: flex-start; gap: 8px; cursor: pointer; background: #f8fafc; border: 1px solid #cbd5e1; border-radius: 6px; padding: 10px 12px; font-size: 13px;">
-                                <input type="radio" name="payment_method" value="<?php echo esc_attr($mId); ?>" <?php checked($isFirst, true); ?> style="margin-top: 3px;">
-                                <span>
-                                    <strong><?php echo esc_html($method['title']); ?></strong>
-                                    <br><small style="color: #64748b;"><?php echo esc_html($method['description']); ?></small>
-                                </span>
-                            </label>
-                        <?php
-                            $isFirst = false;
-                        endforeach;
-                        ?>
-                    </div>
-                </div>
+            <?php if (!empty($tourivoPaymentOptions)) : ?>
+                <fieldset class="field-row tourivo-payment-options">
+                    <legend class="tourivo-payment-title"><?php esc_html_e('Payment Method', 'tourivo'); ?></legend>
+                    <?php foreach (array_values($tourivoPaymentOptions) as $tourivoIndex => $tourivoOption) : ?>
+                        <label class="tourivo-payment-option">
+                            <input type="radio" name="payment_method" value="<?php echo esc_attr((string) ($tourivoOption['value'] ?? '')); ?>" <?php checked($tourivoIndex, 0); ?>
+                                <?php foreach ((array) ($tourivoOption['data'] ?? []) as $tourivoDataKey => $tourivoDataValue) : ?>
+                                    data-<?php echo esc_attr(sanitize_key((string) $tourivoDataKey)); ?>="<?php echo esc_attr((string) $tourivoDataValue); ?>"
+                                <?php endforeach; ?>>
+                            <span class="tourivo-payment-text">
+                                <strong><?php echo esc_html((string) ($tourivoOption['title'] ?? '')); ?></strong>
+                                <?php if (!empty($tourivoOption['description'])) : ?>
+                                    <small><?php echo esc_html((string) $tourivoOption['description']); ?></small>
+                                <?php endif; ?>
+                            </span>
+                        </label>
+                    <?php endforeach; ?>
+                    <?php do_action('tourivo_booking_panel_after_payment_options', $tourivoItemId, $tourivoItemType); ?>
+                </fieldset>
             <?php endif; ?>
         </div>
 
@@ -302,10 +313,10 @@ if ($tourivoItemType === 'tour') {
                         <textarea name="message" rows="3" placeholder="<?php esc_attr_e('Tell us about your questions or custom trip preferences...', 'tourivo'); ?>" required></textarea>
                     </div>
                     <?php if (\Tourivo\Config\Config::get('require_consent', false)) : ?>
-                        <div class="inquiry-field-row tourivo-consent-row" style="display:flex; align-items:flex-start; gap:8px; margin-top:8px;">
-                            <input type="checkbox" name="consent" id="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required style="margin-top:3px;">
-                            <label for="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" style="font-size:13px; line-height:1.4;">
-                                <?php echo wp_kses_post(\Tourivo\Support\Privacy::getRenderedConsentLabel()); ?> <span class="required" style="color:#ef4444;">*</span>
+                        <div class="inquiry-field-row tourivo-consent-row">
+                            <input type="checkbox" name="consent" id="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>" value="1" required>
+                            <label for="tourivo-inq-consent-<?php echo esc_attr((string) $tourivoItemId); ?>">
+                                <?php echo wp_kses_post(\Tourivo\Support\Privacy::getRenderedConsentLabel()); ?> <span class="required">*</span>
                             </label>
                         </div>
                     <?php endif; ?>

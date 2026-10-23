@@ -121,7 +121,7 @@ $tourivoSymbol  = (string) apply_filters('tourivo/currency_symbol', '$');
                                     );
                                     ?></span>
                                     <?php if ($tourivoRoom->getBedType()) : ?>
-                                        <span class="spec-item"><span class="dashicons dashicons-bed"></span> <?php echo esc_html($tourivoRoom->getBedType()); ?></span>
+                                        <span class="spec-item"><span class="spec-icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="currentColor" focusable="false"><path d="M2 6h2v7h16a2 2 0 0 1 2 2v4h-2v-2H4v2H2V6zm5 1.5a2 2 0 1 1 0 4 2 2 0 0 1 0-4zM10 8h7a3 3 0 0 1 3 3v1H10V8z"/></svg></span> <?php echo esc_html($tourivoRoom->getBedType()); ?></span>
                                     <?php endif; ?>
                                     <?php if ($tourivoRoom->getRoomSize()) : ?>
                                         <span class="spec-item"><span class="dashicons dashicons-editor-expand"></span> <?php echo esc_html($tourivoRoom->getRoomSize()); ?></span>

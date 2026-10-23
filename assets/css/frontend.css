@@ -52,6 +52,21 @@
     font-family: inherit;
 }
 
+/* Headings follow the theme's heading font (Bengali in Anek Bangla). This needs to beat a theme's own
+   h1-h6 rule, hence the (0,1,1) selectors. */
+:is([class^="tourivo-"], [class*=" tourivo-"]) :is(h1, h2, h3, h4, h5, h6),
+:is(h1, h2, h3, h4, h5, h6):is([class^="tourivo-"], [class*=" tourivo-"]) {
+    font-family: var(--trv-font-heading, inherit);
+}
+
+/* Not every theme sets border-box; without it width:100% fields spill out of their boxes. */
+:where([class^="tourivo-"], [class*=" tourivo-"]),
+:where([class^="tourivo-"], [class*=" tourivo-"]) *,
+:where([class^="tourivo-"], [class*=" tourivo-"]) *::before,
+:where([class^="tourivo-"], [class*=" tourivo-"]) *::after {
+    box-sizing: border-box;
+}
+
 /* Bengali needs more room for vowel signs above and below the line, and no extra letter spacing
    (it breaks conjuncts in some browsers). */
 :where([class^="tourivo-"], [class*=" tourivo-"]):lang(bn) {
@@ -839,8 +854,36 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     border-top: 1px solid var(--trv-border);
     padding-top: 12px;
+}
+
+.tourivo-card-footer .tourivo-price-box {
+    min-width: 0;
+}
+
+.tourivo-card-footer .tourivo-btn {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+
+/* Shown when a tour, hotel or room has no image. */
+.tourivo-placeholder-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    min-height: 120px;
+    background: #f1f5f9;
+    color: #94a3b8;
+}
+
+.tourivo-placeholder-img .dashicons {
+    font-size: 44px;
+    width: 44px;
+    height: 44px;
 }
 
 .tourivo-price-box .price-from { font-size: var(--trv-text-xs); color: var(--trv-text-muted); display: block; }
@@ -1954,3 +1997,224 @@
 
 
 
+
+/* Hotel rooms (single hotel page) */
+.tourivo-rooms-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.tourivo-room-card {
+    display: grid;
+    grid-template-columns: 180px minmax(0, 1fr) auto;
+    gap: 16px;
+    align-items: start;
+    padding: 16px;
+    border: 1px solid var(--trv-border);
+    border-radius: var(--trv-radius);
+    background: #fff;
+}
+
+.room-thumb-col {
+    aspect-ratio: 4 / 3;
+    border-radius: calc(var(--trv-radius) - 2px);
+    overflow: hidden;
+    background: #f1f5f9;
+}
+
+.room-thumb-col img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.room-thumb-col .tourivo-placeholder-img {
+    min-height: 0;
+}
+
+.tourivo-room-card .room-title {
+    margin: 0 0 6px;
+    font-size: var(--trv-text-lg);
+    line-height: var(--trv-leading-tight);
+}
+
+.room-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 16px;
+    margin-bottom: 6px;
+    font-size: var(--trv-text-sm);
+    color: var(--trv-text-muted);
+}
+
+.room-specs .spec-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.room-specs .dashicons,
+.room-specs .spec-icon svg {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+}
+
+.room-specs .spec-icon {
+    display: inline-flex;
+}
+
+.room-desc {
+    font-size: var(--trv-text-sm);
+    color: var(--trv-text-muted);
+}
+
+.room-price-col {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    min-width: 150px;
+    text-align: right;
+}
+
+.room-price-col .price-tag .amount {
+    font-size: var(--trv-text-xl);
+    font-weight: var(--trv-weight-bold);
+    color: var(--trv-primary);
+    font-variant-numeric: tabular-nums;
+}
+
+.room-price-col .price-tag .unit {
+    font-size: var(--trv-text-sm);
+    color: var(--trv-text-muted);
+}
+
+.room-reserve-dropdown > summary {
+    list-style: none;
+}
+
+.room-reserve-dropdown > summary::-webkit-details-marker {
+    display: none;
+}
+
+/* An open reservation form gets the full width of the card. */
+.tourivo-room-card:has(.room-reserve-dropdown[open]) .room-price-col {
+    grid-column: 1 / -1;
+    align-items: stretch;
+    text-align: left;
+}
+
+.tourivo-room-card:has(.room-reserve-dropdown[open]) .price-tag,
+.tourivo-room-card:has(.room-reserve-dropdown[open]) .room-reserve-dropdown > summary {
+    align-self: flex-end;
+}
+
+.room-dropdown-content {
+    margin-top: 12px;
+    text-align: left;
+}
+
+@media (max-width: 640px) {
+    .tourivo-room-card {
+        grid-template-columns: 1fr;
+    }
+
+    .room-price-col {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: center;
+        text-align: left;
+    }
+}
+
+/* Booking panel: payment choice (offline methods plus any online ones an add-on registers) */
+.tourivo-payment-options {
+    margin: 14px 0 0;
+    padding: 12px 0 0;
+    border: 0;
+    border-top: 1px solid var(--trv-border);
+    min-width: 0;
+}
+
+.tourivo-payment-title {
+    margin-bottom: 8px;
+    padding: 0;
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
+    color: var(--trv-text-main);
+}
+
+.tourivo-payment-option {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 8px;
+    padding: 10px 12px;
+    border: 1px solid var(--trv-border);
+    border-radius: 6px;
+    background: var(--trv-bg-light);
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.tourivo-payment-option:hover {
+    border-color: var(--trv-primary);
+}
+
+.tourivo-payment-option:has(input:checked) {
+    border-color: var(--trv-primary);
+    background: #fff;
+    box-shadow: 0 0 0 1px var(--trv-primary);
+}
+
+.tourivo-payment-option input[type="radio"] {
+    flex: 0 0 auto;
+    width: 16px;
+    height: 16px;
+    margin: 3px 0 0;
+    accent-color: var(--trv-primary);
+}
+
+.tourivo-payment-text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+}
+
+.tourivo-payment-text strong {
+    font-size: var(--trv-text-sm);
+    font-weight: var(--trv-weight-semibold);
+    line-height: var(--trv-leading-tight);
+}
+
+.tourivo-payment-text small {
+    font-size: var(--trv-text-xs);
+    color: var(--trv-text-muted);
+    line-height: 1.45;
+}
+
+.tourivo-consent-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.tourivo-consent-row input[type="checkbox"] {
+    flex: 0 0 auto;
+    margin-top: 3px;
+}
+
+.tourivo-consent-row label {
+    font-size: var(--trv-text-sm);
+    line-height: 1.45;
+}
+
+.tourivo-consent-row .required {
+    color: var(--trv-danger);
+}

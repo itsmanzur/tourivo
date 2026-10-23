@@ -170,7 +170,7 @@ class SettingsPage
             'primary_hover'              => sanitize_hex_color(wp_unslash((string)($_POST['primary_hover'] ?? '#0f766e'))) ?: '#0f766e',
             'accent_color'               => sanitize_hex_color(wp_unslash((string)($_POST['accent_color'] ?? '#f59e0b'))) ?: '#f59e0b',
             'border_radius'              => self::borderRadius(sanitize_text_field(wp_unslash($_POST['border_radius'] ?? ''))),
-            'font_family'                => self::choice('font_family', \Tourivo\Support\Typography::MODES, 'theme'),
+            'font_family'                => self::choice('font_family', \Tourivo\Support\Typography::MODES, 'anek'),
             'button_text_color'          => sanitize_hex_color(wp_unslash((string)($_POST['button_text_color'] ?? '#ffffff'))) ?: '#ffffff',
             'enable_schema'              => isset($_POST['enable_schema']) ? 1 : 0,
             'enable_opengraph'           => isset($_POST['enable_opengraph']) ? 1 : 0,
@@ -780,11 +780,11 @@ class SettingsPage
                                 <th scope="row"><label for="font_family"><?php esc_html_e('Font', 'tourivo'); ?></label></th>
                                 <td>
                                     <select name="font_family" id="font_family">
-                                        <option value="theme" <?php selected($fontFamily, 'theme'); ?>><?php esc_html_e('Theme font, Bengali in Anek Bangla (Default)', 'tourivo'); ?></option>
-                                        <option value="anek" <?php selected($fontFamily, 'anek'); ?>><?php esc_html_e('Anek Bangla for everything', 'tourivo'); ?></option>
-                                        <option value="system" <?php selected($fontFamily, 'system'); ?>><?php esc_html_e('Device font, Bengali in Anek Bangla', 'tourivo'); ?></option>
+                                        <option value="anek" <?php selected($fontFamily, 'anek'); ?>><?php esc_html_e('Anek Bangla, headings in your theme\'s font (Default)', 'tourivo'); ?></option>
+                                        <option value="anek_all" <?php selected($fontFamily, 'anek_all'); ?>><?php esc_html_e('Anek Bangla for text and headings', 'tourivo'); ?></option>
+                                        <option value="theme" <?php selected($fontFamily, 'theme'); ?>><?php esc_html_e('Your theme\'s fonts, Bengali in Anek Bangla', 'tourivo'); ?></option>
                                     </select>
-                                    <p class="description"><?php esc_html_e('By default Tourivo uses your theme\'s font so it looks like part of your site, and shows Bengali text in Anek Bangla. The Bengali font is loaded only on pages that contain Bengali.', 'tourivo'); ?></p>
+                                    <p class="description"><?php esc_html_e('Anek Bangla keeps forms, prices and buttons crisp on any theme and covers Bengali and English. Headings follow your theme so Tourivo pages still look like your site. Choose your theme\'s fonts only if its text font is a clear sans-serif with several weights.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
                         </table>
