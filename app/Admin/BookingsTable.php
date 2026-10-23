@@ -73,8 +73,13 @@ class BookingsTable
                 "SELECT * FROM {$itemsTable} WHERE booking_id IN ({$placeholders}) ORDER BY id ASC",
                 ...$ids
             ));
+            $grouped = [];
             foreach ($rows as $row) {
-                $items[(int) $row->booking_id] ??= $row; // first line item per booking
+                $grouped[(int) $row->booking_id][] = $row;
+            }
+            foreach ($grouped as $bookingId => $bookingItems) {
+                // One row per booking: several items (a package) show their combined title and dates.
+                $items[$bookingId] = \Tourivo\Support\BookingItems::summaryRow($bookingItems, $bookingId);
             }
         }
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
@@ -202,7 +207,7 @@ class BookingsTable
                                         )
                                     );
                                     if ($lineItem->check_out) {
-                                        echo esc_html(' &rarr; ' . gmdate('M d, Y', strtotime($lineItem->check_out)));
+                                        echo esc_html(' → ' . gmdate('M d, Y', strtotime($lineItem->check_out)));
                                     }
                                     echo esc_html(
                                         sprintf(

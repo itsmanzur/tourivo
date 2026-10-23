@@ -9,7 +9,7 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"POT-Creation-Date: 2026-10-23T13:05:37+00:00\n"
+"POT-Creation-Date: 2026-10-23T17:59:39+00:00\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "X-Generator: WP-CLI 2.12.0\n"
 "X-Domain: tourivo\n"
@@ -62,7 +62,7 @@ msgid "Reports"
 msgstr ""
 
 #: app/Admin/AdminDashboard.php:62
-#: app/Admin/BookingsTable.php:132
+#: app/Admin/BookingsTable.php:137
 msgid "Export Bookings"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgid "Code"
 msgstr ""
 
 #: app/Admin/AdminDashboard.php:125
-#: app/Admin/BookingsTable.php:162
+#: app/Admin/BookingsTable.php:167
 #: templates/emails/admin-booking-cancelled.php:41
 msgid "Customer"
 msgstr ""
@@ -161,286 +161,286 @@ msgstr ""
 msgid "Hotels grid"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:127
+#: app/Admin/BookingsTable.php:132
 #: templates/my-bookings.php:133
 msgid "All Bookings"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:129
+#: app/Admin/BookingsTable.php:134
 msgid "Add Manual Booking"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:139
+#: app/Admin/BookingsTable.php:144
 #: app/Admin/InquiriesTable.php:54
 msgid "All"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:140
-#: app/Admin/BookingsTable.php:505
+#: app/Admin/BookingsTable.php:145
+#: app/Admin/BookingsTable.php:510
 #: templates/emails/admin-new-booking.php:27
 msgid "Pending"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:141
-#: app/Admin/BookingsTable.php:504
+#: app/Admin/BookingsTable.php:146
+#: app/Admin/BookingsTable.php:509
 #: templates/emails/admin-new-booking.php:28
 msgid "Confirmed"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:142
+#: app/Admin/BookingsTable.php:147
 msgid "🚨 Cancel Requested"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:143
-#: app/Admin/BookingsTable.php:507
+#: app/Admin/BookingsTable.php:148
+#: app/Admin/BookingsTable.php:512
 msgid "On Hold"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:144
-#: app/Admin/BookingsTable.php:508
+#: app/Admin/BookingsTable.php:149
+#: app/Admin/BookingsTable.php:513
 #: templates/my-bookings.php:141
 msgid "Completed"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:145
-#: app/Admin/BookingsTable.php:509
+#: app/Admin/BookingsTable.php:150
+#: app/Admin/BookingsTable.php:514
 #: templates/emails/admin-new-booking.php:29
 #: templates/my-bookings.php:145
 msgid "Cancelled"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:154
+#: app/Admin/BookingsTable.php:159
 msgid "Search bookings..."
 msgstr ""
 
-#: app/Admin/BookingsTable.php:155
+#: app/Admin/BookingsTable.php:160
 #: app/Shortcodes/FilterSearchShortcode.php:75
 #: templates/search-bar.php:118
 msgid "Search"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:161
-#: app/Services/ExportService.php:324
-#: app/Services/ExportService.php:385
+#: app/Admin/BookingsTable.php:166
+#: app/Services/ExportService.php:326
+#: app/Services/ExportService.php:387
 #: app/Services/ReportingService.php:454
 #: app/Support/Privacy.php:261
 #: templates/my-bookings.php:188
 msgid "Booking Code"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:163
+#: app/Admin/BookingsTable.php:168
 msgid "Item & Dates"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:164
-#: app/Services/ExportService.php:336
+#: app/Admin/BookingsTable.php:169
+#: app/Services/ExportService.php:338
 #: app/Support/Privacy.php:266
 #: templates/booking-panel.php:183
 #: templates/my-bookings.php:224
 msgid "Total Amount"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:165
-#: app/Admin/BookingsTable.php:245
+#: app/Admin/BookingsTable.php:170
+#: app/Admin/BookingsTable.php:250
 msgid "Payment"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:166
-#: app/Admin/BookingsTable.php:501
-#: app/Services/ExportService.php:340
-#: app/Services/ExportService.php:399
+#: app/Admin/BookingsTable.php:171
+#: app/Admin/BookingsTable.php:506
+#: app/Services/ExportService.php:342
+#: app/Services/ExportService.php:401
 #: app/Services/ReportingService.php:470
 #: app/Support/Privacy.php:267
 msgid "Booking Status"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:167
+#: app/Admin/BookingsTable.php:172
 #: app/Admin/InquiriesTable.php:69
 msgid "Quick Actions"
 msgstr ""
 
 #. translators: %s: Booking check-in date
-#: app/Admin/BookingsTable.php:200
+#: app/Admin/BookingsTable.php:205
 #, php-format
 msgid "Date: %s"
 msgstr ""
 
 #. translators: %d: Quantity of travelers
-#: app/Admin/BookingsTable.php:210
+#: app/Admin/BookingsTable.php:215
 #, php-format
 msgid " | %d Travelers"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:232
-#: app/Admin/BookingsTable.php:506
+#: app/Admin/BookingsTable.php:237
+#: app/Admin/BookingsTable.php:511
 #: templates/booking-lookup.php:67
 msgid "Cancel Requested"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:237
+#: app/Admin/BookingsTable.php:242
 msgid "View Booking Details & Timeline Notes"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:238
+#: app/Admin/BookingsTable.php:243
 msgid "Details"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:240
+#: app/Admin/BookingsTable.php:245
 #: templates/booking-lookup.php:89
-#: templates/booking-voucher.php:271
+#: templates/booking-voucher.php:276
 #: templates/thank-you.php:276
 msgid "Print Booking Voucher"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:241
+#: app/Admin/BookingsTable.php:246
 msgid "Voucher"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:244
+#: app/Admin/BookingsTable.php:249
 msgid "Record received offline payment or mark paid"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:247
+#: app/Admin/BookingsTable.php:252
 msgid "Invalidate previously shared voucher / calendar links"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:247
+#: app/Admin/BookingsTable.php:252
 msgid "Revoke Links"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:249
+#: app/Admin/BookingsTable.php:254
 msgid "Confirm"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:252
-#: app/Admin/BookingsTable.php:382
-#: app/Admin/BookingsTable.php:579
-#: app/Admin/BookingsTable.php:674
+#: app/Admin/BookingsTable.php:257
+#: app/Admin/BookingsTable.php:387
+#: app/Admin/BookingsTable.php:584
+#: app/Admin/BookingsTable.php:679
 msgid "Cancel"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:260
+#: app/Admin/BookingsTable.php:265
 msgid "No bookings found matching criteria."
 msgstr ""
 
 #. translators: %s: Number of bookings
-#: app/Admin/BookingsTable.php:283
+#: app/Admin/BookingsTable.php:288
 #, php-format
 msgid "%s booking"
 msgid_plural "%s bookings"
 msgstr[0] ""
 msgstr[1] ""
 
-#: app/Admin/BookingsTable.php:296
+#: app/Admin/BookingsTable.php:301
 msgid "Create Manual Booking (Phone / WhatsApp / Walk-in)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:302
+#: app/Admin/BookingsTable.php:307
 msgid "Select Tour or Hotel Room *"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:304
+#: app/Admin/BookingsTable.php:309
 msgid "-- Select Trip or Room --"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:305
-#: app/Admin/BookingsTable.php:531
+#: app/Admin/BookingsTable.php:310
+#: app/Admin/BookingsTable.php:536
 msgid "Tour Packages"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:312
-#: app/Admin/BookingsTable.php:538
+#: app/Admin/BookingsTable.php:317
+#: app/Admin/BookingsTable.php:543
 msgid "Hotel Rooms"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:325
+#: app/Admin/BookingsTable.php:330
 msgid "Check-in Date *"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:329
+#: app/Admin/BookingsTable.php:334
 msgid "Check-out Date (For Rooms)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:336
+#: app/Admin/BookingsTable.php:341
 msgid "Adults *"
 msgstr ""
 
 #. translators: %s: child age range
-#: app/Admin/BookingsTable.php:340
-#: app/Services/ExportService.php:394
+#: app/Admin/BookingsTable.php:345
+#: app/Services/ExportService.php:396
 #: app/Services/PricingService.php:162
 #: templates/booking-panel.php:136
 msgid "Children"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:344
+#: app/Admin/BookingsTable.php:349
 msgid "Total Price ($) *"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:353
+#: app/Admin/BookingsTable.php:358
 msgid "Customer Full Name *"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:357
+#: app/Admin/BookingsTable.php:362
 msgid "Customer Email *"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:364
+#: app/Admin/BookingsTable.php:369
 msgid "Phone / WhatsApp"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:368
-#: app/Admin/BookingsTable.php:513
-#: app/Admin/BookingsTable.php:631
-#: app/Services/ExportService.php:339
-#: app/Services/ExportService.php:400
+#: app/Admin/BookingsTable.php:373
+#: app/Admin/BookingsTable.php:518
+#: app/Admin/BookingsTable.php:636
+#: app/Services/ExportService.php:341
+#: app/Services/ExportService.php:402
 #: app/Services/ReportingService.php:467
 #: app/Support/Privacy.php:268
 #: templates/thank-you.php:58
 msgid "Payment Status"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:370
+#: app/Admin/BookingsTable.php:375
 msgid "Paid (Full Cash / Online)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:371
+#: app/Admin/BookingsTable.php:376
 msgid "Pending (Pay on Arrival)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:377
+#: app/Admin/BookingsTable.php:382
 msgid "Internal Notes"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:378
+#: app/Admin/BookingsTable.php:383
 msgid "e.g. Phone booking confirmed by agent."
 msgstr ""
 
-#: app/Admin/BookingsTable.php:384
+#: app/Admin/BookingsTable.php:389
 msgid "Confirm & Create Booking"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:402
-#: app/Admin/BookingsTable.php:604
+#: app/Admin/BookingsTable.php:407
+#: app/Admin/BookingsTable.php:609
 msgid "Customer:"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:403
-#: templates/booking-voucher.php:296
+#: app/Admin/BookingsTable.php:408
+#: templates/booking-voucher.php:301
 #: templates/thank-you.php:118
 msgid "Email:"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:404
-#: templates/booking-voucher.php:298
+#: app/Admin/BookingsTable.php:409
+#: templates/booking-voucher.php:303
 #: templates/thank-you.php:120
 msgid "Phone:"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:405
-#: app/Admin/BookingsTable.php:608
+#: app/Admin/BookingsTable.php:410
+#: app/Admin/BookingsTable.php:613
 #: templates/booking-lookup.php:84
-#: templates/booking-voucher.php:374
+#: templates/booking-voucher.php:379
 #: templates/emails/admin-booking-cancelled.php:73
 #: templates/emails/admin-new-booking.php:104
 #: templates/emails/customer-booking-cancelled.php:65
@@ -449,252 +449,252 @@ msgstr ""
 msgid "Total Amount:"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:406
+#: app/Admin/BookingsTable.php:411
 msgid "Trip / Room:"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:410
+#: app/Admin/BookingsTable.php:415
 msgid "Activity History & Internal Notes"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:419
+#: app/Admin/BookingsTable.php:424
 msgid "Add Internal Staff Note"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:421
+#: app/Admin/BookingsTable.php:426
 msgid "e.g. Customer requested early check-in or confirmed passport."
 msgstr ""
 
-#: app/Admin/BookingsTable.php:423
+#: app/Admin/BookingsTable.php:428
 msgid "Add Note"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:430
-#: templates/booking-voucher.php:270
+#: app/Admin/BookingsTable.php:435
+#: templates/booking-voucher.php:275
 #: templates/my-bookings.php:265
 #: templates/my-bookings.php:272
 #: templates/my-bookings.php:283
 msgid "Close"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:458
+#: app/Admin/BookingsTable.php:463
 msgid "Export Bookings & Generate Reports"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:468
+#: app/Admin/BookingsTable.php:473
 msgid "Date Range Preset"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:470
-#: app/Services/ExportService.php:457
+#: app/Admin/BookingsTable.php:475
+#: app/Services/ExportService.php:459
 msgid "All Time"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:471
+#: app/Admin/BookingsTable.php:476
 #: app/Admin/ReportsPage.php:54
 #: app/Services/ReportingService.php:40
 #: views/admin/metaboxes/availability-metabox.php:31
 msgid "Today"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:472
+#: app/Admin/BookingsTable.php:477
 #: app/Admin/ReportsPage.php:55
 #: app/Services/ReportingService.php:58
 msgid "Last 7 Days"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:473
+#: app/Admin/BookingsTable.php:478
 #: app/Admin/ReportsPage.php:56
 #: app/Services/ReportingService.php:102
 msgid "This Month"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:474
+#: app/Admin/BookingsTable.php:479
 #: app/Admin/ReportsPage.php:57
 #: app/Services/ReportingService.php:68
 msgid "Last Month"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:475
+#: app/Admin/BookingsTable.php:480
 msgid "Custom Range"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:482
+#: app/Admin/BookingsTable.php:487
 msgid "Filter Dates By"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:484
+#: app/Admin/BookingsTable.php:489
 msgid "Booking Date (Created)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:485
+#: app/Admin/BookingsTable.php:490
 msgid "Travel Date (Check-in)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:489
+#: app/Admin/BookingsTable.php:494
 msgid "Start Date"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:493
+#: app/Admin/BookingsTable.php:498
 msgid "End Date"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:503
+#: app/Admin/BookingsTable.php:508
 msgid "All Statuses"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:515
+#: app/Admin/BookingsTable.php:520
 msgid "All Payment Statuses"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:516
+#: app/Admin/BookingsTable.php:521
 #: templates/emails/admin-new-booking.php:30
 msgid "Paid"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:517
-#: app/Admin/BookingsTable.php:635
+#: app/Admin/BookingsTable.php:522
+#: app/Admin/BookingsTable.php:640
 msgid "Pending (Unpaid)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:518
-#: app/Admin/BookingsTable.php:636
+#: app/Admin/BookingsTable.php:523
+#: app/Admin/BookingsTable.php:641
 #: templates/emails/admin-new-booking.php:33
 msgid "Refunded"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:519
+#: app/Admin/BookingsTable.php:524
 msgid "Failed"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:527
+#: app/Admin/BookingsTable.php:532
 msgid "Specific Tour or Room"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:529
+#: app/Admin/BookingsTable.php:534
 msgid "-- All Tours & Rooms --"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:547
+#: app/Admin/BookingsTable.php:552
 msgid "Search Keyword"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:548
+#: app/Admin/BookingsTable.php:553
 msgid "Name, email, phone, code..."
 msgstr ""
 
-#: app/Admin/BookingsTable.php:554
+#: app/Admin/BookingsTable.php:559
 msgid "Report Format & Detail Level"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:558
+#: app/Admin/BookingsTable.php:563
 msgid "Bookings List"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:558
+#: app/Admin/BookingsTable.php:563
 msgid "Standard manifest with customer & financial totals"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:562
+#: app/Admin/BookingsTable.php:567
 msgid "Line-Item Manifest"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:562
+#: app/Admin/BookingsTable.php:567
 msgid "One row per room/tour line with travelers breakdown"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:566
+#: app/Admin/BookingsTable.php:571
 msgid "Financial Summary"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:566
+#: app/Admin/BookingsTable.php:571
 msgid "Aggregated metrics: Gross value, taxes & net revenue"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:573
+#: app/Admin/BookingsTable.php:578
 msgid "matching bookings found"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:574
+#: app/Admin/BookingsTable.php:579
 msgid "UTF-8 Excel Ready"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:581
+#: app/Admin/BookingsTable.php:586
 msgid "Download CSV Report"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:593
+#: app/Admin/BookingsTable.php:598
 msgid "Record Payment"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:612
+#: app/Admin/BookingsTable.php:617
 msgid "Already Paid:"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:616
+#: app/Admin/BookingsTable.php:621
 msgid "Current Due:"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:623
+#: app/Admin/BookingsTable.php:628
 msgid "Payment Amount to Record"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:625
+#: app/Admin/BookingsTable.php:630
 msgid "Defaults to the full or remaining due balance."
 msgstr ""
 
-#: app/Admin/BookingsTable.php:633
+#: app/Admin/BookingsTable.php:638
 msgid "Paid (Settled)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:634
+#: app/Admin/BookingsTable.php:639
 msgid "Partially Paid (Deposit)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:640
-#: app/Services/ExportService.php:338
+#: app/Admin/BookingsTable.php:645
+#: app/Services/ExportService.php:340
 #: app/Services/ReportingService.php:468
 #: templates/booking-panel.php:238
 msgid "Payment Method"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:642
+#: app/Admin/BookingsTable.php:647
 msgid "Bank Transfer"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:643
+#: app/Admin/BookingsTable.php:648
 msgid "Cash on Arrival"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:644
+#: app/Admin/BookingsTable.php:649
 msgid "Manual / Other Offline"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:645
+#: app/Admin/BookingsTable.php:650
 msgid "POS / Reception Counter"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:652
+#: app/Admin/BookingsTable.php:657
 msgid "Transaction / Deposit Reference"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:653
+#: app/Admin/BookingsTable.php:658
 msgid "e.g. BANK-TXN-882299, Slip #, bKash TrxID"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:660
+#: app/Admin/BookingsTable.php:665
 msgid "Automatically confirm reservation if currently in Pending status"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:666
+#: app/Admin/BookingsTable.php:671
 msgid "Internal Audit Note"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:667
+#: app/Admin/BookingsTable.php:672
 msgid "Optional memo (e.g. Verified via City Bank Online portal)"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:676
+#: app/Admin/BookingsTable.php:681
 msgid "Save Payment Record"
 msgstr ""
 
@@ -1937,8 +1937,8 @@ msgstr[1] ""
 #: app/Providers/AdminServiceProvider.php:758
 #: app/Providers/AdminServiceProvider.php:782
 #: app/Providers/AdminServiceProvider.php:834
-#: app/Services/ExportService.php:480
-#: app/Services/ExportService.php:528
+#: app/Services/ExportService.php:482
+#: app/Services/ExportService.php:530
 msgid "Unauthorized access."
 msgstr ""
 
@@ -2188,7 +2188,7 @@ msgid "These exchange rates are used when travelers switch currencies with [tour
 msgstr ""
 
 #: app/Admin/SettingsPage.php:491
-#: app/Services/ExportService.php:337
+#: app/Services/ExportService.php:339
 msgid "Currency"
 msgstr ""
 
@@ -3381,7 +3381,8 @@ msgid "Too many booking requests submitted. Please wait a few minutes before try
 msgstr ""
 
 #: app/Controllers/Api/BookingController.php:79
-#: app/Services/BookingService.php:116
+#: app/Services/BookingService.php:117
+#: app/Services/BookingService.php:991
 msgid "Please add at least one adult or child."
 msgstr ""
 
@@ -3429,7 +3430,7 @@ msgid "Custom Item ID (Leave 0 for Current Page)"
 msgstr ""
 
 #: app/Elementor/Widgets/BookingPanelWidget.php:72
-#: app/Services/ExportService.php:390
+#: app/Services/ExportService.php:392
 #: app/Services/ReportingService.php:461
 msgid "Item Type"
 msgstr ""
@@ -3963,10 +3964,10 @@ msgstr ""
 
 #: app/Providers/AdminServiceProvider.php:787
 #: app/Providers/AdminServiceProvider.php:1114
-#: app/Services/BookingService.php:564
+#: app/Services/BookingService.php:596
 #: app/Services/PaymentService.php:317
-#: app/Shortcodes/MyBookingsShortcode.php:475
-#: app/Shortcodes/MyBookingsShortcode.php:498
+#: app/Shortcodes/MyBookingsShortcode.php:476
+#: app/Shortcodes/MyBookingsShortcode.php:499
 msgid "Invalid booking ID."
 msgstr ""
 
@@ -4007,9 +4008,9 @@ msgstr ""
 
 #: app/Providers/AdminServiceProvider.php:880
 #: app/Providers/AdminServiceProvider.php:932
-#: app/Services/BookingService.php:585
-#: app/Shortcodes/MyBookingsShortcode.php:325
-#: app/Shortcodes/MyBookingsShortcode.php:380
+#: app/Services/BookingService.php:617
+#: app/Shortcodes/MyBookingsShortcode.php:326
+#: app/Shortcodes/MyBookingsShortcode.php:381
 msgid "Booking not found."
 msgstr ""
 
@@ -4226,7 +4227,7 @@ msgid "Selected dates contain active bookings. Are you sure you want to force bl
 msgstr ""
 
 #: app/Providers/MetaBoxServiceProvider.php:158
-#: app/Services/ExportService.php:329
+#: app/Services/ExportService.php:331
 msgid "Type"
 msgstr ""
 
@@ -4505,413 +4506,426 @@ msgstr ""
 msgid "Tours in %s."
 msgstr ""
 
-#: app/Services/BookingService.php:87
-#: app/Services/BookingService.php:574
+#: app/Services/BookingService.php:88
+#: app/Services/BookingService.php:606
 msgid "Database connection not available."
 msgstr ""
 
-#: app/Services/BookingService.php:93
+#: app/Services/BookingService.php:94
 msgid "Selected item is invalid or no longer available."
 msgstr ""
 
-#: app/Services/BookingService.php:103
+#: app/Services/BookingService.php:104
 msgid "Invalid booking item type."
 msgstr ""
 
-#: app/Services/BookingService.php:129
+#: app/Services/BookingService.php:130
 msgid "Please provide all required traveler details (Name, Valid Email, Date)."
 msgstr ""
 
-#: app/Services/BookingService.php:133
+#: app/Services/BookingService.php:134
+#: app/Services/BookingService.php:983
 msgid "Please provide valid dates in YYYY-MM-DD format."
 msgstr ""
 
-#: app/Services/BookingService.php:136
+#: app/Services/BookingService.php:137
 msgid "The check-out date cannot be earlier than the check-in date."
 msgstr ""
 
-#: app/Services/BookingService.php:142
+#: app/Services/BookingService.php:143
 msgid "You must agree to the terms and privacy policy before completing this booking."
 msgstr ""
 
-#: app/Services/BookingService.php:149
+#: app/Services/BookingService.php:150
 msgid "Too many booking requests were made for this email address. Please try again later."
 msgstr ""
 
-#. translators: %d: Maximum allowed guests
-#. translators: %d: Maximum guests
-#: app/Services/BookingService.php:168
-#: app/Services/PricingService.php:127
-#, php-format
-msgid "This tour allows a maximum of %d guests per booking."
-msgstr ""
-
-#: app/Services/BookingService.php:176
-#: app/Services/PricingService.php:190
-msgid "Please select a valid check-out date for room reservations."
-msgstr ""
-
-#: app/Services/BookingService.php:179
-msgid "Check-out must be at least one night after check-in."
-msgstr ""
-
-#. translators: 1: Room count, 2: Maximum adults
-#: app/Services/BookingService.php:198
-#, php-format
-msgid "Selected %1$d room(s) can accommodate up to %2$d adults."
-msgstr ""
-
-#. translators: 1: Room count, 2: Maximum children
-#: app/Services/BookingService.php:205
-#, php-format
-msgid "Selected %1$d room(s) can accommodate up to %2$d children."
-msgstr ""
-
-#. translators: 1: Room count, 2: Maximum total guests
-#: app/Services/BookingService.php:212
-#, php-format
-msgid "Selected %1$d room(s) can accommodate up to %2$d total guests."
-msgstr ""
-
-#: app/Services/BookingService.php:258
+#: app/Services/BookingService.php:201
+#: app/Services/BookingService.php:1016
 msgid "Failed to calculate price quote."
 msgstr ""
 
-#: app/Services/BookingService.php:286
+#: app/Services/BookingService.php:265
 msgid "Invalid total price calculated for this booking."
 msgstr ""
 
-#: app/Services/BookingService.php:300
+#: app/Services/BookingService.php:279
 msgid "This coupon could not be applied."
 msgstr ""
 
-#: app/Services/BookingService.php:368
+#: app/Services/BookingService.php:347
 msgid "Failed to commit inventory. Selected slots are no longer available."
 msgstr ""
 
-#: app/Services/BookingService.php:425
+#. translators: %s: tour or room name
+#: app/Services/BookingService.php:370
+#, php-format
+msgid "%s is no longer available for the selected dates."
+msgstr ""
+
+#: app/Services/BookingService.php:418
 msgid "Could not save booking record to database."
 msgstr ""
 
-#: app/Services/BookingService.php:456
+#: app/Services/BookingService.php:449
+#: app/Services/BookingService.php:477
 msgid "Could not save booking item line to database."
 msgstr ""
 
-#: app/Services/BookingService.php:480
+#: app/Services/BookingService.php:502
 msgid "An unexpected error occurred while creating your booking. Please try again."
 msgstr ""
 
 #. translators: %s: Booking reference code
-#: app/Services/BookingService.php:543
+#: app/Services/BookingService.php:575
 #, php-format
 msgid "Almost done! Your booking code is #%s. Please open the confirmation link we emailed you to secure your reservation."
 msgstr ""
 
 #. translators: %s: Booking reference code
-#: app/Services/BookingService.php:545
+#: app/Services/BookingService.php:577
 #, php-format
 msgid "Booking created successfully! Your booking code is #%s."
 msgstr ""
 
 #. translators: 1: Invalid status string, 2: Comma-separated list of valid statuses
-#: app/Services/BookingService.php:570
+#: app/Services/BookingService.php:602
 #, php-format
 msgid "Invalid status \"%1$s\". Valid statuses are: %2$s"
 msgstr ""
 
-#: app/Services/BookingService.php:592
+#: app/Services/BookingService.php:624
 msgid "Booking status unchanged."
 msgstr ""
 
 #. translators: 1: Current status, 2: Requested status
-#: app/Services/BookingService.php:610
+#: app/Services/BookingService.php:642
 #, php-format
 msgid "A booking cannot move from %1$s to %2$s."
 msgstr ""
 
-#: app/Services/BookingService.php:655
+#: app/Services/BookingService.php:687
 msgid "Cannot reactivate booking. Required inventory spots are no longer available."
 msgstr ""
 
-#: app/Services/BookingService.php:687
+#: app/Services/BookingService.php:719
 msgid "Booking status has already changed or could not be updated."
 msgstr ""
 
-#: app/Services/BookingService.php:713
+#: app/Services/BookingService.php:745
 msgid " (email address was never confirmed)"
 msgstr ""
 
-#: app/Services/BookingService.php:714
+#: app/Services/BookingService.php:746
 msgid " (pending booking expired)"
 msgstr ""
 
 #. translators: 1: Old status, 2: New status
-#: app/Services/BookingService.php:723
+#: app/Services/BookingService.php:755
 #, php-format
 msgid "Booking status changed from %1$s to %2$s"
 msgstr ""
 
 #. translators: 1: Old status, 2: New status
-#: app/Services/BookingService.php:734
+#: app/Services/BookingService.php:766
 #, php-format
 msgid "Booking status changed from %1$s to %2$s successfully."
 msgstr ""
 
-#: app/Services/BookingService.php:765
+#: app/Services/BookingService.php:797
 msgid "Voucher and calendar links were revoked by staff."
 msgstr ""
 
+#. translators: %d: Maximum allowed guests
+#. translators: %d: Maximum guests
+#: app/Services/BookingService.php:873
+#: app/Services/PricingService.php:127
+#, php-format
+msgid "This tour allows a maximum of %d guests per booking."
+msgstr ""
+
+#: app/Services/BookingService.php:881
+#: app/Services/PricingService.php:190
+msgid "Please select a valid check-out date for room reservations."
+msgstr ""
+
+#: app/Services/BookingService.php:884
+msgid "Check-out must be at least one night after check-in."
+msgstr ""
+
+#. translators: 1: Room count, 2: Maximum adults
+#: app/Services/BookingService.php:903
+#, php-format
+msgid "Selected %1$d room(s) can accommodate up to %2$d adults."
+msgstr ""
+
+#. translators: 1: Room count, 2: Maximum children
 #: app/Services/BookingService.php:910
+#, php-format
+msgid "Selected %1$d room(s) can accommodate up to %2$d children."
+msgstr ""
+
+#. translators: 1: Room count, 2: Maximum total guests
+#: app/Services/BookingService.php:917
+#, php-format
+msgid "Selected %1$d room(s) can accommodate up to %2$d total guests."
+msgstr ""
+
+#: app/Services/BookingService.php:977
+msgid "One of the items in this booking is no longer available."
+msgstr ""
+
+#: app/Services/BookingService.php:1132
 msgid "This confirmation link is invalid."
 msgstr ""
 
-#: app/Services/BookingService.php:929
+#: app/Services/BookingService.php:1151
 msgid "Your email address is already confirmed."
 msgstr ""
 
-#: app/Services/BookingService.php:933
+#: app/Services/BookingService.php:1155
 msgid "This booking was cancelled because the email address was not confirmed in time. Please make a new booking."
 msgstr ""
 
-#: app/Services/BookingService.php:952
+#: app/Services/BookingService.php:1174
 msgid "Customer confirmed their email address."
 msgstr ""
 
-#: app/Services/BookingService.php:956
+#: app/Services/BookingService.php:1178
 msgid "Thank you! Your email address is confirmed and your booking is secured."
 msgstr ""
 
 #. translators: 1: Email type, 2: Recipient, 3: Attempt number
-#: app/Services/EmailService.php:368
+#: app/Services/EmailService.php:369
 #, php-format
 msgid "Email [%1$s] sent successfully to %2$s (attempt %3$d)."
 msgstr ""
 
 #. translators: 1: Email type, 2: Recipient, 3: Attempt number, 4: Error details
-#: app/Services/EmailService.php:380
+#: app/Services/EmailService.php:381
 #, php-format
 msgid "Email [%1$s] failed to send to %2$s (attempt %3$d). Reason: %4$s"
 msgstr ""
 
-#: app/Services/EmailService.php:384
+#: app/Services/EmailService.php:385
 msgid "Unknown mail error"
 msgstr ""
 
-#: app/Services/EmailService.php:671
+#: app/Services/EmailService.php:672
 msgid "Your Booking Request Received #{booking_code} - {site_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:672
+#: app/Services/EmailService.php:673
 msgid "Booking Request Received"
 msgstr ""
 
-#: app/Services/EmailService.php:673
+#: app/Services/EmailService.php:674
 msgid "Your Booking Confirmation #{booking_code} - {site_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:674
+#: app/Services/EmailService.php:675
 #: templates/emails/booking-confirmation.php:51
 #: templates/emails/customer-booking-confirmed.php:47
 msgid "Booking Confirmed!"
 msgstr ""
 
-#: app/Services/EmailService.php:675
+#: app/Services/EmailService.php:676
 msgid "Please confirm your booking #{booking_code} - {site_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:676
+#: app/Services/EmailService.php:677
 msgid "Confirm Your Email Address"
 msgstr ""
 
-#: app/Services/EmailService.php:677
+#: app/Services/EmailService.php:678
 msgid "Your Booking #{booking_code} has been Cancelled - {site_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:678
+#: app/Services/EmailService.php:679
 #: templates/emails/admin-booking-cancelled.php:34
 msgid "Booking Cancelled"
 msgstr ""
 
-#: app/Services/EmailService.php:679
+#: app/Services/EmailService.php:680
 msgid "Upcoming Trip Reminder: #{booking_code} - {site_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:680
+#: app/Services/EmailService.php:681
 msgid "Your Trip is Coming Up Soon!"
 msgstr ""
 
-#: app/Services/EmailService.php:681
+#: app/Services/EmailService.php:682
 msgid "[New Booking] #{booking_code} by {customer_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:682
+#: app/Services/EmailService.php:683
 msgid "New Booking Received"
 msgstr ""
 
-#: app/Services/EmailService.php:683
+#: app/Services/EmailService.php:684
 msgid "[Booking Cancelled] #{booking_code} - {customer_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:684
+#: app/Services/EmailService.php:685
 msgid "Booking Cancelled Notification"
 msgstr ""
 
-#: app/Services/EmailService.php:685
+#: app/Services/EmailService.php:686
 msgid "[New Inquiry] {item_title} from {customer_name}"
 msgstr ""
 
-#: app/Services/EmailService.php:686
+#: app/Services/EmailService.php:687
 msgid "New Traveler Trip Inquiry"
 msgstr ""
 
-#: app/Services/ExportService.php:325
-#: app/Services/ExportService.php:386
+#: app/Services/ExportService.php:327
+#: app/Services/ExportService.php:388
 #: app/Services/ReportingService.php:457
 #: app/Support/Privacy.php:262
 msgid "Customer Name"
 msgstr ""
 
-#: app/Services/ExportService.php:326
-#: app/Services/ExportService.php:387
+#: app/Services/ExportService.php:328
+#: app/Services/ExportService.php:389
 #: app/Services/ReportingService.php:458
 msgid "Customer Email"
 msgstr ""
 
-#: app/Services/ExportService.php:327
+#: app/Services/ExportService.php:329
 #: app/Services/ReportingService.php:459
 msgid "Customer Phone"
 msgstr ""
 
-#: app/Services/ExportService.php:328
+#: app/Services/ExportService.php:330
 msgid "Trip / Stay Title"
 msgstr ""
 
-#: app/Services/ExportService.php:330
-#: app/Services/ExportService.php:391
+#: app/Services/ExportService.php:332
+#: app/Services/ExportService.php:393
 msgid "Check-in Date"
 msgstr ""
 
-#: app/Services/ExportService.php:331
-#: app/Services/ExportService.php:392
+#: app/Services/ExportService.php:333
+#: app/Services/ExportService.php:394
 msgid "Check-out Date"
 msgstr ""
 
-#: app/Services/ExportService.php:332
+#: app/Services/ExportService.php:334
 #: templates/search-bar.php:99
 msgid "Travelers"
 msgstr ""
 
-#: app/Services/ExportService.php:333
+#: app/Services/ExportService.php:335
 #: templates/booking-panel.php:171
 msgid "Subtotal"
 msgstr ""
 
-#: app/Services/ExportService.php:334
+#: app/Services/ExportService.php:336
 #: app/Services/ReportingService.php:464
 msgid "Tax Amount"
 msgstr ""
 
-#: app/Services/ExportService.php:335
+#: app/Services/ExportService.php:337
 #: app/Services/ReportingService.php:465
 msgid "Discount Amount"
 msgstr ""
 
-#: app/Services/ExportService.php:341
+#: app/Services/ExportService.php:343
 #: app/Support/Privacy.php:269
 msgid "Customer Notes"
 msgstr ""
 
-#: app/Services/ExportService.php:342
+#: app/Services/ExportService.php:344
 msgid "Booking Created At"
 msgstr ""
 
-#: app/Services/ExportService.php:388
+#: app/Services/ExportService.php:390
 msgid "Item ID"
 msgstr ""
 
-#: app/Services/ExportService.php:389
+#: app/Services/ExportService.php:391
 #: app/Services/ReportingService.php:460
 msgid "Item Title"
 msgstr ""
 
-#: app/Services/ExportService.php:393
+#: app/Services/ExportService.php:395
 #: app/Services/PricingService.php:141
 #: templates/booking-panel.php:124
 msgid "Adults"
 msgstr ""
 
-#: app/Services/ExportService.php:395
+#: app/Services/ExportService.php:397
 #: app/Services/PricingService.php:176
 #: templates/booking-panel.php:148
 msgid "Infants"
 msgstr ""
 
-#: app/Services/ExportService.php:396
+#: app/Services/ExportService.php:398
 msgid "Total Guests"
 msgstr ""
 
-#: app/Services/ExportService.php:397
+#: app/Services/ExportService.php:399
 msgid "Unit Price"
 msgstr ""
 
-#: app/Services/ExportService.php:398
+#: app/Services/ExportService.php:400
 msgid "Line Total"
 msgstr ""
 
-#: app/Services/ExportService.php:401
+#: app/Services/ExportService.php:403
 #: app/Services/ReportingService.php:455
 msgid "Booking Date"
 msgstr ""
 
-#: app/Services/ExportService.php:451
+#: app/Services/ExportService.php:453
 msgid "Tourivo Bookings Financial Summary Report"
 msgstr ""
 
-#: app/Services/ExportService.php:452
+#: app/Services/ExportService.php:454
 msgid "Generated On"
 msgstr ""
 
-#: app/Services/ExportService.php:454
+#: app/Services/ExportService.php:456
 msgid "Date Filter"
 msgstr ""
 
-#: app/Services/ExportService.php:459
+#: app/Services/ExportService.php:461
 msgid "Status Filter"
 msgstr ""
 
-#: app/Services/ExportService.php:462
+#: app/Services/ExportService.php:464
 msgid "Metric"
 msgstr ""
 
-#: app/Services/ExportService.php:462
+#: app/Services/ExportService.php:464
 msgid "Value"
 msgstr ""
 
-#: app/Services/ExportService.php:463
+#: app/Services/ExportService.php:465
 msgid "Total Bookings Recorded"
 msgstr ""
 
-#: app/Services/ExportService.php:464
+#: app/Services/ExportService.php:466
 msgid "Confirmed / Active Bookings"
 msgstr ""
 
-#: app/Services/ExportService.php:465
+#: app/Services/ExportService.php:467
 msgid "Total Travelers / Guests"
 msgstr ""
 
-#: app/Services/ExportService.php:466
+#: app/Services/ExportService.php:468
 msgid "Gross Total Booking Value"
 msgstr ""
 
-#: app/Services/ExportService.php:467
+#: app/Services/ExportService.php:469
 msgid "Total Revenue (Excluding Cancelled)"
 msgstr ""
 
-#: app/Services/ExportService.php:468
+#: app/Services/ExportService.php:470
 msgid "Total Tax Collected"
 msgstr ""
 
-#: app/Services/ExportService.php:469
+#: app/Services/ExportService.php:471
 msgid "Total Discounts Granted"
 msgstr ""
 
@@ -5317,7 +5331,7 @@ msgid "Hotel Stay"
 msgstr ""
 
 #: app/Shortcodes/BookingLookupShortcode.php:421
-#: templates/booking-voucher.php:333
+#: templates/booking-voucher.php:338
 #: templates/my-bookings.php:179
 msgid "Tour Package"
 msgstr ""
@@ -5439,23 +5453,23 @@ msgstr ""
 msgid "My Bookings & Trips"
 msgstr ""
 
-#: app/Shortcodes/MyBookingsShortcode.php:307
+#: app/Shortcodes/MyBookingsShortcode.php:308
 msgid "Please log in to manage your bookings."
 msgstr ""
 
-#: app/Shortcodes/MyBookingsShortcode.php:339
+#: app/Shortcodes/MyBookingsShortcode.php:340
 msgid "You do not have permission to manage this booking."
 msgstr ""
 
-#: app/Shortcodes/MyBookingsShortcode.php:362
+#: app/Shortcodes/MyBookingsShortcode.php:363
 msgid "Please log in to view booking details."
 msgstr ""
 
-#: app/Shortcodes/MyBookingsShortcode.php:394
+#: app/Shortcodes/MyBookingsShortcode.php:395
 msgid "You do not have permission to view this booking."
 msgstr ""
 
-#: app/Shortcodes/MyBookingsShortcode.php:517
+#: app/Shortcodes/MyBookingsShortcode.php:518
 msgid "Please log in to continue."
 msgstr ""
 
@@ -5539,6 +5553,12 @@ msgstr ""
 
 #: app/Shortcodes/WishlistShortcode.php:71
 msgid "Explore Tours & Stays"
+msgstr ""
+
+#. translators: 1: first item, 2: second item, 3: number of further items
+#: app/Support/BookingItems.php:54
+#, php-format
+msgid "%1$s + %2$s + %3$d more"
 msgstr ""
 
 #: app/Support/Privacy.php:82
@@ -5694,7 +5714,7 @@ msgid "Searching..."
 msgstr ""
 
 #: templates/booking-lookup.php:59
-#: templates/booking-voucher.php:282
+#: templates/booking-voucher.php:287
 #: templates/my-bookings.php:551
 #: templates/thank-you.php:48
 msgid "Booking Reference"
@@ -5705,7 +5725,7 @@ msgid "Traveler:"
 msgstr ""
 
 #: templates/booking-lookup.php:74
-#: templates/booking-voucher.php:314
+#: templates/booking-voucher.php:319
 #: templates/my-bookings.php:572
 msgid "Payment Method:"
 msgstr ""
@@ -5917,67 +5937,67 @@ msgstr ""
 msgid "Booking Voucher #%1$s — %2$s"
 msgstr ""
 
-#: templates/booking-voucher.php:279
+#: templates/booking-voucher.php:284
 msgid "Official Travel & Accommodation Booking Confirmation Voucher"
 msgstr ""
 
 #. translators: %s: Date and time of booking
-#: templates/booking-voucher.php:286
+#: templates/booking-voucher.php:291
 #, php-format
 msgid "Issued: %s"
 msgstr ""
 
-#: templates/booking-voucher.php:294
+#: templates/booking-voucher.php:299
 msgid "Traveler Details"
 msgstr ""
 
-#: templates/booking-voucher.php:295
+#: templates/booking-voucher.php:300
 #: templates/thank-you.php:117
 msgid "Name:"
 msgstr ""
 
-#: templates/booking-voucher.php:303
+#: templates/booking-voucher.php:308
 #: templates/thank-you.php:52
 msgid "Reservation Status"
 msgstr ""
 
-#: templates/booking-voucher.php:304
+#: templates/booking-voucher.php:309
 #: templates/emails/admin-new-booking.php:96
 msgid "Booking Status:"
 msgstr ""
 
-#: templates/booking-voucher.php:309
+#: templates/booking-voucher.php:314
 #: templates/emails/admin-new-booking.php:100
 #: templates/my-bookings.php:573
 msgid "Payment Status:"
 msgstr ""
 
-#: templates/booking-voucher.php:322
+#: templates/booking-voucher.php:327
 msgid "Trip / Stay Description"
 msgstr ""
 
-#: templates/booking-voucher.php:323
+#: templates/booking-voucher.php:328
 msgid "Travel / Check-in Dates"
 msgstr ""
 
-#: templates/booking-voucher.php:324
+#: templates/booking-voucher.php:329
 msgid "Qty / Pax"
 msgstr ""
 
-#: templates/booking-voucher.php:325
+#: templates/booking-voucher.php:330
 msgid "Total"
 msgstr ""
 
-#: templates/booking-voucher.php:333
+#: templates/booking-voucher.php:338
 msgid "Hotel Room"
 msgstr ""
 
-#: templates/booking-voucher.php:357
+#: templates/booking-voucher.php:362
 #: templates/thank-you.php:137
 msgid "Subtotal:"
 msgstr ""
 
-#: templates/booking-voucher.php:363
+#: templates/booking-voucher.php:368
 #: templates/emails/booking-confirmation.php:120
 #: templates/emails/customer-booking-confirmed.php:88
 #: templates/emails/customer-booking-received.php:87
@@ -5985,7 +6005,7 @@ msgstr ""
 msgid "Discount:"
 msgstr ""
 
-#: templates/booking-voucher.php:369
+#: templates/booking-voucher.php:374
 #: templates/emails/booking-confirmation.php:126
 #: templates/emails/customer-booking-confirmed.php:94
 #: templates/emails/customer-booking-received.php:93
@@ -5993,23 +6013,23 @@ msgstr ""
 msgid "Tax / VAT:"
 msgstr ""
 
-#: templates/booking-voucher.php:379
+#: templates/booking-voucher.php:384
 msgid "Amount Due:"
 msgstr ""
 
-#: templates/booking-voucher.php:388
+#: templates/booking-voucher.php:393
 msgid "Important Instructions for Travelers:"
 msgstr ""
 
-#: templates/booking-voucher.php:389
+#: templates/booking-voucher.php:394
 msgid "Please present this voucher along with a valid government-issued photo ID during hotel check-in or tour boarding."
 msgstr ""
 
-#: templates/booking-voucher.php:390
+#: templates/booking-voucher.php:395
 msgid "For inquiries, date changes, or support, please contact our team with your Booking Reference Code."
 msgstr ""
 
-#: templates/booking-voucher.php:391
+#: templates/booking-voucher.php:396
 msgid "Thank you for traveling with us! Powered by Tourivo Travel Engine."
 msgstr ""
 
@@ -6213,12 +6233,12 @@ msgstr ""
 msgid "View & Reply in Inquiries Manager"
 msgstr ""
 
-#: templates/emails/base-layout.php:160
+#: templates/emails/base-layout.php:161
 #: templates/emails/booking-confirmation.php:49
 msgid "TEST NOTIFICATION"
 msgstr ""
 
-#: templates/emails/base-layout.php:171
+#: templates/emails/base-layout.php:172
 #: templates/emails/booking-confirmation.php:143
 msgid "All rights reserved."
 msgstr ""

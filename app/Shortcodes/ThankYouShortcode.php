@@ -220,7 +220,7 @@ class ThankYouShortcode
             return '';
         }
 
-        $item = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d LIMIT 1", $bookingId));
+        $item = \Tourivo\Support\BookingItems::summaryRow(\Tourivo\Support\BookingItems::forBooking($bookingId), $bookingId);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         $siteName = get_bloginfo('name') ?: 'Tourivo';

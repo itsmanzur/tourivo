@@ -181,7 +181,8 @@ class ExportService
                 $adults   = (int) ($li['adults_count'] ?? 1);
                 $children = (int) ($li['children_count'] ?? 0);
                 $infants  = (int) ($li['infants_count'] ?? 0);
-                $totalGuests += ($adults + $children + $infants);
+                // The same party travels on every item of a package, so count the largest party, not the sum.
+                $totalGuests = max($totalGuests, $adults + $children + $infants);
             }
 
             if ($totalGuests === 0 && $firstItem) {
@@ -189,10 +190,11 @@ class ExportService
             }
 
             $b['items']        = $lineItems;
-            $b['item_title']   = $firstItem['item_title'] ?? 'N/A';
+            $span = \Tourivo\Support\BookingItems::span($lineItems);
+            $b['item_title']   = $lineItems !== [] ? \Tourivo\Support\BookingItems::title($lineItems, $bId) : 'N/A';
             $b['item_type']    = $firstItem['item_type'] ?? 'tour';
-            $b['check_in']     = $firstItem['check_in'] ?? '';
-            $b['check_out']    = $firstItem['check_out'] ?? '';
+            $b['check_in']     = count($lineItems) > 1 ? $span['check_in'] : ($firstItem['check_in'] ?? '');
+            $b['check_out']    = count($lineItems) > 1 ? $span['check_out'] : ($firstItem['check_out'] ?? '');
             $b['total_guests'] = max(1, $totalGuests);
 
             $results[] = $b;

@@ -9,6 +9,7 @@ use Tourivo\Config\Config;
 use Tourivo\Models\Room;
 use Tourivo\Models\Tour;
 use Tourivo\Shortcodes\ThankYouShortcode;
+use Tourivo\Support\BookingItems;
 use Tourivo\Support\ClientIp;
 use Tourivo\Support\Money;
 use Tourivo\Support\RateLimiter;
@@ -151,70 +152,12 @@ class BookingService
         }
 
         // 3. Item-Specific Occupancy Validation & Title Resolution
-        $itemTitle = '';
-        $inventoryQuantity = 1;
-
-        if ($itemType === 'tour') {
-            $tour = new Tour($itemId);
-            $itemTitle = $tour->getTitle();
-            $maxGuests = $tour->getMaxGuests();
-            $infantsUseCapacity = (bool) apply_filters('tourivo/infants_use_capacity', false, $itemId, $itemType, $data);
-            $capacityGuests = $adultsCount + $childrenCount + ($infantsUseCapacity ? $infantsCount : 0);
-
-            if ($maxGuests > 0 && $capacityGuests > $maxGuests) {
-                return [
-                    'success' => false,
-                    /* translators: %d: Maximum allowed guests */
-                    'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'tourivo'), $maxGuests),
-                ];
-            }
-
-            $inventoryQuantity = $capacityGuests;
-        } else {
-            // Room
-            if (empty($checkOut)) {
-                return ['success' => false, 'message' => __('Please select a valid check-out date for room reservations.', 'tourivo')];
-            }
-            if ($checkOut <= $checkIn) {
-                return ['success' => false, 'message' => __('Check-out must be at least one night after check-in.', 'tourivo')];
-            }
-
-            $room = new Room($itemId);
-            $itemTitle = $room->getTitle();
-            $hotel = $room->getHotel();
-            if ($hotel) {
-                $itemTitle = $hotel->getTitle() . ' - ' . $itemTitle;
-            }
-
-            // Occupancy validation against total room units booked
-            $maxAdultsAllowed   = $room->getMaxAdults() * $roomsCount;
-            $maxChildrenAllowed = $room->getMaxChildren() * $roomsCount;
-            $maxGuestsAllowed   = $room->getMaxGuests() * $roomsCount;
-
-            if ($maxAdultsAllowed > 0 && $adultsCount > $maxAdultsAllowed) {
-                return [
-                    'success' => false,
-                    /* translators: 1: Room count, 2: Maximum adults */
-                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d adults.', 'tourivo'), $roomsCount, $maxAdultsAllowed),
-                ];
-            }
-            if ($maxChildrenAllowed > 0 && $childrenCount > $maxChildrenAllowed) {
-                return [
-                    'success' => false,
-                    /* translators: 1: Room count, 2: Maximum children */
-                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d children.', 'tourivo'), $roomsCount, $maxChildrenAllowed),
-                ];
-            }
-            if ($maxGuestsAllowed > 0 && $totalGuests > $maxGuestsAllowed) {
-                return [
-                    'success' => false,
-                    /* translators: 1: Room count, 2: Maximum total guests */
-                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d total guests.', 'tourivo'), $roomsCount, $maxGuestsAllowed),
-                ];
-            }
-
-            $inventoryQuantity = $roomsCount;
+        $resolved = $this->resolveLine($itemId, $itemType, $checkIn, $checkOut, $adultsCount, $childrenCount, $infantsCount, $roomsCount, $data);
+        if (empty($resolved['success'])) {
+            return ['success' => false, 'message' => (string) $resolved['message']];
         }
+        $itemTitle         = (string) $resolved['title'];
+        $inventoryQuantity = (int) $resolved['quantity'];
 
         // 4. Calculate Authoritative Price Quote from Pricing Engine
         $quoteInput = [
@@ -265,12 +208,48 @@ class BookingService
             return ['success' => false, 'message' => $avail['message']];
         }
 
+        // 5b. Further items in the same booking (for example a package's other tours and hotel nights).
+        $extraLines = [];
+        foreach ($this->extraItemSpecs($data, $trusted) as $spec) {
+            $line = $this->prepareExtraLine($spec, $timeSlot, $enforceFuture, $data);
+            if (empty($line['success'])) {
+                return ['success' => false, 'message' => (string) $line['message']];
+            }
+            $extraLines[] = $line;
+        }
+
         $unitPrice       = (float) $quote['unit_price'];
         $subtotalPrice   = (float) $quote['subtotal'];
         $taxAmount       = (float) $quote['tax'];
         $discountAmount  = (float) $quote['discount'];
         $totalPrice      = (float) $quote['total'];
         $defaultCurrency = (string) ($quote['currency'] ?? Config::get('currency', 'USD'));
+
+        foreach ($extraLines as $line) {
+            $subtotalPrice  += (float) $line['quote']['subtotal'];
+            $taxAmount      += (float) $line['quote']['tax'];
+            $discountAmount += (float) $line['quote']['discount'];
+            $totalPrice     += (float) $line['quote']['total'];
+        }
+
+        /**
+         * Booking-wide price lines, such as a package discount: [['title' => string, 'total' => float], ...],
+         * negative for discounts. They are shown with the first item's lines.
+         */
+        $bookingAdjustments = (array) apply_filters('tourivo/booking_adjustments', [], $data, $quote, array_column($extraLines, 'quote'));
+        foreach ($bookingAdjustments as $adjustment) {
+            $amount = round((float) ($adjustment['total'] ?? 0), 2);
+            if ($amount == 0.0 || empty($adjustment['title'])) {
+                continue;
+            }
+            $totalPrice += $amount;
+            if ($amount < 0) {
+                $discountAmount += -$amount;
+            }
+            $quote['lines'][] = ['title' => sanitize_text_field((string) $adjustment['title']), 'quantity' => 1, 'rate' => $amount, 'total' => $amount, 'adjustment' => true];
+            $quote['total'] = round((float) $quote['total'] + $amount, 2);
+        }
+        $totalPrice = round(max(0.0, $totalPrice), 2);
 
         // Allow explicit manual booking total override ONLY for trusted callers
         if ($trusted) {
@@ -370,14 +349,28 @@ class BookingService
 
         // If PHP dies before the booking row is committed, give the seats back. Handled failures release themselves.
         $inventorySettled = false;
-        $releaseCommittedInventory = function () use (&$inventorySettled, $itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity): void {
+        $committedExtras = [];
+        $releaseCommittedInventory = function () use (&$inventorySettled, &$committedExtras, $itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity): void {
             if ($inventorySettled) {
                 return;
             }
             $inventorySettled = true;
             $this->inventoryService->releaseBookingInventory($itemId, $itemType, $checkIn, $checkOut, $timeSlot, $inventoryQuantity);
+            foreach ($committedExtras as $line) {
+                $this->inventoryService->releaseBookingInventory($line['item_id'], $line['item_type'], $line['check_in'], $line['check_out'], $line['time_slot'], $line['quantity']);
+            }
         };
         register_shutdown_function($releaseCommittedInventory);
+
+        foreach ($extraLines as $line) {
+            if (!$this->inventoryService->commitBooking($line['item_id'], $line['item_type'], $line['check_in'], $line['check_out'], $line['time_slot'], $line['quantity'], null, !$trusted)) {
+                $releaseCommittedInventory();
+                $releaseCouponHold();
+                /* translators: %s: tour or room name */
+                return ['success' => false, 'message' => sprintf(__('%s is no longer available for the selected dates.', 'tourivo'), $line['title'])];
+            }
+            $committedExtras[] = $line;
+        }
 
         // 8. Step 2: Insert Booking Record
         // Booking row, line item and audit entry are written atomically; inventory was committed (and is
@@ -441,7 +434,7 @@ class BookingService
                 'infants_count'     => $infantsCount,
                 'quantity'          => $inventoryQuantity,
                 'unit_price'        => $unitPrice,
-                'total_price'       => $totalPrice,
+                'total_price'       => $extraLines === [] ? $totalPrice : (float) $quote['total'],
                 'pricing_breakdown' => wp_json_encode($quote, JSON_UNESCAPED_UNICODE),
             ], [
                 '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%f', '%f', '%s'
@@ -456,6 +449,35 @@ class BookingService
                 return ['success' => false, 'message' => __('Could not save booking item line to database.', 'tourivo')];
             }
 
+            foreach ($extraLines as $line) {
+                $extraInserted = $this->db->insert($itemsTable, [
+                    'booking_id'        => $bookingId,
+                    'item_id'           => $line['item_id'],
+                    'item_type'         => $line['item_type'],
+                    'item_title'        => $line['title'],
+                    'check_in'          => $line['check_in'] . ' 00:00:00',
+                    'check_out'         => !empty($line['check_out']) ? ($line['check_out'] . ' 00:00:00') : null,
+                    'time_slot'         => $line['time_slot'],
+                    'adults_count'      => $line['adults'],
+                    'children_count'    => $line['children'],
+                    'infants_count'     => $line['infants'],
+                    'quantity'          => $line['quantity'],
+                    'unit_price'        => (float) $line['quote']['unit_price'],
+                    'total_price'       => (float) $line['quote']['total'],
+                    'pricing_breakdown' => wp_json_encode($line['quote'], JSON_UNESCAPED_UNICODE),
+                ], [
+                    '%d', '%d', '%s', '%s', '%s', '%s', '%s', '%d', '%d', '%d', '%d', '%f', '%f', '%s'
+                ]);
+                if (!$extraInserted) {
+                    $this->db->query('ROLLBACK');
+                    $this->db->delete($itemsTable, ['booking_id' => $bookingId], ['%d']);
+                    $this->db->delete($bookingsTable, ['id' => $bookingId], ['%d']);
+                    $releaseCommittedInventory();
+                    $releaseCouponHold();
+                    return ['success' => false, 'message' => __('Could not save booking item line to database.', 'tourivo')];
+                }
+            }
+
             // 8. Step 4: Write to Audit Logs (without wp_slash on wpdb->insert)
             $this->db->insert($logsTable, [
                 'booking_id' => $bookingId,
@@ -464,7 +486,7 @@ class BookingService
                 'details'    => wp_json_encode([
                     'method' => $paymentMethod,
                     'amount' => $totalPrice,
-                    'items'  => [$itemTitle],
+                    'items'  => array_merge([$itemTitle], array_column($extraLines, 'title')),
                 ], JSON_UNESCAPED_UNICODE),
                 'created_at' => $nowGmt,
             ], ['%d', '%s', '%d', '%s', '%s']);
@@ -484,6 +506,12 @@ class BookingService
         $couponHeld = false;
 
         // 9. Fire Booking Created Action & Trigger Confirmation Notification
+        $allLines = array_merge(
+            [['item_title' => $itemTitle, 'check_in' => $checkIn, 'check_out' => $checkOut]],
+            array_map(static fn (array $l): array => ['item_title' => $l['title'], 'check_in' => $l['check_in'], 'check_out' => $l['check_out']], $extraLines)
+        );
+        $displayTitle = $extraLines === [] ? $itemTitle : BookingItems::title($allLines, $bookingId, $data);
+        $displaySpan  = BookingItems::span($allLines);
         $bookingData = [
             'id'              => $bookingId,
             'booking_code'    => $bookingCode,
@@ -492,9 +520,9 @@ class BookingService
             'customer_phone'  => $customerPhone,
             'item_id'         => $itemId,
             'item_type'       => $itemType,
-            'item_title'      => $itemTitle,
+            'item_title'      => $displayTitle,
             'check_in'        => $checkIn,
-            'check_out'       => $checkOut,
+            'check_out'       => $extraLines === [] ? $checkOut : $displaySpan['check_out'],
             'adults'          => $adultsCount,
             'children'        => $childrenCount,
             'infants'         => $infantsCount,
@@ -516,6 +544,10 @@ class BookingService
             'coupon_code'         => (string) ($quote['coupon']['code'] ?? ''),
             'coupon_amount'       => (float) ($quote['coupon']['amount'] ?? 0),
             'custom_fields'       => $customFields,
+            'items'               => array_merge(
+                [['item_id' => $itemId, 'item_type' => $itemType, 'title' => $itemTitle, 'check_in' => $checkIn, 'check_out' => $checkOut]],
+                array_map(static fn (array $l): array => ['item_id' => $l['item_id'], 'item_type' => $l['item_type'], 'title' => $l['title'], 'check_in' => $l['check_in'], 'check_out' => $l['check_out']], $extraLines)
+            ),
         ];
 
         do_action('tourivo/booking_created', $bookingId, $bookingData);
@@ -814,6 +846,196 @@ class BookingService
      * How long a freshly issued email-confirmation link stays valid.
      */
     public const VERIFICATION_TTL = 259200;
+
+    /**
+     * Check a line's party against the tour or room limits and resolve its title and inventory units.
+     *
+     * @param array<string, mixed> $data
+     * @return array{success: bool, message?: string, title?: string, quantity?: int}
+     */
+    private function resolveLine(int $itemId, string $itemType, string $checkIn, ?string $checkOut, int $adultsCount, int $childrenCount, int $infantsCount, int $roomsCount, array $data): array
+    {
+        $totalGuests = $adultsCount + $childrenCount + $infantsCount;
+        $itemTitle = '';
+        $inventoryQuantity = 1;
+
+        if ($itemType === 'tour') {
+            $tour = new Tour($itemId);
+            $itemTitle = $tour->getTitle();
+            $maxGuests = $tour->getMaxGuests();
+            $infantsUseCapacity = (bool) apply_filters('tourivo/infants_use_capacity', false, $itemId, $itemType, $data);
+            $capacityGuests = $adultsCount + $childrenCount + ($infantsUseCapacity ? $infantsCount : 0);
+
+            if ($maxGuests > 0 && $capacityGuests > $maxGuests) {
+                return [
+                    'success' => false,
+                    /* translators: %d: Maximum allowed guests */
+                    'message' => sprintf(__('This tour allows a maximum of %d guests per booking.', 'tourivo'), $maxGuests),
+                ];
+            }
+
+            $inventoryQuantity = $capacityGuests;
+        } else {
+            // Room
+            if (empty($checkOut)) {
+                return ['success' => false, 'message' => __('Please select a valid check-out date for room reservations.', 'tourivo')];
+            }
+            if ($checkOut <= $checkIn) {
+                return ['success' => false, 'message' => __('Check-out must be at least one night after check-in.', 'tourivo')];
+            }
+
+            $room = new Room($itemId);
+            $itemTitle = $room->getTitle();
+            $hotel = $room->getHotel();
+            if ($hotel) {
+                $itemTitle = $hotel->getTitle() . ' - ' . $itemTitle;
+            }
+
+            // Occupancy validation against total room units booked
+            $maxAdultsAllowed   = $room->getMaxAdults() * $roomsCount;
+            $maxChildrenAllowed = $room->getMaxChildren() * $roomsCount;
+            $maxGuestsAllowed   = $room->getMaxGuests() * $roomsCount;
+
+            if ($maxAdultsAllowed > 0 && $adultsCount > $maxAdultsAllowed) {
+                return [
+                    'success' => false,
+                    /* translators: 1: Room count, 2: Maximum adults */
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d adults.', 'tourivo'), $roomsCount, $maxAdultsAllowed),
+                ];
+            }
+            if ($maxChildrenAllowed > 0 && $childrenCount > $maxChildrenAllowed) {
+                return [
+                    'success' => false,
+                    /* translators: 1: Room count, 2: Maximum children */
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d children.', 'tourivo'), $roomsCount, $maxChildrenAllowed),
+                ];
+            }
+            if ($maxGuestsAllowed > 0 && $totalGuests > $maxGuestsAllowed) {
+                return [
+                    'success' => false,
+                    /* translators: 1: Room count, 2: Maximum total guests */
+                    'message' => sprintf(__('Selected %1$d room(s) can accommodate up to %2$d total guests.', 'tourivo'), $roomsCount, $maxGuestsAllowed),
+                ];
+            }
+
+            $inventoryQuantity = $roomsCount;
+        }
+
+        return ['success' => true, 'title' => $itemTitle, 'quantity' => $inventoryQuantity];
+    }
+
+    /**
+     * Further items to book with the first one, cleaned (trusted callers, or when an add-on allows it). Each: item_id, check_in, check_out, time_slot,
+     * adults, children, infants, rooms, selected_addons; missing counts follow the first item.
+     *
+     * @param array<string, mixed> $data
+     * @return array<int, array<string, mixed>>
+     */
+    private function extraItemSpecs(array $data, bool $trusted): array
+    {
+        // A public request may not add items on its own; an add-on that builds the list on the server (e.g. a
+        // package) allows it for its own call with the tourivo/accept_extra_items filter.
+        if (empty($data['extra_items']) || (!$trusted && !apply_filters('tourivo/accept_extra_items', false, $data))) {
+            return [];
+        }
+        $specs = [];
+        foreach (array_slice((array) ($data['extra_items'] ?? []), 0, 20) as $raw) {
+            if (!is_array($raw)) {
+                continue;
+            }
+            $spec = [
+                'item_id'   => (int) ($raw['item_id'] ?? 0),
+                'check_in'  => sanitize_text_field((string) ($raw['check_in'] ?? '')),
+                'check_out' => !empty($raw['check_out']) ? sanitize_text_field((string) $raw['check_out']) : null,
+                'time_slot' => isset($raw['time_slot']) ? (string) $raw['time_slot'] : null,
+                'rooms'     => max(1, (int) ($raw['rooms'] ?? 1)),
+                'selected_addons' => array_map('strval', (array) ($raw['selected_addons'] ?? [])),
+            ];
+            foreach (['adults', 'children', 'infants'] as $count) {
+                $spec[$count] = array_key_exists($count, $raw) ? max(0, (int) $raw[$count]) : max(0, (int) ($data[$count] ?? ($count === 'adults' ? 1 : 0)));
+            }
+            $specs[] = $spec;
+        }
+
+        return $specs;
+    }
+
+    /**
+     * Validate, price and check availability for one extra item.
+     *
+     * @param array<string, mixed> $spec
+     * @param array<string, mixed> $data
+     * @return array<string, mixed> success, message, or the line: item_id, item_type, title, check_in, check_out,
+     *                              time_slot, adults, children, infants, quantity, quote
+     */
+    private function prepareExtraLine(array $spec, string $defaultSlot, bool $enforceFuture, array $data): array
+    {
+        $itemId = (int) $spec['item_id'];
+        $postType = $itemId > 0 && get_post_status($itemId) === 'publish' ? get_post_type($itemId) : '';
+        $itemType = $postType === 'tourivo_tour' ? 'tour' : ($postType === 'tourivo_room' ? 'room' : '');
+        if ($itemType === '') {
+            return ['success' => false, 'message' => __('One of the items in this booking is no longer available.', 'tourivo')];
+        }
+
+        $checkIn  = (string) $spec['check_in'];
+        $checkOut = $spec['check_out'];
+        if (!self::isValidDate($checkIn) || ($checkOut !== null && !self::isValidDate((string) $checkOut)) || ($checkOut !== null && $checkOut < $checkIn)) {
+            return ['success' => false, 'message' => __('Please provide valid dates in YYYY-MM-DD format.', 'tourivo')];
+        }
+        $timeSlot = InventoryService::normalizeTimeSlot($spec['time_slot'] ?? $defaultSlot);
+        $adults   = (int) $spec['adults'];
+        $children = (int) $spec['children'];
+        $infants  = (int) $spec['infants'];
+        $rooms    = (int) $spec['rooms'];
+        if (($adults + $children) < 1) {
+            return ['success' => false, 'message' => __('Please add at least one adult or child.', 'tourivo')];
+        }
+
+        $resolved = $this->resolveLine($itemId, $itemType, $checkIn, $checkOut, $adults, $children, $infants, $rooms, $data);
+        if (empty($resolved['success'])) {
+            return $resolved;
+        }
+
+        // Promo codes apply once, to the first item; extra items are priced on their own.
+        $quoteInput = [
+            'item_id'   => $itemId,
+            'item_type' => $itemType,
+            'check_in'  => $checkIn,
+            'check_out' => $checkOut,
+            'time_slot' => $timeSlot,
+            'adults'    => $adults,
+            'children'  => $children,
+            'infants'   => $infants,
+            'rooms'     => $rooms,
+        ];
+        if ($spec['selected_addons'] !== []) {
+            $quoteInput['selected_addons'] = $spec['selected_addons'];
+        }
+        $quote = $this->pricingService->quote($quoteInput);
+        if (empty($quote['success'])) {
+            return ['success' => false, 'message' => (string) ($quote['message'] ?? __('Failed to calculate price quote.', 'tourivo'))];
+        }
+
+        $avail = $this->inventoryService->checkAvailability($itemId, $itemType, $checkIn, $checkOut, $timeSlot, (int) $resolved['quantity'], $enforceFuture);
+        if (empty($avail['available'])) {
+            return ['success' => false, 'message' => sprintf('%s: %s', (string) $resolved['title'], (string) $avail['message'])];
+        }
+
+        return [
+            'success'   => true,
+            'item_id'   => $itemId,
+            'item_type' => $itemType,
+            'title'     => (string) $resolved['title'],
+            'check_in'  => $checkIn,
+            'check_out' => $checkOut,
+            'time_slot' => $timeSlot,
+            'adults'    => $adults,
+            'children'  => $children,
+            'infants'   => $infants,
+            'quantity'  => (int) $resolved['quantity'],
+            'quote'     => $quote,
+        ];
+    }
 
     /**
      * Seats or rooms that were actually committed for this line.

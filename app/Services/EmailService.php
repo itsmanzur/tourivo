@@ -6,6 +6,7 @@ namespace Tourivo\Services;
 
 use Tourivo\Config\Config;
 use Tourivo\Shortcodes\BookingLookupShortcode;
+use Tourivo\Support\BookingItems;
 use Tourivo\Support\Money;
 
 if (!defined('ABSPATH')) {
@@ -457,7 +458,7 @@ class EmailService
                 'customer_name'   => (string) $booking->customer_name,
                 'customer_email'  => (string) $booking->customer_email,
                 'customer_phone'  => (string) $booking->customer_phone,
-                'item_title'      => (string) $booking->item_title,
+                'item_title'      => BookingItems::title(BookingItems::forBooking($bookingId), $bookingId),
                 'check_in'        => substr((string) $booking->check_in, 0, 10),
                 'check_out'       => !empty($booking->check_out) ? substr((string) $booking->check_out, 0, 10) : '',
                 'adults'          => (int) ($booking->adults_count ?? 1),
@@ -750,7 +751,6 @@ class EmailService
     {
         global $wpdb;
         $bookingsTable = $wpdb->prefix . 'tourivo_bookings';
-        $itemsTable    = $wpdb->prefix . 'tourivo_booking_items';
 
         // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
         $booking = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$bookingsTable} WHERE id = %d", $bookingId));
@@ -758,7 +758,9 @@ class EmailService
             return null;
         }
 
-        $item = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$itemsTable} WHERE booking_id = %d LIMIT 1", $bookingId));
+        $items = BookingItems::forBooking($bookingId);
+        $item  = $items[0] ?? null;
+        $span  = BookingItems::span($items);
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         return [
@@ -770,9 +772,10 @@ class EmailService
             'billing_address' => (string) ($booking->billing_address ?? ''),
             'item_id'         => $item ? (int) $item->item_id : 0,
             'item_type'       => $item ? (string) $item->item_type : 'tour',
-            'item_title'      => $item ? (string) $item->item_title : '',
-            'check_in'        => $item ? substr((string) $item->check_in, 0, 10) : '',
-            'check_out'       => ($item && !empty($item->check_out)) ? substr((string) $item->check_out, 0, 10) : '',
+            // Several items (e.g. a package) share one title and the dates from the first start to the last end.
+            'item_title'      => BookingItems::title($items, (int) $booking->id),
+            'check_in'        => $span['check_in'],
+            'check_out'       => $span['check_out'] !== $span['check_in'] || ($item && !empty($item->check_out)) ? $span['check_out'] : '',
             'adults'          => $item ? (int) $item->adults_count : 1,
             'children'        => $item ? (int) $item->children_count : 0,
             'infants'         => $item ? (int) $item->infants_count : 0,

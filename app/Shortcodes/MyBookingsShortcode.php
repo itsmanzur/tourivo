@@ -141,7 +141,8 @@ class MyBookingsShortcode
             $paymentStatus = (string) $booking->payment_status;
 
             // Determine if trip is upcoming or completed
-            $firstItem = !empty($items) ? $items[0] : null;
+            // Several items (a package) show as one card with the combined title and dates.
+            $firstItem = \Tourivo\Support\BookingItems::summaryRow($items, $bookingId);
             $checkInDate = $firstItem && !empty($firstItem->check_in)
                 ? gmdate('Y-m-d', strtotime((string) $firstItem->check_in))
                 : gmdate('Y-m-d', strtotime((string) $booking->created_at));
