@@ -30,6 +30,11 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
         /* translators: 1: Booking Reference Code, 2: Site Name */
         echo esc_html(sprintf(__('Booking Voucher #%1$s — %2$s', 'tourivo'), $tourivoBooking->booking_code, $tourivoSite)); 
     ?></title>
+    <?php
+    // A standalone print page: print Tourivo's fonts (Anek Bangla) here instead of through wp_head().
+    \Tourivo\Support\Typography::enqueue();
+    wp_print_styles(\Tourivo\Support\Typography::HANDLE);
+    ?>
     <style>
         * {
             box-sizing: border-box;
@@ -37,7 +42,7 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
             padding: 0;
         }
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: var(--trv-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif);
             background-color: #f8fafc;
             color: #1e293b;
             padding: 40px 20px;
@@ -63,7 +68,7 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
         }
         .agency-brand h1 {
             font-size: 26px;
-            font-weight: 800;
+            font-weight: 700;
             color: #0d9488;
             letter-spacing: -0.02em;
             margin-bottom: 4px;
@@ -79,7 +84,7 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
             display: inline-block;
             background: #f1f5f9;
             color: #334155;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -89,12 +94,12 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
         }
         .voucher-code {
             font-size: 22px;
-            font-weight: 800;
+            font-weight: 700;
             color: #0f172a;
             letter-spacing: 0.05em;
         }
         .voucher-date {
-            font-size: 12px;
+            font-size: 13px;
             color: #64748b;
             margin-top: 2px;
         }
@@ -109,7 +114,7 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
             border: 1px solid #f1f5f9;
         }
         .info-block h3 {
-            font-size: 12px;
+            font-size: 13px;
             text-transform: uppercase;
             letter-spacing: 0.06em;
             color: #0d9488;
@@ -127,7 +132,7 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
             display: inline-block;
             padding: 2px 8px;
             border-radius: 12px;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
         }
@@ -152,7 +157,7 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
             background: #f1f5f9;
             color: #475569;
             text-align: left;
-            font-size: 12px;
+            font-size: 13px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -171,7 +176,7 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
         }
         .item-type-tag {
             display: inline-block;
-            font-size: 11px;
+            font-size: 13px;
             font-weight: 600;
             padding: 2px 6px;
             border-radius: 4px;
@@ -199,13 +204,13 @@ $tourivoMethod   = ucwords(str_replace('_', ' ', (string) $tourivoBooking->payme
             padding-top: 10px;
             margin-top: 6px;
             font-size: 18px;
-            font-weight: 800;
+            font-weight: 700;
             color: #0f172a;
         }
         .voucher-footer {
             border-top: 1px dashed #cbd5e1;
             padding-top: 20px;
-            font-size: 12px;
+            font-size: 13px;
             color: #94a3b8;
             line-height: 1.6;
         }

@@ -325,14 +325,14 @@ class AdminServiceProvider extends ServiceProvider
         <div class="notice notice-info is-dismissible tourivo-welcome-notice" data-nonce="<?php echo esc_attr($nonce); ?>" style="border-left-color: #0284c7; background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%); border-radius: 8px; padding: 16px 20px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); margin: 20px 20px 15px 0;">
             <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px;">
                 <div style="display: flex; align-items: center; gap: 14px;">
-                    <div style="background: #0284c7; color: #fff; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; flex-shrink: 0; box-shadow: 0 2px 4px rgba(2,132,199,0.3);">
+                    <div style="background: #0284c7; color: #fff; width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: var(--trv-admin-text-3xl); flex-shrink: 0; box-shadow: 0 2px 4px rgba(2,132,199,0.3);">
                         🌴
                     </div>
                     <div>
-                        <h3 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 700; color: #0f172a;">
+                        <h3 style="margin: 0 0 4px 0; font-size: var(--trv-admin-text-lg); font-weight: 700; color: #0f172a;">
                             <?php esc_html_e('Welcome to Tourivo! Want to explore with ready-made demo content?', 'tourivo'); ?>
                         </h3>
-                        <p style="margin: 0; color: #475569; font-size: 13.5px;">
+                        <p style="margin: 0; color: #475569; font-size: var(--trv-admin-text-base);">
                             <?php esc_html_e('Get started in seconds! Import 3 complete tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to test booking forms, filters, and calendars immediately.', 'tourivo'); ?>
                         </p>
                     </div>
@@ -797,13 +797,13 @@ class AdminServiceProvider extends ServiceProvider
                     $userName = $user ? $user->display_name : __('System / Guest', 'tourivo');
                     $isNote = $log['action'] === 'internal_note';
                 ?>
-                    <li class="timeline-item" style="padding: 8px 10px; margin-bottom: 8px; border-left: 3px solid <?php echo $isNote ? '#8b5cf6' : '#0284c7'; ?>; background: #f8fafc; border-radius: 0 6px 6px 0; font-size: 13px;">
+                    <li class="timeline-item" style="padding: 8px 10px; margin-bottom: 8px; border-left: 3px solid <?php echo $isNote ? '#8b5cf6' : '#0284c7'; ?>; background: #f8fafc; border-radius: 0 6px 6px 0; font-size: var(--trv-admin-text-sm);">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 2px;">
                             <strong><?php echo $isNote ? '📝 ' . esc_html__('Internal Staff Note', 'tourivo') : '📌 ' . esc_html(ucwords(str_replace('_', ' ', $log['action']))); ?></strong>
                             <small style="color: #64748b;"><?php echo esc_html(gmdate('M d, Y g:i A', strtotime($log['created_at']))); ?></small>
                         </div>
                         <div style="color: #334155; line-height: 1.4;"><?php echo nl2br(esc_html($log['details'])); ?></div>
-                        <small style="color: #94a3b8; font-size: 11px;"><?php
+                        <small style="color: #94a3b8; font-size: var(--trv-admin-text-xs);"><?php
                         echo esc_html(
                             sprintf(
                                 /* translators: %s: Staff or user display name */

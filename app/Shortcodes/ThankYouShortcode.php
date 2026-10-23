@@ -186,15 +186,15 @@ class ThankYouShortcode
         ob_start();
         ?>
         <div class="tourivo-thankyou-wrapper" style="max-width: 680px; margin: 40px auto; padding: 32px 24px; background: #ffffff; border-radius: 12px; border: 1px solid #e2e8f0; text-align: center; box-shadow: 0 4px 12px rgba(0,0,0,0.05); font-family: inherit;">
-            <div style="font-size: 48px; margin-bottom: 12px;">🔒</div>
-            <h3 style="margin: 0 0 8px; color: #1e293b; font-size: 22px; font-weight: 700;"><?php esc_html_e('Unable to Display Booking Details', 'tourivo'); ?></h3>
-            <p style="color: #64748b; font-size: 14px; line-height: 1.6; margin: 0 0 24px;">
+            <div style="font-size: var(--trv-text-display); margin-bottom: 12px;">🔒</div>
+            <h3 style="margin: 0 0 8px; color: #1e293b; font-size: var(--trv-text-2xl); font-weight: 700;"><?php esc_html_e('Unable to Display Booking Details', 'tourivo'); ?></h3>
+            <p style="color: #64748b; font-size: var(--trv-text-sm); line-height: 1.6; margin: 0 0 24px;">
                 <?php echo esc_html($message); ?>
             </p>
-            <p style="color: #475569; font-size: 13px; margin: 0 0 20px;">
+            <p style="color: #475569; font-size: var(--trv-text-sm); margin: 0 0 20px;">
                 <?php esc_html_e('You can view and manage your reservation anytime by entering your booking reference code and email on our self-service portal:', 'tourivo'); ?>
             </p>
-            <a href="<?php echo esc_url($lookupUrl); ?>" class="button button-primary" style="display: inline-block; background: #0d9488; color: #ffffff; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px;">
+            <a href="<?php echo esc_url($lookupUrl); ?>" class="button button-primary" style="display: inline-block; background: #0d9488; color: #ffffff; padding: 10px 22px; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: var(--trv-text-sm);">
                 🔍 <?php esc_html_e('Track My Booking on Lookup Portal', 'tourivo'); ?>
             </a>
         </div>

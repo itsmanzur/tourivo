@@ -175,7 +175,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
                     <?php if ($paymentMethod === 'cash_on_arrival') : ?>
                         <div class="tourivo-cash-card">
                             <h4 style="margin: 0 0 8px; color: #1e293b;">💵 <?php esc_html_e('Cash on Arrival / Pay at Check-in', 'tourivo'); ?></h4>
-                            <p style="margin: 0; color: #475569; font-size: 13.5px; line-height: 1.5;">
+                            <p style="margin: 0; color: #475569; font-size: var(--trv-text-sm); line-height: 1.5;">
                                 <?php
                                 $cashNote = (string) \Tourivo\Config\Config::get('cash_on_arrival_instructions', '');
                                 echo !empty($cashNote)
@@ -188,16 +188,16 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
 
                     <!-- Transaction Reference Submission Form -->
                     <div class="tourivo-submit-reference-box" style="margin-top: 18px; padding-top: 16px; border-top: 1px dashed #cbd5e1;">
-                        <h4 style="margin: 0 0 6px; font-size: 14.5px; color: #0f172a;">📝 <?php esc_html_e('Already completed your transfer or deposit?', 'tourivo'); ?></h4>
-                        <p style="margin: 0 0 12px; font-size: 13px; color: #64748b;">
+                        <h4 style="margin: 0 0 6px; font-size: var(--trv-text-sm); color: #0f172a;">📝 <?php esc_html_e('Already completed your transfer or deposit?', 'tourivo'); ?></h4>
+                        <p style="margin: 0 0 12px; font-size: var(--trv-text-sm); color: #64748b;">
                             <?php esc_html_e('Submit your deposit slip, bank transaction reference, or mobile banking TrxID below for fast verification.', 'tourivo'); ?>
                         </p>
 
                         <?php if (!empty($booking->transaction_id)) : ?>
-                            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 14px; font-size: 13px; color: #166534;">
+                            <div style="background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; padding: 10px 14px; font-size: var(--trv-text-sm); color: #166534;">
                                 <strong>✓ <?php esc_html_e('Submitted Reference:', 'tourivo'); ?></strong>
                                 <code><?php echo esc_html($booking->transaction_id); ?></code>
-                                <span style="font-size: 12px; margin-left: 6px; color: #15803d;"><?php esc_html_e('(Under review by accounts team)', 'tourivo'); ?></span>
+                                <span style="font-size: var(--trv-text-xs); margin-left: 6px; color: #15803d;"><?php esc_html_e('(Under review by accounts team)', 'tourivo'); ?></span>
                             </div>
                         <?php else : ?>
                             <form id="tourivo-submit-ref-form" style="display: flex; flex-direction: column; gap: 8px;">
@@ -210,12 +210,12 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
                                 <input type="hidden" name="customer_email" value="<?php echo esc_attr($booking->customer_email); ?>">
 
                                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                                    <input type="text" name="transaction_id" id="tourivo-ref-input" required placeholder="<?php esc_attr_e('Transaction Reference / Slip # / TrxID *', 'tourivo'); ?>" style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 13.5px;">
+                                    <input type="text" name="transaction_id" id="tourivo-ref-input" required placeholder="<?php esc_attr_e('Transaction Reference / Slip # / TrxID *', 'tourivo'); ?>" style="flex: 1; min-width: 200px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: var(--trv-text-sm);">
                                     <button type="submit" id="tourivo-submit-ref-btn" class="button button-primary" style="background: var(--trv-primary, #0d9488); border-color: var(--trv-primary, #0d9488); color: #fff; padding: 8px 18px; border-radius: 6px; font-weight: 600; cursor: pointer;">
                                         <?php esc_html_e('Submit Reference', 'tourivo'); ?>
                                     </button>
                                 </div>
-                                <div id="tourivo-ref-alert" style="display: none; padding: 8px 12px; border-radius: 6px; font-size: 13px; margin-top: 4px;"></div>
+                                <div id="tourivo-ref-alert" style="display: none; padding: 8px 12px; border-radius: 6px; font-size: var(--trv-text-sm); margin-top: 4px;"></div>
                             </form>
                             <script>
                             document.addEventListener('DOMContentLoaded', function() {
@@ -340,7 +340,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
 .tourivo-thankyou-wrapper {
     max-width: 960px;
     margin: 30px auto;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-family: var(--trv-font, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif);
     color: #1e293b;
 }
 .tourivo-thankyou-header {
@@ -362,14 +362,14 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     box-shadow: 0 10px 15px -3px rgba(16, 185, 129, 0.3);
 }
 .tourivo-thankyou-title {
-    font-size: 26px;
+    font-size: var(--trv-text-2xl);
     font-weight: 700;
     margin: 0 0 6px;
     color: #0f172a;
 }
 .tourivo-thankyou-subtitle {
     color: #64748b;
-    font-size: 15px;
+    font-size: var(--trv-text-base);
     margin: 0;
 }
 .tourivo-thankyou-overview-bar {
@@ -386,21 +386,21 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
 }
 .tourivo-overview-label {
     display: block;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #64748b;
     margin-bottom: 2px;
 }
 .tourivo-overview-code {
-    font-size: 18px;
+    font-size: var(--trv-text-lg);
     color: var(--trv-primary, #0d9488);
 }
 .tourivo-badge {
     display: inline-block;
     padding: 4px 10px;
     border-radius: 9999px;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     font-weight: 600;
 }
 .tourivo-thankyou-grid {
@@ -423,7 +423,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     box-shadow: 0 1px 3px rgba(0,0,0,0.04);
 }
 .tourivo-card-title {
-    font-size: 18px;
+    font-size: var(--trv-text-lg);
     font-weight: 700;
     margin: 0 0 16px;
     color: #0f172a;
@@ -444,13 +444,13 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     margin-bottom: 8px;
 }
 .tourivo-item-title {
-    font-size: 15px;
+    font-size: var(--trv-text-base);
     font-weight: 600;
     margin: 0 0 4px;
     color: #0f172a;
 }
 .tourivo-item-type-badge {
-    font-size: 11px;
+    font-size: var(--trv-text-xs);
     background: #e0f2fe;
     color: #0369a1;
     padding: 2px 6px;
@@ -465,7 +465,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
 }
 .tourivo-customer-details {
@@ -474,7 +474,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     margin-top: 14px;
 }
 .tourivo-section-subtitle {
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     font-weight: 600;
     color: #475569;
     margin: 0 0 8px;
@@ -483,7 +483,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
 }
 .tourivo-customer-details p {
     margin: 4px 0;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: #334155;
 }
 .tourivo-price-breakdown {
@@ -494,7 +494,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
 .tourivo-breakdown-row {
     display: flex;
     justify-content: space-between;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
 }
 .tourivo-breakdown-row.discount {
@@ -504,7 +504,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     border-top: 1px solid #e2e8f0;
     padding-top: 10px;
     margin-top: 6px;
-    font-size: 17px;
+    font-size: var(--trv-text-lg);
     color: #0f172a;
     font-weight: 700;
 }
@@ -516,13 +516,13 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     margin-bottom: 20px;
 }
 .tourivo-instructions-title {
-    font-size: 15px;
+    font-size: var(--trv-text-base);
     font-weight: 700;
     color: #166534;
     margin: 0 0 6px;
 }
 .tourivo-instructions-desc {
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: #15803d;
     margin: 0 0 10px;
 }
@@ -532,7 +532,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     border-radius: 8px;
     padding: 12px 14px;
     font-family: inherit;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: #1e293b;
     line-height: 1.6;
 }
@@ -547,7 +547,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     padding: 11px 16px;
     border-radius: 8px;
     font-weight: 600;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     text-decoration: none;
     transition: all 0.2s;
     box-sizing: border-box;
@@ -584,7 +584,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     padding: 28px 24px;
 }
 .tourivo-next-steps-title {
-    font-size: 18px;
+    font-size: var(--trv-text-lg);
     font-weight: 700;
     color: #0f172a;
     margin: 0 0 20px;
@@ -611,7 +611,7 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
     color: #0369a1;
     border-radius: 50%;
     font-weight: 700;
-    font-size: 16px;
+    font-size: var(--trv-text-base);
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -619,12 +619,12 @@ $paymentBadgeColor = ($paymentStatus === 'paid') ? '#15803d' : '#475569';
 }
 .tourivo-step-box h4 {
     margin: 0 0 6px;
-    font-size: 15px;
+    font-size: var(--trv-text-base);
     color: #0f172a;
 }
 .tourivo-step-box p {
     margin: 0;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
     line-height: 1.5;
 }

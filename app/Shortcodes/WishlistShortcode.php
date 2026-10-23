@@ -62,7 +62,7 @@ class WishlistShortcode
 
             <!-- Empty State -->
             <div id="tourivo-wishlist-empty" class="tourivo-empty-state" style="display: none; text-align: center; padding: 60px 20px;">
-                <div style="font-size: 48px; margin-bottom: 16px;">🏖️</div>
+                <div style="font-size: var(--trv-text-display); margin-bottom: 16px;">🏖️</div>
                 <h3><?php esc_html_e('Your Wishlist is Empty', 'tourivo'); ?></h3>
                 <p style="color: #64748b; max-width: 480px; margin: 0 auto 20px auto;">
                     <?php esc_html_e('Explore our exciting tour packages and luxury hotels, and click the heart icon to save your favorite itineraries here!', 'tourivo'); ?>

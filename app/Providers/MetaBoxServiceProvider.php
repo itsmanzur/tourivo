@@ -181,7 +181,7 @@ class MetaBoxServiceProvider extends ServiceProvider
             case 'price':
                 echo '<strong>' . esc_html($tour->getFormattedPrice()) . '</strong>';
                 if ($tour->getSalePrice()) {
-                    echo ' <del style="color:#94a3b8; font-size:11px;">$' . esc_html((string)$tour->getPrice()) . '</del>';
+                    echo ' <del style="color:#94a3b8; font-size: var(--trv-admin-text-xs);">$' . esc_html((string)$tour->getPrice()) . '</del>';
                 }
                 break;
             case 'duration':

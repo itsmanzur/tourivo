@@ -229,7 +229,7 @@ class BookingsTable
                                     <?php echo esc_html(ucfirst($b->booking_status)); ?>
                                 </span>
                                 <?php if (!empty($b->cancel_requested_at) && $b->booking_status !== 'cancelled') : ?>
-                                    <br><span class="tourivo-badge" style="background:#fee2e2; color:#991b1b; margin-top:4px; display:inline-block; font-size:11px;">🚨 <?php esc_html_e('Cancel Requested', 'tourivo'); ?></span>
+                                    <br><span class="tourivo-badge" style="background:#fee2e2; color:#991b1b; margin-top:4px; display:inline-block; font-size: var(--trv-admin-text-xs);">🚨 <?php esc_html_e('Cancel Requested', 'tourivo'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -398,7 +398,7 @@ class BookingsTable
                     </div>
                     <div class="modal-body">
                         <!-- Summary Grid -->
-                        <div class="timeline-summary-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: 13px;">
+                        <div class="timeline-summary-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; background: #f8fafc; padding: 14px; border-radius: 8px; border: 1px solid #e2e8f0; margin-bottom: 20px; font-size: var(--trv-admin-text-sm);">
                             <div><strong><?php esc_html_e('Customer:', 'tourivo'); ?></strong> <span id="timeline-modal-name"></span></div>
                             <div><strong><?php esc_html_e('Email:', 'tourivo'); ?></strong> <span id="timeline-modal-email"></span></div>
                             <div><strong><?php esc_html_e('Phone:', 'tourivo'); ?></strong> <span id="timeline-modal-phone"></span></div>
@@ -407,7 +407,7 @@ class BookingsTable
                         </div>
 
                         <!-- Activity Timeline -->
-                        <h3 style="margin: 0 0 10px 0; font-size: 15px;">⏱️ <?php esc_html_e('Activity History & Internal Notes', 'tourivo'); ?></h3>
+                        <h3 style="margin: 0 0 10px 0; font-size: var(--trv-admin-text-lg);">⏱️ <?php esc_html_e('Activity History & Internal Notes', 'tourivo'); ?></h3>
                         <div id="timeline-logs-container" style="max-height: 220px; overflow-y: auto; background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px; margin-bottom: 16px;">
                             <div class="timeline-loading" style="text-align: center; color: #64748b;">Loading activity logs...</div>
                         </div>
@@ -569,9 +569,9 @@ class BookingsTable
                         </div>
 
                         <!-- Live Match Preview Badge -->
-                        <div id="tourivo-export-preview-badge" style="margin-top: 14px; padding: 12px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: 13px;">
+                        <div id="tourivo-export-preview-badge" style="margin-top: 14px; padding: 12px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: var(--trv-admin-text-sm);">
                             <span>📊 <strong id="export-preview-count">...</strong> <?php esc_html_e('matching bookings found', 'tourivo'); ?> (<span id="export-preview-revenue">...</span>)</span>
-                            <span style="color: #166534; font-size: 12px; font-weight: 600;"><?php esc_html_e('UTF-8 Excel Ready', 'tourivo'); ?></span>
+                            <span style="color: #166534; font-size: var(--trv-admin-text-xs); font-weight: 600;"><?php esc_html_e('UTF-8 Excel Ready', 'tourivo'); ?></span>
                         </div>
                     </div>
 
@@ -590,7 +590,7 @@ class BookingsTable
             <div class="tourivo-modal-overlay"></div>
             <div class="tourivo-modal-content" style="max-width: 520px; padding: 0; overflow: hidden; border-radius: 8px;">
                 <div class="modal-header" style="background: #0f172a; color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin: 0; color: #ffffff; font-size: 16px;">💳 <?php esc_html_e('Record Payment', 'tourivo'); ?> &mdash; <span id="payment-modal-booking-code">#...</span></h3>
+                    <h3 style="margin: 0; color: #ffffff; font-size: var(--trv-admin-text-lg);">💳 <?php esc_html_e('Record Payment', 'tourivo'); ?> &mdash; <span id="payment-modal-booking-code">#...</span></h3>
                     <button type="button" class="close-modal-btn" style="background: none; border: none; color: #ffffff; font-size: 20px; cursor: pointer; line-height: 1;">&times;</button>
                 </div>
                 <form id="tourivo-record-payment-form">
@@ -599,7 +599,7 @@ class BookingsTable
 
                     <div class="modal-body" style="padding: 20px;">
                         <!-- Booking financial summary banner -->
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; margin-bottom: 16px; font-size: 13px;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 14px; margin-bottom: 16px; font-size: var(--trv-admin-text-sm);">
                             <div style="display: flex; justify-content: space-between; margin-bottom: 4px;">
                                 <span><?php esc_html_e('Customer:', 'tourivo'); ?></span>
                                 <strong id="payment-modal-customer">—</strong>
@@ -621,7 +621,7 @@ class BookingsTable
                         <!-- Amount to Record -->
                         <div class="tourivo-form-group" style="margin-bottom: 14px;">
                             <label for="payment-amount" style="display: block; font-weight: 600; margin-bottom: 4px;"><?php esc_html_e('Payment Amount to Record', 'tourivo'); ?> *</label>
-                            <input type="number" step="0.01" min="0" name="amount" id="payment-amount" class="widefat" required style="font-size: 15px; font-weight: 600;">
+                            <input type="number" step="0.01" min="0" name="amount" id="payment-amount" class="widefat" required style="font-size: var(--trv-admin-text-lg); font-weight: 600;">
                             <p class="description" style="margin-top: 4px;"><?php esc_html_e('Defaults to the full or remaining due balance.', 'tourivo'); ?></p>
                         </div>
 
@@ -655,7 +655,7 @@ class BookingsTable
 
                         <!-- Auto-confirm pending booking checkbox -->
                         <div class="tourivo-form-group" id="payment-auto-confirm-wrap" style="margin-bottom: 14px; background: #eff6ff; padding: 10px 12px; border-radius: 6px; border: 1px solid #bfdbfe;">
-                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 500;">
+                            <label style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: var(--trv-admin-text-sm); font-weight: 500;">
                                 <input type="checkbox" name="auto_confirm" id="payment-auto-confirm" value="1" checked>
                                 <span><?php esc_html_e('Automatically confirm reservation if currently in Pending status', 'tourivo'); ?></span>
                             </label>
@@ -667,7 +667,7 @@ class BookingsTable
                             <textarea name="note" id="payment-note" rows="2" class="widefat" placeholder="<?php esc_attr_e('Optional memo (e.g. Verified via City Bank Online portal)', 'tourivo'); ?>"></textarea>
                         </div>
 
-                        <div id="payment-modal-alert" style="display: none; margin-top: 14px; padding: 10px 12px; border-radius: 6px; font-size: 13px;"></div>
+                        <div id="payment-modal-alert" style="display: none; margin-top: 14px; padding: 10px 12px; border-radius: 6px; font-size: var(--trv-admin-text-sm);"></div>
                     </div>
 
                     <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0;">

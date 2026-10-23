@@ -73,6 +73,6 @@ $tourivoDate    = static function (string $value): string {
     </div>
 <?php endif; ?>
 
-<p style="color: #64748b; font-size: 13.5px; margin-top: 20px;">
+<p style="color: #64748b; font-size: 14px; margin-top: 20px;">
     <?php esc_html_e('If you have any questions or believe this cancellation was made in error, please feel free to reply directly to this email.', 'tourivo'); ?>
 </p>

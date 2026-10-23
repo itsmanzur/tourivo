@@ -227,8 +227,8 @@ class SetupWizard
                             <span>🏯</span>
                             <span>🏨</span>
                         </div>
-                        <h4 style="margin: 0 0 6px; color:#0f172a; font-size:16px;"><?php esc_html_e('Ready to install 3 Featured Tours, 2 Boutique Hotels & 4 Room Types.', 'tourivo'); ?></h4>
-                        <p style="margin:0; font-size:13px; color:#64748b;"><?php esc_html_e('Includes complete day-by-day itineraries, high-res photos, inclusions, FAQs, and realistic pricing.', 'tourivo'); ?></p>
+                        <h4 style="margin: 0 0 6px; color:#0f172a; font-size: var(--trv-admin-text-lg);"><?php esc_html_e('Ready to install 3 Featured Tours, 2 Boutique Hotels & 4 Room Types.', 'tourivo'); ?></h4>
+                        <p style="margin:0; font-size: var(--trv-admin-text-sm); color:#64748b;"><?php esc_html_e('Includes complete day-by-day itineraries, high-res photos, inclusions, FAQs, and realistic pricing.', 'tourivo'); ?></p>
                     </div>
 
                     <div id="demoImportProgress" style="display:none; text-align:center; padding: 20px;">
@@ -247,8 +247,8 @@ class SetupWizard
                 <!-- Step 4: Ready / Completion Screen -->
                 <div class="wizard-content-card" id="wizard-card-4" style="display:none; text-align:center;">
                     <div style="font-size: 54px; margin-bottom: 12px;">🎉</div>
-                    <h2 style="font-size: 26px; font-weight: 800; color: #0f172a; margin: 0 0 10px;"><?php esc_html_e('Your Booking Engine is Ready!', 'tourivo'); ?></h2>
-                    <p style="font-size: 15px; color: #64748b; max-width: 500px; margin: 0 auto 24px;">
+                    <h2 style="font-size: var(--trv-admin-text-3xl); font-weight: 700; color: #0f172a; margin: 0 0 10px;"><?php esc_html_e('Your Booking Engine is Ready!', 'tourivo'); ?></h2>
+                    <p style="font-size: var(--trv-admin-text-lg); color: #64748b; max-width: 500px; margin: 0 auto 24px;">
                         <?php esc_html_e('Tourivo has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms.', 'tourivo'); ?>
                     </p>
 
@@ -276,7 +276,7 @@ class SetupWizard
                     </div>
 
                     <div style="margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
-                        <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-btn wizard-btn-primary" style="padding: 12px 32px; font-size: 16px;">
+                        <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-btn wizard-btn-primary" style="padding: 12px 32px; font-size: var(--trv-admin-text-lg);">
                             🚀 <?php esc_html_e('Go to Tourivo Dashboard', 'tourivo'); ?>
                         </a>
                     </div>
@@ -288,7 +288,7 @@ class SetupWizard
         .tourivo-wizard-body {
             max-width: 820px;
             margin: 40px auto;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            font-family: var(--trv-font-admin, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif);
         }
         .tourivo-wizard-header {
             text-align: center;
@@ -303,14 +303,14 @@ class SetupWizard
             font-size: 32px;
         }
         .brand-title {
-            font-size: 32px;
-            font-weight: 800;
+            font-size: var(--trv-admin-text-display);
+            font-weight: 700;
             color: #0f172a;
             margin: 0;
             letter-spacing: -0.02em;
         }
         .brand-tagline {
-            font-size: 15px;
+            font-size: var(--trv-admin-text-lg);
             color: #64748b;
             margin: 6px 0 0;
         }
@@ -347,7 +347,7 @@ class SetupWizard
             border: 2px solid #cbd5e1;
             color: #64748b;
             font-weight: 700;
-            font-size: 14px;
+            font-size: var(--trv-admin-text-base);
             margin-bottom: 6px;
             transition: all 0.2s;
         }
@@ -364,7 +364,7 @@ class SetupWizard
         }
         .step-label {
             display: block;
-            font-size: 12px;
+            font-size: var(--trv-admin-text-xs);
             font-weight: 600;
             color: #64748b;
         }
@@ -385,13 +385,13 @@ class SetupWizard
         }
         .card-intro h2 {
             margin: 0 0 6px;
-            font-size: 20px;
+            font-size: var(--trv-admin-text-2xl);
             font-weight: 700;
             color: #0f172a;
         }
         .card-intro p {
             margin: 0;
-            font-size: 14px;
+            font-size: var(--trv-admin-text-base);
             color: #64748b;
         }
         .wizard-form-group {
@@ -400,7 +400,7 @@ class SetupWizard
         .wizard-form-group label {
             display: block;
             margin-bottom: 6px;
-            font-size: 13px;
+            font-size: var(--trv-admin-text-sm);
             color: #334155;
         }
         .wizard-input, .wizard-select {
@@ -408,7 +408,7 @@ class SetupWizard
             padding: 10px 14px;
             border: 1px solid #cbd5e1;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: var(--trv-admin-text-base);
             box-sizing: border-box;
             background: #f8fafc;
         }
@@ -426,7 +426,7 @@ class SetupWizard
         .wizard-hint {
             display: block;
             margin-top: 4px;
-            font-size: 12px;
+            font-size: var(--trv-admin-text-xs);
             color: #94a3b8;
         }
         .wizard-checklist {
@@ -458,12 +458,12 @@ class SetupWizard
         }
         .check-text strong {
             display: block;
-            font-size: 14px;
+            font-size: var(--trv-admin-text-base);
             color: #0f172a;
             margin-bottom: 2px;
         }
         .check-text span {
-            font-size: 12px;
+            font-size: var(--trv-admin-text-xs);
             color: #64748b;
         }
         .demo-import-box {
@@ -491,7 +491,7 @@ class SetupWizard
         }
         .wizard-btn {
             padding: 10px 22px;
-            font-size: 14px;
+            font-size: var(--trv-admin-text-base);
             font-weight: 600;
             border-radius: 8px;
             cursor: pointer;
@@ -526,7 +526,7 @@ class SetupWizard
             color: #ffffff;
         }
         .wizard-skip-link {
-            font-size: 13px;
+            font-size: var(--trv-admin-text-sm);
             color: #94a3b8;
             text-decoration: none;
         }
@@ -562,11 +562,11 @@ class SetupWizard
         }
         .quick-link-box strong {
             display: block;
-            font-size: 14px;
+            font-size: var(--trv-admin-text-base);
             color: #0f172a;
         }
         .quick-link-box small {
-            font-size: 12px;
+            font-size: var(--trv-admin-text-xs);
             color: #64748b;
         }
         </style>

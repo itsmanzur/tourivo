@@ -317,7 +317,7 @@ class FilterSearchShortcode
 
         if (!$query->have_posts()) {
             return '<div class="tourivo-no-results-msg" style="grid-column: 1 / -1; text-align: center; padding: 40px 20px; color: #64748b;">
-                <div style="font-size: 36px; margin-bottom: 8px;">🔍</div>
+                <div style="font-size: var(--trv-text-3xl); margin-bottom: 8px;">🔍</div>
                 <p><strong>' . esc_html__('No results found matching your filters.', 'tourivo') . '</strong></p>
                 <small>' . esc_html__('Try adjusting your keywords, budget, or destination criteria.', 'tourivo') . '</small>
             </div>';

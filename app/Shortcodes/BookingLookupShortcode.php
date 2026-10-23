@@ -422,10 +422,10 @@ class BookingLookupShortcode
 
             $itemsHtml .= '<div class="tourivo-lookup-item-row" style="padding: 12px; background: #f8fafc; border-radius: 8px; margin-bottom: 8px; border: 1px solid #e2e8f0;">';
             $itemsHtml .= '<div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom: 4px;">';
-            $itemsHtml .= '<div><strong style="color:#0f172a; font-size:15px;">' . esc_html($item->item_title) . '</strong> <span style="display:inline-block; font-size:11px; padding:2px 6px; background:#e0e7ff; color:#3730a3; border-radius:4px; font-weight:600; margin-left:6px;">' . esc_html($typeLabel) . '</span></div>';
+            $itemsHtml .= '<div><strong style="color:#0f172a; font-size: var(--trv-text-base);">' . esc_html($item->item_title) . '</strong> <span style="display:inline-block; font-size: var(--trv-text-xs); padding:2px 6px; background:#e0e7ff; color:#3730a3; border-radius:4px; font-weight:600; margin-left:6px;">' . esc_html($typeLabel) . '</span></div>';
             $itemsHtml .= '<div style="font-weight:700; color:#0f172a;">' . esc_html(Money::format((float) $item->total_price, $currencySymbol)) . '</div>';
             $itemsHtml .= '</div>';
-            $itemsHtml .= '<div style="font-size:13px; color:#64748b;">';
+            $itemsHtml .= '<div style="font-size: var(--trv-text-sm); color:#64748b;">';
             $itemsHtml .= '📅 <strong>' . esc_html__('Dates:', 'tourivo') . '</strong> ' . esc_html($dateRange) . ' &bull; ';
             $partyBits = [];
             if (!empty($item->adults_count)) {

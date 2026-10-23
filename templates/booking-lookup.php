@@ -75,7 +75,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
                 </div>
 
                 <div class="tourivo-result-items-box">
-                    <h4 style="margin: 0 0 10px; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;"><?php esc_html_e('Booked Package / Stays', 'tourivo'); ?></h4>
+                    <h4 style="margin: 0 0 10px; font-size: var(--trv-text-sm); text-transform: uppercase; letter-spacing: 0.05em; color: #64748b;"><?php esc_html_e('Booked Package / Stays', 'tourivo'); ?></h4>
                     <div id="resItemsContainer"></div>
                 </div>
 
@@ -96,13 +96,13 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
 
                 <!-- Cancellation Request Box -->
                 <div id="tourivoCancelBox" style="display:none; margin-top:20px; padding:16px; background:#fff1f2; border:1px solid #fecdd3; border-radius:8px;">
-                    <h4 style="margin:0 0 8px; color:#9f1239; font-size:15px; font-weight:700;">
+                    <h4 style="margin:0 0 8px; color:#9f1239; font-size: var(--trv-text-base); font-weight:700;">
                         <?php esc_html_e('Submit Cancellation Request', 'tourivo'); ?>
                     </h4>
-                    <p style="margin:0 0 12px; font-size:13px; color:#881337;">
+                    <p style="margin:0 0 12px; font-size: var(--trv-text-sm); color:#881337;">
                         <?php esc_html_e('Are you sure you wish to cancel this reservation? Please provide a reason below:', 'tourivo'); ?>
                     </p>
-                    <textarea id="trv_cancel_reason" rows="3" class="tourivo-lookup-input" placeholder="<?php esc_attr_e('Reason for cancellation (optional)...', 'tourivo'); ?>" style="margin-bottom:12px; font-size:13px;"></textarea>
+                    <textarea id="trv_cancel_reason" rows="3" class="tourivo-lookup-input" placeholder="<?php esc_attr_e('Reason for cancellation (optional)...', 'tourivo'); ?>" style="margin-bottom:12px; font-size: var(--trv-text-sm);"></textarea>
                     <div style="display:flex; gap:10px;">
                         <button type="button" id="tourivoConfirmCancelBtn" class="tourivo-btn tourivo-btn-danger">
                             <?php esc_html_e('Confirm Cancellation', 'tourivo'); ?>
@@ -111,7 +111,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
                             <?php esc_html_e('Keep My Booking', 'tourivo'); ?>
                         </button>
                     </div>
-                    <div id="tourivoCancelAlert" style="display:none; margin-top:10px; font-size:13px; font-weight:600;"></div>
+                    <div id="tourivoCancelAlert" style="display:none; margin-top:10px; font-size: var(--trv-text-sm); font-weight:600;"></div>
                 </div>
             </div>
         </div>
@@ -141,13 +141,13 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     margin-bottom: 8px;
 }
 .tourivo-lookup-title {
-    font-size: 24px;
+    font-size: var(--trv-text-2xl);
     font-weight: 700;
     color: #0f172a;
     margin: 0 0 8px;
 }
 .tourivo-lookup-desc {
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
     margin: 0;
     line-height: 1.5;
@@ -166,7 +166,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
 .tourivo-lookup-field label {
     display: block;
     margin-bottom: 6px;
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: #334155;
 }
 .tourivo-lookup-input {
@@ -175,7 +175,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     padding: 12px 14px;
     border: 1px solid #cbd5e1;
     border-radius: 8px;
-    font-size: 15px;
+    font-size: var(--trv-text-base);
     transition: border-color 0.2s;
 }
 .tourivo-lookup-input:focus {
@@ -189,7 +189,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
 .tourivo-btn {
     border: none;
     cursor: pointer;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     font-weight: 600;
     padding: 12px 24px;
     border-radius: 8px;
@@ -233,7 +233,7 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     padding: 14px;
     border-radius: 8px;
     margin-top: 20px;
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     line-height: 1.5;
 }
 .tourivo-lookup-alert.error {
@@ -260,13 +260,13 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
 }
 .tourivo-result-label {
     display: block;
-    font-size: 11px;
+    font-size: var(--trv-text-xs);
     text-transform: uppercase;
     letter-spacing: 0.05em;
     color: #64748b;
 }
 .tourivo-result-code {
-    font-size: 20px;
+    font-size: var(--trv-text-xl);
     color: #0f172a;
     margin: 2px 0 4px;
 }
@@ -282,11 +282,11 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     display: inline-block;
     padding: 4px 10px;
     border-radius: 9999px;
-    font-size: 12px;
+    font-size: var(--trv-text-xs);
     font-weight: 600;
 }
 .tourivo-result-customer-info {
-    font-size: 14px;
+    font-size: var(--trv-text-sm);
     color: #334155;
     margin-bottom: 16px;
 }
@@ -307,12 +307,12 @@ $tourivoLookupToken = !empty($tourivoNonce) ? $tourivoNonce : wp_create_nonce('t
     gap: 12px;
 }
 .tourivo-result-total span {
-    font-size: 13px;
+    font-size: var(--trv-text-sm);
     color: #64748b;
     display: block;
 }
 .tourivo-result-total strong {
-    font-size: 22px;
+    font-size: var(--trv-text-2xl);
     color: #0f172a;
 }
 </style>

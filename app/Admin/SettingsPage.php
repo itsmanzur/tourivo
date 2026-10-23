@@ -651,7 +651,7 @@ class SettingsPage
                         <p class="description"><?php esc_html_e('Configure structured bank details for direct wire transfer and Pay-on-Arrival terms for bookings without online payment gateways.', 'tourivo'); ?></p>
 
                         <!-- Bank Transfer Configuration -->
-                        <h3 style="margin-top: 20px; font-size: 15px; color: #1e293b;">🏛️ <?php esc_html_e('Direct Bank Transfer (Wire / Deposit)', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 20px; font-size: var(--trv-admin-text-lg); color: #1e293b;">🏛️ <?php esc_html_e('Direct Bank Transfer (Wire / Deposit)', 'tourivo'); ?></h3>
                         <table class="form-table">
                             <tr>
                                 <th scope="row"><?php esc_html_e('Enable Bank Transfer', 'tourivo'); ?></th>
@@ -707,7 +707,7 @@ class SettingsPage
                         </table>
 
                         <!-- Cash on Arrival Configuration -->
-                        <h3 style="margin-top: 25px; font-size: 15px; color: #1e293b;">💵 <?php esc_html_e('Cash on Arrival / Pay at Check-in', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 25px; font-size: var(--trv-admin-text-lg); color: #1e293b;">💵 <?php esc_html_e('Cash on Arrival / Pay at Check-in', 'tourivo'); ?></h3>
                         <table class="form-table">
                             <tr>
                                 <th scope="row"><?php esc_html_e('Enable Cash on Arrival', 'tourivo'); ?></th>
@@ -909,7 +909,7 @@ class SettingsPage
 
                         <h2>🏷️ <?php esc_html_e('Available Template Placeholders', 'tourivo'); ?></h2>
                         <p class="description"><?php esc_html_e('Use these tags inside email subjects, headings, and additional content. They will be dynamically replaced with real booking data:', 'tourivo'); ?></p>
-                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin: 12px 0 24px; font-size: 13px; line-height: 1.8;">
+                        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 16px; margin: 12px 0 24px; font-size: var(--trv-admin-text-sm); line-height: 1.8;">
                             <code>{customer_name}</code>, <code>{customer_email}</code>, <code>{customer_phone}</code>, <code>{booking_code}</code>, <code>{item_title}</code>, <code>{item_type}</code>, <code>{check_in}</code>, <code>{check_out}</code>, <code>{guests}</code>, <code>{total_amount}</code>, <code>{subtotal}</code>, <code>{tax_amount}</code>, <code>{discount_amount}</code>, <code>{status}</code>, <code>{site_name}</code>, <code>{site_url}</code>, <code>{voucher_url}</code>, <code>{lookup_url}</code>, <code>{offline_payment_instructions}</code>
                             <br><small style="color: #64748b;"><?php esc_html_e('For inquiry notifications: {inquiry_name}, {inquiry_email}, {inquiry_phone}, {inquiry_message}, {item_title}, {site_name}.', 'tourivo'); ?></small>
                         </div>
@@ -924,11 +924,11 @@ class SettingsPage
                                 <div style="background: #ffffff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 18px 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
                                     <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; margin-bottom: 14px;">
                                         <div style="display: flex; align-items: center; gap: 10px;">
-                                            <label style="font-size: 15px; font-weight: 600; color: #1e293b; cursor: pointer;">
+                                            <label style="font-size: var(--trv-admin-text-lg); font-weight: 600; color: #1e293b; cursor: pointer;">
                                                 <input type="checkbox" name="email_<?php echo esc_attr($tmplKey); ?>_enabled" value="1" <?php checked($tmpl['enabled']); ?>>
                                                 <?php echo esc_html($tmpl['title']); ?>
                                             </label>
-                                            <span style="font-size: 11px; background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 9999px; font-weight: 600;">
+                                            <span style="font-size: var(--trv-admin-text-xs); background: #e0f2fe; color: #0369a1; padding: 2px 8px; border-radius: 9999px; font-weight: 600;">
                                                 <?php echo esc_html($tmpl['recipient']); ?>
                                             </span>
                                         </div>
@@ -939,17 +939,17 @@ class SettingsPage
                                         </div>
                                     </div>
 
-                                    <p style="color: #64748b; font-size: 13px; margin: 0 0 14px;"><?php echo esc_html($tmpl['desc']); ?></p>
+                                    <p style="color: #64748b; font-size: var(--trv-admin-text-sm); margin: 0 0 14px;"><?php echo esc_html($tmpl['desc']); ?></p>
 
                                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 12px;">
                                         <div>
-                                            <label style="display: block; font-weight: 600; font-size: 12px; color: #475569; margin-bottom: 4px;" for="email_<?php echo esc_attr($tmplKey); ?>_subject">
+                                            <label style="display: block; font-weight: 600; font-size: var(--trv-admin-text-xs); color: #475569; margin-bottom: 4px;" for="email_<?php echo esc_attr($tmplKey); ?>_subject">
                                                 <?php esc_html_e('Email Subject Line', 'tourivo'); ?>
                                             </label>
                                             <input type="text" name="email_<?php echo esc_attr($tmplKey); ?>_subject" id="email_<?php echo esc_attr($tmplKey); ?>_subject" value="<?php echo esc_attr($tmpl['subject']); ?>" class="large-text">
                                         </div>
                                         <div>
-                                            <label style="display: block; font-weight: 600; font-size: 12px; color: #475569; margin-bottom: 4px;" for="email_<?php echo esc_attr($tmplKey); ?>_heading">
+                                            <label style="display: block; font-weight: 600; font-size: var(--trv-admin-text-xs); color: #475569; margin-bottom: 4px;" for="email_<?php echo esc_attr($tmplKey); ?>_heading">
                                                 <?php esc_html_e('Email Main Heading', 'tourivo'); ?>
                                             </label>
                                             <input type="text" name="email_<?php echo esc_attr($tmplKey); ?>_heading" id="email_<?php echo esc_attr($tmplKey); ?>_heading" value="<?php echo esc_attr($tmpl['heading']); ?>" class="large-text">
@@ -957,7 +957,7 @@ class SettingsPage
                                     </div>
 
                                     <div>
-                                        <label style="display: block; font-weight: 600; font-size: 12px; color: #475569; margin-bottom: 4px;" for="email_<?php echo esc_attr($tmplKey); ?>_additional_content">
+                                        <label style="display: block; font-weight: 600; font-size: var(--trv-admin-text-xs); color: #475569; margin-bottom: 4px;" for="email_<?php echo esc_attr($tmplKey); ?>_additional_content">
                                             <?php esc_html_e('Additional Content / Custom Notes', 'tourivo'); ?>
                                         </label>
                                         <textarea name="email_<?php echo esc_attr($tmplKey); ?>_additional_content" id="email_<?php echo esc_attr($tmplKey); ?>_additional_content" rows="3" class="large-text" placeholder="<?php esc_attr_e('Optional custom message, arrival guidelines, or policy instructions...', 'tourivo'); ?>"><?php echo esc_textarea($tmpl['content']); ?></textarea>
@@ -1158,11 +1158,11 @@ class SettingsPage
 
                         <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px; margin-top: 15px; max-width: 650px;">
                             <h4 style="margin: 0 0 8px; color: #1e293b;"><?php esc_html_e('Retention Routine Dry-Run Preview', 'tourivo'); ?></h4>
-                            <p style="margin: 0 0 12px; font-size: 13px; color: #64748b;"><?php esc_html_e('Check how many expired records are currently eligible for scheduled retention actions without modifying data.', 'tourivo'); ?></p>
+                            <p style="margin: 0 0 12px; font-size: var(--trv-admin-text-sm); color: #64748b;"><?php esc_html_e('Check how many expired records are currently eligible for scheduled retention actions without modifying data.', 'tourivo'); ?></p>
                             <button type="button" class="button button-secondary" id="tourivo-retention-dry-run-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>">
                                 🔍 <?php esc_html_e('Check Eligible Records Count', 'tourivo'); ?>
                             </button>
-                            <div id="tourivo-retention-dry-run-result" style="display: none; margin-top: 10px; font-size: 13px; font-weight: 600;"></div>
+                            <div id="tourivo-retention-dry-run-result" style="display: none; margin-top: 10px; font-size: var(--trv-admin-text-sm); font-weight: 600;"></div>
                         </div>
 
                         <hr style="margin: 25px 0; border: 0; border-top: 1px solid #e2e8f0;">
@@ -1220,7 +1220,7 @@ class SettingsPage
                         <h2><?php esc_html_e('Setup Wizard & Demo Tools', 'tourivo'); ?></h2>
                         <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 16px; margin-bottom: 20px; max-width: 600px;">
                             <h4 style="margin: 0 0 6px; color: #0f766e;"><?php esc_html_e('Quick Onboarding & Sample Data', 'tourivo'); ?></h4>
-                            <p style="margin: 0 0 12px; font-size: 13px; color: #115e59;"><?php esc_html_e('Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?', 'tourivo'); ?></p>
+                            <p style="margin: 0 0 12px; font-size: var(--trv-admin-text-sm); color: #115e59;"><?php esc_html_e('Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?', 'tourivo'); ?></p>
                             <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button button-secondary">
                                 🪄 <?php esc_html_e('Launch Setup Wizard', 'tourivo'); ?>
                             </a>

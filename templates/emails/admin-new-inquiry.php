@@ -66,7 +66,7 @@ $tourivoDate = static function (string $value): string {
     <?php if (!empty($tourivoInquiry['message'])) : ?>
         <div style="padding-top: 10px; margin-top: 8px; border-top: 1px solid #e2e8f0;">
             <span class="tourivo-info-label" style="display: block; margin-bottom: 4px;"><?php esc_html_e('Inquiry / Question:', 'tourivo'); ?></span>
-            <div style="color: #334155; font-size: 13.5px; line-height: 1.5; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
+            <div style="color: #334155; font-size: 14px; line-height: 1.5; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px;">
                 <?php echo nl2br(esc_html($tourivoInquiry['message'])); ?>
             </div>
         </div>

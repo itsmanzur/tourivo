@@ -465,7 +465,7 @@ class DocumentationPage
                                 </tr>
                                 <tr>
                                     <td>
-                                        <strong><?php esc_html_e('Customer Frontend Account Dashboard', 'tourivo'); ?> <span class="tourivo-badge tourivo-badge-pending" style="font-size:10px; padding:2px 6px;"><?php esc_html_e('PRO', 'tourivo'); ?></span></strong>
+                                        <strong><?php esc_html_e('Customer Frontend Account Dashboard', 'tourivo'); ?> <span class="tourivo-badge tourivo-badge-pending" style="font-size: var(--trv-admin-text-xs); padding:2px 6px;"><?php esc_html_e('PRO', 'tourivo'); ?></span></strong>
                                         <br><small><?php esc_html_e('Self-service portal for travelers: past bookings, itinerary lookup, PDF tickets & invoices.', 'tourivo'); ?></small>
                                     </td>
                                     <td><code>[tourivo_customer_dashboard]</code></td>
@@ -561,7 +561,7 @@ class DocumentationPage
                         <hr class="doc-divider">
 
                         <h3><?php esc_html_e('How to Use the Availability Manager', 'tourivo'); ?></h3>
-                        <ol style="line-height: 1.8; color: #334155; font-size: 14px; padding-left: 20px;">
+                        <ol style="line-height: 1.8; color: #334155; font-size: var(--trv-admin-text-base); padding-left: 20px;">
                             <li><strong><?php esc_html_e('Navigate to Tour or Room Edit Screen:', 'tourivo'); ?></strong> <?php esc_html_e('Open any published Tour or Room. Scroll down to the "Availability & Pricing Calendar" metabox.', 'tourivo'); ?></li>
                             <li><strong><?php esc_html_e('Select Dates:', 'tourivo'); ?></strong> <?php esc_html_e('Click any date to select it. Hold Shift and click another date to select an entire date range. Use the weekday checkboxes (Mo-Su) to filter your selection.', 'tourivo'); ?></li>
                             <li><strong><?php esc_html_e('Choose Actions to Apply:', 'tourivo'); ?></strong> <?php esc_html_e('In the right-hand panel, choose your Status action (Available or Blocked), adjust total capacity, or set a custom Price Override.', 'tourivo'); ?></li>
@@ -570,7 +570,7 @@ class DocumentationPage
 
                         <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 14px 18px; border-radius: 6px; margin-top: 16px;">
                             <strong style="color: #0369a1;"><?php esc_html_e('💡 Developer Hook:', 'tourivo'); ?></strong>
-                            <p style="margin: 4px 0 0 0; font-size: 13px; color: #0c4a6e;">
+                            <p style="margin: 4px 0 0 0; font-size: var(--trv-admin-text-sm); color: #0c4a6e;">
                                 <?php esc_html_e('Listen to availability updates via:', 'tourivo'); ?>
                                 <code>do_action("tourivo/availability_updated", $itemId, $itemType, $startDate, $endDate, $changes);</code>
                             </p>

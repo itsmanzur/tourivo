@@ -54,3 +54,21 @@ body[class*="tourivo_page_"] #wpbody-content,
 .tourivo-metabox-wrapper {
     font-family: var(--trv-font-admin);
 }
+
+/* wp-admin type scale for Tourivo screens: WordPress admin text is 13px, so the steps sit around it. */
+body.wp-admin {
+    --trv-admin-text-xs: 12px;
+    --trv-admin-text-sm: 13px;
+    --trv-admin-text-base: 14px;
+    --trv-admin-text-lg: 16px;
+    --trv-admin-text-xl: 18px;
+    --trv-admin-text-2xl: 20px;
+    --trv-admin-text-3xl: 24px;
+    --trv-admin-text-display: 30px;
+}
+
+body.toplevel_page_tourivo #wpbody-content:lang(bn),
+body[class*="tourivo_page_"] #wpbody-content:lang(bn),
+.tourivo-metabox-wrapper:lang(bn) {
+    line-height: 1.7;
+}

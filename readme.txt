@@ -142,6 +142,7 @@ Tourivo is engineered from the ground up for strict privacy regulations (GDPR, C
 * **Booking panel:** One payment list: add-ons add their online choices next to the offline methods through the new `tourivo/booking_panel_payment_options` filter and `tourivo_booking_panel_after_payment_options` action. Fields no longer spill out of the panel on themes without border-box sizing.
 * **Hotel page:** Room types are laid out as cards (photo, details, price and reserve button; the reservation form opens full width), and the bed size shows its icon.
 * **Cards:** Price and button no longer collide; tours and hotels without a photo show a centered placeholder.
+* **Typography:** Admin screens use a type scale matched to WordPress admin (12 to 24px around its 13px text); My Bookings, thank-you, booking lookup, voucher, emails and the wizard follow the same sizes and fonts (no text below 12px on pages, 13px in emails). Emails list Bengali system fonts before the generic family so mail apps show Bengali properly.
 
 = 1.4.3 =
 * **Offline Payment Method Expansion (Bank Transfer & Cash on Arrival):** Added dedicated offline payment method configuration allowing tour operators and hoteliers to accept direct bank deposits and cash on arrival.

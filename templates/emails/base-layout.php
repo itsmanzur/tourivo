@@ -32,7 +32,8 @@ if (function_exists('tourivo_current_locale')) {
     <title><?php echo esc_html($tourivoHeading ?: $tourivoSiteName); ?></title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Noto Sans Bengali', 'SolaimanLipi', 'Bangla';
+            /* Bengali faces come before the generic family: many mail apps stop at the first generic name. */
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans Bengali', 'Nirmala UI', 'Kohinoor Bangla', 'Vrinda', 'SolaimanLipi', sans-serif;
             line-height: 1.6;
             color: #1e293b;
             margin: 0;
@@ -59,13 +60,13 @@ if (function_exists('tourivo_current_locale')) {
         .tourivo-email-header h1 {
             margin: 0;
             font-size: 22px;
-            font-weight: 800;
+            font-weight: 700;
             color: #ffffff;
         }
         .tourivo-email-header p {
             margin: 6px 0 0 0;
             opacity: 0.92;
-            font-size: 13.5px;
+            font-size: 14px;
             color: #ffffff;
         }
         .tourivo-email-content {
@@ -83,7 +84,7 @@ if (function_exists('tourivo_current_locale')) {
             justify-content: space-between;
             padding: 7px 0;
             border-bottom: 1px solid #e2e8f0;
-            font-size: 13.5px;
+            font-size: 14px;
         }
         .tourivo-info-row:last-child {
             border-bottom: none;
@@ -114,8 +115,8 @@ if (function_exists('tourivo_current_locale')) {
             color: #92400e;
             padding: 4px 10px;
             border-radius: 4px;
-            font-size: 11px;
-            font-weight: 800;
+            font-size: 13px;
+            font-weight: 700;
             display: inline-block;
             margin-bottom: 10px;
             text-transform: uppercase;
@@ -123,7 +124,7 @@ if (function_exists('tourivo_current_locale')) {
         }
         .tourivo-email-footer {
             text-align: center;
-            font-size: 12px;
+            font-size: 13px;
             color: #64748b;
             padding: 20px 24px;
             background: #f8fafc;
@@ -140,7 +141,7 @@ if (function_exists('tourivo_current_locale')) {
             padding: 14px 16px;
             margin: 16px 0;
             color: #166534;
-            font-size: 13.5px;
+            font-size: 14px;
         }
         .tourivo-warning-box {
             background: #fffbeb;
@@ -149,7 +150,7 @@ if (function_exists('tourivo_current_locale')) {
             padding: 14px 16px;
             margin: 16px 0;
             color: #92400e;
-            font-size: 13.5px;
+            font-size: 14px;
         }
     </style>
 </head>

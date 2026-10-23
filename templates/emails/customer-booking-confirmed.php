@@ -104,7 +104,7 @@ $tourivoDate    = static function (string $value): string {
 <?php if (!empty($tourivoPayment) && (empty($tourivoBooking['payment_status']) || $tourivoBooking['payment_status'] !== 'paid')) : ?>
     <div class="tourivo-info-card" style="background: #eff6ff; border-color: #bfdbfe;">
         <h4 style="margin: 0 0 6px 0; color: #1e40af;"><?php esc_html_e('Payment Instructions', 'tourivo'); ?></h4>
-        <div style="font-size: 13.5px; color: #1e3a8a; line-height: 1.5;">
+        <div style="font-size: 14px; color: #1e3a8a; line-height: 1.5;">
             <?php echo nl2br(esc_html($tourivoPayment)); ?>
         </div>
     </div>

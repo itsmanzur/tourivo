@@ -23,10 +23,10 @@ $tourivoSiteName = isset($siteName) && is_string($siteName) ? $siteName : get_bl
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php esc_html_e('Booking Confirmation', 'tourivo'); ?></title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 20px; background-color: #f1f5f9; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, 'Noto Sans Bengali', 'Nirmala UI', 'Kohinoor Bangla', 'Vrinda', 'SolaimanLipi', sans-serif; line-height: 1.6; color: #1e293b; margin: 0; padding: 20px; background-color: #f1f5f9; }
         .container { max-width: 600px; margin: 0 auto; background: #ffffff; border-radius: 12px; overflow: hidden; border: 1px solid #e2e8f0; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); }
         .header { background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%); color: #ffffff; padding: 32px 24px; text-align: center; }
-        .header h1 { margin: 0; font-size: 24px; font-weight: 800; }
+        .header h1 { margin: 0; font-size: 24px; font-weight: 700; }
         .header p { margin: 6px 0 0 0; opacity: 0.9; font-size: 14px; }
         .content { padding: 28px 24px; }
         .info-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 18px; margin: 20px 0; }
@@ -36,9 +36,9 @@ $tourivoSiteName = isset($siteName) && is_string($siteName) ? $siteName : get_bl
         .info-value { color: #0f172a; font-weight: 700; text-align: right; }
         .total-box { background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 8px; padding: 16px; margin-top: 20px; text-align: center; }
         .total-box .total-label { font-size: 13px; color: #15803d; font-weight: 600; text-transform: uppercase; }
-        .total-box .total-val { font-size: 26px; color: #166534; font-weight: 800; }
-        .test-badge { background: #fef3c7; color: #92400e; padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700; display: inline-block; margin-bottom: 12px; }
-        .footer { text-align: center; font-size: 12px; color: #64748b; padding: 20px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; }
+        .total-box .total-val { font-size: 26px; color: #166534; font-weight: 700; }
+        .test-badge { background: #fef3c7; color: #92400e; padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 700; display: inline-block; margin-bottom: 12px; }
+        .footer { text-align: center; font-size: 13px; color: #64748b; padding: 20px 24px; background: #f8fafc; border-top: 1px solid #e2e8f0; }
         .footer a { color: #0284c7; text-decoration: none; }
     </style>
 </head>

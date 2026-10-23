@@ -115,7 +115,7 @@ class InquiriesTable
                                 <br><small>👥 <?php echo esc_html((string) $inq['guests']); ?> <?php esc_html_e('Guests', 'tourivo'); ?></small>
                             </td>
                             <td>
-                                <div style="max-height: 80px; overflow-y: auto; font-size: 13px; line-height: 1.4; background: #f8fafc; padding: 8px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                <div style="max-height: 80px; overflow-y: auto; font-size: var(--trv-admin-text-sm); line-height: 1.45; background: #f8fafc; padding: 8px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
                                     <?php echo nl2br(esc_html($inq['message'])); ?>
                                 </div>
                             </td>
