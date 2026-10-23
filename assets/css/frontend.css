@@ -131,6 +131,23 @@
     color: var(--trv-primary);
 }
 
+/* The tour's badge (e.g. "Bestseller") next to the back link, styled like the card ribbon. */
+.tourivo-ribbon-inline {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: #fff7ed;
+    color: #c2410c;
+    font-size: var(--trv-text-xs);
+    font-weight: var(--trv-weight-semibold);
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+}
+
+.tourivo-ribbon-inline:lang(bn) {
+    letter-spacing: normal;
+}
+
 .tourivo-title {
     font-size: var(--trv-text-3xl);
     font-weight: var(--trv-weight-semibold);
