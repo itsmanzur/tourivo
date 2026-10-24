@@ -67,6 +67,18 @@ if (!file_exists($moFile)) {
     echo "==> Languages & MO binary files verified (" . number_format(filesize($moFile)) . " bytes)\n";
 }
 
+// `wp i18n make-php` writes .l10n.php files without a direct-access guard,
+// which Plugin Check reports as an error. Add it back after every regeneration.
+foreach (glob($pluginRoot . '/languages/*.l10n.php') ?: [] as $l10nFile) {
+    $l10n = (string) file_get_contents($l10nFile);
+    if (!preg_match('/defined\(\s*[\'"]ABSPATH[\'"]\s*\)/', $l10n)) {
+        $eol  = str_contains($l10n, "\r\n") ? "\r\n" : "\n";
+        $l10n = (string) preg_replace('/^<\?php\R/', '<?php' . $eol . "defined('ABSPATH') || exit;" . $eol, $l10n, 1);
+        file_put_contents($l10nFile, $l10n);
+        echo "==> Added ABSPATH guard to languages/" . basename($l10nFile) . "\n";
+    }
+}
+
 // 4. Setup dist directory
 $distDir = $pluginRoot . '/dist';
 if (!is_dir($distDir)) {

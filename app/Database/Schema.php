@@ -92,7 +92,7 @@ class Schema
             // 1.4.0 introduced email verification: NULL now means "awaiting verification", so every
             // pre-existing booking must be backfilled as already verified or it would be auto-cancelled.
             if ($installedVersion !== '0.0.0' && version_compare($installedVersion, '1.4.0', '<')) {
-                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
                 $wpdb->query("UPDATE {$prefix}bookings SET email_verified_at = created_at WHERE email_verified_at IS NULL");
             }
 

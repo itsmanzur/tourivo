@@ -512,7 +512,9 @@ class Seeder
     {
         $existing = get_posts([
             'post_type'      => [TourPostType::POST_TYPE, HotelPostType::POST_TYPE],
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_key -- Admin-only existence check, LIMIT 1.
             'meta_key'       => '_tourivo_demo',
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_meta_value -- Admin-only existence check, LIMIT 1.
             'meta_value'     => '1',
             'posts_per_page' => 1,
             'post_status'    => 'any',

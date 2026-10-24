@@ -10,6 +10,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
+
 if (function_exists('tourivo_load_plugin_textdomain')) {
     tourivo_load_plugin_textdomain();
 }

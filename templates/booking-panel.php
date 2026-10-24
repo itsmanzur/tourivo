@@ -16,6 +16,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template included inside a function; these variables are local.
+
 if (function_exists('tourivo_load_plugin_textdomain')) {
     tourivo_load_plugin_textdomain();
 }

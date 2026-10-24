@@ -819,6 +819,7 @@ class InventoryService
         // Execute batch upsert inside database transaction
         global $wpdb;
         if ($wpdb) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Transaction control, nothing to cache.
             $wpdb->query('START TRANSACTION');
         }
 
@@ -838,6 +839,7 @@ class InventoryService
 
             if (!$ok) {
                 if ($wpdb) {
+                    // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Transaction control, nothing to cache.
                     $wpdb->query('ROLLBACK');
                 }
                 return [
@@ -850,6 +852,7 @@ class InventoryService
         }
 
         if ($wpdb) {
+            // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Transaction control, nothing to cache.
             $wpdb->query('COMMIT');
         }
 
@@ -1237,6 +1240,7 @@ class InventoryService
 
         $destination = sanitize_title($destination);
         if ($destination !== '') {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- One destination term on a small, paged listing query.
             $args['tax_query'] = [
                 [
                     'taxonomy' => 'tourivo_destination',
@@ -1268,6 +1272,7 @@ class InventoryService
 
         $destination = sanitize_title($destination);
         if ($destination !== '') {
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- One destination term on a small, paged listing query.
             $args['tax_query'] = [
                 [
                     'taxonomy' => 'tourivo_destination',
