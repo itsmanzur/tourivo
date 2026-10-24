@@ -1747,3 +1747,144 @@ td .tourivo-empty {
     font-size: var(--trv-admin-text-lg);
     font-weight: 600;
 }
+
+/* =======================================================
+   SETTINGS FIELDS
+   One width and one height for every field, so the columns line up.
+   ======================================================= */
+.tourivo-settings-box {
+    box-sizing: border-box;
+}
+
+.tourivo-settings-form input[type="text"],
+.tourivo-settings-form input[type="email"],
+.tourivo-settings-form input[type="url"],
+.tourivo-settings-form input[type="password"],
+.tourivo-settings-form input[type="tel"],
+.tourivo-settings-form input[type="number"],
+.tourivo-settings-form select {
+    min-height: 40px;
+    font-size: var(--trv-admin-text-base);
+}
+
+.tourivo-settings-box .form-table td > input[type="text"]:not(.small-text),
+.tourivo-settings-box .form-table td > input[type="email"],
+.tourivo-settings-box .form-table td > input[type="url"],
+.tourivo-settings-box .form-table td > input[type="password"],
+.tourivo-settings-box .form-table td > select,
+.tourivo-settings-box .form-table td > .tourivo-inline-fields > input[type="password"] {
+    width: 100%;
+    max-width: 460px;
+}
+
+.tourivo-settings-box .form-table td > select {
+    padding-right: 32px;
+}
+
+.tourivo-settings-form input.small-text {
+    width: 96px;
+}
+
+.tourivo-settings-form input.tourivo-input-symbol {
+    width: 72px;
+    text-align: center;
+}
+
+.tourivo-settings-form .form-table td textarea {
+    width: 100%;
+    max-width: 460px;
+    font-size: var(--trv-admin-text-base);
+}
+
+.tourivo-settings-form .form-table td {
+    color: #334155;
+}
+
+.tourivo-settings-form .form-table td .description {
+    max-width: 640px;
+    margin-top: 6px;
+    line-height: 1.55;
+}
+
+/* A number with its unit ("2 decimals", "60 minutes") or a field with its button. */
+.tourivo-inline-fields {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.tourivo-inline-fields > input,
+.tourivo-inline-fields > select,
+.tourivo-inline-fields > .button {
+    margin: 0;
+}
+
+.tourivo-inline-fields > input[type="password"],
+.tourivo-inline-fields > input[type="email"] {
+    flex: 1 1 220px;
+}
+
+.tourivo-inline-fields > span {
+    color: #64748b;
+}
+
+/* Sub-sections inside one card (Bank transfer / Cash on arrival). */
+.tourivo-settings-subhead {
+    margin: 24px 0 4px;
+    padding-top: 20px;
+    border-top: 1px solid var(--trv-ui-border, #e2e8f0);
+    font-size: var(--trv-admin-text-base);
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.tourivo-settings-box > .description + .tourivo-settings-subhead {
+    margin-top: 16px;
+}
+
+/* Colour pickers with their hex code. */
+.tourivo-color-input {
+    width: 44px;
+    height: 40px;
+    padding: 2px;
+    vertical-align: middle;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+    background: #fff;
+    cursor: pointer;
+}
+
+.tourivo-color-input + code {
+    margin-left: 8px;
+    vertical-align: middle;
+}
+
+/* Read-only tables (exchange rates, system information). */
+.tourivo-settings-table {
+    max-width: 640px;
+    margin-top: 12px;
+}
+
+.tourivo-settings-table td,
+.tourivo-settings-table th {
+    padding: 10px 12px;
+}
+
+.tourivo-settings-tip {
+    max-width: 640px;
+    padding: 16px;
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 8px;
+}
+
+@media (max-width: 782px) {
+    .tourivo-settings-box .form-table td > input[type="text"],
+    .tourivo-settings-box .form-table td > input[type="email"],
+    .tourivo-settings-box .form-table td > input[type="url"],
+    .tourivo-settings-box .form-table td > input[type="password"],
+    .tourivo-settings-box .form-table td > select {
+        max-width: 100%;
+    }
+}

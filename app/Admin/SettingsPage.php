@@ -400,7 +400,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="currency_symbol"><?php esc_html_e('Currency Symbol', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="currency_symbol" type="text" id="currency_symbol" value="<?php echo esc_attr($currencySymbol); ?>" class="regular-text" style="max-width: 100px;">
+                                    <input name="currency_symbol" type="text" id="currency_symbol" value="<?php echo esc_attr($currencySymbol); ?>" class="small-text tourivo-input-symbol">
                                 </td>
                             </tr>
 
@@ -418,19 +418,20 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="number_of_decimals"><?php esc_html_e('Number Format', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="number_of_decimals" type="number" id="number_of_decimals" min="0" max="4" value="<?php echo esc_attr((string) $numDecimals); ?>" class="small-text">
-                                    <?php esc_html_e('decimals', 'tourivo'); ?>
-                                    &nbsp;
-                                    <select name="decimal_separator" id="decimal_separator" aria-label="<?php esc_attr_e('Decimal separator', 'tourivo'); ?>">
-                                        <option value="." <?php selected($decimalSep, '.'); ?>><?php esc_html_e('Decimal: . (period)', 'tourivo'); ?></option>
-                                        <option value="," <?php selected($decimalSep, ','); ?>><?php esc_html_e('Decimal: , (comma)', 'tourivo'); ?></option>
-                                    </select>
-                                    <select name="thousand_separator" id="thousand_separator" aria-label="<?php esc_attr_e('Thousands separator', 'tourivo'); ?>">
-                                        <option value="," <?php selected($thousandSep, ','); ?>><?php esc_html_e('Thousands: , (comma)', 'tourivo'); ?></option>
-                                        <option value="." <?php selected($thousandSep, '.'); ?>><?php esc_html_e('Thousands: . (period)', 'tourivo'); ?></option>
-                                        <option value=" " <?php selected($thousandSep, ' '); ?>><?php esc_html_e('Thousands: space', 'tourivo'); ?></option>
-                                        <option value="" <?php selected($thousandSep, ''); ?>><?php esc_html_e('Thousands: none', 'tourivo'); ?></option>
-                                    </select>
+                                    <div class="tourivo-inline-fields">
+                                        <input name="number_of_decimals" type="number" id="number_of_decimals" min="0" max="4" value="<?php echo esc_attr((string) $numDecimals); ?>" class="small-text">
+                                        <span><?php esc_html_e('decimals', 'tourivo'); ?></span>
+                                        <select name="decimal_separator" id="decimal_separator" aria-label="<?php esc_attr_e('Decimal separator', 'tourivo'); ?>">
+                                            <option value="." <?php selected($decimalSep, '.'); ?>><?php esc_html_e('Decimal: . (period)', 'tourivo'); ?></option>
+                                            <option value="," <?php selected($decimalSep, ','); ?>><?php esc_html_e('Decimal: , (comma)', 'tourivo'); ?></option>
+                                        </select>
+                                        <select name="thousand_separator" id="thousand_separator" aria-label="<?php esc_attr_e('Thousands separator', 'tourivo'); ?>">
+                                            <option value="," <?php selected($thousandSep, ','); ?>><?php esc_html_e('Thousands: , (comma)', 'tourivo'); ?></option>
+                                            <option value="." <?php selected($thousandSep, '.'); ?>><?php esc_html_e('Thousands: . (period)', 'tourivo'); ?></option>
+                                            <option value=" " <?php selected($thousandSep, ' '); ?>><?php esc_html_e('Thousands: space', 'tourivo'); ?></option>
+                                            <option value="" <?php selected($thousandSep, ''); ?>><?php esc_html_e('Thousands: none', 'tourivo'); ?></option>
+                                        </select>
+                                    </div>
                                 </td>
                             </tr>
                         </table>
@@ -458,7 +459,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="tax_rate"><?php esc_html_e('Tax Rate (%)', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="tax_rate" type="number" step="0.01" min="0" max="100" id="tax_rate" value="<?php echo esc_attr((string) $taxRate); ?>" class="regular-text" style="max-width: 120px;">
+                                    <input name="tax_rate" type="number" step="0.01" min="0" max="100" id="tax_rate" value="<?php echo esc_attr((string) $taxRate); ?>" class="small-text">
                                 </td>
                             </tr>
                             <tr>
@@ -488,7 +489,7 @@ class SettingsPage
                         <h2><?php esc_html_e('Supported Multi-Currencies for Frontend Switcher', 'tourivo'); ?></h2>
                         <p class="description"><?php esc_html_e('These exchange rates are used when travelers switch currencies with [tourivo_currency_switcher]:', 'tourivo'); ?></p>
                         
-                        <table class="widefat striped" style="max-width: 600px; margin-top: 10px;">
+                        <table class="widefat striped tourivo-settings-table">
                             <thead>
                                 <tr>
                                     <th><?php esc_html_e('Currency', 'tourivo'); ?></th>
@@ -500,8 +501,8 @@ class SettingsPage
                                 <?php foreach ($currencies as $code => $c) : ?>
                                     <tr>
                                         <td><strong><?php echo esc_html($code); ?></strong> (<?php echo esc_html($c['name']); ?>)</td>
-                                        <td><code><?php echo esc_html($c['symbol']); ?></code></td>
-                                        <td><code><?php echo esc_html((string)$c['rate']); ?></code></td>
+                                        <td><?php echo esc_html($c['symbol']); ?></td>
+                                        <td><?php echo esc_html((string)$c['rate']); ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             </tbody>
@@ -659,7 +660,7 @@ class SettingsPage
                         <p class="description"><?php esc_html_e('Configure structured bank details for direct wire transfer and Pay-on-Arrival terms for bookings without online payment gateways.', 'tourivo'); ?></p>
 
                         <!-- Bank Transfer Configuration -->
-                        <h3 style="margin-top: 20px; font-size: var(--trv-admin-text-lg); color: #1e293b;"><?php esc_html_e('Direct Bank Transfer (Wire / Deposit)', 'tourivo'); ?></h3>
+                        <h3 class="tourivo-settings-subhead"><?php esc_html_e('Direct Bank Transfer (Wire / Deposit)', 'tourivo'); ?></h3>
                         <table class="form-table">
                             <tr>
                                 <th scope="row"><?php esc_html_e('Enable Bank Transfer', 'tourivo'); ?></th>
@@ -685,19 +686,19 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="bank_account_number"><?php esc_html_e('Account Number', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_account_number" type="text" id="bank_account_number" value="<?php echo esc_attr($bankAccountNumber); ?>" class="regular-text code" placeholder="<?php esc_attr_e('e.g. 01-2345678-01', 'tourivo'); ?>">
+                                    <input name="bank_account_number" type="text" id="bank_account_number" value="<?php echo esc_attr($bankAccountNumber); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. 01-2345678-01', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="bank_iban"><?php esc_html_e('IBAN (International)', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_iban" type="text" id="bank_iban" value="<?php echo esc_attr($bankIban); ?>" class="regular-text code" placeholder="<?php esc_attr_e('e.g. GB29NWBK60161331926819', 'tourivo'); ?>">
+                                    <input name="bank_iban" type="text" id="bank_iban" value="<?php echo esc_attr($bankIban); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. GB29NWBK60161331926819', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="bank_swift_routing"><?php esc_html_e('SWIFT / BIC / Routing Code', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="bank_swift_routing" type="text" id="bank_swift_routing" value="<?php echo esc_attr($bankSwiftRouting); ?>" class="regular-text code" placeholder="<?php esc_attr_e('e.g. CIBLBDDH', 'tourivo'); ?>">
+                                    <input name="bank_swift_routing" type="text" id="bank_swift_routing" value="<?php echo esc_attr($bankSwiftRouting); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. CIBLBDDH', 'tourivo'); ?>">
                                 </td>
                             </tr>
                             <tr>
@@ -715,7 +716,7 @@ class SettingsPage
                         </table>
 
                         <!-- Cash on Arrival Configuration -->
-                        <h3 style="margin-top: 25px; font-size: var(--trv-admin-text-lg); color: #1e293b;"><?php esc_html_e('Cash on Arrival / Pay at Check-in', 'tourivo'); ?></h3>
+                        <h3 class="tourivo-settings-subhead"><?php esc_html_e('Cash on Arrival / Pay at Check-in', 'tourivo'); ?></h3>
                         <table class="form-table">
                             <tr>
                                 <th scope="row"><?php esc_html_e('Enable Cash on Arrival', 'tourivo'); ?></th>
@@ -746,7 +747,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="primary_color"><?php esc_html_e('Primary Brand Color', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="primary_color" type="color" id="primary_color" value="<?php echo esc_attr($primaryColor); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <input name="primary_color" type="color" id="primary_color" value="<?php echo esc_attr($primaryColor); ?>" class="tourivo-color-input">
                                     <code><?php echo esc_html($primaryColor); ?></code>
                                     <p class="description"><?php esc_html_e('Used for primary booking buttons, price tags, active calendar dates, and highlights.', 'tourivo'); ?></p>
                                 </td>
@@ -754,14 +755,14 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="primary_hover"><?php esc_html_e('Primary Hover Color', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="primary_hover" type="color" id="primary_hover" value="<?php echo esc_attr($primaryHover); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <input name="primary_hover" type="color" id="primary_hover" value="<?php echo esc_attr($primaryHover); ?>" class="tourivo-color-input">
                                     <code><?php echo esc_html($primaryHover); ?></code>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="row"><label for="accent_color"><?php esc_html_e('Accent / Badge Color', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="accent_color" type="color" id="accent_color" value="<?php echo esc_attr($accentColor); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <input name="accent_color" type="color" id="accent_color" value="<?php echo esc_attr($accentColor); ?>" class="tourivo-color-input">
                                     <code><?php echo esc_html($accentColor); ?></code>
                                     <p class="description"><?php esc_html_e('Used for promotional ribbons, star ratings, and discount tags.', 'tourivo'); ?></p>
                                 </td>
@@ -769,7 +770,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="button_text_color"><?php esc_html_e('Button Text Color', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="button_text_color" type="color" id="button_text_color" value="<?php echo esc_attr($btnTextColor); ?>" style="width: 50px; height: 35px; vertical-align: middle; cursor: pointer;">
+                                    <input name="button_text_color" type="color" id="button_text_color" value="<?php echo esc_attr($btnTextColor); ?>" class="tourivo-color-input">
                                     <code><?php echo esc_html($btnTextColor); ?></code>
                                 </td>
                             </tr>
@@ -909,7 +910,7 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="offline_payment_instructions"><?php esc_html_e('Offline / Manual Payment Instructions', 'tourivo'); ?></label></th>
                                 <td>
-                                    <textarea name="offline_payment_instructions" id="offline_payment_instructions" rows="4" class="large-text code" placeholder="<?php esc_attr_e("Bank Transfer Details:\nBank: City Bank\nAccount: 123456789\nOr bKash Merchant: 01700000000 (Use booking code as reference)", 'tourivo'); ?>"><?php echo esc_textarea($offlinePayment); ?></textarea>
+                                    <textarea name="offline_payment_instructions" id="offline_payment_instructions" rows="4" class="large-text" placeholder="<?php esc_attr_e("Bank Transfer Details:\nBank: City Bank\nAccount: 123456789\nOr bKash Merchant: 01700000000 (Use booking code as reference)", 'tourivo'); ?>"><?php echo esc_textarea($offlinePayment); ?></textarea>
                                     <p class="description"><?php esc_html_e('Included in Pending Booking emails via the {offline_payment_instructions} placeholder for manual bank wire, bKash, or pay-on-arrival instructions.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
@@ -984,8 +985,8 @@ class SettingsPage
                         <h2><?php esc_html_e('Test Email Dispatcher', 'tourivo'); ?></h2>
                         <p class="description"><?php esc_html_e('Send a sample email to verify your WordPress mail server setup and layout rendering.', 'tourivo'); ?></p>
                         
-                        <div style="display: flex; gap: 10px; align-items: center; margin-top: 12px; flex-wrap: wrap;">
-                            <select id="tourivo_test_email_type" class="regular-text" style="max-width: 280px;">
+                        <div class="tourivo-inline-fields">
+                            <select id="tourivo_test_email_type">
                                 <?php foreach ($emailTemplates as $tmplKey => $tmpl) : ?>
                                     <option value="<?php echo esc_attr($tmplKey); ?>"><?php echo esc_html($tmpl['title']); ?></option>
                                 <?php endforeach; ?>
@@ -1017,8 +1018,10 @@ class SettingsPage
                             <tr>
                                 <th scope="row"><label for="webhook_secret"><?php esc_html_e('Secret Key (HMAC SHA-256)', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="webhook_secret" type="password" autocomplete="new-password" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. secret_trv_xxxx', 'tourivo'); ?>" style="max-width: 400px;">
-                                    <button type="button" class="button" id="tourivo-gen-secret-btn"><?php esc_html_e('Generate Secret', 'tourivo'); ?></button>
+                                    <div class="tourivo-inline-fields">
+                                        <input name="webhook_secret" type="password" autocomplete="new-password" id="webhook_secret" value="<?php echo esc_attr($webhookSecret); ?>" class="regular-text" placeholder="<?php esc_attr_e('e.g. secret_trv_xxxx', 'tourivo'); ?>">
+                                        <button type="button" class="button" id="tourivo-gen-secret-btn"><?php esc_html_e('Generate Secret', 'tourivo'); ?></button>
+                                    </div>
                                     <p class="description"><?php esc_html_e('Optional secret key used to compute the X-Tourivo-Signature HTTP header for payload verification.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
@@ -1235,8 +1238,10 @@ class SettingsPage
                             </tr>
                         </table>
 
+                    </div>
+                    <div class="tourivo-settings-box">
                         <h2><?php esc_html_e('Setup Wizard & Demo Tools', 'tourivo'); ?></h2>
-                        <div style="background: #f0fdfa; border: 1px solid #99f6e4; border-radius: 8px; padding: 16px; margin-bottom: 20px; max-width: 600px;">
+                        <div class="tourivo-settings-tip">
                             <h4 style="margin: 0 0 6px; color: #0f766e;"><?php esc_html_e('Quick Onboarding & Sample Data', 'tourivo'); ?></h4>
                             <p style="margin: 0 0 12px; font-size: var(--trv-admin-text-sm); color: #115e59;"><?php esc_html_e('Need to regenerate core pages, re-configure currency, or re-import sample demo tours and boutique hotels?', 'tourivo'); ?></p>
                             <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button button-secondary">
@@ -1248,7 +1253,7 @@ class SettingsPage
                     <div class="tourivo-settings-box">
 
                         <h2><?php esc_html_e('System Information', 'tourivo'); ?></h2>
-                        <table class="widefat striped" style="max-width: 600px;">
+                        <table class="widefat striped tourivo-settings-table">
                             <tbody>
                                 <tr>
                                     <td><strong><?php esc_html_e('Tourivo Core Version', 'tourivo'); ?></strong></td>
