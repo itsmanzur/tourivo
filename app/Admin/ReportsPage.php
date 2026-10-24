@@ -60,9 +60,9 @@ class ReportsPage
         ?>
         <div class="wrap tourivo-admin-wrap tourivo-reports-wrap">
             <!-- Header & Filter Bar -->
-            <div class="tourivo-dashboard-header tourivo-reports-header">
-                <div>
-                    <h1 class="wp-heading-inline"><?php esc_html_e('Analytics & Business Reports', 'tourivo'); ?></h1>
+            <div class="tourivo-page-header tourivo-reports-header">
+                <div class="tourivo-page-header__text">
+                    <h1><?php esc_html_e('Analytics & Business Reports', 'tourivo'); ?></h1>
                     <p class="tourivo-subtitle">
                         <?php
                         printf(
@@ -74,19 +74,20 @@ class ReportsPage
                     </p>
                 </div>
                 <div class="header-actions">
-                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" style="display:inline-block;">
+                    <form method="post" action="<?php echo esc_url(admin_url('admin-post.php')); ?>" class="tourivo-inline-form">
                         <input type="hidden" name="action" value="tourivo_export_accounting_csv">
                         <input type="hidden" name="period" value="<?php echo esc_attr($range['period']); ?>">
                         <input type="hidden" name="start_date" value="<?php echo esc_attr(substr($range['start'], 0, 10)); ?>">
                         <input type="hidden" name="end_date" value="<?php echo esc_attr(substr($range['end'], 0, 10)); ?>">
                         <?php wp_nonce_field('tourivo_reports_action', 'tourivo_reports_nonce'); ?>
                         <button type="submit" class="button button-primary">
-                            <span class="dashicons dashicons-media-spreadsheet" style="vertical-align: middle; margin-top: -2px;"></span>
+                            <span class="dashicons dashicons-media-spreadsheet" aria-hidden="true"></span>
                             <?php esc_html_e('Export Accounting & Tax CSV', 'tourivo'); ?>
                         </button>
                     </form>
                 </div>
             </div>
+            <hr class="wp-header-end">
 
             <!-- Date Range Filter Toolbar -->
             <div class="tourivo-card-box tourivo-reports-filter-box">
@@ -217,7 +218,7 @@ class ReportsPage
                 <div class="box-header">
                     <h2><?php esc_html_e('Sales & Booking Volume Timeline', 'tourivo'); ?></h2>
                     <span class="tourivo-chart-legend">
-                        <span class="legend-dot" style="background:#0284c7;"></span> <?php esc_html_e('Daily Revenue', 'tourivo'); ?>
+                        <span class="legend-dot"></span> <?php esc_html_e('Daily Revenue', 'tourivo'); ?>
                     </span>
                 </div>
                 <div class="tourivo-timeline-chart-container">
@@ -257,7 +258,7 @@ class ReportsPage
                 <div class="tourivo-card-box">
                     <div class="box-header">
                         <h2>
-                            <span class="dashicons dashicons-palmtree" style="color:#0284c7;"></span>
+                            <span class="dashicons dashicons-palmtree"></span>
                             <?php esc_html_e('Top Tour Packages', 'tourivo'); ?>
                         </h2>
                     </div>
@@ -300,7 +301,7 @@ class ReportsPage
                 <div class="tourivo-card-box">
                     <div class="box-header">
                         <h2>
-                            <span class="dashicons dashicons-admin-home" style="color:#8b5cf6;"></span>
+                            <span class="dashicons dashicons-admin-home"></span>
                             <?php esc_html_e('Top Hotel Stays & Rooms', 'tourivo'); ?>
                         </h2>
                     </div>

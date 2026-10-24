@@ -52,12 +52,12 @@ class DocumentationPage
                 <div class="tourivo-docs-nav">
                     <ul>
                         <li class="active"><a href="#doc-intro"><span class="dashicons dashicons-info-outline"></span> <?php esc_html_e('1. Introduction & Quick Start', 'tourivo'); ?></a></li>
-                        <li><a href="#doc-features"><span class="dashicons dashicons-awards" style="color:#0284c7;"></span> <strong><?php esc_html_e('2. ✨ All Features Catalog', 'tourivo'); ?></strong></a></li>
+                        <li><a href="#doc-features"><span class="dashicons dashicons-awards" style="color:#0d9488;"></span> <strong><?php esc_html_e('2. All Features Catalog', 'tourivo'); ?></strong></a></li>
                         <li><a href="#doc-tours"><span class="dashicons dashicons-palmtree"></span> <?php esc_html_e('3. Creating Tour Packages', 'tourivo'); ?></a></li>
                         <li><a href="#doc-hotels"><span class="dashicons dashicons-building"></span> <?php esc_html_e('4. Hotels & Room Listings', 'tourivo'); ?></a></li>
                         <li><a href="#doc-embed"><span class="dashicons dashicons-shortcode"></span> <?php esc_html_e('5. Page Builders & Shortcodes', 'tourivo'); ?></a></li>
                         <li><a href="#doc-bookings"><span class="dashicons dashicons-calendar-alt"></span> <?php esc_html_e('6. Managing Orders & Bookings', 'tourivo'); ?></a></li>
-                        <li><a href="#doc-availability"><span class="dashicons dashicons-calendar" style="color:#0284c7;"></span> <strong><?php esc_html_e('7. 📅 Availability & Pricing Manager', 'tourivo'); ?></strong></a></li>
+                        <li><a href="#doc-availability"><span class="dashicons dashicons-calendar" style="color:#0d9488;"></span> <strong><?php esc_html_e('7. Availability & Pricing Manager', 'tourivo'); ?></strong></a></li>
                         <li><a href="#doc-pro"><span class="dashicons dashicons-star-filled" style="color:#f59e0b;"></span> <?php esc_html_e('8. Tourivo Pro Features', 'tourivo'); ?></a></li>
                     </ul>
                 </div>
@@ -92,7 +92,7 @@ class DocumentationPage
 
                         <hr class="doc-divider">
 
-                        <h3><?php esc_html_e('🚀 4-Step Quick Launch Checklist', 'tourivo'); ?></h3>
+                        <h3><?php esc_html_e('4-Step Quick Launch Checklist', 'tourivo'); ?></h3>
                         <div class="quick-launch-steps">
                             <div class="launch-step">
                                 <div class="step-num">1</div>
@@ -108,8 +108,8 @@ class DocumentationPage
                                     <strong><?php esc_html_e('Import Starter Demo Data (Recommended for Beginners)', 'tourivo'); ?></strong>
                                     <p><?php esc_html_e('Instantly create complete starter packages: 3 guided tours (Bali, Swiss Alps, Dubai) and 2 boutique hotels with 4 rooms to see full itineraries, rooms, and booking forms in action.', 'tourivo'); ?></p>
                                     <div style="margin-top: 8px;">
-                                        <button type="button" class="button button-primary tourivo-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>" style="background: #0284c7; border-color: #0284c7; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
-                                            <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('⚡ Import Starter Demo Content Now', 'tourivo'); ?>
+                                        <button type="button" class="button button-primary tourivo-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>" style="background: #0d9488; border-color: #0d9488; font-weight:600; display:inline-flex; align-items:center; gap:6px;">
+                                            <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('Import Starter Demo Content Now', 'tourivo'); ?>
                                         </button>
                                         <div class="tourivo-seeder-notice" style="display:none; margin-top:8px;"></div>
                                     </div>
@@ -133,15 +133,15 @@ class DocumentationPage
                         </div>
                     </div>
 
-                    <!-- TAB 2: ✨ All Features Catalog -->
+                    <!-- TAB 2: All Features Catalog -->
                     <div id="doc-features" class="tourivo-doc-pane">
-                        <h2><?php esc_html_e('✨ Complete Tourivo Feature Catalog', 'tourivo'); ?></h2>
+                        <h2><?php esc_html_e('Complete Tourivo Feature Catalog', 'tourivo'); ?></h2>
                         <p class="lead-paragraph">
                             <?php esc_html_e('Explore the complete roster of features engineered into Tourivo to power modern travel agencies, tour operators, and boutique hoteliers.', 'tourivo'); ?>
                         </p>
 
                         <!-- Feature Category 1: Tours & Trips -->
-                        <h3 style="margin-top: 24px;">🌴 <?php esc_html_e('Tour & Excursion Management', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 24px;"><?php esc_html_e('Tour & Excursion Management', 'tourivo'); ?></h3>
                         <div class="tourivo-feature-cards-grid">
                             <div class="feature-card">
                                 <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'tourivo'); ?></span>
@@ -161,7 +161,7 @@ class DocumentationPage
                         </div>
 
                         <!-- Feature Category 2: Hotels & Accommodations -->
-                        <h3 style="margin-top: 30px;">🏨 <?php esc_html_e('Hotels, Resorts & Accommodation Engine', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 30px;"><?php esc_html_e('Hotels, Resorts & Accommodation Engine', 'tourivo'); ?></h3>
                         <div class="tourivo-feature-cards-grid">
                             <div class="feature-card">
                                 <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'tourivo'); ?></span>
@@ -181,7 +181,7 @@ class DocumentationPage
                         </div>
 
                         <!-- Feature Category 3: Search, Filter & Wishlist -->
-                        <h3 style="margin-top: 30px;">⚡ <?php esc_html_e('Live Search, Filter & Traveler Wishlist', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 30px;"><?php esc_html_e('Live Search, Filter & Traveler Wishlist', 'tourivo'); ?></h3>
                         <div class="tourivo-feature-cards-grid">
                             <div class="feature-card">
                                 <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'tourivo'); ?></span>
@@ -201,7 +201,7 @@ class DocumentationPage
                         </div>
 
                         <!-- Feature Category 4: Reviews & Lead Capture -->
-                        <h3 style="margin-top: 30px;">⭐ <?php esc_html_e('Trust, Reviews & Lead Management', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 30px;"><?php esc_html_e('Trust, Reviews & Lead Management', 'tourivo'); ?></h3>
                         <div class="tourivo-feature-cards-grid">
                             <div class="feature-card">
                                 <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'tourivo'); ?></span>
@@ -221,7 +221,7 @@ class DocumentationPage
                         </div>
 
                         <!-- Feature Category 5: Operations & Safety -->
-                        <h3 style="margin-top: 30px;">🔒 <?php esc_html_e('Booking Operations & Safety', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 30px;"><?php esc_html_e('Booking Operations & Safety', 'tourivo'); ?></h3>
                         <div class="tourivo-feature-cards-grid">
                             <div class="feature-card">
                                 <span class="tourivo-badge tourivo-badge-paid" style="margin-bottom: 8px;"><?php esc_html_e('FREE CORE', 'tourivo'); ?></span>
@@ -241,7 +241,7 @@ class DocumentationPage
                         </div>
 
                         <!-- Feature Category 6: Tourivo Pro -->
-                        <h3 style="margin-top: 30px;">👑 <?php esc_html_e('Tourivo Pro Enterprise Upgrades', 'tourivo'); ?></h3>
+                        <h3 style="margin-top: 30px;"><?php esc_html_e('Tourivo Pro Enterprise Upgrades', 'tourivo'); ?></h3>
                         <div class="tourivo-feature-cards-grid">
                             <div class="feature-card" style="border-color: #fde68a;">
                                 <span class="tourivo-badge tourivo-badge-pending" style="margin-bottom: 8px;"><?php esc_html_e('PRO ADDON', 'tourivo'); ?></span>
@@ -516,8 +516,8 @@ class DocumentationPage
                                 <ul class="simple-checklist">
                                     <li><strong><?php esc_html_e('Booking Code:', 'tourivo'); ?></strong> <?php esc_html_e('Unique code generated for every reservation (e.g. #TRV-2026-X9A21B).', 'tourivo'); ?></li>
                                     <li><strong><?php esc_html_e('1-Click Confirm / Cancel:', 'tourivo'); ?></strong> <?php esc_html_e('Update status instantly with Ajax without page refreshes.', 'tourivo'); ?></li>
-                                    <li><strong><?php esc_html_e('Activity Timeline & Notes:', 'tourivo'); ?></strong> <?php esc_html_e('Click "👁️ Details" to read history and record staff notes.', 'tourivo'); ?></li>
-                                    <li><strong><?php esc_html_e('Advanced Export & Reporting (CSV):', 'tourivo'); ?></strong> <?php esc_html_e('Click "📥 Export Bookings" from the Dashboard or Bookings table to launch the export dialog. Filter by Booking vs Travel dates, booking/payment status, and specific tour/room. Generate standard booking lists, itemized line manifests, or financial summary reports with full Excel UTF-8 and formula-injection security.', 'tourivo'); ?></li>
+                                    <li><strong><?php esc_html_e('Activity Timeline & Notes:', 'tourivo'); ?></strong> <?php esc_html_e('Click "Details" to read history and record staff notes.', 'tourivo'); ?></li>
+                                    <li><strong><?php esc_html_e('Advanced Export & Reporting (CSV):', 'tourivo'); ?></strong> <?php esc_html_e('Click "Export Bookings" from the Dashboard or Bookings table to launch the export dialog. Filter by Booking vs Travel dates, booking/payment status, and specific tour/room. Generate standard booking lists, itemized line manifests, or financial summary reports with full Excel UTF-8 and formula-injection security.', 'tourivo'); ?></li>
                                 </ul>
                             </div>
 
@@ -568,8 +568,8 @@ class DocumentationPage
                             <li><strong><?php esc_html_e('Apply Changes:', 'tourivo'); ?></strong> <?php esc_html_e('Click "Apply to Selected Dates". The system updates the inventory atomically in a transaction, invalidates SEO caches, and writes an audit log.', 'tourivo'); ?></li>
                         </ol>
 
-                        <div style="background: #f0f9ff; border-left: 4px solid #0284c7; padding: 14px 18px; border-radius: 6px; margin-top: 16px;">
-                            <strong style="color: #0369a1;"><?php esc_html_e('💡 Developer Hook:', 'tourivo'); ?></strong>
+                        <div style="background: #f0fdfa; border-left: 4px solid #0d9488; padding: 14px 18px; border-radius: 6px; margin-top: 16px;">
+                            <strong style="color: #0f766e;"><?php esc_html_e('Developer Hook:', 'tourivo'); ?></strong>
                             <p style="margin: 4px 0 0 0; font-size: var(--trv-admin-text-sm); color: #0c4a6e;">
                                 <?php esc_html_e('Listen to availability updates via:', 'tourivo'); ?>
                                 <code>do_action("tourivo/availability_updated", $itemId, $itemType, $startDate, $endDate, $changes);</code>

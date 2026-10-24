@@ -51,19 +51,19 @@ class AdminDashboard
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
         ?>
         <div class="wrap tourivo-admin-wrap">
-            <div class="tourivo-dashboard-header">
-                <div>
-                    <h1 class="wp-heading-inline"><?php esc_html_e('Tourivo Dashboard', 'tourivo'); ?></h1>
+            <div class="tourivo-page-header">
+                <div class="tourivo-page-header__text">
+                    <h1><?php esc_html_e('Tourivo Dashboard', 'tourivo'); ?></h1>
                     <p class="tourivo-subtitle"><?php esc_html_e('Welcome back! Overview of your travel packages, hotel rooms, and live booking activity.', 'tourivo'); ?></p>
                 </div>
                 <div class="header-actions">
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button">🪄 <?php esc_html_e('Setup Wizard', 'tourivo'); ?></a>
-                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-reports')); ?>" class="button">📊 <?php esc_html_e('Reports', 'tourivo'); ?></a>
-                    <button type="button" class="button tourivo-open-export-modal-btn">📥 <?php esc_html_e('Export Bookings', 'tourivo'); ?></button>
-                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_tour')); ?>" class="button button-primary">+ <?php esc_html_e('New Tour', 'tourivo'); ?></a>
-                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_hotel')); ?>" class="button">+ <?php esc_html_e('New Hotel', 'tourivo'); ?></a>
+                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-reports')); ?>" class="button"><span class="dashicons dashicons-chart-bar" aria-hidden="true"></span><?php esc_html_e('Reports', 'tourivo'); ?></a>
+                    <button type="button" class="button tourivo-open-export-modal-btn"><span class="dashicons dashicons-download" aria-hidden="true"></span><?php esc_html_e('Export Bookings', 'tourivo'); ?></button>
+                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_hotel')); ?>" class="button"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('New Hotel', 'tourivo'); ?></a>
+                    <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_tour')); ?>" class="button button-primary"><span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('New Tour', 'tourivo'); ?></a>
                 </div>
             </div>
+            <hr class="wp-header-end">
 
             <!-- KPI Metric Tiles -->
             <div class="tourivo-kpi-grid">
@@ -132,7 +132,7 @@ class AdminDashboard
                                     <?php foreach ($recentBookings as $bk) : ?>
                                         <tr>
                                             <td><strong>#<?php echo esc_html($bk->booking_code); ?></strong></td>
-                                            <td><?php echo esc_html($bk->customer_name); ?><br><small style="color:#64748b;"><?php echo esc_html($bk->customer_email); ?></small></td>
+                                            <td><?php echo esc_html($bk->customer_name); ?><br><small class="tourivo-muted"><?php echo esc_html($bk->customer_email); ?></small></td>
                                             <td><strong><?php echo esc_html(\Tourivo\Support\Money::format((float)$bk->total_amount)); ?></strong></td>
                                             <td>
                                                 <span class="tourivo-badge tourivo-badge-<?php echo esc_attr($bk->booking_status); ?>">
@@ -145,8 +145,14 @@ class AdminDashboard
                                 </tbody>
                             </table>
                         <?php else : ?>
-                            <div class="empty-state-box">
+                            <div class="tourivo-empty">
+                                <span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span>
+                                <h3><?php esc_html_e('No bookings yet', 'tourivo'); ?></h3>
                                 <p><?php esc_html_e('No bookings recorded yet. Start sharing your tours and hotels with travelers!', 'tourivo'); ?></p>
+                                <div class="tourivo-empty__actions">
+                                    <a href="<?php echo esc_url(admin_url('edit.php?post_type=tourivo_tour')); ?>" class="button"><?php esc_html_e('View tours', 'tourivo'); ?></a>
+                                    <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-setup-wizard')); ?>" class="button"><?php esc_html_e('Setup Wizard', 'tourivo'); ?></a>
+                                </div>
                             </div>
                         <?php endif; ?>
                     </div>
@@ -155,16 +161,16 @@ class AdminDashboard
                 <!-- Right Side: 1-Click Demo Data & Shortcodes Helper -->
                 <div class="dashboard-side-col">
                     <div class="tourivo-card-box seeder-card">
-                        <h3><span class="dashicons dashicons-download"></span> <?php esc_html_e('1-Click Demo Travel & Hotel Data', 'tourivo'); ?></h3>
+                        <h3><span class="dashicons dashicons-database-import" aria-hidden="true"></span> <?php esc_html_e('1-Click Demo Travel & Hotel Data', 'tourivo'); ?></h3>
                         <p><?php esc_html_e('Quickly test Tourivo by importing ready-made tours (Bali, Swiss Alps, Dubai) and boutique hotels with rooms.', 'tourivo'); ?></p>
-                        <button type="button" id="tourivo-import-sample-btn" class="button button-secondary tourivo-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>">
+                        <button type="button" id="tourivo-import-sample-btn" class="button tourivo-import-sample-btn" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_admin_nonce')); ?>">
                             <span class="dashicons dashicons-cloud-upload"></span> <?php esc_html_e('Import Demo Data', 'tourivo'); ?>
                         </button>
                         <div id="tourivo-seeder-notice" class="tourivo-seeder-notice" style="display:none; margin-top:10px;"></div>
                     </div>
 
-                    <div class="tourivo-card-box">
-                        <h3><span class="dashicons dashicons-shortcode"></span> <?php esc_html_e('Useful Shortcodes', 'tourivo'); ?></h3>
+                    <div class="tourivo-card-box tourivo-shortcodes-card">
+                        <h3><span class="dashicons dashicons-shortcode" aria-hidden="true"></span> <?php esc_html_e('Useful Shortcodes', 'tourivo'); ?></h3>
                         <ul class="shortcode-tips">
                             <li><code>[tourivo_search_bar]</code> – <?php esc_html_e('Search filter bar', 'tourivo'); ?></li>
                             <li><code>[tourivo_tours columns="3"]</code> – <?php esc_html_e('Tours grid', 'tourivo'); ?></li>

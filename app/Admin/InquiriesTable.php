@@ -43,11 +43,12 @@ class InquiriesTable
         ?>
         <div class="wrap tourivo-admin-wrap">
             <div class="tourivo-page-header">
-                <div>
-                    <h1 class="wp-heading-inline"><?php esc_html_e('Travel Inquiries & Consultation Requests', 'tourivo'); ?></h1>
-                    <p class="description"><?php esc_html_e('Manage leads and custom trip questions submitted by travelers through the "Ask an Expert" inquiry modal.', 'tourivo'); ?></p>
+                <div class="tourivo-page-header__text">
+                    <h1><?php esc_html_e('Inquiries', 'tourivo'); ?></h1>
+                    <p class="tourivo-subtitle"><?php esc_html_e('Manage leads and custom trip questions submitted by travelers through the "Ask an Expert" inquiry modal.', 'tourivo'); ?></p>
                 </div>
             </div>
+            <hr class="wp-header-end">
 
             <!-- Status Filter Bar -->
             <ul class="subsubsub">
@@ -72,8 +73,11 @@ class InquiriesTable
                 <tbody>
                     <?php if (empty($inquiries)) : ?>
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 30px; color: #64748b;">
-                                <?php esc_html_e('No inquiries found.', 'tourivo'); ?>
+                            <td colspan="7">
+                                <div class="tourivo-empty">
+                                    <span class="dashicons dashicons-email-alt" aria-hidden="true"></span>
+                                    <p><?php esc_html_e('No inquiries found.', 'tourivo'); ?></p>
+                                </div>
                             </td>
                         </tr>
                     <?php else : foreach ($inquiries as $inq) :
@@ -98,7 +102,7 @@ class InquiriesTable
                                 <strong><?php echo esc_html($inq['customer_name']); ?></strong>
                                 <br><a href="mailto:<?php echo esc_attr($inq['customer_email']); ?>"><?php echo esc_html($inq['customer_email']); ?></a>
                                 <?php if (!empty($inq['customer_phone'])) : ?>
-                                    <br><small>📞 <?php echo esc_html($inq['customer_phone']); ?></small>
+                                    <br><small class="tourivo-inline-icon"><span class="dashicons dashicons-phone" aria-hidden="true"></span><?php echo esc_html($inq['customer_phone']); ?></small>
                                 <?php endif; ?>
                             </td>
                             <td>
@@ -111,11 +115,11 @@ class InquiriesTable
                                 <?php endif; ?>
                             </td>
                             <td>
-                                <span>📅 <?php echo esc_html($inq['travel_date'] ?: __('Flexible', 'tourivo')); ?></span>
-                                <br><small>👥 <?php echo esc_html((string) $inq['guests']); ?> <?php esc_html_e('Guests', 'tourivo'); ?></small>
+                                <span class="tourivo-inline-icon"><span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span><?php echo esc_html($inq['travel_date'] ?: __('Flexible', 'tourivo')); ?></span>
+                                <br><small class="tourivo-inline-icon"><span class="dashicons dashicons-groups" aria-hidden="true"></span><?php echo esc_html((string) $inq['guests']); ?> <?php esc_html_e('Guests', 'tourivo'); ?></small>
                             </td>
                             <td>
-                                <div style="max-height: 80px; overflow-y: auto; font-size: var(--trv-admin-text-sm); line-height: 1.45; background: #f8fafc; padding: 8px 10px; border-radius: 6px; border: 1px solid #e2e8f0;">
+                                <div class="tourivo-inquiry-message">
                                     <?php echo nl2br(esc_html($inq['message'])); ?>
                                 </div>
                             </td>
@@ -128,10 +132,10 @@ class InquiriesTable
                             </td>
                             <td>
                                 <a href="<?php echo esc_url($mailtoUrl); ?>" class="button button-small button-primary" target="_blank">
-                                    ✉️ <?php esc_html_e('Reply', 'tourivo'); ?>
+                                    <span class="dashicons dashicons-email" aria-hidden="true"></span><?php esc_html_e('Reply', 'tourivo'); ?>
                                 </a>
-                                <button type="button" class="button button-small delete-inquiry-btn" data-id="<?php echo esc_attr($inq['id']); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_inquiry_nonce')); ?>" style="color: #ef4444;">
-                                    <span class="dashicons dashicons-trash" style="font-size: 16px; width: 16px; height: 16px; vertical-align: middle;"></span>
+                                <button type="button" class="button button-small delete-inquiry-btn tourivo-button-danger" data-id="<?php echo esc_attr($inq['id']); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_inquiry_nonce')); ?>" aria-label="<?php esc_attr_e('Delete', 'tourivo'); ?>">
+                                    <span class="dashicons dashicons-trash" aria-hidden="true"></span>
                                 </button>
                             </td>
                         </tr>

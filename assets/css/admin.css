@@ -2,42 +2,383 @@
  * Tourivo Admin Dashboard & Documentation Styles
  */
 
+/* =======================================================
+   ADMIN UI KIT
+   Shared by every Tourivo and Tourivo Pro screen (body.tourivo-admin-screen).
+   ======================================================= */
+body.tourivo-admin-screen {
+    --trv-ui-primary: #0d9488;
+    --trv-ui-primary-hover: #0f766e;
+    --trv-ui-primary-soft: #f0fdfa;
+    --trv-ui-primary-ring: rgba(13, 148, 136, 0.28);
+    --trv-ui-text: #0f172a;
+    --trv-ui-body: #334155;
+    --trv-ui-muted: #64748b;
+    --trv-ui-border: #e2e8f0;
+    --trv-ui-border-strong: #cbd5e1;
+    --trv-ui-subtle: #f8fafc;
+    --trv-ui-radius: 10px;
+    --trv-ui-radius-sm: 6px;
+    --trv-ui-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
 .tourivo-admin-wrap {
     margin: 20px 20px 0 2px;
     font-family: var(--trv-font-admin, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
     color: #1e293b;
 }
 
-.tourivo-dashboard-header {
+/* Page header: title, one-line description and the page's actions. */
+.tourivo-dashboard-header,
+.tourivo-page-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     gap: 16px 24px;
     flex-wrap: wrap;
     margin-bottom: 24px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid #cbd5e1;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--trv-ui-border, #e2e8f0);
 }
 
-.tourivo-dashboard-header .header-actions {
+.tourivo-page-header__text {
+    flex: 1 1 360px;
+    min-width: 0;
+}
+
+.tourivo-admin-screen .tourivo-page-header h1,
+.tourivo-admin-screen .tourivo-dashboard-header h1 {
+    margin: 0;
+    padding: 0;
+    font-size: var(--trv-admin-text-3xl);
+    font-weight: 600;
+    line-height: 1.3;
+    color: var(--trv-ui-text);
+}
+
+.tourivo-page-header .tourivo-subtitle {
+    max-width: 760px;
+    line-height: 1.55;
+}
+
+.tourivo-page-header + .wp-header-end,
+.tourivo-dashboard-header + .wp-header-end {
+    display: none;
+}
+
+.tourivo-dashboard-header .header-actions,
+.tourivo-page-header .header-actions {
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-end;
+    align-items: center;
     gap: 8px;
     margin-left: auto;
 }
 
-.tourivo-dashboard-header .header-actions .button {
+.tourivo-dashboard-header .header-actions .button,
+.tourivo-page-header .header-actions .button {
     margin: 0;
-    display: inline-flex;
-    align-items: center;
-    min-height: 32px;
-    line-height: 1.2;
     white-space: nowrap;
 }
 
+/* Buttons in the Tourivo colour. */
+.tourivo-admin-screen #wpbody-content .button,
+.tourivo-admin-screen #wpbody-content .button-primary,
+.tourivo-admin-screen #wpbody-content .button-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: var(--trv-ui-radius-sm);
+    vertical-align: middle;
+}
+
+.tourivo-admin-screen #wpbody-content .button .dashicons {
+    color: inherit;
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+}
+
+.tourivo-admin-screen #wpbody-content .button-primary {
+    background: var(--trv-ui-primary);
+    border-color: var(--trv-ui-primary);
+    color: #fff;
+}
+
+.tourivo-admin-screen #wpbody-content .button-primary:hover,
+.tourivo-admin-screen #wpbody-content .button-primary:focus {
+    background: var(--trv-ui-primary-hover);
+    border-color: var(--trv-ui-primary-hover);
+    color: #fff;
+}
+
+.tourivo-admin-screen #wpbody-content .button:not(.button-primary) {
+    background: #fff;
+    border-color: var(--trv-ui-border-strong);
+    color: var(--trv-ui-body);
+}
+
+.tourivo-admin-screen #wpbody-content .button:not(.button-primary):hover {
+    background: var(--trv-ui-primary-soft);
+    border-color: var(--trv-ui-primary);
+    color: var(--trv-ui-primary-hover);
+}
+
+.tourivo-admin-screen #wpbody-content .button:focus,
+.tourivo-admin-screen #wpbody-content .button-primary:focus {
+    box-shadow: 0 0 0 1px #fff, 0 0 0 3px var(--trv-ui-primary-ring);
+    outline: 0;
+}
+
+.tourivo-admin-screen #wpbody-content .button[disabled],
+.tourivo-admin-screen #wpbody-content .button-primary[disabled] {
+    opacity: 0.6;
+}
+
+/* Form controls. */
+.tourivo-admin-screen #wpbody-content input[type="text"],
+.tourivo-admin-screen #wpbody-content input[type="email"],
+.tourivo-admin-screen #wpbody-content input[type="url"],
+.tourivo-admin-screen #wpbody-content input[type="tel"],
+.tourivo-admin-screen #wpbody-content input[type="number"],
+.tourivo-admin-screen #wpbody-content input[type="password"],
+.tourivo-admin-screen #wpbody-content input[type="search"],
+.tourivo-admin-screen #wpbody-content input[type="date"],
+.tourivo-admin-screen #wpbody-content input[type="time"],
+.tourivo-admin-screen #wpbody-content select,
+.tourivo-admin-screen #wpbody-content textarea {
+    border-color: var(--trv-ui-border-strong);
+    border-radius: var(--trv-ui-radius-sm);
+}
+
+.tourivo-admin-screen #wpbody-content input:focus,
+.tourivo-admin-screen #wpbody-content select:focus,
+.tourivo-admin-screen #wpbody-content textarea:focus {
+    border-color: var(--trv-ui-primary);
+    box-shadow: 0 0 0 1px var(--trv-ui-primary);
+    outline: 0;
+}
+
+.tourivo-admin-screen #wpbody-content input[type="checkbox"]:checked,
+.tourivo-admin-screen #wpbody-content input[type="radio"]:checked {
+    accent-color: var(--trv-ui-primary);
+}
+
+/* Cards. */
+.tourivo-ui-card {
+    background: #fff;
+    border: 1px solid var(--trv-ui-border, #e2e8f0);
+    border-radius: var(--trv-ui-radius, 10px);
+    box-shadow: var(--trv-ui-shadow);
+    padding: 20px 24px;
+    margin: 0 0 20px;
+    max-width: 1100px;
+}
+
+.tourivo-ui-card--wide {
+    max-width: none;
+}
+
+.tourivo-ui-card__head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px 20px;
+    flex-wrap: wrap;
+    margin: -20px -24px 18px;
+    padding: 16px 24px;
+    border-bottom: 1px solid var(--trv-ui-border, #e2e8f0);
+}
+
+.tourivo-ui-card__head h2,
+.tourivo-ui-card__head h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    font-size: var(--trv-admin-text-lg);
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--trv-ui-text);
+}
+
+.tourivo-ui-card__head h2 .dashicons,
+.tourivo-ui-card__head h3 .dashicons {
+    color: var(--trv-ui-primary);
+}
+
+.tourivo-ui-card__head p {
+    flex-basis: 100%;
+    margin: 4px 0 0;
+    color: var(--trv-ui-muted);
+    font-size: var(--trv-admin-text-sm);
+    line-height: 1.55;
+}
+
+.tourivo-ui-card .form-table {
+    margin-top: 0;
+}
+
+.tourivo-ui-card .form-table th {
+    width: 220px;
+    padding-left: 0;
+}
+
+.tourivo-ui-card > .form-table:last-child,
+.tourivo-ui-card > :last-child {
+    margin-bottom: 0;
+}
+
+.tourivo-ui-card > table.widefat {
+    border: 0;
+    box-shadow: none;
+}
+
+/* Tables on Tourivo pages. */
+.tourivo-admin-screen #wpbody-content table.widefat {
+    border-color: var(--trv-ui-border);
+    border-radius: var(--trv-ui-radius);
+    box-shadow: var(--trv-ui-shadow);
+    overflow: hidden;
+}
+
+.tourivo-admin-screen #wpbody-content table.widefat thead th,
+.tourivo-admin-screen #wpbody-content table.widefat thead td {
+    background: var(--trv-ui-subtle);
+    color: var(--trv-ui-muted);
+    font-weight: 600;
+}
+
+/* Empty states. */
+.tourivo-empty {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--trv-ui-muted, #64748b);
+}
+
+.tourivo-empty > .dashicons {
+    width: 48px;
+    height: 48px;
+    padding: 12px;
+    border-radius: 50%;
+    background: var(--trv-ui-primary-soft, #f0fdfa);
+    color: var(--trv-ui-primary, #0d9488);
+    font-size: 24px;
+    line-height: 48px;
+    box-sizing: content-box;
+    margin: 0 auto 4px;
+    display: block;
+    text-align: center;
+}
+
+.tourivo-empty h3 {
+    margin: 10px 0 4px;
+    font-size: var(--trv-admin-text-lg);
+    font-weight: 600;
+    color: var(--trv-ui-text, #0f172a);
+}
+
+.tourivo-empty p {
+    max-width: 460px;
+    margin: 0 auto;
+    font-size: var(--trv-admin-text-sm);
+    line-height: 1.55;
+}
+
+.tourivo-empty .tourivo-empty__actions {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 16px;
+}
+
+.widefat td .tourivo-empty p {
+    margin: 0 auto;
+}
+
+td .tourivo-empty {
+    padding: 28px 12px;
+}
+
+/* Sticky save bar at the end of long forms. */
+.tourivo-savebar {
+    position: sticky;
+    bottom: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    max-width: 1100px;
+    margin: 20px 0 0;
+    padding: 12px 24px;
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid var(--trv-ui-border, #e2e8f0);
+    border-radius: var(--trv-ui-radius, 10px);
+    box-shadow: 0 -6px 16px rgba(15, 23, 42, 0.06);
+}
+
+.tourivo-savebar .submit,
+.tourivo-savebar p {
+    margin: 0;
+    padding: 0;
+}
+
+.tourivo-savebar__hint {
+    color: var(--trv-ui-muted, #64748b);
+    font-size: var(--trv-admin-text-sm);
+}
+
+/* Small status pill used beside headings ("Connected", "Off"...). */
+.tourivo-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 10px;
+    border-radius: 999px;
+    font-size: var(--trv-admin-text-xs);
+    font-weight: 600;
+    line-height: 1.6;
+    background: #f1f5f9;
+    color: #475569;
+}
+
+.tourivo-pill--on { background: #dcfce7; color: #166534; }
+.tourivo-pill--warn { background: #fef3c7; color: #92400e; }
+.tourivo-pill--off { background: #f1f5f9; color: #64748b; }
+
+@media (max-width: 782px) {
+    .tourivo-ui-card {
+        padding: 16px;
+    }
+
+    .tourivo-ui-card__head {
+        margin: -16px -16px 16px;
+        padding: 14px 16px;
+    }
+
+    .tourivo-ui-card .form-table th {
+        width: auto;
+    }
+
+    .tourivo-savebar {
+        padding: 10px 16px;
+    }
+
+    .tourivo-dashboard-header .header-actions,
+    .tourivo-page-header .header-actions {
+        justify-content: flex-start;
+        margin-left: 0;
+    }
+}
+
 .tourivo-proxy-notice {
-    border-left-color: #0284c7;
+    border-left-color: #0d9488;
     padding: 2px 12px;
 }
 
@@ -85,46 +426,52 @@
     .tourivo-kpi-grid { grid-template-columns: repeat(3, 1fr); }
 }
 @media (max-width: 780px) {
+    .tourivo-kpi-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
     .tourivo-kpi-grid { grid-template-columns: 1fr; }
 }
 
 .kpi-card {
     background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    border: 1px solid var(--trv-ui-border, #e2e8f0);
+    border-radius: var(--trv-ui-radius, 10px);
     padding: 16px;
     display: flex;
     align-items: center;
     gap: 14px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    min-width: 0;
+    box-shadow: var(--trv-ui-shadow, 0 1px 2px rgba(15, 23, 42, 0.06));
 }
+
+.kpi-info { min-width: 0; }
 
 .kpi-icon {
     width: 44px;
     height: 44px;
-    border-radius: 8px;
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #fff;
     flex-shrink: 0;
 }
 
 .kpi-icon .dashicons { font-size: 22px; width: 22px; height: 22px; }
-.kpi-icon.icon-tours { background: #0284c7; }
-.kpi-icon.icon-hotels { background: #6366f1; }
-.kpi-icon.icon-rooms { background: #8b5cf6; }
-.kpi-icon.icon-bookings { background: #059669; }
-.kpi-icon.icon-revenue { background: #ea580c; }
+.kpi-icon.icon-tours { background: #e0f2fe; color: #0369a1; }
+.kpi-icon.icon-hotels { background: #e0e7ff; color: #4338ca; }
+.kpi-icon.icon-rooms { background: #ede9fe; color: #6d28d9; }
+.kpi-icon.icon-bookings { background: #ccfbf1; color: #0f766e; }
+.kpi-icon.icon-revenue { background: #ffedd5; color: #c2410c; }
 
-.kpi-title { display: block; font-size: var(--trv-admin-text-xs); color: #64748b; font-weight: 600; text-transform: uppercase; }
-.kpi-number { display: block; font-size: var(--trv-admin-text-3xl); font-weight: 700; color: #1e293b; }
+.kpi-title { display: block; font-size: var(--trv-admin-text-sm); color: #64748b; font-weight: 500; line-height: 1.4; }
+.kpi-number { display: block; font-size: var(--trv-admin-text-3xl); font-weight: 700; line-height: 1.3; color: #0f172a; overflow-wrap: anywhere; }
 
 /* Dashboard Split */
 .tourivo-dashboard-layout {
     display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 24px;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+    gap: 20px;
+    align-items: start;
 }
 
 @media (max-width: 960px) {
@@ -133,57 +480,125 @@
 
 .tourivo-card-box {
     background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
+    border: 1px solid var(--trv-ui-border, #e2e8f0);
+    border-radius: var(--trv-ui-radius, 10px);
     padding: 20px;
     margin-bottom: 20px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    box-shadow: var(--trv-ui-shadow, 0 1px 2px rgba(15, 23, 42, 0.06));
 }
+
+.tourivo-card-box > h3 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 10px;
+    font-size: var(--trv-admin-text-lg);
+    font-weight: 600;
+    color: #0f172a;
+}
+
+.tourivo-card-box > h3 .dashicons { color: var(--trv-ui-primary, #0d9488); }
 
 .box-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 12px;
     margin-bottom: 16px;
 }
 
-.box-header h2 { margin: 0; font-size: var(--trv-admin-text-xl); font-weight: 700; }
-.view-all-link { text-decoration: none; font-weight: 600; font-size: var(--trv-admin-text-sm); }
+.box-header h2 { margin: 0; font-size: var(--trv-admin-text-lg); font-weight: 600; color: #0f172a; }
+.view-all-link { color: var(--trv-ui-primary-hover, #0f766e); text-decoration: none; font-weight: 600; font-size: var(--trv-admin-text-sm); }
+.tourivo-muted { color: #64748b; }
 
 /* Badges */
 .tourivo-badge {
     display: inline-block;
     padding: 4px 8px;
     font-size: var(--trv-admin-text-xs);
-    font-weight: 700;
-    line-height: 1;
-    border-radius: 4px;
-    text-transform: uppercase;
+    font-weight: 600;
+    line-height: 1.2;
+    border-radius: 999px;
+    white-space: nowrap;
 }
 
 .tourivo-badge-pending { background-color: #fef3c7; color: #92400e; }
 .tourivo-badge-confirmed { background-color: #d1fae5; color: #065f46; }
 .tourivo-badge-cancelled { background-color: #fee2e2; color: #991b1b; }
 .tourivo-badge-paid { background-color: #dcfce7; color: #166534; }
+.tourivo-badge-completed { background-color: #e0f2fe; color: #075985; }
+.tourivo-badge-on-hold,
+.tourivo-badge-on_hold { background-color: #ede9fe; color: #5b21b6; }
+.tourivo-badge-alert { background-color: #fee2e2; color: #991b1b; }
 
 /* Seeder Card */
 .seeder-card {
-    background: #f0fdf4;
-    border-color: #bbf7d0;
+    background: var(--trv-ui-primary-soft, #f0fdfa);
+    border-color: #99f6e4;
 }
 
-.seeder-card h3 { margin: 0 0 8px 0; color: #166534; font-size: var(--trv-admin-text-lg); display: flex; align-items: center; gap: 6px; }
-.seeder-card p { font-size: var(--trv-admin-text-sm); color: #15803d; line-height: 1.5; margin: 0 0 14px 0; }
+.seeder-card p { font-size: var(--trv-admin-text-sm); color: #334155; line-height: 1.55; margin: 0 0 14px 0; }
 
-.shortcode-tips { list-style: none; margin: 0; padding: 0; }
-.shortcode-tips li { font-size: var(--trv-admin-text-sm); margin-bottom: 8px; }
+.shortcode-tips { list-style: none; margin: 0 0 12px; padding: 0; }
+.shortcode-tips li { font-size: var(--trv-admin-text-sm); margin-bottom: 8px; line-height: 1.6; }
+
+.tourivo-settings-form {
+    margin-top: 20px;
+}
 
 .tourivo-settings-box {
     background: #fff;
-    border: 1px solid #e2e8f0;
-    border-radius: 8px;
-    padding: 24px;
-    max-width: 800px;
+    border: 1px solid var(--trv-ui-border, #e2e8f0);
+    border-radius: var(--trv-ui-radius, 10px);
+    box-shadow: var(--trv-ui-shadow, 0 1px 2px rgba(15, 23, 42, 0.06));
+    padding: 20px 24px;
+    margin: 0 0 16px;
+    max-width: 900px;
+}
+
+.tourivo-settings-box > h2:first-child {
+    margin: -20px -24px 16px;
+    padding: 14px 24px;
+    border-bottom: 1px solid var(--trv-ui-border, #e2e8f0);
+    font-size: var(--trv-admin-text-lg);
+    font-weight: 600;
+    line-height: 1.4;
+    color: #0f172a;
+}
+
+.tourivo-settings-box > h2:first-child + p.description {
+    margin-top: -4px;
+}
+
+.tourivo-settings-box .form-table {
+    margin-top: 0;
+}
+
+.tourivo-settings-box .form-table th {
+    padding-left: 0;
+}
+
+.tourivo-settings-form .tourivo-savebar {
+    max-width: 900px;
+    box-sizing: border-box;
+}
+
+.tourivo-settings-tabs .nav-tab .dashicons {
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    vertical-align: -3px;
+}
+
+@media (max-width: 782px) {
+    .tourivo-settings-box {
+        padding: 16px;
+    }
+
+    .tourivo-settings-box > h2:first-child {
+        margin: -16px -16px 14px;
+        padding: 12px 16px;
+    }
 }
 
 /* =======================================================
@@ -194,7 +609,7 @@
 }
 
 .tourivo-docs-hero {
-    background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+    background: linear-gradient(135deg, #0d9488 0%, #0f766e 100%);
     color: #fff;
     padding: 36px 32px;
     border-radius: 10px;
@@ -214,10 +629,11 @@
     margin-bottom: 12px;
 }
 
-.hero-title {
+.tourivo-docs-hero .hero-title {
     color: #fff;
     font-size: var(--trv-admin-text-display);
     font-weight: 700;
+    line-height: 1.25;
     margin: 0 0 12px 0;
 }
 
@@ -226,7 +642,7 @@
     line-height: 1.6;
     max-width: 850px;
     margin: 0 0 20px 0;
-    color: #f0f9ff;
+    color: #f0fdfa;
 }
 
 .hero-quick-actions {
@@ -258,14 +674,14 @@
 
 .tourivo-btn-hero-primary {
     background: #ffffff;
-    color: #0284c7 !important;
+    color: #0d9488 !important;
     border: 1px solid #ffffff;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
 }
 
 .tourivo-btn-hero-primary:hover {
-    background: #f0f9ff;
-    color: #0369a1 !important;
+    background: #f0fdfa;
+    color: #0f766e !important;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.18);
     transform: translateY(-1px);
 }
@@ -341,7 +757,7 @@
 }
 
 .tourivo-docs-nav li.active a {
-    background: #0284c7;
+    background: #0d9488;
     color: #ffffff !important;
     box-shadow: 0 2px 8px rgba(2, 132, 199, 0.3);
 }
@@ -427,7 +843,7 @@
 
 .feature-card-icon.icon-tour {
     background: #e0f2fe;
-    color: #0284c7;
+    color: #0d9488;
 }
 
 .feature-card-icon.icon-hotel {
@@ -481,7 +897,7 @@
     width: 32px;
     height: 32px;
     border-radius: 50%;
-    background: #0284c7;
+    background: #0d9488;
     color: #fff;
     font-weight: 700;
     font-size: var(--trv-admin-text-base);
@@ -510,9 +926,9 @@
     align-items: center;
     gap: 6px;
     padding: 6px 14px;
-    background: #f0f9ff;
-    color: #0284c7 !important;
-    border: 1px solid #bae6fd;
+    background: #f0fdfa;
+    color: #0d9488 !important;
+    border: 1px solid #99f6e4;
     border-radius: 6px;
     font-weight: 600;
     text-decoration: none !important;
@@ -521,9 +937,9 @@
 }
 
 .step-action-link:hover {
-    background: #0284c7;
+    background: #0d9488;
     color: #ffffff !important;
-    border-color: #0284c7;
+    border-color: #0d9488;
     box-shadow: 0 2px 6px rgba(2, 132, 199, 0.25);
     transform: translateX(2px);
 }
@@ -542,7 +958,7 @@
     position: absolute;
     top: -10px;
     left: 20px;
-    background: #0284c7;
+    background: #0d9488;
     color: #fff;
     font-size: var(--trv-admin-text-xs);
     font-weight: 700;
@@ -577,7 +993,7 @@
 }
 
 .doc-callout.callout-tip { background: #fefce8; border: 1px solid #fef08a; color: #854d0e; }
-.doc-callout.callout-info { background: #f0f9ff; border: 1px solid #bae6fd; color: #0369a1; }
+.doc-callout.callout-info { background: #f0fdfa; border: 1px solid #99f6e4; color: #0f766e; }
 .doc-callout.callout-success { background: #f0fdf4; border: 1px solid #bbf7d0; color: #166534; }
 
 .doc-callout .dashicons { font-size: 20px; width: 20px; height: 20px; }
@@ -642,9 +1058,9 @@
 .tourivo-code-table code {
     font-size: var(--trv-admin-text-sm);
     font-weight: 600;
-    color: #0284c7;
-    background: #f0f9ff;
-    border: 1px solid #bae6fd;
+    color: #0d9488;
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
     padding: 4px 10px;
     border-radius: 6px;
     user-select: all;
@@ -848,7 +1264,7 @@
 .tourivo-admin-modal input:focus,
 .tourivo-admin-modal select:focus,
 .tourivo-admin-modal textarea:focus {
-    border-color: #0284c7;
+    border-color: #0d9488;
     outline: none;
     box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
 }
@@ -862,7 +1278,7 @@
 }
 
 .change-inquiry-status-select option[value="new"] {
-    color: #0284c7;
+    color: #0d9488;
     font-weight: 700;
 }
 .change-inquiry-status-select option[value="replied"] {
@@ -893,16 +1309,16 @@
 
 .export-date-presets .export-preset-btn.active,
 .export-date-presets .export-preset-btn.button-primary {
-    background: #0284c7 !important;
-    border-color: #0284c7 !important;
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
     color: #ffffff !important;
     font-weight: 600;
 }
 
 .export-report-type-selector label:has(input:checked),
 .export-report-type-selector label.active {
-    border-color: #0284c7 !important;
-    background: #f0f9ff !important;
+    border-color: #0d9488 !important;
+    background: #f0fdfa !important;
 }
 
 /* Reports & Analytics Hub */
@@ -949,7 +1365,7 @@
 }
 
 .tourivo-preset-pill.active {
-    background: #0284c7;
+    background: #0d9488;
     color: #ffffff;
 }
 
@@ -967,15 +1383,23 @@
 }
 
 .tourivo-reports-kpi-grid {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
     margin-bottom: 24px;
 }
 
-.kpi-icon.icon-tax { background: #0d9488; }
-.kpi-icon.icon-occupancy { background: #4f46e5; }
-.kpi-icon.icon-travelers { background: #0891b2; }
-.kpi-icon.icon-aov { background: #ca8a04; }
+@media (max-width: 1100px) {
+    .tourivo-reports-kpi-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 600px) {
+    .tourivo-reports-kpi-grid { grid-template-columns: 1fr; }
+}
+
+.kpi-icon.icon-tax { background: #ccfbf1; color: #0f766e; }
+.kpi-icon.icon-occupancy { background: #e0e7ff; color: #4338ca; }
+.kpi-icon.icon-travelers { background: #cffafe; color: #0e7490; }
+.kpi-icon.icon-aov { background: #fef9c3; color: #a16207; }
 
 .kpi-subtext {
     display: block;
@@ -1018,6 +1442,7 @@
     width: 10px;
     height: 10px;
     border-radius: 50%;
+    background: #0d9488;
 }
 
 .tourivo-timeline-chart-container {
@@ -1057,14 +1482,14 @@
 
 .bar-fill {
     width: 100%;
-    background: linear-gradient(180deg, #38bdf8 0%, #0284c7 100%);
+    background: linear-gradient(180deg, #2dd4bf 0%, #0d9488 100%);
     border-radius: 4px 4px 0 0;
     transition: height 0.3s ease, background 0.2s ease;
     position: relative;
 }
 
 .bar-col:hover .bar-fill {
-    background: #0369a1;
+    background: #0f766e;
 }
 
 .bar-tooltip {
@@ -1144,7 +1569,7 @@
 
 .rank-badge {
     background: #e0f2fe;
-    color: #0369a1;
+    color: #0f766e;
     font-size: var(--trv-admin-text-xs);
     font-weight: 700;
     padding: 2px 6px;
@@ -1172,7 +1597,7 @@
 
 .ranked-progress-fill {
     height: 100%;
-    background: #0284c7;
+    background: #0d9488;
     border-radius: 9999px;
 }
 
@@ -1217,7 +1642,7 @@
 
 .tourivo-badge-bank_transfer {
     background: #e0f2fe;
-    color: #0369a1;
+    color: #0f766e;
 }
 
 .tourivo-badge-cash_on_arrival {
@@ -1226,3 +1651,99 @@
 }
 
 
+
+/* =======================================================
+   BOOKINGS LIST
+   ======================================================= */
+.tourivo-bookings-search {
+    float: right;
+    margin: 0 0 12px;
+}
+
+.tourivo-bookings-table {
+    clear: both;
+}
+
+.tourivo-bookings-table td {
+    vertical-align: top;
+}
+
+.tourivo-bookings-table .action-buttons-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+}
+
+.tourivo-bookings-table .action-buttons-group .button {
+    margin: 0;
+}
+
+.tourivo-badge-stacked {
+    margin-top: 6px;
+}
+
+@media (max-width: 782px) {
+    .tourivo-bookings-search {
+        float: none;
+    }
+}
+
+/* =======================================================
+   INQUIRIES
+   ======================================================= */
+.tourivo-inline-icon {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.tourivo-inline-icon .dashicons {
+    width: 14px;
+    height: 14px;
+    font-size: 14px;
+    color: #94a3b8;
+}
+
+.tourivo-inquiry-message {
+    max-height: 80px;
+    overflow-y: auto;
+    padding: 8px 10px;
+    font-size: var(--trv-admin-text-sm);
+    line-height: 1.5;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+}
+
+.tourivo-admin-screen #wpbody-content .button.button-link-delete:not(.button-primary),
+.tourivo-admin-screen #wpbody-content .button.tourivo-button-danger:not(.button-primary) {
+    color: #b91c1c;
+}
+
+.tourivo-admin-screen #wpbody-content .button.button-link-delete:not(.button-primary):hover,
+.tourivo-admin-screen #wpbody-content .button.tourivo-button-danger:not(.button-primary):hover {
+    background: #fef2f2;
+    border-color: #fca5a5;
+    color: #991b1b;
+}
+
+/* Reports: section icons and the export form in the header. */
+.tourivo-inline-form {
+    display: inline-flex;
+    margin: 0;
+}
+
+.tourivo-reports-wrap .box-header h2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.tourivo-reports-wrap .box-header h2 .dashicons { color: #0d9488; }
+.tourivo-reports-wrap .box-header h2 .dashicons-admin-home { color: #7c3aed; }
+
+.tourivo-settings-box > h2:not(:first-child) {
+    margin: 28px 0 12px;
+    font-size: var(--trv-admin-text-lg);
+    font-weight: 600;
+}

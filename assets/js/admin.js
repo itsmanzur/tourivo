@@ -125,6 +125,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Disable all import buttons during process
             importButtons.forEach(b => {
+                b.dataset.label = b.dataset.label || b.innerHTML;
                 b.disabled = true;
                 b.innerHTML = '<span class="dashicons dashicons-update spin"></span> Importing Starter Packages...';
             });
@@ -159,7 +160,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .catch(() => {
                     importButtons.forEach(b => {
                         b.disabled = false;
-                        b.innerHTML = '<span class="dashicons dashicons-cloud-upload"></span> ⚡ Import Starter Demo Content';
+                        b.innerHTML = b.dataset.label || b.innerHTML;
                     });
                     alert('An error occurred while importing sample data.');
                 });
@@ -514,6 +515,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 return;
             }
 
+            sendTestWebhookBtn.dataset.label = sendTestWebhookBtn.dataset.label || sendTestWebhookBtn.innerHTML;
             sendTestWebhookBtn.disabled = true;
             sendTestWebhookBtn.innerHTML = '<span class="dashicons dashicons-update spin"></span> Testing...';
             if (testWebhookAlert) testWebhookAlert.style.display = 'none';
@@ -531,7 +533,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(res => res.json())
                 .then(data => {
                     sendTestWebhookBtn.disabled = false;
-                    sendTestWebhookBtn.innerHTML = '🚀 Send Test Ping Payload';
+                    sendTestWebhookBtn.innerHTML = sendTestWebhookBtn.dataset.label;
 
                     if (testWebhookAlert) {
                         if (data.success) {
@@ -546,7 +548,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .catch(() => {
                     sendTestWebhookBtn.disabled = false;
-                    sendTestWebhookBtn.innerHTML = '🚀 Send Test Ping Payload';
+                    sendTestWebhookBtn.innerHTML = sendTestWebhookBtn.dataset.label;
                     if (testWebhookAlert) {
                         testWebhookAlert.style.color = '#b91c1c';
                         testWebhookAlert.innerHTML = '✕ Network error while contacting test endpoint.';
@@ -671,6 +673,7 @@ document.addEventListener('DOMContentLoaded', function () {
     if (retentionDryRunBtn && retentionDryRunResult) {
         retentionDryRunBtn.addEventListener('click', function () {
             const nonce = this.dataset.nonce || (window.tourivoAdminConfig ? window.tourivoAdminConfig.nonce : '');
+            retentionDryRunBtn.dataset.label = retentionDryRunBtn.dataset.label || retentionDryRunBtn.textContent;
             retentionDryRunBtn.disabled = true;
             retentionDryRunBtn.textContent = 'Calculating...';
             retentionDryRunResult.style.display = 'none';
@@ -686,14 +689,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(res => res.json())
                 .then(data => {
                     retentionDryRunBtn.disabled = false;
-                    retentionDryRunBtn.textContent = '🔍 Check Eligible Records Count';
+                    retentionDryRunBtn.textContent = retentionDryRunBtn.dataset.label;
 
                     if (data.success && data.data) {
                         retentionDryRunResult.style.color = '#0f766e';
                         const scanLabel = document.createElement('strong');
                         scanLabel.textContent = 'Dry-Run Scan Results:';
                         retentionDryRunResult.replaceChildren(
-                            document.createTextNode('📊 '),
                             scanLabel,
                             document.createTextNode(` ${Number(data.data.bookings_to_anonymize)} completed/cancelled booking(s) eligible for anonymization, and ${Number(data.data.inquiries_to_delete)} inquiry/inquiries eligible for deletion.`)
                         );
@@ -706,7 +708,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .catch(() => {
                     retentionDryRunBtn.disabled = false;
-                    retentionDryRunBtn.textContent = '🔍 Check Eligible Records Count';
+                    retentionDryRunBtn.textContent = retentionDryRunBtn.dataset.label;
                     retentionDryRunResult.style.color = '#b91c1c';
                     retentionDryRunResult.textContent = 'Network error during dry-run scan.';
                     retentionDryRunResult.style.display = 'block';
