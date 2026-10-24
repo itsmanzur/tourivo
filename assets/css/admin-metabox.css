@@ -56,13 +56,13 @@
 .tourivo-tabs-nav li.active a,
 .tourivo-tabs-nav li a:hover {
     background: #ffffff;
-    color: #0284c7;
-    border-left-color: #0284c7;
+    color: #0d9488;
+    border-left-color: #0d9488;
 }
 
 .tourivo-tabs-nav li.active a .dashicons,
 .tourivo-tabs-nav li a:hover .dashicons {
-    color: #0284c7;
+    color: #0d9488;
 }
 
 .tourivo-tabs-content {
@@ -153,9 +153,9 @@
 .tourivo-col select:focus,
 .tourivo-form-group textarea:focus,
 .tourivo-col textarea:focus {
-    border-color: #0284c7;
+    border-color: #0d9488;
     outline: none;
-    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
 }
 
 /* Repeaters (Itinerary, Inclusions, FAQs) */
@@ -238,7 +238,7 @@
     }
     .tourivo-tabs-nav li.active a {
         border-left-color: transparent;
-        border-bottom-color: #0284c7;
+        border-bottom-color: #0d9488;
     }
     .tourivo-tabs-content {
         padding: 18px 16px;
@@ -305,7 +305,7 @@
     font-size: 16px;
     width: 16px;
     height: 16px;
-    color: #0284c7;
+    color: #0d9488;
 }
 
 .tourivo-avail-body {
@@ -338,7 +338,7 @@
 }
 
 .tourivo-avail-weekday.tourivo-weekend {
-    color: #0284c7;
+    color: #0d9488;
 }
 
 .tourivo-avail-grid {
@@ -349,7 +349,7 @@
 }
 
 .tourivo-avail-grid:focus {
-    box-shadow: 0 0 0 2px rgba(2, 132, 199, 0.2);
+    box-shadow: 0 0 0 2px rgba(13, 148, 136, 0.2);
     border-radius: 6px;
 }
 
@@ -369,22 +369,22 @@
 }
 
 .tourivo-avail-day:hover {
-    border-color: #0284c7;
-    background: #f0f9ff;
+    border-color: #0d9488;
+    background: #f0fdfa;
     transform: translateY(-1px);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .tourivo-avail-day:focus {
-    outline: 2px solid #0284c7;
+    outline: 2px solid #0d9488;
     outline-offset: 1px;
 }
 
 .tourivo-avail-day.is-selected,
 .tourivo-avail-day[aria-selected="true"] {
-    background: #e0f2fe !important;
-    border-color: #0284c7 !important;
-    box-shadow: 0 0 0 1px #0284c7;
+    background: #ccfbf1 !important;
+    border-color: #0d9488 !important;
+    box-shadow: 0 0 0 1px #0d9488;
 }
 
 .tourivo-avail-day.is-past {
@@ -419,7 +419,7 @@
 }
 
 .tourivo-avail-day.is-today .tourivo-day-num {
-    background: #0284c7;
+    background: #0d9488;
     color: #ffffff;
     width: 20px;
     height: 20px;
@@ -545,7 +545,7 @@
 }
 
 .tourivo-selection-badge {
-    background: #0284c7;
+    background: #0d9488;
     color: #ffffff;
     font-size: var(--trv-admin-text-xs);
     font-weight: 700;
@@ -607,8 +607,8 @@
 }
 
 .tourivo-panel-actions .button-primary {
-    background: #0284c7 !important;
-    border-color: #0284c7 !important;
+    background: #0d9488 !important;
+    border-color: #0d9488 !important;
     padding: 6px 14px !important;
     height: auto !important;
     font-weight: 700 !important;
@@ -651,3 +651,86 @@
     }
 }
 
+
+/* One control height: inputs and selects line up at 40px, like the rest of wp-admin. */
+.tourivo-form-group input[type="date"],
+.tourivo-form-group input[type="url"],
+.tourivo-form-group input[type="tel"],
+.tourivo-col input[type="date"],
+.tourivo-col input[type="url"],
+.tourivo-col input[type="tel"] {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    border: 1px solid #cbd5e1;
+    border-radius: 6px;
+}
+
+.tourivo-form-group input:not([type="checkbox"]):not([type="radio"]),
+.tourivo-col input:not([type="checkbox"]):not([type="radio"]),
+.tourivo-form-group select,
+.tourivo-col select {
+    min-height: 40px;
+    height: 40px;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 38px;
+}
+
+.tourivo-form-group select,
+.tourivo-col select {
+    padding-right: 32px;
+}
+
+/* Buttons inside Tourivo editor boxes, in the Tourivo colour (editor screens have no admin-kit body class). */
+.tourivo-metabox-wrapper .button,
+.tourivo-availability-app .button,
+.tourivo-pro-package-editor .button,
+.tourivo-tab-pane .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    border-radius: 6px;
+}
+
+.tourivo-metabox-wrapper .button:not(.button-primary),
+.tourivo-availability-app .button:not(.button-primary),
+.tourivo-pro-package-editor .button:not(.button-primary) {
+    background: #fff;
+    border-color: #cbd5e1;
+    color: #334155;
+}
+
+.tourivo-metabox-wrapper .button:not(.button-primary):hover,
+.tourivo-availability-app .button:not(.button-primary):hover,
+.tourivo-pro-package-editor .button:not(.button-primary):hover {
+    background: #f0fdfa;
+    border-color: #0d9488;
+    color: #0f766e;
+}
+
+.tourivo-metabox-wrapper .button-primary,
+.tourivo-availability-app .button-primary,
+.tourivo-pro-package-editor .button-primary {
+    background: #0d9488;
+    border-color: #0d9488;
+    color: #fff;
+}
+
+.tourivo-metabox-wrapper .button-primary:hover,
+.tourivo-availability-app .button-primary:hover,
+.tourivo-pro-package-editor .button-primary:hover {
+    background: #0f766e;
+    border-color: #0f766e;
+}
+
+.tourivo-metabox-wrapper .button .dashicons,
+.tourivo-availability-app .button .dashicons,
+.tourivo-pro-package-editor .button .dashicons {
+    color: inherit;
+    width: 16px;
+    height: 16px;
+    font-size: 16px;
+    line-height: 1;
+}
