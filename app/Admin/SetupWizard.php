@@ -46,7 +46,7 @@ class SetupWizard
                 <!-- Wizard Logo Header -->
                 <div class="tourivo-wizard-header">
                     <div class="tourivo-wizard-brand">
-                        <span class="brand-icon">🌴</span>
+                        <span class="brand-icon dashicons dashicons-palmtree" aria-hidden="true"></span>
                         <h1 class="brand-title">Tourivo</h1>
                     </div>
                     <p class="brand-tagline"><?php esc_html_e('Quick Setup & Configuration Wizard', 'tourivo'); ?></p>
@@ -75,7 +75,7 @@ class SetupWizard
                 <!-- Step 1: Store & Currency -->
                 <div class="wizard-content-card" id="wizard-card-1">
                     <div class="card-intro">
-                        <h2>⚙️ <?php esc_html_e('Agency & Currency Setup', 'tourivo'); ?></h2>
+                        <h2><?php esc_html_e('Agency & Currency Setup', 'tourivo'); ?></h2>
                         <p><?php esc_html_e('Configure your business name and default pricing currency.', 'tourivo'); ?></p>
                     </div>
 
@@ -133,7 +133,7 @@ class SetupWizard
                 <!-- Step 2: Core Default Pages -->
                 <div class="wizard-content-card" id="wizard-card-2" style="display:none;">
                     <div class="card-intro">
-                        <h2>📄 <?php esc_html_e('Create Essential Pages', 'tourivo'); ?></h2>
+                        <h2><?php esc_html_e('Create Essential Pages', 'tourivo'); ?></h2>
                         <p><?php esc_html_e('Select the default pages you would like Tourivo to automatically generate on your website.', 'tourivo'); ?></p>
                     </div>
 
@@ -142,7 +142,7 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="tours" checked>
                                 <div class="check-text">
-                                    <strong>🌴 <?php esc_html_e('Tours Directory Page', 'tourivo'); ?></strong>
+                                    <strong><?php esc_html_e('Tours Directory Page', 'tourivo'); ?></strong>
                                     <span><?php esc_html_e('Creates "/tours" displaying the interactive tour packages grid.', 'tourivo'); ?></span>
                                 </div>
                             </label>
@@ -150,7 +150,7 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="hotels" checked>
                                 <div class="check-text">
-                                    <strong>🏨 <?php esc_html_e('Hotels & Stays Page', 'tourivo'); ?></strong>
+                                    <strong><?php esc_html_e('Hotels & Stays Page', 'tourivo'); ?></strong>
                                     <span><?php esc_html_e('Creates "/hotels" displaying boutique hotels, rooms, and resorts.', 'tourivo'); ?></span>
                                 </div>
                             </label>
@@ -158,7 +158,7 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="search" checked>
                                 <div class="check-text">
-                                    <strong>🔍 <?php esc_html_e('Search & Filter Portal', 'tourivo'); ?></strong>
+                                    <strong><?php esc_html_e('Search & Filter Portal', 'tourivo'); ?></strong>
                                     <span><?php esc_html_e('Creates "/search-trips" with live price sliders, destination & star filters.', 'tourivo'); ?></span>
                                 </div>
                             </label>
@@ -166,7 +166,7 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="track" checked>
                                 <div class="check-text">
-                                    <strong>🎫 <?php esc_html_e('Track My Booking & Voucher Portal', 'tourivo'); ?></strong>
+                                    <strong><?php esc_html_e('Track My Booking & Voucher Portal', 'tourivo'); ?></strong>
                                     <span><?php esc_html_e('Creates "/track-booking" for travelers to track status & print vouchers.', 'tourivo'); ?></span>
                                 </div>
                             </label>
@@ -182,7 +182,7 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="thankyou" checked>
                                 <div class="check-text">
-                                    <strong>🎉 <?php esc_html_e('Booking Confirmation / Thank You Page', 'tourivo'); ?></strong>
+                                    <strong><?php esc_html_e('Booking Confirmation / Thank You Page', 'tourivo'); ?></strong>
                                     <span><?php esc_html_e('Creates "/booking-confirmation" displaying booking summary, token-secured calendar .ics and vouchers.', 'tourivo'); ?></span>
                                 </div>
                             </label>
@@ -190,7 +190,7 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="my_bookings" checked>
                                 <div class="check-text">
-                                    <strong>👤 <?php esc_html_e('Traveler Dashboard / My Bookings Page', 'tourivo'); ?></strong>
+                                    <strong><?php esc_html_e('Traveler Dashboard / My Bookings Page', 'tourivo'); ?></strong>
                                     <span><?php esc_html_e('Creates "/my-bookings" allowing registered travelers to view past and upcoming trips, download vouchers, and manage reservations.', 'tourivo'); ?></span>
                                 </div>
                             </label>
@@ -198,7 +198,7 @@ class SetupWizard
                             <label class="wizard-check-item">
                                 <input type="checkbox" name="pages[]" value="travel_homepage">
                                 <div class="check-text">
-                                    <strong>🏠 <?php esc_html_e('Travel Homepage Layout (optional)', 'tourivo'); ?></strong>
+                                    <strong><?php esc_html_e('Travel Homepage Layout (optional)', 'tourivo'); ?></strong>
                                     <span><?php esc_html_e('Adds the search bar, destinations, tours and hotels to your homepage and hides its latest-posts list. Leave unticked if your theme already has its own homepage. You can change this later in Settings.', 'tourivo'); ?></span>
                                 </div>
                             </label>
@@ -216,16 +216,16 @@ class SetupWizard
                 <!-- Step 3: Demo Content Importer -->
                 <div class="wizard-content-card" id="wizard-card-3" style="display:none;">
                     <div class="card-intro">
-                        <h2>🚀 <?php esc_html_e('Import Realistic Sample Trips & Hotels', 'tourivo'); ?></h2>
+                        <h2><?php esc_html_e('Import Realistic Sample Trips & Hotels', 'tourivo'); ?></h2>
                         <p><?php esc_html_e('Populate sample data (Bali Beach, Swiss Alps, Kyoto Heritage, Grand Oceanfront Resort) to immediately test booking flows.', 'tourivo'); ?></p>
                     </div>
 
                     <div class="demo-import-box">
                         <div class="demo-preview-icons">
-                            <span>🏝️</span>
-                            <span>🏔️</span>
-                            <span>🏯</span>
-                            <span>🏨</span>
+                            <span class="dashicons dashicons-palmtree" aria-hidden="true"></span>
+                            <span class="dashicons dashicons-location-alt" aria-hidden="true"></span>
+                            <span class="dashicons dashicons-building" aria-hidden="true"></span>
+                            <span class="dashicons dashicons-admin-home" aria-hidden="true"></span>
                         </div>
                         <h4 style="margin: 0 0 6px; color:#0f172a; font-size: var(--trv-admin-text-lg);"><?php esc_html_e('Ready to install 3 Featured Tours, 2 Boutique Hotels & 4 Room Types.', 'tourivo'); ?></h4>
                         <p style="margin:0; font-size: var(--trv-admin-text-sm); color:#64748b;"><?php esc_html_e('Includes complete day-by-day itineraries, high-res photos, inclusions, FAQs, and realistic pricing.', 'tourivo'); ?></p>
@@ -239,14 +239,14 @@ class SetupWizard
                     <div class="wizard-footer">
                         <button type="button" class="wizard-btn wizard-btn-secondary" onclick="TourivoWizard.goToStep(4);"><?php esc_html_e('Skip Demo Import', 'tourivo'); ?></button>
                         <button type="button" class="wizard-btn wizard-btn-success" id="btnImportDemo">
-                            ✨ <?php esc_html_e('Import Demo Data Now', 'tourivo'); ?>
+                            <?php esc_html_e('Import Demo Data Now', 'tourivo'); ?>
                         </button>
                     </div>
                 </div>
 
                 <!-- Step 4: Ready / Completion Screen -->
                 <div class="wizard-content-card" id="wizard-card-4" style="display:none; text-align:center;">
-                    <div style="font-size: 54px; margin-bottom: 12px;">🎉</div>
+                    <div class="wizard-done-icon"><span class="dashicons dashicons-yes-alt" aria-hidden="true"></span></div>
                     <h2 style="font-size: var(--trv-admin-text-3xl); font-weight: 700; color: #0f172a; margin: 0 0 10px;"><?php esc_html_e('Your Booking Engine is Ready!', 'tourivo'); ?></h2>
                     <p style="font-size: var(--trv-admin-text-lg); color: #64748b; max-width: 500px; margin: 0 auto 24px;">
                         <?php esc_html_e('Tourivo has been successfully configured. You are ready to accept bookings, manage travel itineraries, and publish hotel rooms.', 'tourivo'); ?>
@@ -254,22 +254,22 @@ class SetupWizard
 
                     <div class="wizard-quick-links-grid" id="wizardQuickLinks">
                         <a href="<?php echo esc_url(home_url('/tours')); ?>" target="_blank" class="quick-link-box">
-                            <span class="ql-icon">🌴</span>
+                            <span class="ql-icon dashicons dashicons-palmtree" aria-hidden="true"></span>
                             <strong><?php esc_html_e('View Tours Page', 'tourivo'); ?></strong>
                             <small><?php esc_html_e('Browse travel packages', 'tourivo'); ?></small>
                         </a>
                         <a href="<?php echo esc_url(home_url('/hotels')); ?>" target="_blank" class="quick-link-box">
-                            <span class="ql-icon">🏨</span>
+                            <span class="ql-icon dashicons dashicons-building" aria-hidden="true"></span>
                             <strong><?php esc_html_e('View Hotels Page', 'tourivo'); ?></strong>
                             <small><?php esc_html_e('Browse rooms & stays', 'tourivo'); ?></small>
                         </a>
                         <a href="<?php echo esc_url(home_url('/track-booking')); ?>" target="_blank" class="quick-link-box">
-                            <span class="ql-icon">🎫</span>
+                            <span class="ql-icon dashicons dashicons-tickets-alt" aria-hidden="true"></span>
                             <strong><?php esc_html_e('Track Booking Portal', 'tourivo'); ?></strong>
                             <small><?php esc_html_e('Customer self-service', 'tourivo'); ?></small>
                         </a>
                         <a href="<?php echo esc_url(admin_url('post-new.php?post_type=tourivo_tour')); ?>" class="quick-link-box">
-                            <span class="ql-icon">➕</span>
+                            <span class="ql-icon dashicons dashicons-plus-alt2" aria-hidden="true"></span>
                             <strong><?php esc_html_e('Create First Tour', 'tourivo'); ?></strong>
                             <small><?php esc_html_e('Add your custom itinerary', 'tourivo'); ?></small>
                         </a>
@@ -277,7 +277,7 @@ class SetupWizard
 
                     <div style="margin-top: 32px; border-top: 1px solid #e2e8f0; padding-top: 24px;">
                         <a href="<?php echo esc_url(admin_url('admin.php?page=tourivo')); ?>" class="wizard-btn wizard-btn-primary" style="padding: 12px 32px; font-size: var(--trv-admin-text-lg);">
-                            🚀 <?php esc_html_e('Go to Tourivo Dashboard', 'tourivo'); ?>
+                            <?php esc_html_e('Go to Tourivo Dashboard', 'tourivo'); ?>
                         </a>
                     </div>
                 </div>
@@ -299,8 +299,18 @@ class SetupWizard
             align-items: center;
             gap: 10px;
         }
-        .brand-icon {
-            font-size: 32px;
+        .brand-icon.dashicons {
+            width: 40px;
+            height: 40px;
+            font-size: 40px;
+            color: #0d9488;
+        }
+        .wizard-done-icon .dashicons {
+            width: 56px;
+            height: 56px;
+            font-size: 56px;
+            color: #0d9488;
+            margin-bottom: 12px;
         }
         .brand-title {
             font-size: var(--trv-admin-text-display);
@@ -475,11 +485,16 @@ class SetupWizard
             margin-bottom: 24px;
         }
         .demo-preview-icons {
-            font-size: 36px;
+            color: #0d9488;
             display: flex;
             justify-content: center;
             gap: 16px;
             margin-bottom: 12px;
+        }
+        .demo-preview-icons .dashicons {
+            width: 32px;
+            height: 32px;
+            font-size: 32px;
         }
         .wizard-footer {
             display: flex;
@@ -556,9 +571,12 @@ class SetupWizard
             transform: translateY(-2px);
         }
         .quick-link-box .ql-icon {
+            width: 24px;
+            height: 24px;
             font-size: 24px;
             display: block;
-            margin-bottom: 6px;
+            margin: 0 auto 6px;
+            color: #0d9488;
         }
         .quick-link-box strong {
             display: block;

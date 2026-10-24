@@ -88,6 +88,22 @@ class BookingsTable
     }
 
     /**
+     * Human label for a booking status ("on_hold" -> "On Hold").
+     */
+    public static function statusLabel(string $status): string
+    {
+        $labels = [
+            'pending'   => __('Pending', 'tourivo'),
+            'confirmed' => __('Confirmed', 'tourivo'),
+            'on_hold'   => __('On Hold', 'tourivo'),
+            'completed' => __('Completed', 'tourivo'),
+            'cancelled' => __('Cancelled', 'tourivo'),
+        ];
+
+        return $labels[$status] ?? ucfirst(str_replace('_', ' ', $status));
+    }
+
+    /**
      * Render the bookings management view.
      *
      * @return void
@@ -127,31 +143,34 @@ class BookingsTable
         );
         ?>
         <div class="wrap tourivo-admin-wrap">
-            <div class="tourivo-page-header" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-                <div>
-                    <h1 class="wp-heading-inline" style="margin-right: 12px;"><?php esc_html_e('All Bookings', 'tourivo'); ?></h1>
-                    <button type="button" id="tourivo-open-manual-booking-btn" class="page-title-action button-primary">
-                        ➕ <?php esc_html_e('Add Manual Booking', 'tourivo'); ?>
+            <div class="tourivo-page-header">
+                <div class="tourivo-page-header__text">
+                    <h1><?php esc_html_e('All Bookings', 'tourivo'); ?></h1>
+                </div>
+                <div class="header-actions">
+                    <button type="button" id="tourivo-open-export-modal-btn" class="button tourivo-open-export-modal-btn" data-status="<?php echo esc_attr($statusFilter); ?>" data-search="<?php echo esc_attr($searchQuery); ?>">
+                        <span class="dashicons dashicons-download" aria-hidden="true"></span><?php esc_html_e('Export Bookings', 'tourivo'); ?>
                     </button>
-                    <button type="button" id="tourivo-open-export-modal-btn" class="page-title-action button tourivo-open-export-modal-btn" data-status="<?php echo esc_attr($statusFilter); ?>" data-search="<?php echo esc_attr($searchQuery); ?>">
-                        📥 <?php esc_html_e('Export Bookings', 'tourivo'); ?>
+                    <button type="button" id="tourivo-open-manual-booking-btn" class="button button-primary">
+                        <span class="dashicons dashicons-plus-alt2" aria-hidden="true"></span><?php esc_html_e('Add Manual Booking', 'tourivo'); ?>
                     </button>
                 </div>
             </div>
+            <hr class="wp-header-end">
 
             <!-- Filter Status Links -->
             <ul class="subsubsub">
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=all')); ?>" class="<?php echo ($statusFilter === 'all') ? 'current' : ''; ?>"><?php esc_html_e('All', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=pending')); ?>" class="<?php echo ($statusFilter === 'pending') ? 'current' : ''; ?>"><?php esc_html_e('Pending', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=confirmed')); ?>" class="<?php echo ($statusFilter === 'confirmed') ? 'current' : ''; ?>"><?php esc_html_e('Confirmed', 'tourivo'); ?></a> |</li>
-                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancel_requested')); ?>" class="<?php echo ($statusFilter === 'cancel_requested') ? 'current' : ''; ?>"><?php esc_html_e('🚨 Cancel Requested', 'tourivo'); ?></a> |</li>
+                <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancel_requested')); ?>" class="<?php echo ($statusFilter === 'cancel_requested') ? 'current' : ''; ?>"><?php esc_html_e('Cancel Requested', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=on_hold')); ?>" class="<?php echo ($statusFilter === 'on_hold') ? 'current' : ''; ?>"><?php esc_html_e('On Hold', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=completed')); ?>" class="<?php echo ($statusFilter === 'completed') ? 'current' : ''; ?>"><?php esc_html_e('Completed', 'tourivo'); ?></a> |</li>
                 <li><a href="<?php echo esc_url(admin_url('admin.php?page=tourivo-bookings&status=cancelled')); ?>" class="<?php echo ($statusFilter === 'cancelled') ? 'current' : ''; ?>"><?php esc_html_e('Cancelled', 'tourivo'); ?></a></li>
             </ul>
 
             <!-- Search Form -->
-            <form method="get" class="search-box" style="margin-bottom: 12px; float: right;">
+            <form method="get" class="search-box tourivo-bookings-search">
                 <input type="hidden" name="page" value="tourivo-bookings">
                 <?php if ($statusFilter !== 'all') : ?>
                     <input type="hidden" name="status" value="<?php echo esc_attr($statusFilter); ?>">
@@ -160,7 +179,7 @@ class BookingsTable
                 <input type="submit" class="button" value="<?php esc_attr_e('Search', 'tourivo'); ?>">
             </form>
 
-            <table class="wp-list-table widefat fixed striped" style="margin-top: 10px;">
+            <table class="wp-list-table widefat fixed striped tourivo-bookings-table">
                 <thead>
                     <tr>
                         <th style="width: 130px;"><?php esc_html_e('Booking Code', 'tourivo'); ?></th>
@@ -226,43 +245,47 @@ class BookingsTable
                             </td>
                             <td>
                                 <span class="tourivo-badge tourivo-badge-<?php echo esc_attr($b->payment_status); ?>">
-                                    <?php echo esc_html(strtoupper($b->payment_method) . ' (' . ucfirst($b->payment_status) . ')'); ?>
+                                    <?php echo esc_html(ucfirst(str_replace('_', ' ', (string) $b->payment_status))); ?>
                                 </span>
+                                <br><small class="tourivo-muted"><?php echo esc_html(ucwords(str_replace(['_', '-'], ' ', (string) $b->payment_method))); ?></small>
                             </td>
                             <td>
                                 <span class="tourivo-badge tourivo-badge-<?php echo esc_attr($b->booking_status); ?>" id="status-badge-<?php echo esc_attr((string)$b->id); ?>">
-                                    <?php echo esc_html(ucfirst($b->booking_status)); ?>
+                                    <?php echo esc_html(self::statusLabel((string) $b->booking_status)); ?>
                                 </span>
                                 <?php if (!empty($b->cancel_requested_at) && $b->booking_status !== 'cancelled') : ?>
-                                    <br><span class="tourivo-badge" style="background:#fee2e2; color:#991b1b; margin-top:4px; display:inline-block; font-size: var(--trv-admin-text-xs);">🚨 <?php esc_html_e('Cancel Requested', 'tourivo'); ?></span>
+                                    <br><span class="tourivo-badge tourivo-badge-alert tourivo-badge-stacked"><?php esc_html_e('Cancel Requested', 'tourivo'); ?></span>
                                 <?php endif; ?>
                             </td>
                             <td>
                                 <div class="action-buttons-group">
                                     <button type="button" class="button button-small open-timeline-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-name="<?php echo esc_attr($b->customer_name); ?>" data-email="<?php echo esc_attr($b->customer_email); ?>" data-phone="<?php echo esc_attr($b->customer_phone); ?>" data-item="<?php echo esc_attr($b->item_title ?? ''); ?>" data-checkin="<?php echo esc_attr($b->check_in ?? ''); ?>" data-checkout="<?php echo esc_attr($b->check_out ?? ''); ?>" data-amount="<?php echo esc_attr(\Tourivo\Support\Money::format((float)$b->total_amount)); ?>" data-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr(wp_create_nonce('tourivo_timeline_nonce')); ?>" title="<?php esc_attr_e('View Booking Details & Timeline Notes', 'tourivo'); ?>">
-                                        👁️ <?php esc_html_e('Details', 'tourivo'); ?>
+                                        <span class="dashicons dashicons-visibility" aria-hidden="true"></span><?php esc_html_e('Details', 'tourivo'); ?>
                                     </button>
                                     <a href="<?php echo esc_url(add_query_arg(['action' => 'tourivo_print_voucher', 'code' => $b->booking_code], admin_url('admin-post.php'))); ?>" target="_blank" rel="noopener" class="button button-small" title="<?php esc_attr_e('Print Booking Voucher', 'tourivo'); ?>">
-                                        🖨️ <?php esc_html_e('Voucher', 'tourivo'); ?>
+                                        <span class="dashicons dashicons-printer" aria-hidden="true"></span><?php esc_html_e('Voucher', 'tourivo'); ?>
                                     </a>
                                     <?php do_action('tourivo_booking_row_actions', $b); ?>
                                     <button type="button" class="button button-small tourivo-open-payment-modal-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-code="<?php echo esc_attr($b->booking_code); ?>" data-customer="<?php echo esc_attr($b->customer_name); ?>" data-total="<?php echo esc_attr((string)$b->total_amount); ?>" data-paid="<?php echo esc_attr((string)($b->paid_amount ?? 0)); ?>" data-due="<?php echo esc_attr((string)($b->due_amount ?? $b->total_amount)); ?>" data-payment-status="<?php echo esc_attr($b->payment_status); ?>" data-payment-method="<?php echo esc_attr($b->payment_method); ?>" data-transaction-id="<?php echo esc_attr($b->transaction_id ?? ''); ?>" data-booking-status="<?php echo esc_attr($b->booking_status); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Record received offline payment or mark paid', 'tourivo'); ?>">
-                                        💳 <?php esc_html_e('Payment', 'tourivo'); ?>
+                                        <span class="dashicons dashicons-money-alt" aria-hidden="true"></span><?php esc_html_e('Payment', 'tourivo'); ?>
                                     </button>
-                                    <button type="button" class="button button-small revoke-links-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Invalidate previously shared voucher / calendar links', 'tourivo'); ?>">🔒 <?php esc_html_e('Revoke Links', 'tourivo'); ?></button>
+                                    <button type="button" class="button button-small revoke-links-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-nonce="<?php echo esc_attr($nonce); ?>" title="<?php esc_attr_e('Invalidate previously shared voucher / calendar links', 'tourivo'); ?>"><span class="dashicons dashicons-lock" aria-hidden="true"></span><?php esc_html_e('Revoke Links', 'tourivo'); ?></button>
                                     <?php if ($b->booking_status !== 'confirmed') : ?>
-                                        <button type="button" class="button button-small button-primary change-status-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-status="confirmed" data-nonce="<?php echo esc_attr($nonce); ?>">✓ <?php esc_html_e('Confirm', 'tourivo'); ?></button>
+                                        <button type="button" class="button button-small button-primary change-status-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-status="confirmed" data-nonce="<?php echo esc_attr($nonce); ?>"><span class="dashicons dashicons-yes" aria-hidden="true"></span><?php esc_html_e('Confirm', 'tourivo'); ?></button>
                                     <?php endif; ?>
                                     <?php if ($b->booking_status !== 'cancelled') : ?>
-                                        <button type="button" class="button button-small button-link-delete change-status-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-status="cancelled" data-nonce="<?php echo esc_attr($nonce); ?>" style="color:#ef4444;"><?php esc_html_e('Cancel', 'tourivo'); ?></button>
+                                        <button type="button" class="button button-small button-link-delete change-status-btn" data-id="<?php echo esc_attr((string)$b->id); ?>" data-status="cancelled" data-nonce="<?php echo esc_attr($nonce); ?>"><?php esc_html_e('Cancel', 'tourivo'); ?></button>
                                     <?php endif; ?>
                                 </div>
                             </td>
                         </tr>
                     <?php endforeach; else : ?>
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 20px; color: #64748b;">
-                                <?php esc_html_e('No bookings found matching criteria.', 'tourivo'); ?>
+                            <td colspan="7">
+                                <div class="tourivo-empty">
+                                    <span class="dashicons dashicons-calendar-alt" aria-hidden="true"></span>
+                                    <p><?php esc_html_e('No bookings found matching criteria.', 'tourivo'); ?></p>
+                                </div>
                             </td>
                         </tr>
                     <?php endif; ?>
@@ -298,7 +321,7 @@ class BookingsTable
                 <div class="modal-overlay"></div>
                 <div class="modal-dialog">
                     <div class="modal-header">
-                        <h2>➕ <?php esc_html_e('Create Manual Booking (Phone / WhatsApp / Walk-in)', 'tourivo'); ?></h2>
+                        <h2><?php esc_html_e('Create Manual Booking (Phone / WhatsApp / Walk-in)', 'tourivo'); ?></h2>
                         <button type="button" class="close-modal-btn">&times;</button>
                     </div>
                     <form id="tourivo-manual-booking-form">
@@ -310,14 +333,14 @@ class BookingsTable
                                     <optgroup label="<?php esc_attr_e('Tour Packages', 'tourivo'); ?>">
                                         <?php foreach ($tours as $t) : ?>
                                             <option value="<?php echo esc_attr((string) $t->ID); ?>" data-type="tour">
-                                                🌴 <?php echo esc_html($t->post_title); ?>
+                                                <?php echo esc_html($t->post_title); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </optgroup>
                                     <optgroup label="<?php esc_attr_e('Hotel Rooms', 'tourivo'); ?>">
                                         <?php foreach ($rooms as $r) : ?>
                                             <option value="<?php echo esc_attr((string) $r->ID); ?>" data-type="room">
-                                                🏨 <?php echo esc_html($r->post_title); ?>
+                                                <?php echo esc_html($r->post_title); ?>
                                             </option>
                                         <?php endforeach; ?>
                                     </optgroup>
@@ -398,7 +421,7 @@ class BookingsTable
                 <div class="modal-overlay"></div>
                 <div class="modal-dialog" style="max-width: 680px;">
                     <div class="modal-header">
-                        <h2>📋 <span id="timeline-modal-code">Booking #</span></h2>
+                        <h2><span id="timeline-modal-code">Booking #</span></h2>
                         <button type="button" class="close-modal-btn">&times;</button>
                     </div>
                     <div class="modal-body">
@@ -425,7 +448,7 @@ class BookingsTable
                                 <div style="display: flex; gap: 8px;">
                                     <input type="text" name="note" id="internal-note-text" required placeholder="<?php esc_attr_e('e.g. Customer requested early check-in or confirmed passport.', 'tourivo'); ?>" style="flex: 1;">
                                     <button type="submit" id="add-note-submit-btn" class="button button-primary">
-                                        ➕ <?php esc_html_e('Add Note', 'tourivo'); ?>
+                                        <?php esc_html_e('Add Note', 'tourivo'); ?>
                                     </button>
                                 </div>
                             </div>
@@ -460,7 +483,7 @@ class BookingsTable
             <div class="modal-overlay"></div>
             <div class="modal-dialog" style="max-width: 650px;">
                 <div class="modal-header">
-                    <h2>📥 <?php esc_html_e('Export Bookings & Generate Reports', 'tourivo'); ?></h2>
+                    <h2><?php esc_html_e('Export Bookings & Generate Reports', 'tourivo'); ?></h2>
                     <button type="button" class="close-modal-btn">&times;</button>
                 </div>
                 <form id="tourivo-export-form" method="get" action="<?php echo esc_url(admin_url('admin-post.php')); ?>">
@@ -535,14 +558,14 @@ class BookingsTable
                                     <?php if (!empty($tours)) : ?>
                                         <optgroup label="<?php esc_attr_e('Tour Packages', 'tourivo'); ?>">
                                             <?php foreach ($tours as $t) : ?>
-                                                <option value="<?php echo esc_attr((string) $t->ID); ?>">🌴 <?php echo esc_html($t->post_title); ?></option>
+                                                <option value="<?php echo esc_attr((string) $t->ID); ?>"><?php echo esc_html($t->post_title); ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     <?php endif; ?>
                                     <?php if (!empty($rooms)) : ?>
                                         <optgroup label="<?php esc_attr_e('Hotel Rooms', 'tourivo'); ?>">
                                             <?php foreach ($rooms as $r) : ?>
-                                                <option value="<?php echo esc_attr((string) $r->ID); ?>">🏨 <?php echo esc_html($r->post_title); ?></option>
+                                                <option value="<?php echo esc_attr((string) $r->ID); ?>"><?php echo esc_html($r->post_title); ?></option>
                                             <?php endforeach; ?>
                                         </optgroup>
                                     <?php endif; ?>
@@ -575,7 +598,7 @@ class BookingsTable
 
                         <!-- Live Match Preview Badge -->
                         <div id="tourivo-export-preview-badge" style="margin-top: 14px; padding: 12px 14px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 6px; display: flex; justify-content: space-between; align-items: center; font-size: var(--trv-admin-text-sm);">
-                            <span>📊 <strong id="export-preview-count">...</strong> <?php esc_html_e('matching bookings found', 'tourivo'); ?> (<span id="export-preview-revenue">...</span>)</span>
+                            <span><strong id="export-preview-count">...</strong> <?php esc_html_e('matching bookings found', 'tourivo'); ?> (<span id="export-preview-revenue">...</span>)</span>
                             <span style="color: #166534; font-size: var(--trv-admin-text-xs); font-weight: 600;"><?php esc_html_e('UTF-8 Excel Ready', 'tourivo'); ?></span>
                         </div>
                     </div>
@@ -583,7 +606,7 @@ class BookingsTable
                     <div class="modal-footer" style="display: flex; justify-content: flex-end; gap: 10px; padding: 14px 20px; background: #f8fafc; border-top: 1px solid #e2e8f0;">
                         <button type="button" class="button close-modal-btn"><?php esc_html_e('Cancel', 'tourivo'); ?></button>
                         <button type="submit" id="tourivo-submit-export-btn" class="button button-primary">
-                            📥 <?php esc_html_e('Download CSV Report', 'tourivo'); ?>
+                            <span class="dashicons dashicons-download" aria-hidden="true"></span><?php esc_html_e('Download CSV Report', 'tourivo'); ?>
                         </button>
                     </div>
                 </form>
@@ -595,7 +618,7 @@ class BookingsTable
             <div class="tourivo-modal-overlay"></div>
             <div class="tourivo-modal-content" style="max-width: 520px; padding: 0; overflow: hidden; border-radius: 8px;">
                 <div class="modal-header" style="background: #0f172a; color: #ffffff; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center;">
-                    <h3 style="margin: 0; color: #ffffff; font-size: var(--trv-admin-text-lg);">💳 <?php esc_html_e('Record Payment', 'tourivo'); ?> &mdash; <span id="payment-modal-booking-code">#...</span></h3>
+                    <h3 style="margin: 0; color: #ffffff; font-size: var(--trv-admin-text-lg);"><?php esc_html_e('Record Payment', 'tourivo'); ?> &mdash; <span id="payment-modal-booking-code">#...</span></h3>
                     <button type="button" class="close-modal-btn" style="background: none; border: none; color: #ffffff; font-size: 20px; cursor: pointer; line-height: 1;">&times;</button>
                 </div>
                 <form id="tourivo-record-payment-form">

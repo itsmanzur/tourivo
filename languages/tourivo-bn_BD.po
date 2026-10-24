@@ -110,8 +110,8 @@ msgid "2. Itinerary Builder Tab"
 msgstr "২. ভ্রমণ পরিকল্পনা বিল্ডার ট্যাব"
 
 #: app/Admin/DocumentationPage.php:55
-msgid "2. ✨ All Features Catalog"
-msgstr "২. ✨ সকল ফিচারের তালিকা"
+msgid "2. All Features Catalog"
+msgstr "২. সকল ফিচারের তালিকা"
 
 #: app/Admin/DocumentationPage.php:56
 msgid "3. Creating Tour Packages"
@@ -768,8 +768,8 @@ msgid "Click \"✉️ Reply\" to open pre-filled email client."
 msgstr "প্রি-ফিল্ড ইমেল ক্লায়েন্ট খুলতে \"✉️ Reply\"-এ ক্লিক করুন।"
 
 #: app/Admin/DocumentationPage.php:519
-msgid "Click \"👁️ Details\" to read history and record staff notes."
-msgstr "হিস্ট্রি দেখতে এবং কর্মীদের নোট সংরক্ষণ করতে \"👁️ Details\"-এ ক্লিক করুন।"
+msgid "Click \"Details\" to read history and record staff notes."
+msgstr "হিস্ট্রি দেখতে এবং কর্মীদের নোট সংরক্ষণ করতে \"Details\"-এ ক্লিক করুন।"
 
 #: app/Admin/BookingsTable.php:435
 #: templates/booking-voucher.php:275
@@ -3905,20 +3905,20 @@ msgid "⚡ Import Starter Demo Content"
 msgstr "⚡ স্টার্টার ডেমো কন্টেন্ট ইমপোর্ট করুন"
 
 #: app/Admin/DocumentationPage.php:112
-msgid "⚡ Import Starter Demo Content Now"
-msgstr "⚡ এখনই স্টার্টার ডেমো কন্টেন্ট ইমপোর্ট করুন"
+msgid "Import Starter Demo Content Now"
+msgstr "এখনই স্টার্টার ডেমো কন্টেন্ট ইমপোর্ট করুন"
 
 #: app/Admin/DocumentationPage.php:213
 msgid "✓ Verified Traveler Trust Badge"
 msgstr "✓ ভেরিফাইড ট্রাভেলার ট্রাস্ট ব্যাজ"
 
 #: app/Admin/DocumentationPage.php:138
-msgid "✨ Complete Tourivo Feature Catalog"
-msgstr "✨ ট্যুরিতোর সম্পূর্ণ ফিচার ক্যাটালগ"
+msgid "Complete Tourivo Feature Catalog"
+msgstr "ট্যুরিতোর সম্পূর্ণ ফিচার ক্যাটালগ"
 
 #: app/Admin/DocumentationPage.php:95
-msgid "🚀 4-Step Quick Launch Checklist"
-msgstr "🚀 ৪-ধাপের দ্রুত চালুকরণ চেকলিস্ট"
+msgid "4-Step Quick Launch Checklist"
+msgstr "৪-ধাপের দ্রুত চালুকরণ চেকলিস্ট"
 
 #: app/Admin/SettingsPage.php:279
 msgid "Customer: Booking Request Received (Pending)"
@@ -5221,10 +5221,6 @@ msgstr ""
 msgid "https://thereadscope.com"
 msgstr ""
 
-#: app/Admin/BookingsTable.php:147
-msgid "🚨 Cancel Requested"
-msgstr "🚨 বাতিলের অনুরোধ"
-
 #: app/Admin/BookingsTable.php:148
 #: app/Admin/BookingsTable.php:512
 msgid "On Hold"
@@ -5456,8 +5452,8 @@ msgid "Save Payment Record"
 msgstr "পেমেন্ট রেকর্ড সংরক্ষণ করুন"
 
 #: app/Admin/DocumentationPage.php:60
-msgid "7. 📅 Availability & Pricing Manager"
-msgstr "৭. 📅 অ্যাভেইলেবিলিটি ও মূল্য ব্যবস্থাপক"
+msgid "7. Availability & Pricing Manager"
+msgstr "৭. অ্যাভেইলেবিলিটি ও মূল্য ব্যবস্থাপক"
 
 #: app/Admin/DocumentationPage.php:61
 msgid "8. Tourivo Pro Features"
@@ -5484,8 +5480,8 @@ msgid "Advanced Export & Reporting (CSV):"
 msgstr "উন্নত এক্সপোর্ট ও রিপোর্টিং (CSV):"
 
 #: app/Admin/DocumentationPage.php:520
-msgid "Click \"📥 Export Bookings\" from the Dashboard or Bookings table to launch the export dialog. Filter by Booking vs Travel dates, booking/payment status, and specific tour/room. Generate standard booking lists, itemized line manifests, or financial summary reports with full Excel UTF-8 and formula-injection security."
-msgstr "এক্সপোর্ট ডায়ালগ খুলতে ড্যাশবোর্ড বা বুকিং টেবিল থেকে \"📥 বুকিং এক্সপোর্ট\" ক্লিক করুন। বুকিংয়ের তারিখ বা ভ্রমণের তারিখ, বুকিং/পেমেন্ট স্ট্যাটাস এবং নির্দিষ্ট ট্যুর/রুম দিয়ে ফিল্টার করুন। সাধারণ বুকিং তালিকা, আইটেমভিত্তিক লাইন তালিকা বা আর্থিক সারসংক্ষেপ রিপোর্ট তৈরি করুন, পূর্ণ Excel UTF-8 সাপোর্ট ও ফর্মুলা-ইনজেকশন সুরক্ষাসহ।"
+msgid "Click \"Export Bookings\" from the Dashboard or Bookings table to launch the export dialog. Filter by Booking vs Travel dates, booking/payment status, and specific tour/room. Generate standard booking lists, itemized line manifests, or financial summary reports with full Excel UTF-8 and formula-injection security."
+msgstr "এক্সপোর্ট ডায়ালগ খুলতে ড্যাশবোর্ড বা বুকিং টেবিল থেকে \"বুকিং এক্সপোর্ট\" ক্লিক করুন। বুকিংয়ের তারিখ বা ভ্রমণের তারিখ, বুকিং/পেমেন্ট স্ট্যাটাস এবং নির্দিষ্ট ট্যুর/রুম দিয়ে ফিল্টার করুন। সাধারণ বুকিং তালিকা, আইটেমভিত্তিক লাইন তালিকা বা আর্থিক সারসংক্ষেপ রিপোর্ট তৈরি করুন, পূর্ণ Excel UTF-8 সাপোর্ট ও ফর্মুলা-ইনজেকশন সুরক্ষাসহ।"
 
 #: app/Admin/DocumentationPage.php:538
 msgid "Availability & Pricing Calendar Manager"
@@ -5556,8 +5552,8 @@ msgid "Click \"Apply to Selected Dates\". The system updates the inventory atomi
 msgstr "\"নির্বাচিত তারিখে প্রয়োগ করুন\" ক্লিক করুন। সিস্টেম একটি ট্রানজ্যাকশনে ইনভেন্টরি আপডেট করে, SEO ক্যাশ মুছে দেয় এবং একটি অডিট লগ লেখে।"
 
 #: app/Admin/DocumentationPage.php:572
-msgid "💡 Developer Hook:"
-msgstr "💡 ডেভেলপার হুক:"
+msgid "Developer Hook:"
+msgstr "ডেভেলপার হুক:"
 
 #: app/Admin/DocumentationPage.php:574
 msgid "Listen to availability updates via:"
@@ -7323,3 +7319,15 @@ msgstr "এই বুকিংয়ের একটি অংশ আর পা�
 #, php-format
 msgid "%1$s + %2$s + %3$d more"
 msgstr "%1$s + %2$s + আরও %3$dটি"
+
+#: app/Admin/AdminDashboard.php
+msgid "No bookings yet"
+msgstr "এখনো কোনো বুকিং নেই"
+
+#: app/Admin/AdminDashboard.php
+msgid "View tours"
+msgstr "ট্যুর দেখুন"
+
+#: app/Admin/InquiriesTable.php
+msgid "Delete"
+msgstr "মুছুন"

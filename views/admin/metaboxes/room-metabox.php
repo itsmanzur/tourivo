@@ -38,7 +38,7 @@ if (!defined('ABSPATH')) {
                     <option value=""><?php esc_html_e('-- Select Hotel --', 'tourivo'); ?></option>
                     <?php foreach ($hotels as $tourivoHotelOption) : ?>
                         <option value="<?php echo esc_attr((string)$tourivoHotelOption->ID); ?>" <?php selected($parentHotelId, $tourivoHotelOption->ID); ?>>
-                            🏨 <?php echo esc_html($tourivoHotelOption->post_title); ?>
+                            <?php echo esc_html($tourivoHotelOption->post_title); ?>
                         </option>
                     <?php endforeach; ?>
                 </select>

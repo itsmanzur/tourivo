@@ -74,6 +74,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->addAction('admin_menu', [$this, 'loadAdminLocale'], 29);
         $this->addAction('admin_enqueue_scripts', [$this, 'maybeSwitchUiLocale'], 1);
         $this->addAction('admin_enqueue_scripts', [$this, 'enqueueAdminAssets']);
+        add_filter('admin_body_class', [$this, 'addAdminBodyClass']);
         $this->addAction('admin_post_tourivo_export_bookings_csv', [ExportService::class, 'handleExportRequest']);
         $this->addAction('admin_post_tourivo_export_accounting_csv', [$this, 'handleExportAccountingCsv']);
         $this->addAction('admin_post_tourivo_save_settings', [SettingsPage::class, 'handleSave']);
@@ -270,6 +271,19 @@ class AdminServiceProvider extends ServiceProvider
             'ajaxUrl' => admin_url('admin-ajax.php'),
             'nonce'   => wp_create_nonce('tourivo_admin_nonce'),
         ]);
+    }
+
+    /**
+     * Mark every Tourivo (and Tourivo Pro) admin page, so the shared admin styles can scope to it.
+     *
+     * Screen ids follow the translated menu title, so the page slug is the reliable signal.
+     */
+    public function addAdminBodyClass(string $classes): string
+    {
+        // phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only screen check.
+        $page = isset($_GET['page']) ? sanitize_key(wp_unslash((string) $_GET['page'])) : '';
+
+        return str_starts_with($page, 'tourivo') ? $classes . ' tourivo-admin-screen' : $classes;
     }
 
     public function renderDashboardPage(): void
