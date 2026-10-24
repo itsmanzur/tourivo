@@ -58,7 +58,7 @@ class BookingsTable
         $perPage  = max(1, $perPage);
         $offset   = ($page - 1) * $perPage;
 
-        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
         $countSql = "SELECT COUNT(*) FROM {$bookingsTable} WHERE {$whereSql}";
         $total    = (int) $wpdb->get_var(empty($params) ? $countSql : $wpdb->prepare($countSql, ...$params));
 
@@ -82,7 +82,7 @@ class BookingsTable
                 $items[$bookingId] = \Tourivo\Support\BookingItems::summaryRow($bookingItems, $bookingId);
             }
         }
-        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter, WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
 
         return ['bookings' => $bookings, 'total' => $total, 'items' => $items];
     }

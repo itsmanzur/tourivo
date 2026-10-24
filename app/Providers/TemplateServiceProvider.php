@@ -723,9 +723,11 @@ class TemplateServiceProvider extends ServiceProvider
             return;
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
         $destination = isset($_GET['tourivo_destination']) ? sanitize_title(wp_unslash((string) $_GET['tourivo_destination'])) : '';
         $date = isset($_GET['tourivo_date']) ? sanitize_text_field(wp_unslash((string) $_GET['tourivo_date'])) : '';
         $guests = isset($_GET['tourivo_guests']) ? max(1, min(50, absint(wp_unslash((string) $_GET['tourivo_guests'])))) : 1;
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
             $date = '';
         }
@@ -968,6 +970,7 @@ class TemplateServiceProvider extends ServiceProvider
             }
         }
         $kept = ['post_type' => 'tourivo_tour'];
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
         if (isset($_GET['tourivo_date'])) {
             $date = sanitize_text_field(wp_unslash((string) $_GET['tourivo_date']));
             if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
@@ -977,6 +980,7 @@ class TemplateServiceProvider extends ServiceProvider
         if (isset($_GET['tourivo_guests'])) {
             $kept['tourivo_guests'] = (string) max(1, min(50, absint(wp_unslash((string) $_GET['tourivo_guests']))));
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
         foreach ($terms as $term) {
             if (!$term instanceof \WP_Term || $term->name === '') {
                 continue;
@@ -1247,11 +1251,13 @@ class TemplateServiceProvider extends ServiceProvider
             'post_type'        => $postType,
             'post_status'      => 'publish',
             'posts_per_page'   => 6,
+            // phpcs:ignore WordPressVIPMinimum.Performance.WPQueryParams.PostNotIn_post__not_in -- Excludes only the current post from 6 related items.
             'post__not_in'     => [$currentId],
             'orderby'          => 'date',
             'order'            => 'DESC',
             'fields'           => 'ids',
             'no_found_rows'    => true,
+            // phpcs:ignore WordPress.DB.SlowDBQuery.slow_db_query_tax_query -- One destination term, 6 ids, no_found_rows.
             'tax_query'        => [
                 [
                     'taxonomy' => 'tourivo_destination',
@@ -1355,12 +1361,14 @@ class TemplateServiceProvider extends ServiceProvider
         }
 
         $destination = $this->searchedDestination();
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
         $date = isset($_GET['tourivo_date']) ? sanitize_text_field(wp_unslash((string) $_GET['tourivo_date'])) : '';
         $guests = isset($_GET['tourivo_guests']) ? max(1, min(50, absint(wp_unslash((string) $_GET['tourivo_guests'])))) : 1;
         if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $date)) {
             $date = '';
         }
         $searched = $destination !== '' || isset($_GET['tourivo_date']) || isset($_GET['tourivo_guests']);
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
         if ($date === '' && $destination === '' && !$searched) {
             return '';
         }
@@ -1507,9 +1515,11 @@ class TemplateServiceProvider extends ServiceProvider
             return false;
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
         return $this->searchedDestination() !== ''
             || isset($_GET['tourivo_date'])
             || isset($_GET['tourivo_guests']);
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
     }
 
     /**
@@ -1597,9 +1607,11 @@ class TemplateServiceProvider extends ServiceProvider
             return $fromQuery;
         }
 
+        // phpcs:disable WordPress.Security.NonceVerification.Recommended -- Public search filters read from the URL (GET, read-only, sanitized); no state changes.
         if (isset($_GET['tourivo_destination'])) {
             return sanitize_text_field(wp_unslash((string) $_GET['tourivo_destination']));
         }
+        // phpcs:enable WordPress.Security.NonceVerification.Recommended
 
         return '';
     }

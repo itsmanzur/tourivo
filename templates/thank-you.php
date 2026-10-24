@@ -17,6 +17,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template included inside a function; these variables are local.
+
 $brandColor    = !empty($primaryColor) ? $primaryColor : '#0d9488';
 $bookingStatus = (string) $booking->booking_status;
 $paymentStatus = (string) $booking->payment_status;

@@ -12,6 +12,8 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
+// phpcs:disable WordPress.NamingConventions.PrefixAllGlobals.NonPrefixedVariableFound -- Template included inside a function; these variables are local.
+
 $tourivoBooking   = isset($booking) && is_array($booking) ? $booking : [];
 $tourivoExtra     = isset($additionalContent) && is_string($additionalContent) ? $additionalContent : '';
 $adminBookingsUrl = admin_url('admin.php?page=tourivo-bookings');
