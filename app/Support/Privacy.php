@@ -255,11 +255,32 @@ class Privacy
             ));
 
             foreach ($bookings as $booking) {
+                // What was booked: every item with its dates and party (a package has several).
+                $bookedItems = [];
+                foreach (BookingItems::forBooking((int) $booking->id) as $line) {
+                    $dates = substr((string) ($line->check_in ?? ''), 0, 10);
+                    if (!empty($line->check_out)) {
+                        $dates .= ' – ' . substr((string) $line->check_out, 0, 10);
+                    }
+                    $bookedItems[] = [
+                        'name'  => __('Booked Item', 'tourivo'),
+                        'value' => sprintf(
+                            /* translators: 1: Item title, 2: Dates, 3: Adults, 4: Children, 5: Infants */
+                            __('%1$s (%2$s) — adults: %3$d, children: %4$d, infants: %5$d', 'tourivo'),
+                            (string) ($line->item_title ?? ''),
+                            $dates,
+                            (int) ($line->adults_count ?? 0),
+                            (int) ($line->children_count ?? 0),
+                            (int) ($line->infants_count ?? 0)
+                        ),
+                    ];
+                }
+
                 $data[] = [
                     'group_id'    => 'tourivo-bookings',
                     'group_label' => __('Tourivo Bookings', 'tourivo'),
                     'item_id'     => 'tourivo-booking-' . $booking->id,
-                    'data'        => [
+                    'data'        => array_merge([
                         ['name' => __('Booking Code', 'tourivo'), 'value' => (string) ($booking->booking_code ?? '')],
                         ['name' => __('Customer Name', 'tourivo'), 'value' => (string) ($booking->customer_name ?? '')],
                         ['name' => __('Email Address', 'tourivo'), 'value' => (string) ($booking->customer_email ?? '')],
@@ -272,7 +293,7 @@ class Privacy
                         ['name' => __('IP Address', 'tourivo'), 'value' => (string) ($booking->ip_address ?? '')],
                         ['name' => __('Consent Given At', 'tourivo'), 'value' => (string) ($booking->consent_at ?? '')],
                         ['name' => __('Created Date', 'tourivo'), 'value' => (string) ($booking->created_at ?? '')],
-                    ],
+                    ], $bookedItems),
                 ];
             }
         }
@@ -336,13 +357,20 @@ class Privacy
 
         // 1. Fetch matching bookings to anonymize
         $bookings = $wpdb->get_results($wpdb->prepare(
-            "SELECT id, booking_code FROM {$bookingsTable} WHERE customer_email = %s",
+            "SELECT id, booking_code, customer_name, customer_phone FROM {$bookingsTable} WHERE customer_email = %s",
             $emailAddress
         ));
 
         $anonymizedCount = 0;
         foreach ($bookings as $b) {
             $anonEmail = 'anon-' . substr(md5((string)$b->id . $emailAddress), 0, 12) . '@anonymized.invalid';
+
+            // Scrub this traveler's own values from the booking's logs while they are still known.
+            LogService::redactPersonalData((int) $b->id, [
+                $emailAddress,
+                (string) ($b->customer_name ?? ''),
+                (string) ($b->customer_phone ?? ''),
+            ]);
 
             $wpdb->update(
                 $bookingsTable,
@@ -359,8 +387,6 @@ class Privacy
                 ],
                 ['id' => $b->id]
             );
-
-            LogService::redactPersonalData((int) $b->id);
 
             $anonymizedCount++;
         }

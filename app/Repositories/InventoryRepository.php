@@ -206,7 +206,19 @@ class InventoryRepository
     }
 
     /**
+     * Why the last upsert() failed: 'capacity_below_active' or 'db_error' ('' after a success).
+     *
+     * @var string
+     */
+    public string $lastError = '';
+
+    /**
      * Insert or update an inventory capacity record.
+     *
+     * The capacity guard lives in the UPDATE itself: an existing row is only changed when the new capacity
+     * still covers the seats already booked or held (or does not shrink), so a booking that lands between
+     * the caller's validation and this write can never be squeezed out. A refused change affects 0 rows
+     * and returns false with $lastError = 'capacity_below_active'.
      *
      * @param int         $itemId
      * @param string      $itemType
@@ -230,19 +242,20 @@ class InventoryRepository
         ?float $priceOverride = null,
         string $status = 'available'
     ): bool {
-        $priceVal = $priceOverride !== null ? $priceOverride : 'NULL';
+        $this->lastError = '';
         $priceSql = $priceOverride !== null ? '%f' : 'NULL';
+        $fits     = '(VALUES(total_capacity) >= booked_count + reserved_count OR VALUES(total_capacity) >= total_capacity)';
 
         $query = $this->db->prepare(
-            "INSERT INTO {$this->table} 
+            "INSERT INTO {$this->table}
                 (item_id, item_type, event_date, time_slot, total_capacity, booked_count, reserved_count, price_override, status, created_at, updated_at)
-             VALUES 
+             VALUES
                 (%d, %s, %s, %s, %d, %d, %d, {$priceSql}, %s, NOW(), NOW())
              ON DUPLICATE KEY UPDATE
-                total_capacity = VALUES(total_capacity),
-                price_override = VALUES(price_override),
-                status = VALUES(status),
-                updated_at = NOW()",
+                price_override = IF({$fits}, VALUES(price_override), price_override),
+                status = IF({$fits}, VALUES(status), status),
+                updated_at = IF({$fits}, NOW(), updated_at),
+                total_capacity = IF({$fits}, VALUES(total_capacity), total_capacity)",
             $itemId,
             $itemType,
             $date,
@@ -253,7 +266,23 @@ class InventoryRepository
             ...($priceOverride !== null ? [$priceOverride, $status] : [$status])
         );
 
-        return $this->db->query($query) !== false;
+        $result = $this->db->query($query);
+        if ($result === false) {
+            $this->lastError = 'db_error';
+            return false;
+        }
+
+        // 1 = inserted, 2 = updated. 0 = nothing changed: either the guard refused it, or the row already held
+        // exactly these values within the same second. Only the first is an error.
+        if ((int) $this->db->rows_affected === 0) {
+            $row = $this->getRecord($itemId, $itemType, $date, $timeSlot);
+            if ($row && (int) $row->total_capacity !== $totalCapacity) {
+                $this->lastError = 'capacity_below_active';
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

@@ -145,7 +145,7 @@ class BookingService
 
         // Per-address throttle: stops one inbox being flooded with booking mail from rotating IPs.
         if (!$trusted) {
-            $emailLimit = max(1, (int) apply_filters('tourivo/booking_email_rate_limit', 5));
+            $emailLimit = max(1, (int) apply_filters('tourivo/booking/email_rate_limit', 5));
             if (!RateLimiter::hit('trv_rl_email_' . md5(strtolower($customerEmail)), $emailLimit, 3600)) {
                 return ['success' => false, 'message' => __('Too many booking requests were made for this email address. Please try again later.', 'tourivo')];
             }
@@ -236,7 +236,7 @@ class BookingService
          * Booking-wide price lines, such as a package discount: [['title' => string, 'total' => float], ...],
          * negative for discounts. They are shown with the first item's lines.
          */
-        $bookingAdjustments = (array) apply_filters('tourivo/booking_adjustments', [], $data, $quote, array_column($extraLines, 'quote'));
+        $bookingAdjustments = (array) apply_filters('tourivo/booking/adjustments', [], $data, $quote, array_column($extraLines, 'quote'));
         foreach ($bookingAdjustments as $adjustment) {
             $amount = round((float) ($adjustment['total'] ?? 0), 2);
             if ($amount == 0.0 || empty($adjustment['title'])) {
@@ -271,10 +271,10 @@ class BookingService
                 return;
             }
             $couponHeld = false;
-            do_action('tourivo/booking_coupon_rollback', $quote, $data);
+            do_action('tourivo/booking/coupon_rollback', $quote, $data);
         };
         if (!empty($quote['coupon']['code'])) {
-            $couponGate = apply_filters('tourivo/booking_coupon_commit', true, $quote, $data);
+            $couponGate = apply_filters('tourivo/booking/coupon_commit', true, $quote, $data);
             if ($couponGate !== true) {
                 $message = is_string($couponGate) ? $couponGate : __('This coupon could not be applied.', 'tourivo');
                 return ['success' => false, 'message' => $message];
@@ -496,7 +496,7 @@ class BookingService
             $this->db->query('ROLLBACK');
             $releaseCommittedInventory();
             $releaseCouponHold();
-            do_action('tourivo/booking_error', $e);
+            do_action('tourivo/booking/error', $e);
 
             // Internal details stay out of the customer-facing response.
             return ['success' => false, 'message' => __('An unexpected error occurred while creating your booking. Please try again.', 'tourivo')];
@@ -550,7 +550,7 @@ class BookingService
             ),
         ];
 
-        do_action('tourivo/booking_created', $bookingId, $bookingData);
+        do_action('tourivo/booking/created', $bookingId, $bookingData);
 
         $thankyouToken  = ThankYouShortcode::generateThankYouToken($bookingId);
         $thankyouPageId = (int) Config::get('thankyou_page_id', 0);
@@ -633,7 +633,7 @@ class BookingService
         ];
         $transitionAllowed = in_array($newStatus, $allowedNext[$oldStatus] ?? [], true);
         if (function_exists('apply_filters')) {
-            $transitionAllowed = (bool) apply_filters('tourivo/booking_status_transition_allowed', $transitionAllowed, $bookingId, $oldStatus, $newStatus, $booking);
+            $transitionAllowed = (bool) apply_filters('tourivo/booking/status_transition_allowed', $transitionAllowed, $bookingId, $oldStatus, $newStatus, $booking);
         }
         if (!$transitionAllowed) {
             return [
@@ -758,7 +758,13 @@ class BookingService
             ) . $sourceNote
         );
 
-        do_action('tourivo/booking_status_changed', $bookingId, $oldStatus, $newStatus, $context);
+        // Identifies this one transition (microseconds: updated_at only has whole seconds), so listeners can
+        // tell a repeated hook call from a real second change to the same status.
+        if (!isset($context['changed_at'])) {
+            $context['changed_at'] = sprintf('%.6F', microtime(true));
+        }
+
+        do_action('tourivo/booking/status_changed', $bookingId, $oldStatus, $newStatus, $context);
 
         return [
             'success' => true,
@@ -1172,7 +1178,7 @@ class BookingService
         // Another request verified it first: still a success for this visitor, but only one run of the follow-up mail.
         if ($updated === 1) {
             LogService::log($bookingId, 'email_verified', __('Customer confirmed their email address.', 'tourivo'), 0);
-            do_action('tourivo/booking_email_verified', $bookingId);
+            do_action('tourivo/booking/email_verified', $bookingId);
         }
 
         return ['success' => true, 'booking_id' => $bookingId, 'message' => __('Thank you! Your email address is confirmed and your booking is secured.', 'tourivo')];

@@ -233,7 +233,7 @@ class PricingService
         // Apply Pro / 3rd-party Pricing Pipeline Filter.
         // A filter that changes total_price should also list each change in 'adjustments'
         // ([['title' => string, 'total' => float], ...], negative for discounts) so the customer sees it itemised.
-        $pricingData = apply_filters('tourivo/booking_price', [
+        $pricingData = apply_filters('tourivo/booking/price', [
             'unit_price'  => $avgUnitPrice,
             'total_price' => $rawSubtotal,
             'base_price'  => $rawSubtotal,

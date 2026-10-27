@@ -12,7 +12,7 @@ use Tourivo\Tests\TestCase;
 /**
  * Class PricingAdjustmentsTest
  *
- * Price changes from tourivo/booking_price filters are itemised on the quote.
+ * Price changes from tourivo/booking/price filters are itemised on the quote.
  */
 class PricingAdjustmentsTest extends TestCase
 {
@@ -24,7 +24,7 @@ class PricingAdjustmentsTest extends TestCase
     {
         update_option('tourivo_settings', []);
         $tourId = $this->createTour(100.0, 10);
-        add_filter('tourivo/booking_price', $filter, 10, 2);
+        add_filter('tourivo/booking/price', $filter, 10, 2);
         try {
             return (new PricingService(new InventoryService(new InventoryRepository())))->quote([
                 'item_id'   => $tourId,
@@ -33,7 +33,7 @@ class PricingAdjustmentsTest extends TestCase
                 'adults'    => 2,
             ]);
         } finally {
-            remove_filter('tourivo/booking_price', $filter);
+            remove_filter('tourivo/booking/price', $filter);
         }
     }
 

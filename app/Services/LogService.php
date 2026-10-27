@@ -59,14 +59,16 @@ class LogService
     public const PII_ACTIONS = ['email_sent', 'email_failed', 'cancel_requested', 'internal_note'];
 
     /**
-     * Replace the details of PII-bearing log entries of a booking with a neutral placeholder.
+     * Replace the details of PII-bearing log entries of a booking with a neutral placeholder, and scrub the
+     * traveler's own values (and any email address) from every other entry of that booking.
      *
      * The audit trail itself (that something happened, and when) is kept.
      *
-     * @param int $bookingId
+     * @param int      $bookingId
+     * @param string[] $knownValues The traveler's name, email, phone... as stored before anonymization.
      * @return void
      */
-    public static function redactPersonalData(int $bookingId): void
+    public static function redactPersonalData(int $bookingId, array $knownValues = []): void
     {
         global $wpdb;
         $table = $wpdb->prefix . 'tourivo_logs';
@@ -79,6 +81,26 @@ class LogService
             ...array_merge(['[redacted]', $bookingId], self::PII_ACTIONS)
         ));
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, WordPress.DB.PreparedSQL.NotPrepared, WordPress.DB.PreparedSQLPlaceholders.ReplacementsWrongNumber, PluginCheck.Security.DirectDB.UnescapedDBParameter
+
+        // Values shorter than 3 characters would match unrelated words.
+        $needles = array_values(array_filter(array_map('trim', $knownValues), static fn (string $v): bool => mb_strlen($v) >= 3));
+
+        foreach (self::getTimeline($bookingId) as $entry) {
+            $details = (string) ($entry['details'] ?? '');
+            if ($details === '' || $details === '[redacted]') {
+                continue;
+            }
+
+            $clean = (string) preg_replace('/[A-Z0-9._%+\-]+@[A-Z0-9.\-]+\.[A-Z]{2,}/i', '[redacted]', $details);
+            foreach ($needles as $needle) {
+                $clean = str_ireplace($needle, '[redacted]', $clean);
+            }
+
+            if ($clean !== $details) {
+                // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- One log row, by primary key.
+                $wpdb->update($table, ['details' => $clean], ['id' => (int) $entry['id']], ['%s'], ['%d']);
+            }
+        }
     }
 
     /**

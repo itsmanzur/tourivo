@@ -189,9 +189,21 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         $status   = $m[9];
                         $key = "{$itemId}_{$date}";
                         if (isset($this->inventories[$key])) {
+                            // Mirrors the guarded ON DUPLICATE KEY UPDATE: a capacity cut below the seats already
+                            // booked or held leaves the row untouched (0 rows affected).
+                            $cur    = $this->inventories[$key];
+                            $active = (int) $cur['booked_count'] + (int) $cur['reserved_count'];
+                            $guarded = stripos($trimmed, 'VALUES(total_capacity) >= booked_count + reserved_count') !== false;
+                            if ($guarded && $totalCap < $active && $totalCap < (int) $cur['total_capacity']) {
+                                $this->rows_affected = 0;
+                                return 0;
+                            }
                             $this->inventories[$key]['total_capacity'] = $totalCap;
                             $this->inventories[$key]['price_override'] = $priceVal;
                             $this->inventories[$key]['status']         = $status;
+                            $this->insert_id = $this->inventories[$key]['id'] ?? 1;
+                            $this->rows_affected = 2;
+                            return 2;
                         } else {
                             $id = count($this->inventories) + 1;
                             $this->inventories[$key] = [
@@ -477,8 +489,47 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                 return addcslashes($text, '_%\\');
             }
 
+            /**
+             * Retention candidates (PrivacyService): status in the IN list, not anonymized, and trip end
+             * (latest check_out/check_in over the booking's items, else created_at) on or before the cutoff.
+             */
+            public function retentionCandidates(string $query): array {
+                preg_match('/booking_status\s+IN\s*\(([^)]*)\)/i', $query, $mS);
+                $statuses = array_map(static fn ($s) => trim($s, " '"), explode(',', $mS[1] ?? ''));
+                preg_match("/HAVING.*<=\s*'([0-9-]{10})'/is", $query, $mC);
+                $cutoff = $mC[1] ?? '0000-00-00';
+                $byTripEnd = stripos($query, 'COALESCE(i.check_out, i.check_in)') !== false;
+                $rows = [];
+                foreach ($this->bookings as $b) {
+                    if (!in_array((string) ($b['booking_status'] ?? ''), $statuses, true) || ($b['customer_name'] ?? '') === 'Anonymized') {
+                        continue;
+                    }
+                    $end = '';
+                    foreach ($byTripEnd ? $this->booking_items : [] as $it) {
+                        if ((int) ($it['booking_id'] ?? 0) === (int) $b['id']) {
+                            $d = substr((string) (!empty($it['check_out']) ? $it['check_out'] : ($it['check_in'] ?? '')), 0, 10);
+                            $end = max($end, $d);
+                        }
+                    }
+                    if ($end === '') {
+                        $end = substr((string) ($b['created_at'] ?? ''), 0, 10);
+                    }
+                    if ($end <= $cutoff) {
+                        $rows[(int) $b['id']] = $b;
+                    }
+                }
+                ksort($rows);
+                if (preg_match('/LIMIT\s+(\d+)/i', $query, $mL)) {
+                    $rows = array_slice($rows, 0, (int) $mL[1], true);
+                }
+                return array_values($rows);
+            }
+
             public function get_col(?string $query = null, int $x = 0): array {
                 if (!$query) return [];
+                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'HAVING') !== false) {
+                    return array_map(static fn ($b) => $b['id'], $this->retentionCandidates($query));
+                }
                 if (stripos($query, 'option_name') !== false && preg_match("/LIKE\s+'([^']*)'/i", $query, $mLike)) {
                     $prefix = rtrim(str_replace('\\_', '_', stripslashes($mLike[1])), '%');
                     $names = [];
@@ -571,6 +622,10 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
             public function get_results(?string $query = null, string $output = OBJECT): array {
                 if (!$query) return [];
+
+                if (stripos($query, 'tourivo_bookings') !== false && stripos($query, 'HAVING') !== false) {
+                    return array_map(static fn ($b) => $output === ARRAY_A ? $b : (object) $b, $this->retentionCandidates($query));
+                }
 
                 if (stripos($query, 'tourivo_inquiries') !== false) {
                     $matched = [];
@@ -902,6 +957,16 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
                         }
                     }
                 }
+                if (stripos($table, 'tourivo_logs') !== false) {
+                    $id = (int) ($where['id'] ?? 0);
+                    if (isset($this->logs[$id])) {
+                        $this->logs[$id] = array_merge($this->logs[$id], $data);
+                        $this->rows_affected = 1;
+                        return 1;
+                    }
+                    $this->rows_affected = 0;
+                    return 0;
+                }
                 $this->rows_affected = 1;
                 return 1;
             }
@@ -1071,8 +1136,22 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
     if (!function_exists('wp_parse_url')) {
         function wp_parse_url(string $url, int $component = -1): mixed { return parse_url($url, $component); }
     }
+    // Site timezone from the 'timezone_string' option (UTC when unset), like WordPress.
+    if (!function_exists('wp_timezone')) {
+        function wp_timezone(): \DateTimeZone {
+            $tz = (string) get_option('timezone_string', '');
+            return new \DateTimeZone($tz !== '' ? $tz : 'UTC');
+        }
+    }
+    if (!function_exists('current_datetime')) {
+        function current_datetime(): \DateTimeImmutable {
+            return new \DateTimeImmutable('now', wp_timezone());
+        }
+    }
     if (!function_exists('wp_date')) {
-        function wp_date(string $format, ?int $timestamp = null): string { return gmdate($format, $timestamp ?? time()); }
+        function wp_date(string $format, ?int $timestamp = null, ?\DateTimeZone $timezone = null): string {
+            return (new \DateTimeImmutable('@' . ($timestamp ?? time())))->setTimezone($timezone ?? wp_timezone())->format($format);
+        }
     }
     if (!function_exists('current_time')) {
         function current_time(string $type, int $gmt = 0): string { return gmdate('Y-m-d H:i:s'); }
@@ -1495,13 +1574,38 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             $count = 0;
             if (isset($GLOBALS['tourivo_mock_scheduled_events'])) {
                 foreach ($GLOBALS['tourivo_mock_scheduled_events'] as $k => $ev) {
-                    if ($ev['hook'] === $hook) {
+                    // Like WordPress: only WP-Cron events with exactly these args (default: none).
+                    if ($ev['hook'] === $hook && !str_starts_with((string) $ev['type'], 'action_scheduler') && ($ev['args'] ?? []) === $args) {
                         unset($GLOBALS['tourivo_mock_scheduled_events'][$k]);
                         $count++;
                     }
                 }
             }
             return $count;
+        }
+    }
+
+    // Unlike wp_clear_scheduled_hook() (which only matches the given args), these drop every event of the hook.
+    if (!function_exists('wp_unschedule_hook')) {
+        function wp_unschedule_hook(string $hook, bool $wp_error = false): int|false {
+            $count = 0;
+            foreach ($GLOBALS['tourivo_mock_scheduled_events'] ?? [] as $k => $ev) {
+                if ($ev['hook'] === $hook && !str_starts_with((string) $ev['type'], 'action_scheduler')) {
+                    unset($GLOBALS['tourivo_mock_scheduled_events'][$k]);
+                    $count++;
+                }
+            }
+            return $count;
+        }
+    }
+
+    if (!function_exists('as_unschedule_all_actions')) {
+        function as_unschedule_all_actions(string $hook, ?array $args = null, string $group = ''): void {
+            foreach ($GLOBALS['tourivo_mock_scheduled_events'] ?? [] as $k => $ev) {
+                if ($ev['hook'] === $hook && str_starts_with((string) $ev['type'], 'action_scheduler')) {
+                    unset($GLOBALS['tourivo_mock_scheduled_events'][$k]);
+                }
+            }
         }
     }
 
