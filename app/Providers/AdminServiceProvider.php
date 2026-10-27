@@ -974,6 +974,33 @@ class AdminServiceProvider extends ServiceProvider
     }
 
     /**
+     * Stop the request with 403 unless $itemId really is a post of the claimed item type and the user may edit it.
+     *
+     * The type must match first, so an ID of another post type (or another plugin's post) can never be
+     * passed off as a tour or room; then only the item's own edit_post capability counts.
+     *
+     * @param int    $itemId
+     * @param string $itemType tour | room | hotel_room | hotel
+     * @return bool False once the 403 response was sent.
+     */
+    private function authorizeInventoryItem(int $itemId, string $itemType): bool
+    {
+        $postTypes = [
+            'tour'       => 'tourivo_tour',
+            'room'       => 'tourivo_room',
+            'hotel_room' => 'tourivo_room',
+            'hotel'      => 'tourivo_hotel',
+        ];
+
+        if (!isset($postTypes[$itemType]) || get_post_type($itemId) !== $postTypes[$itemType] || !current_user_can('edit_post', $itemId)) {
+            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * AJAX handler to fetch admin monthly availability calendar grid.
      *
      * @return void
@@ -992,8 +1019,8 @@ class AdminServiceProvider extends ServiceProvider
             wp_send_json_error(['message' => __('Invalid item ID.', 'tourivo')], 400);
         }
 
-        if (!current_user_can('edit_post', $itemId) && !current_user_can('manage_tourivo_tours') && !current_user_can('manage_tourivo_hotels') && !current_user_can('manage_tourivo')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+        if (!$this->authorizeInventoryItem($itemId, $itemType)) {
+            return;
         }
 
         $invService = Container::getInstance()->get(InventoryService::class);
@@ -1031,8 +1058,8 @@ class AdminServiceProvider extends ServiceProvider
             wp_send_json_error(['message' => __('Please provide a valid item ID and date.', 'tourivo')], 400);
         }
 
-        if (!current_user_can('edit_post', $itemId) && !current_user_can('manage_tourivo_tours') && !current_user_can('manage_tourivo_hotels') && !current_user_can('manage_tourivo')) {
-            wp_send_json_error(['message' => __('Unauthorized permission.', 'tourivo')], 403);
+        if (!$this->authorizeInventoryItem($itemId, $itemType)) {
+            return;
         }
 
         $changes = [];

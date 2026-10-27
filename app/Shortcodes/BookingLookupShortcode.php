@@ -12,6 +12,7 @@ use Tourivo\Services\LogService;
 use Tourivo\Support\ClientIp;
 use Tourivo\Support\RateLimiter;
 use Tourivo\Support\Money;
+use Tourivo\Support\SiteTime;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -278,17 +279,18 @@ class BookingLookupShortcode
         // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
 
         $selfCancelHours = (int) Config::get('customer_self_cancel_hours', 0);
-        $checkInRaw      = $item ? (string) $item->check_in : (string) $booking->created_at;
-        $checkInTime     = strtotime($checkInRaw);
-        $now             = time();
+        // check_in is the site's local trip date; created_at (fallback) is UTC.
+        $checkInRaw      = $item
+            ? (string) $item->check_in
+            : (new \DateTimeImmutable((string) $booking->created_at, new \DateTimeZone('UTC')))->setTimezone(wp_timezone())->format('Y-m-d H:i:s');
+        $now             = current_datetime();
 
         $canSelfCancel = false;
         if ($selfCancelHours > 0
             && in_array($booking->booking_status, ['pending', 'confirmed'], true)
             && ($booking->payment_status !== 'paid' || (float) $booking->total_amount <= 0.0)
         ) {
-            $cutoff = $checkInTime - ($selfCancelHours * 3600);
-            if ($now <= $cutoff) {
+            if ($now <= SiteTime::cancelCutoff($checkInRaw, $selfCancelHours)) {
                 $canSelfCancel = true;
             }
         }
@@ -415,8 +417,8 @@ class BookingLookupShortcode
 
         $itemsHtml = '';
         foreach ($items as $item) {
-            $checkInFormatted  = !empty($item->check_in) ? gmdate('M d, Y', strtotime((string) $item->check_in)) : '—';
-            $checkOutFormatted = !empty($item->check_out) ? gmdate('M d, Y', strtotime((string) $item->check_out)) : '';
+            $checkInFormatted  = !empty($item->check_in) ? SiteTime::formatTripDate((string) $item->check_in) : '—';
+            $checkOutFormatted = !empty($item->check_out) ? SiteTime::formatTripDate((string) $item->check_out) : '';
             $dateRange = $checkOutFormatted ? "{$checkInFormatted} → {$checkOutFormatted}" : $checkInFormatted;
             $typeLabel = ($item->item_type === 'room' || $item->item_type === 'hotel_room') ? esc_html__('Hotel Stay', 'tourivo') : esc_html__('Tour Package', 'tourivo');
 
@@ -443,7 +445,7 @@ class BookingLookupShortcode
             $itemsHtml .= '</div>';
         }
 
-        $createdFormatted = gmdate('M d, Y H:i', strtotime((string) $booking->created_at));
+        $createdFormatted = SiteTime::formatGmt((string) $booking->created_at);
         $cancelRequested  = !empty($booking->cancel_requested_at) && $bookingStatus !== 'cancelled';
         $allowCancel      = (bool) Config::get('allow_cancel_requests', true) && $bookingStatus !== 'cancelled';
         $selfCancelHours  = (int) Config::get('customer_self_cancel_hours', 0);

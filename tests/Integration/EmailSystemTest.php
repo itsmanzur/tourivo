@@ -149,7 +149,9 @@ class EmailSystemTest extends TestCase
         $this->assertCount(1, $emailEvents, 'customer_booking_confirmed should be queued on confirmation.');
 
         $this->assertEquals('customer_booking_confirmed', $emailEvents[array_key_first($emailEvents)]['args'][0]);
-        $this->assertEquals('sara@example.com', $emailEvents[array_key_first($emailEvents)]['args'][1]);
+        // The job carries a hash of the address and the booking ID, never the address itself.
+        $this->assertEquals($this->emailService->recipientHash('sara@example.com'), $emailEvents[array_key_first($emailEvents)]['args'][1]);
+        $this->assertEquals($bookingId, $emailEvents[array_key_first($emailEvents)]['args'][2]);
 
         // Dispatch worker
         $ev = reset($emailEvents);
@@ -176,13 +178,20 @@ class EmailSystemTest extends TestCase
         $bookingId = $res['booking_id'];
 
         $GLOBALS['tourivo_mock_scheduled_events'] = [];
+        $firedContext = [];
+        $capture = function ($id, $old, $new, $context) use (&$firedContext) {
+            $firedContext = $context;
+        };
+        add_action('tourivo/booking_status_changed', $capture, 99, 4);
         $this->bookingService->changeStatus($bookingId, 'confirmed');
+        remove_action('tourivo/booking_status_changed', $capture, 99);
 
         $emailEvents1 = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
         $this->assertCount(1, $emailEvents1);
+        $this->assertNotEmpty($firedContext['changed_at'] ?? '', 'changeStatus() should stamp the transition.');
 
-        // Fire status change hook again for same status transition
-        $this->emailService->onBookingStatusChanged($bookingId, 'pending', 'confirmed');
+        // The same transition fired again (same hook arguments)
+        $this->emailService->onBookingStatusChanged($bookingId, 'pending', 'confirmed', $firedContext);
 
         $emailEvents2 = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
         $this->assertCount(1, $emailEvents2, 'Duplicate status transition should not enqueue duplicate email.');
@@ -263,23 +272,24 @@ class EmailSystemTest extends TestCase
         // Intercept pre_wp_mail filter to simulate mail failure
         add_filter('pre_wp_mail', fn () => false);
 
-        $payload = [
-            'id'             => 123,
-            'booking_code'   => 'TRV-FAIL-01',
+        $tourId = $this->createTour(100.0, 10);
+        $res = $this->bookingService->createBooking([
+            'item_id'        => $tourId,
+            'check_in'       => gmdate('Y-m-d', strtotime('+9 days')),
             'customer_name'  => 'Fail Test',
             'customer_email' => 'fail@example.com',
-            'total_amount'   => '$100.00',
-        ];
+        ]);
+        $bookingId = (int) $res['booking_id'];
 
         $GLOBALS['tourivo_mock_scheduled_events'] = [];
 
-        $dispatched = $this->emailService->dispatch('customer_booking_received', 'fail@example.com', $payload, 1);
+        $dispatched = $this->emailService->dispatch('customer_booking_received', $this->emailService->recipientHash('fail@example.com'), $bookingId, 1);
         $this->assertFalse($dispatched, 'Dispatch should return false on mail failure.');
 
         // Verify log entry
-        $logs = LogService::getTimeline(123);
+        $logs = array_values(array_filter(LogService::getTimeline($bookingId), fn ($l) => $l['action'] === 'email_failed'));
         $this->assertNotEmpty($logs, 'LogService should have an entry for failure.');
-        $this->assertEquals('email_failed', $logs[0]['action']);
+        $this->assertStringNotContainsString('fail@example.com', (string) ($logs[0]['details'] ?? $logs[0]['message'] ?? ''), 'Log must not hold the address.');
 
         // Verify retry is scheduled for attempt 2 (delay 120s)
         $retryEvents = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');

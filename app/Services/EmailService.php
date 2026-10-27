@@ -128,17 +128,19 @@ class EmailService
             return;
         }
 
-        // Idempotency / Deduplication: prevent duplicate email for same (booking_id, new_status)
-        $dedupKey = "tourivo_email_dedup_{$bookingId}_{$newStatus}";
-        if (get_transient($dedupKey)) {
-            return;
-        }
-        set_transient($dedupKey, 1, DAY_IN_SECONDS * 30);
-
         $bookingData = $this->getBookingData($bookingId);
         if (empty($bookingData)) {
             return;
         }
+
+        // Deduplicate per transition, not per status: the same transition fired twice (same change
+        // timestamp) mails once, but confirmed -> cancelled -> confirmed mails the second confirmation too.
+        $changedAt = (string) ($context['changed_at'] ?? $bookingData['updated_at'] ?? '');
+        $dedupKey  = 'tourivo_email_dedup_' . $bookingId . '_' . $newStatus . '_' . md5($oldStatus . '|' . $changedAt);
+        if (get_transient($dedupKey)) {
+            return;
+        }
+        set_transient($dedupKey, 1, DAY_IN_SECONDS * 30);
 
         $customerEmail = (string) ($bookingData['customer_email'] ?? '');
         $adminEmail    = $this->getAdminEmail();
@@ -203,7 +205,16 @@ class EmailService
     }
 
     /**
+     * Queue hook that delivers one email.
+     */
+    public const QUEUE_HOOK = 'tourivo_process_email_delivery';
+
+    /**
      * Enqueue asynchronous email delivery via Action Scheduler or WP-Cron.
+     *
+     * Only [type, recipient hash, booking/inquiry ID, attempt] go into the job: Action Scheduler and
+     * WP-Cron store their arguments in plain tables (and cron arrays in wp_options), so no name, address,
+     * phone or message may be queued. dispatch() loads the record again when the job runs.
      *
      * @param string               $emailType
      * @param string               $recipient
@@ -229,28 +240,36 @@ class EmailService
             return;
         }
 
-        if (function_exists('as_enqueue_async_action')) {
-            as_enqueue_async_action('tourivo_process_email_delivery', [$emailType, $recipient, $data, $attempt], 'tourivo-emails');
-        } else {
-            wp_schedule_single_event(time(), 'tourivo_process_email_delivery', [$emailType, $recipient, $data, $attempt]);
-            if (function_exists('spawn_cron')) {
-                spawn_cron();
-            }
+        $entityId = $this->entityId($emailType, $data);
+        if ($entityId <= 0) {
+            return;
         }
+
+        $recipientHash = $this->isAdminType($emailType) ? '' : $this->recipientHash($recipient);
+        $this->schedule([$emailType, $recipientHash, $entityId, $attempt]);
     }
 
     /**
-     * Dispatch email worker execution with logging, plain-text AltBody, and exponential retry.
+     * Queue worker: load the booking or inquiry by ID, then send with logging and retries.
      *
-     * @param string               $emailType
-     * @param string               $recipient
-     * @param array<string, mixed> $data
-     * @param int                  $attempt
+     * @param string                        $emailType
+     * @param string                        $recipientHash HMAC of the customer address; '' for staff mail.
+     * @param int|array<string, mixed>|null $entity        Booking or inquiry ID. An array is a job queued by an
+     *                                                     older version (raw address + full data): still sent,
+     *                                                     but from freshly loaded data.
+     * @param int                           $attempt
      * @return bool
      */
-    public function dispatch(string $emailType, string $recipient, array $data, int $attempt = 1): bool
+    public function dispatch(string $emailType, string $recipientHash, $entity = null, int $attempt = 1): bool
     {
-        if (empty($recipient) || !is_email($recipient)) {
+        if (is_array($entity)) {
+            $legacyRecipient = $recipientHash;
+            $entity          = $this->entityId($emailType, $entity);
+            $recipientHash   = (!$this->isAdminType($emailType) && is_email($legacyRecipient)) ? $this->recipientHash($legacyRecipient) : '';
+        }
+
+        $entityId = (int) $entity;
+        if ($entityId <= 0) {
             return false;
         }
 
@@ -259,11 +278,84 @@ class EmailService
             return false;
         }
 
+        $isInquiry = $this->isInquiryType($emailType);
+        $data      = $isInquiry ? $this->getInquiryData($entityId) : $this->getBookingData($entityId);
+        if (empty($data)) {
+            return false;
+        }
+
+        if ($emailType === 'customer_verify_email') {
+            $data['verify_url'] = BookingService::buildVerificationUrl((string) $data['booking_code'], $entityId, (string) $data['customer_email']);
+        }
+
+        if ($this->isAdminType($emailType)) {
+            $recipient = $this->getAdminEmail();
+        } else {
+            $recipient = (string) ($isInquiry ? ($data['email'] ?? '') : ($data['customer_email'] ?? ''));
+            // The address changed or was erased since the job was queued: do not mail the new (or anonymized) one.
+            if ($recipientHash === '' || !hash_equals($recipientHash, $this->recipientHash($recipient))) {
+                return false;
+            }
+        }
+
+        if (empty($recipient) || !is_email($recipient)) {
+            return false;
+        }
+
         $shouldSend = (bool) apply_filters('tourivo/send_email', true, $emailType, $data);
         if (!$shouldSend) {
             return false;
         }
 
+        [$sent, $lastError] = $this->deliver($emailType, $recipient, $data);
+
+        // Log the outcome on the booking. Never the address: logs are kept after a GDPR erasure.
+        if (!$isInquiry) {
+            if ($sent) {
+                LogService::log(
+                    $entityId,
+                    'email_sent',
+                    sprintf(
+                        /* translators: 1: Email type, 2: Attempt number */
+                        __('Email [%1$s] sent successfully (attempt %2$d).', 'tourivo'),
+                        $emailType,
+                        $attempt
+                    )
+                );
+            } else {
+                LogService::log(
+                    $entityId,
+                    'email_failed',
+                    sprintf(
+                        /* translators: 1: Email type, 2: Attempt number, 3: Error details */
+                        __('Email [%1$s] failed to send (attempt %2$d). Reason: %3$s', 'tourivo'),
+                        $emailType,
+                        $attempt,
+                        $lastError ?: __('Unknown mail error', 'tourivo')
+                    )
+                );
+            }
+        }
+
+        // Handle retry schedule up to 3 attempts (attempt 2 delay: 120s, attempt 3 delay: 300s)
+        if (!$sent && $attempt < 3) {
+            $nextAttempt = $attempt + 1;
+            $this->schedule([$emailType, $recipientHash, $entityId, $nextAttempt], ($nextAttempt === 2) ? 120 : 300);
+        }
+
+        return $sent;
+    }
+
+    /**
+     * Render and send one email right now. No queue, deduplication or booking log.
+     *
+     * @param string               $emailType
+     * @param string               $recipient
+     * @param array<string, mixed> $data
+     * @return array{0: bool, 1: string} Sent flag and the last mail error.
+     */
+    protected function deliver(string $emailType, string $recipient, array $data): array
+    {
         if (function_exists('tourivo_load_plugin_textdomain')) {
             tourivo_load_plugin_textdomain();
         }
@@ -272,7 +364,7 @@ class EmailService
         $primaryColor = Config::get('primary_color', '#0d9488');
         $fromName     = $this->sanitizeHeader((string) Config::get('email_from_name', $siteName));
         $fromEmail    = $this->sanitizeHeader((string) Config::get('email_from_address', get_option('admin_email')));
-        $bookingId    = (int) ($data['id'] ?? $data['booking_id'] ?? 0);
+        $bookingId    = $this->isInquiryType($emailType) ? 0 : (int) ($data['id'] ?? $data['booking_id'] ?? 0);
 
         // Generate voucher URL & lookup URL
         $voucherUrl = '';
@@ -334,7 +426,7 @@ class EmailService
         $headers = [
             'Content-Type: text/html; charset=UTF-8',
             'From: ' . $fromName . ' <' . $fromEmail . '>',
-            'Reply-To: ' . $fromName . ' <' . $fromEmail . '>',
+            'Reply-To: ' . $this->replyTo($emailType, $data, $fromName),
         ];
 
         // Attach plain text AltBody via phpmailer_init action hook
@@ -358,54 +450,107 @@ class EmailService
         remove_action('phpmailer_init', $altBodyHook);
         remove_action('wp_mail_failed', $mailFailedHook);
 
-        // Log outcome in LogService
-        if ($bookingId > 0) {
-            if ($sent) {
-                LogService::log(
-                    $bookingId,
-                    'email_sent',
-                    sprintf(
-                        /* translators: 1: Email type, 2: Recipient, 3: Attempt number */
-                        __('Email [%1$s] sent successfully to %2$s (attempt %3$d).', 'tourivo'),
-                        $emailType,
-                        $recipient,
-                        $attempt
-                    )
-                );
-            } else {
-                LogService::log(
-                    $bookingId,
-                    'email_failed',
-                    sprintf(
-                        /* translators: 1: Email type, 2: Recipient, 3: Attempt number, 4: Error details */
-                        __('Email [%1$s] failed to send to %2$s (attempt %3$d). Reason: %4$s', 'tourivo'),
-                        $emailType,
-                        $recipient,
-                        $attempt,
-                        $lastError ?: __('Unknown mail error', 'tourivo')
-                    )
-                );
+        return [$sent, $lastError];
+    }
+
+    /**
+     * Reply-To header value.
+     *
+     * Customer mail: replies go to the site's support address. Staff mail (admin_*): replies go straight
+     * to the customer, when the booking or inquiry holds a valid address.
+     *
+     * @param string               $emailType
+     * @param array<string, mixed> $data
+     * @param string               $fromName Already sanitized.
+     * @return string
+     */
+    public function replyTo(string $emailType, array $data, string $fromName): string
+    {
+        if ($this->isAdminType($emailType)) {
+            $customerEmail = $this->sanitizeHeader((string) ($data['customer_email'] ?? $data['email'] ?? ''));
+            if ($customerEmail !== '' && is_email($customerEmail)) {
+                $customerName = str_replace(['<', '>', '"', ','], '', $this->sanitizeHeader((string) ($data['customer_name'] ?? $data['name'] ?? '')));
+                return ($customerName !== '' ? $customerName . ' ' : '') . '<' . $customerEmail . '>';
             }
         }
 
-        // Handle retry schedule up to 3 attempts (attempt 2 delay: 120s, attempt 3 delay: 300s)
-        if (!$sent && $attempt < 3) {
-            $nextAttempt = $attempt + 1;
-            $delay = ($nextAttempt === 2) ? 120 : 300;
+        return $fromName . ' <' . $this->sanitizeHeader($this->getAdminEmail()) . '>';
+    }
 
+    /**
+     * Keyed hash of a recipient address, safe to store in a queued job.
+     *
+     * @param string $email
+     * @return string
+     */
+    public function recipientHash(string $email): string
+    {
+        return hash_hmac('sha256', strtolower(trim($email)), wp_salt('auth'));
+    }
+
+    /**
+     * Put a delivery job on Action Scheduler, or WP-Cron as a fallback.
+     *
+     * @param array{0: string, 1: string, 2: int, 3: int} $args
+     * @param int                                         $delay Seconds.
+     * @return void
+     */
+    protected function schedule(array $args, int $delay = 0): void
+    {
+        if ($delay > 0) {
             if (function_exists('as_schedule_single_action')) {
-                as_schedule_single_action(time() + $delay, 'tourivo_process_email_delivery', [$emailType, $recipient, $data, $nextAttempt], 'tourivo-emails');
+                as_schedule_single_action(time() + $delay, self::QUEUE_HOOK, $args, 'tourivo-emails');
             } else {
-                wp_schedule_single_event(time() + $delay, 'tourivo_process_email_delivery', [
-                    $emailType,
-                    $recipient,
-                    $data,
-                    $nextAttempt,
-                ]);
+                wp_schedule_single_event(time() + $delay, self::QUEUE_HOOK, $args);
             }
+            return;
         }
 
-        return $sent;
+        if (function_exists('as_enqueue_async_action')) {
+            as_enqueue_async_action(self::QUEUE_HOOK, $args, 'tourivo-emails');
+        } else {
+            wp_schedule_single_event(time(), self::QUEUE_HOOK, $args);
+            if (function_exists('spawn_cron')) {
+                spawn_cron();
+            }
+        }
+    }
+
+    /**
+     * Booking or inquiry ID an email is about.
+     *
+     * @param string               $emailType
+     * @param array<string, mixed> $data
+     * @return int
+     */
+    protected function entityId(string $emailType, array $data): int
+    {
+        if ($this->isInquiryType($emailType)) {
+            return (int) ($data['inquiry_id'] ?? $data['id'] ?? 0);
+        }
+        return (int) ($data['id'] ?? $data['booking_id'] ?? 0);
+    }
+
+    /**
+     * Staff notifications (sent to the admin address).
+     *
+     * @param string $emailType
+     * @return bool
+     */
+    protected function isAdminType(string $emailType): bool
+    {
+        return str_starts_with($emailType, 'admin_');
+    }
+
+    /**
+     * Emails about an inquiry rather than a booking.
+     *
+     * @param string $emailType
+     * @return bool
+     */
+    protected function isInquiryType(string $emailType): bool
+    {
+        return str_contains($emailType, 'inquiry');
     }
 
     /**
@@ -476,6 +621,9 @@ class EmailService
     /**
      * Send a synchronous test email to verify settings & layout in WP Admin.
      *
+     * Goes straight to wp_mail(): no queue, no deduplication transient and no booking log. The sample
+     * booking has no ID, so nothing can be written against (or read from) a real booking.
+     *
      * @param string $recipientEmail
      * @param string $emailType
      * @return bool
@@ -487,7 +635,6 @@ class EmailService
         }
 
         $mockData = [
-            'id'             => 999,
             'booking_code'   => 'TRV-TEST-8888',
             'customer_name'  => 'John Traveler',
             'customer_email' => $recipientEmail,
@@ -514,7 +661,14 @@ class EmailService
             'isTest'         => true,
         ];
 
-        return $this->dispatch($emailType, $recipientEmail, $mockData, 1);
+        [$sent] = $this->deliver($emailType, $recipientEmail, $mockData);
+
+        if ($sent && defined('WP_DEBUG') && WP_DEBUG) {
+            // phpcs:ignore WordPress.PHP.DevelopmentFunctions.error_log_error_log -- Debug-only note, no personal data.
+            error_log('Tourivo: test email sent.');
+        }
+
+        return $sent;
     }
 
     /**
@@ -790,6 +944,42 @@ class EmailService
             'booking_status'  => (string) $booking->booking_status,
             'payment_method'  => (string) $booking->payment_method,
             'customer_notes'  => (string) ($booking->customer_notes ?? ''),
+            'updated_at'      => (string) ($booking->updated_at ?? ''),
+        ];
+    }
+
+    /**
+     * Load an inquiry in the shape the inquiry emails expect.
+     *
+     * @param int $inquiryId
+     * @return array<string, mixed>|null
+     */
+    protected function getInquiryData(int $inquiryId): ?array
+    {
+        global $wpdb;
+        $inquiriesTable = $wpdb->prefix . 'tourivo_inquiries';
+
+        // phpcs:disable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        $inquiry = $wpdb->get_row($wpdb->prepare("SELECT * FROM {$inquiriesTable} WHERE id = %d", $inquiryId));
+        // phpcs:enable WordPress.DB.DirectDatabaseQuery, WordPress.DB.DirectDatabaseQuery.NoCaching, WordPress.DB.PreparedSQL.InterpolatedNotPrepared, PluginCheck.Security.DirectDB.UnescapedDBParameter
+        if (!$inquiry) {
+            return null;
+        }
+
+        $itemId   = (int) ($inquiry->item_id ?? 0);
+        $itemPost = $itemId > 0 ? get_post($itemId) : null;
+
+        return [
+            'inquiry_id'  => (int) $inquiry->id,
+            'item_id'     => $itemId,
+            'item_type'   => (string) ($inquiry->item_type ?? 'tour'),
+            'item_title'  => $itemPost ? (string) $itemPost->post_title : __('General Travel Inquiry', 'tourivo'),
+            'name'        => (string) ($inquiry->customer_name ?? ''),
+            'email'       => (string) ($inquiry->customer_email ?? ''),
+            'phone'       => (string) ($inquiry->customer_phone ?? ''),
+            'travel_date' => (string) ($inquiry->travel_date ?? ''),
+            'guests'      => (int) ($inquiry->guests ?? 0),
+            'message'     => (string) ($inquiry->message ?? ''),
         ];
     }
 }

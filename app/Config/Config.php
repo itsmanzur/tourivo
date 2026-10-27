@@ -148,7 +148,9 @@ class Config
             'terms_page_id'                                      => 0,
             'consent_label'                                      => 'I agree to the {privacy} and {terms}',
             'store_ip'                                           => true,
-            'anonymize_after_months'                             => 0,
+            'anonymize_after_months'                             => 0, // Legacy; read as 30-day months while anonymize_after_days is 0.
+            'anonymize_after_days'                               => 0, // Days after the trip ends; 0 = off.
+            'retention_statuses'                                 => ['completed', 'cancelled'],
             'delete_inquiries_after_months'                      => 0,
             'webhook_include_phone'                              => true,
             'webhook_include_message'                            => true,

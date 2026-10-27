@@ -758,6 +758,12 @@ class BookingService
             ) . $sourceNote
         );
 
+        // Identifies this one transition (microseconds: updated_at only has whole seconds), so listeners can
+        // tell a repeated hook call from a real second change to the same status.
+        if (!isset($context['changed_at'])) {
+            $context['changed_at'] = sprintf('%.6F', microtime(true));
+        }
+
         do_action('tourivo/booking_status_changed', $bookingId, $oldStatus, $newStatus, $context);
 
         return [

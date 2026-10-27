@@ -184,7 +184,13 @@ class SettingsPage
             'terms_page_id'              => absint($_POST['terms_page_id'] ?? 0),
             'consent_label'              => sanitize_text_field(wp_unslash($_POST['consent_label'] ?? 'I agree to the {privacy} and {terms}')),
             'store_ip'                   => isset($_POST['store_ip']) ? 1 : 0,
-            'anonymize_after_months'     => max(0, (int) sanitize_text_field(wp_unslash($_POST['anonymize_after_months'] ?? '0'))),
+            // Retention now counts days from the end of the trip; the old month value is cleared once days are saved.
+            'anonymize_after_days'       => min(3650, max(0, (int) sanitize_text_field(wp_unslash($_POST['anonymize_after_days'] ?? '0')))),
+            'anonymize_after_months'     => 0,
+            'retention_statuses'         => array_values(array_intersect(
+                array_map('sanitize_key', (array) wp_unslash($_POST['retention_statuses'] ?? [])),
+                \Tourivo\Services\PrivacyService::RETENTION_STATUS_CHOICES
+            )),
             'delete_inquiries_after_months' => max(0, (int) sanitize_text_field(wp_unslash($_POST['delete_inquiries_after_months'] ?? '0'))),
             'proxy_mode'                 => in_array(sanitize_text_field(wp_unslash($_POST['proxy_mode'] ?? '')), ['cloudflare', 'reverse_proxy'], true) ? sanitize_text_field(wp_unslash($_POST['proxy_mode'])) : 'disabled',
             'trusted_proxies'            => sanitize_textarea_field(wp_unslash($_POST['trusted_proxies'] ?? '')),
@@ -254,7 +260,8 @@ class SettingsPage
         $termsPageId           = (int) Config::get('terms_page_id', 0);
         $consentLabel          = (string) Config::get('consent_label', 'I agree to the {privacy} and {terms}');
         $storeIp               = Config::get('store_ip', 1);
-        $anonymizeAfterMonths  = (int) Config::get('anonymize_after_months', 0);
+        $anonymizeAfterDays    = \Tourivo\Services\PrivacyService::retentionDays();
+        $retentionStatuses     = \Tourivo\Services\PrivacyService::retentionStatuses();
         $deleteInqAfterMonths  = (int) Config::get('delete_inquiries_after_months', 0);
         $webhookIncludePhone   = Config::get('webhook_include_phone', 1);
         $webhookIncludeMessage = Config::get('webhook_include_message', 1);
@@ -1159,11 +1166,31 @@ class SettingsPage
 
                         <table class="form-table">
                             <tr>
-                                <th scope="row"><label for="anonymize_after_months"><?php esc_html_e('Anonymize Completed Bookings After', 'tourivo'); ?></label></th>
+                                <th scope="row"><label for="anonymize_after_days"><?php esc_html_e('Anonymize Bookings After', 'tourivo'); ?></label></th>
                                 <td>
-                                    <input name="anonymize_after_months" type="number" id="anonymize_after_months" min="0" max="120" value="<?php echo esc_attr((string) $anonymizeAfterMonths); ?>" class="small-text">
-                                    <?php esc_html_e('months (Set to 0 to disable automated anonymization).', 'tourivo'); ?>
-                                    <p class="description"><?php esc_html_e('Replaces customer name, email, phone, billing address, notes, payment references, and IP with anonymized values, revokes voucher links, and keeps revenue totals intact.', 'tourivo'); ?></p>
+                                    <input name="anonymize_after_days" type="number" id="anonymize_after_days" min="0" max="3650" value="<?php echo esc_attr((string) $anonymizeAfterDays); ?>" class="small-text">
+                                    <?php esc_html_e('days after the trip ends (last check-out, or check-in for tours). Set to 0 to disable automated anonymization.', 'tourivo'); ?>
+                                    <p class="description"><?php esc_html_e('Replaces customer name, email, phone, billing address, notes, payment references, and IP with anonymized values, scrubs them from the booking log, revokes voucher links, and keeps revenue totals intact.', 'tourivo'); ?></p>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><?php esc_html_e('Anonymize Bookings With Status', 'tourivo'); ?></th>
+                                <td>
+                                    <fieldset>
+                                        <?php
+                                        $tourivoStatusLabels = [
+                                            'completed' => __('Completed', 'tourivo'),
+                                            'cancelled' => __('Cancelled', 'tourivo'),
+                                            'confirmed' => __('Confirmed', 'tourivo'),
+                                            'pending'   => __('Pending', 'tourivo'),
+                                            'on_hold'   => __('On hold', 'tourivo'),
+                                        ];
+                                        foreach ($tourivoStatusLabels as $tourivoStatus => $tourivoStatusLabel) :
+                                            ?>
+                                            <label style="margin-right: 14px;"><input type="checkbox" name="retention_statuses[]" value="<?php echo esc_attr($tourivoStatus); ?>" <?php checked(in_array($tourivoStatus, $retentionStatuses, true)); ?>> <?php echo esc_html($tourivoStatusLabel); ?></label>
+                                        <?php endforeach; ?>
+                                    </fieldset>
+                                    <p class="description"><?php esc_html_e('Only bookings in these statuses are anonymized. None ticked = Completed and Cancelled.', 'tourivo'); ?></p>
                                 </td>
                             </tr>
                             <tr>

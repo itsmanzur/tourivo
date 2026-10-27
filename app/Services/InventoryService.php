@@ -842,6 +842,13 @@ class InventoryService
                     // phpcs:ignore WordPress.DB.DirectDatabaseQuery.DirectQuery, WordPress.DB.DirectDatabaseQuery.NoCaching -- Transaction control, nothing to cache.
                     $wpdb->query('ROLLBACK');
                 }
+                if ($this->repository->lastError === 'capacity_below_active') {
+                    return [
+                        'success' => false,
+                        /* translators: %s: Date */
+                        'message' => sprintf(__('Cannot set capacity below active bookings on %s: new bookings arrived while saving. Reload and try again.', 'tourivo'), $r['date']),
+                    ];
+                }
                 return [
                     'success' => false,
                     /* translators: %s: Date */

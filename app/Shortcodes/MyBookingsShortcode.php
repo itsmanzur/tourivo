@@ -6,6 +6,7 @@ namespace Tourivo\Shortcodes;
 
 use Tourivo\Config\Config;
 use Tourivo\Support\Money;
+use Tourivo\Support\SiteTime;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -131,7 +132,7 @@ class MyBookingsShortcode
         }
 
         $currencySymbol = (string) apply_filters('tourivo/currency_symbol', '$');
-        $today          = gmdate('Y-m-d');
+        $today          = SiteTime::today();
         $formattedList  = [];
 
         foreach ($bookings as $booking) {
@@ -144,8 +145,8 @@ class MyBookingsShortcode
             // Several items (a package) show as one card with the combined title and dates.
             $firstItem = \Tourivo\Support\BookingItems::summaryRow($items, $bookingId);
             $checkInDate = $firstItem && !empty($firstItem->check_in)
-                ? gmdate('Y-m-d', strtotime((string) $firstItem->check_in))
-                : gmdate('Y-m-d', strtotime((string) $booking->created_at));
+                ? SiteTime::tripDate((string) $firstItem->check_in)
+                : SiteTime::formatGmt((string) $booking->created_at, 'Y-m-d');
 
             $category = 'upcoming';
             if ($bookingStatus === 'cancelled') {
@@ -174,7 +175,7 @@ class MyBookingsShortcode
             $formattedList[] = [
                 'id'               => $bookingId,
                 'booking_code'     => (string) $booking->booking_code,
-                'created_at'       => gmdate('M d, Y', strtotime((string) $booking->created_at)),
+                'created_at'       => SiteTime::formatGmt((string) $booking->created_at, 'M d, Y'),
                 'booking_status'   => $bookingStatus,
                 'payment_status'   => $paymentStatus,
                 'payment_method'   => ucwords(str_replace('_', ' ', (string) $booking->payment_method)),
@@ -260,13 +261,14 @@ class MyBookingsShortcode
         $completed  = 0;
         $cancelled  = 0;
         $totalSpent = 0.0;
-        $today      = gmdate('Y-m-d');
+        $today      = SiteTime::today();
 
         foreach ($bookings as $row) {
             $status   = (string) $row->booking_status;
             $bId      = (int) $row->id;
-            $checkInRaw = $earliestCheckIns[$bId] ?? (string) $row->created_at;
-            $checkIn  = gmdate('Y-m-d', strtotime($checkInRaw));
+            $checkIn  = isset($earliestCheckIns[$bId])
+                ? SiteTime::tripDate((string) $earliestCheckIns[$bId])
+                : SiteTime::formatGmt((string) $row->created_at, 'Y-m-d');
 
             if ($status === 'cancelled') {
                 $cancelled++;
@@ -409,8 +411,8 @@ class MyBookingsShortcode
             $formattedItems[] = [
                 'item_title'        => (string) $item->item_title,
                 'item_type'         => (string) $item->item_type,
-                'check_in'          => !empty($item->check_in) ? gmdate('M d, Y', strtotime((string) $item->check_in)) : '—',
-                'check_out'         => !empty($item->check_out) ? gmdate('M d, Y', strtotime((string) $item->check_out)) : '',
+                'check_in'          => !empty($item->check_in) ? SiteTime::formatTripDate((string) $item->check_in) : '—',
+                'check_out'         => !empty($item->check_out) ? SiteTime::formatTripDate((string) $item->check_out) : '',
                 'time_slot'         => !empty($item->time_slot) ? (string) $item->time_slot : '',
                 'adults_count'      => (int) $item->adults_count,
                 'children_count'    => (int) $item->children_count,
@@ -440,7 +442,7 @@ class MyBookingsShortcode
                 'paid_amount'     => Money::format((float) $booking->paid_amount, $currencySymbol),
                 'due_amount'      => Money::format((float) $booking->due_amount, $currencySymbol),
                 'customer_notes'  => (string) $booking->customer_notes,
-                'created_at'      => gmdate('M d, Y H:i', strtotime((string) $booking->created_at)),
+                'created_at'      => SiteTime::formatGmt((string) $booking->created_at),
             ],
             'items'   => $formattedItems,
         ];

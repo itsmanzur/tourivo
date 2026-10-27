@@ -44,12 +44,8 @@ class Uninstaller
             }
         }
 
-        // 2. Clear scheduled hooks
-        wp_clear_scheduled_hook('tourivo_daily_cleanup');
-        wp_clear_scheduled_hook('tourivo_sync_ical_feeds');
-        wp_clear_scheduled_hook('tourivo_cleanup_expired_holds');
-        wp_clear_scheduled_hook('tourivo_expire_stale_bookings');
-        wp_clear_scheduled_hook('tourivo_daily_privacy_retention');
+        // 2. Clear scheduled hooks (all args) and queued Action Scheduler actions
+        Deactivator::unscheduleAll();
 
         $settings = get_option('tourivo_settings', []);
         $eraseDataOnDelete = !empty($settings['erase_data_on_uninstall']);
