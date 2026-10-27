@@ -31,9 +31,9 @@ class EmailService
      */
     public function register(): void
     {
-        add_action('tourivo/booking_created', [$this, 'onBookingCreated'], 20, 2);
-        add_action('tourivo/booking_status_changed', [$this, 'onBookingStatusChanged'], 20, 4);
-        add_action('tourivo/booking_email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
+        add_action('tourivo/booking/created', [$this, 'onBookingCreated'], 20, 2);
+        add_action('tourivo/booking/status_changed', [$this, 'onBookingStatusChanged'], 20, 4);
+        add_action('tourivo/booking/email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
         add_action('tourivo/inquiry_created', [$this, 'onInquiryCreated'], 20, 2);
         add_action('tourivo_process_email_delivery', [$this, 'dispatch'], 10, 4);
         add_action('tourivo_daily_reminders', [$this, 'processDailyReminders']);

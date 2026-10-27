@@ -182,9 +182,9 @@ class EmailSystemTest extends TestCase
         $capture = function ($id, $old, $new, $context) use (&$firedContext) {
             $firedContext = $context;
         };
-        add_action('tourivo/booking_status_changed', $capture, 99, 4);
+        add_action('tourivo/booking/status_changed', $capture, 99, 4);
         $this->bookingService->changeStatus($bookingId, 'confirmed');
-        remove_action('tourivo/booking_status_changed', $capture, 99);
+        remove_action('tourivo/booking/status_changed', $capture, 99);
 
         $emailEvents1 = array_filter($GLOBALS['tourivo_mock_scheduled_events'], fn ($e) => $e['hook'] === 'tourivo_process_email_delivery');
         $this->assertCount(1, $emailEvents1);

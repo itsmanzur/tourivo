@@ -34,8 +34,8 @@ class SeoService
     {
         add_action('wp_head', [$this, 'renderJsonLdSchema'], 20);
         add_action('wp_head', [$this, 'renderOpenGraphMeta'], 25);
-        add_action('tourivo/booking_created', [__CLASS__, 'onBookingCreated'], 10, 2);
-        add_action('tourivo/booking_status_changed', [__CLASS__, 'onBookingStatusChanged'], 10, 3);
+        add_action('tourivo/booking/created', [__CLASS__, 'onBookingCreated'], 10, 2);
+        add_action('tourivo/booking/status_changed', [__CLASS__, 'onBookingStatusChanged'], 10, 3);
     }
 
     /**

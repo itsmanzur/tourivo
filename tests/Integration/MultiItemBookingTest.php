@@ -96,14 +96,14 @@ class MultiItemBookingTest extends TestCase
         $roomId = $this->createHotelWithRooms(2, 80.0)['room_id'];
         $in = $this->date(30);
         $filter = static fn (array $adjustments): array => array_merge($adjustments, [['title' => 'Package discount', 'total' => -36.0]]);
-        add_filter('tourivo/booking_adjustments', $filter);
+        add_filter('tourivo/booking/adjustments', $filter);
         try {
             $result = $this->bookingService->createBooking($this->createBookingPayload([
                 'item_id' => $tourId, 'check_in' => $in, 'adults' => 2,
                 'extra_items' => [['item_id' => $roomId, 'check_in' => $in, 'check_out' => $this->date(32)]],
             ]), true);
         } finally {
-            remove_filter('tourivo/booking_adjustments', $filter);
+            remove_filter('tourivo/booking/adjustments', $filter);
         }
 
         $this->assertTrue($result['success'], (string) ($result['message'] ?? ''));
@@ -153,11 +153,11 @@ class MultiItemBookingTest extends TestCase
         $this->assertSame($this->date(33), substr($summary->check_out, 0, 10));
 
         $name = static fn (string $title, int $bookingId): string => $bookingId > 0 ? 'Cox\'s Bazar 3 Days' : $title;
-        add_filter('tourivo/booking_title', $name, 10, 2);
+        add_filter('tourivo/booking/title', $name, 10, 2);
         try {
             $this->assertSame('Cox\'s Bazar 3 Days', \Tourivo\Support\BookingItems::title($rows, $id), 'Add-ons can name the booking.');
         } finally {
-            remove_filter('tourivo/booking_title', $name, 10);
+            remove_filter('tourivo/booking/title', $name, 10);
         }
 
         $this->assertSame('Only', \Tourivo\Support\BookingItems::title([(object) ['item_title' => 'Only']]));

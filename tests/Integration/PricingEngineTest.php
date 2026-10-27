@@ -307,7 +307,7 @@ class PricingEngineTest extends TestCase
     }
 
     /**
-     * Test (f): Pro filter `tourivo/booking_price` modifies subtotal and tax applies on top.
+     * Test (f): Pro filter `tourivo/booking/price` modifies subtotal and tax applies on top.
      */
     public function test_pro_filter_compatibility(): void
     {
@@ -323,7 +323,7 @@ class PricingEngineTest extends TestCase
         ]);
 
         // Mock Pro plugin applying a coupon or tiered discount of $50
-        add_filter('tourivo/booking_price', function ($pricingData, $context) {
+        add_filter('tourivo/booking/price', function ($pricingData, $context) {
             $pricingData['total_price'] = (float) $pricingData['total_price'] - 50.00;
             return $pricingData;
         }, 10, 2);

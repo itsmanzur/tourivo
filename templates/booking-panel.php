@@ -233,7 +233,7 @@ if ($tourivoItemType === 'tour') {
              *
              * @param array<int, array{value: string, title: string, description: string, data: array<string, string>}> $tourivoPaymentOptions
              */
-            $tourivoPaymentOptions = (array) apply_filters('tourivo/booking_panel_payment_options', $tourivoPaymentOptions, $tourivoItemId, $tourivoItemType);
+            $tourivoPaymentOptions = (array) apply_filters('tourivo/booking/panel_payment_options', $tourivoPaymentOptions, $tourivoItemId, $tourivoItemType);
             ?>
             <?php if (!empty($tourivoPaymentOptions)) : ?>
                 <fieldset class="field-row tourivo-payment-options">

@@ -34,7 +34,7 @@ final class BookingItems
 
     /**
      * One title for the booking: the item's own title, or the items joined ("Tour + Hotel - Room").
-     * Add-ons can name the whole booking (e.g. a package) through the tourivo/booking_title filter.
+     * Add-ons can name the whole booking (e.g. a package) through the tourivo/booking/title filter.
      *
      * @param array<int, object|array<string, mixed>> $rows
      * @param array<string, mixed>                     $context Booking data when the title is built at creation.
@@ -56,7 +56,7 @@ final class BookingItems
             $title = implode(' + ', $titles);
         }
 
-        return (string) apply_filters('tourivo/booking_title', $title, $bookingId, $rows, $context);
+        return (string) apply_filters('tourivo/booking/title', $title, $bookingId, $rows, $context);
     }
 
     /**

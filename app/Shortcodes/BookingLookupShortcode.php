@@ -370,7 +370,7 @@ class BookingLookupShortcode
             $emailService->enqueue('admin_booking_cancelled', $adminEmail, $bookingData);
         }
 
-        do_action('tourivo/booking_cancel_requested', $bookingId, $reason);
+        do_action('tourivo/booking/cancel_requested', $bookingId, $reason);
 
         return [
             'success' => true,
