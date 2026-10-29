@@ -256,15 +256,28 @@ class BookingHygieneTest extends TestCase
 
     // ---------------------------------------------------------------- migration
 
-    public function test_migration_backfills_existing_bookings_as_verified(): void
+    public function test_rerunning_migrate_keeps_unverified_bookings_unverified(): void
     {
         global $wpdb;
-        $wpdb->bookings[7] = ['id' => 7, 'booking_code' => 'TRV-OLD', 'booking_status' => 'pending', 'created_at' => '2025-01-01 10:00:00', 'email_verified_at' => null];
-        update_option(Schema::DB_VERSION_OPTION, '1.3.0');
+        $wpdb->bookings[7] = ['id' => 7, 'booking_code' => 'TRV-NEW', 'booking_status' => 'pending', 'created_at' => '2025-01-01 10:00:00', 'email_verified_at' => null];
+
+        // Deactivate + activate runs migrate() again.
+        Schema::migrate();
+        Schema::migrate();
+
+        $this->assertNull($wpdb->bookings[7]['email_verified_at'], 'Re-running migrate() must not mark anything verified.');
+    }
+
+    public function test_migrate_at_current_db_version_changes_no_booking(): void
+    {
+        global $wpdb;
+        $wpdb->bookings[7] = ['id' => 7, 'booking_code' => 'TRV-NEW', 'booking_status' => 'pending', 'created_at' => '2025-01-01 10:00:00', 'email_verified_at' => null];
+        $before = $wpdb->bookings;
+        update_option(Schema::DB_VERSION_OPTION, '1.0.0');
 
         Schema::migrate();
 
-        $this->assertEquals('2025-01-01 10:00:00', $wpdb->bookings[7]['email_verified_at']);
+        $this->assertEquals($before, $wpdb->bookings, 'No booking row may change.');
         $this->assertEquals(Schema::CURRENT_DB_VERSION, get_option(Schema::DB_VERSION_OPTION));
     }
 
