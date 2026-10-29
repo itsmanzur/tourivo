@@ -22,6 +22,8 @@ if (!defined('ABSPATH')) {
 
 // 1. Define Global Constants
 define('TOURIVO_VERSION', '1.0.0');
+// Integer that only grows when the public hooks / helpers add-ons rely on change. Tourivo Pro compares it, not the version.
+define('TOURIVO_API_LEVEL', 1);
 define('TOURIVO_MIN_PHP_VER', '8.0');
 define('TOURIVO_PLUGIN_FILE', __FILE__);
 define('TOURIVO_PLUGIN_DIR', plugin_dir_path(__FILE__));

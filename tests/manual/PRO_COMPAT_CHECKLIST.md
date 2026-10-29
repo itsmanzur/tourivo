@@ -12,11 +12,8 @@ php scripts/check-hooks.php --pro=/path/to/tourivo-pro
 
 - [ ] Exit code 0: every `tourivo/...` hook Pro listens to (`add_action`, `add_filter`, `has_*`, `remove_*`)
       is fired by core or by Pro (`do_action*`, `apply_filters*`).
-- [ ] No "Deprecated names" section. A pre-1.5.0 name still works through `Support\LegacyHooks`, but Pro
-      must use the new `tourivo/booking/*` / `tourivo/inquiry/created` names.
 - [ ] Every "runtime name" listener was checked by hand.
-- [ ] A hook that core stops firing is either still fired under its old name or added to
-      `LegacyHooks::ACTIONS` / `LegacyHooks::FILTERS`, so third-party code keeps working.
+- [ ] A hook is never renamed or removed after release without keeping the old name working for a few versions.
 
 ## 2. Version gate
 
@@ -46,4 +43,4 @@ php scripts/check-hooks.php --pro=/path/to/tourivo-pro
       (`tourivo/booking/panel_payment_options`, `tourivo/public_payment_methods`).
 - [ ] Direct / WooCommerce payment marks the booking verified (`tourivo/booking/email_verified` fired by Pro).
 - [ ] Thank-you page and My Bookings show Pro buttons (documents, balance payment, tickets).
-- [ ] `debug.log` has no "is deprecated since version 1.5.0" notice coming from Pro.
+- [ ] `debug.log` has no deprecation notice coming from Pro.

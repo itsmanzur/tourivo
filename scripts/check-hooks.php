@@ -3,8 +3,7 @@
  * Tourivo ↔ Tourivo Pro hook compatibility check.
  *
  * Scans both repositories with the PHP tokenizer and lists every tourivo/... hook that Pro listens to
- * (add_action, add_filter, has_*, remove_*) but nobody fires (do_action*, apply_filters*), plus listeners that
- * still use a deprecated pre-1.5.0 name (they work through Support\LegacyHooks, but should be renamed).
+ * (add_action, add_filter, has_*, remove_*) but nobody fires (do_action*, apply_filters*).
  *
  * Usage:
  *   php scripts/check-hooks.php [--core=<path>] [--pro=<path>] [--verbose]
@@ -138,17 +137,6 @@ function trv_scan(string $root, string $label): array
     return ['fired' => $fired, 'listened' => $listened];
 }
 
-// Deprecated names: read Support\LegacyHooks without loading WordPress.
-$legacy = [];
-$legacyFile = $core . '/app/Support/LegacyHooks.php';
-if (is_file($legacyFile)) {
-    if (!defined('ABSPATH')) {
-        define('ABSPATH', __DIR__ . '/');
-    }
-    require_once $legacyFile;
-    $legacy = \Tourivo\Support\LegacyHooks::ACTIONS + \Tourivo\Support\LegacyHooks::FILTERS;
-}
-
 $coreScan = trv_scan($core, 'core');
 $proScan  = trv_scan($pro, 'pro');
 
@@ -164,7 +152,7 @@ foreach ($fired as $f) {
     }
 }
 
-$matched = $missing = $deprecated = $dynamic = [];
+$matched = $missing = $dynamic = [];
 foreach ($proScan['listened'] as $l) {
     $name  = $l['name'];
     $where = "{$l['file']}:{$l['line']} ({$l['function']})";
@@ -175,10 +163,6 @@ foreach ($proScan['listened'] as $l) {
     }
     if (isset($firedExact[$name])) {
         $matched[$name][] = $where;
-        continue;
-    }
-    if (isset($legacy[$name])) {
-        $deprecated[] = "{$name} → {$legacy[$name]}  {$where}";
         continue;
     }
     foreach (array_keys($firedPrefixes) as $prefix) {
@@ -205,14 +189,6 @@ if ($verbose) {
     foreach ($matched as $name => $wheres) {
         $by = implode(', ', array_unique(array_map(static fn ($f) => $f['repo'] . ':' . $f['file'] . ':' . $f['line'], $firedExact[$name] ?? [])));
         echo "  ✓ {$name}\n      fired by:  " . ($by ?: 'dynamic name') . "\n      listened:  " . implode(', ', $wheres) . "\n";
-    }
-    echo "\n";
-}
-
-if ($deprecated) {
-    echo "Deprecated names (still work through LegacyHooks, rename them):\n";
-    foreach ($deprecated as $line) {
-        echo "  ! {$line}\n";
     }
     echo "\n";
 }
