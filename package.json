@@ -1,6 +1,6 @@
 {
   "name": "tourivo",
-  "version": "1.5.0",
+  "version": "1.0.0",
   "description": "Next-Gen Travel, Tour & Accommodation Booking Engine for WordPress",
   "scripts": {
     "build": "php bin/build-package.php",

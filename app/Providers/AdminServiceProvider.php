@@ -1069,13 +1069,13 @@ class AdminServiceProvider extends ServiceProvider
         }
 
         if (isset($_POST['capacity']) && $_POST['capacity'] !== '') {
-            $changes['capacity'] = (int) $_POST['capacity'];
+            $changes['capacity'] = (int) sanitize_text_field(wp_unslash((string) $_POST['capacity']));
         }
 
         if (!empty($_POST['reset_price'])) {
             $changes['reset_price'] = true;
         } elseif (isset($_POST['price_override']) && $_POST['price_override'] !== '') {
-            $changes['price_override'] = (float) $_POST['price_override'];
+            $changes['price_override'] = (float) sanitize_text_field(wp_unslash((string) $_POST['price_override']));
         }
 
         if (isset($_POST['days_of_week']) && is_array($_POST['days_of_week'])) {

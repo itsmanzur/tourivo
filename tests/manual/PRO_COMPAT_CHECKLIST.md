@@ -21,7 +21,7 @@ php scripts/check-hooks.php --pro=/path/to/tourivo-pro
 ## 2. Version gate
 
 - [ ] `tourivo-pro.php` requires the oldest core that fires every hook Pro listens to
-      (currently `version_compare(TOURIVO_VERSION, '1.5.0', '<')` and the matching admin notice).
+      (currently `version_compare(TOURIVO_VERSION, '1.0.0', '<')` and the matching admin notice).
 - [ ] `Requires Plugins: tourivo` is still in the Pro header.
 
 ## 3. Test suites

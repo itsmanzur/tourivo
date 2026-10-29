@@ -91,7 +91,6 @@ class BookingLookupShortcode
         ]);
     }
 
-    // phpcs:disable WordPress.Security.NonceVerification.Missing -- every request-handling method up to the matching enable is gated by hasValidNonce() (wp_verify_nonce).
 
     /**
      * Require a valid lookup nonce. Cached pages obtain a fresh one through `tourivo_get_lookup_nonce`,
@@ -102,7 +101,7 @@ class BookingLookupShortcode
     protected static function hasValidNonce(): bool
     {
         // phpcs:ignore WordPress.Security.NonceVerification.Missing
-        $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash((string) $_POST['nonce'])) : '';
+        $nonce = isset($_POST['nonce']) ? sanitize_text_field(wp_unslash((string) $_POST['nonce'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
 
         if ($nonce !== '' && wp_verify_nonce($nonce, 'tourivo_lookup_nonce')) {
             return true;
@@ -124,7 +123,7 @@ class BookingLookupShortcode
     public static function handleLookupAjax(): void
     {
         // Check Honeypot spam field
-        if (!empty($_POST['trv_hp_check'])) {
+        if (!empty($_POST['trv_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
             wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
         }
 
@@ -141,8 +140,8 @@ class BookingLookupShortcode
             return;
         }
 
-        $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : '';
-        $email       = isset($_POST['customer_email']) ? sanitize_email(wp_unslash((string) $_POST['customer_email'])) : '';
+        $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
+        $email       = isset($_POST['customer_email']) ? sanitize_email(wp_unslash((string) $_POST['customer_email'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
 
         if (empty($bookingCode) || empty($email) || !is_email($email)) {
             wp_send_json_error([
@@ -184,7 +183,7 @@ class BookingLookupShortcode
      */
     public static function handleCancellationAjax(): void
     {
-        if (!empty($_POST['trv_hp_check'])) {
+        if (!empty($_POST['trv_hp_check'])) { // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
             wp_send_json_error(['message' => __('Submission blocked.', 'tourivo')], 400);
             return;
         }
@@ -193,9 +192,9 @@ class BookingLookupShortcode
             return;
         }
 
-        $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : '';
-        $email       = isset($_POST['customer_email']) ? sanitize_email(wp_unslash((string) $_POST['customer_email'])) : '';
-        $reason      = isset($_POST['reason']) ? sanitize_textarea_field(wp_unslash((string) $_POST['reason'])) : '';
+        $bookingCode = isset($_POST['booking_code']) ? strtoupper(sanitize_text_field(wp_unslash((string) $_POST['booking_code']))) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
+        $email       = isset($_POST['customer_email']) ? sanitize_email(wp_unslash((string) $_POST['customer_email'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
+        $reason      = isset($_POST['reason']) ? sanitize_textarea_field(wp_unslash((string) $_POST['reason'])) : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing -- hasValidNonce() runs first.
 
         $res = self::processCancellationRequest($bookingCode, $email, $reason);
 
@@ -206,7 +205,6 @@ class BookingLookupShortcode
         }
     }
 
-    // phpcs:enable WordPress.Security.NonceVerification.Missing
 
     /**
      * Core business logic for processing cancellation request or direct self-cancellation.

@@ -138,7 +138,7 @@ class BookingsTable
         $rooms = get_posts(['post_type' => 'tourivo_room', 'post_status' => 'publish', 'posts_per_page' => -1]);
 
         $exportUrl = wp_nonce_url(
-            admin_url('admin-post.php?action=tourivo_export_bookings_csv&status=' . urlencode($statusFilter)),
+            admin_url('admin-post.php?action=tourivo_export_bookings_csv&status=' . rawurlencode($statusFilter)),
             'tourivo_export_csv_action'
         );
         ?>
