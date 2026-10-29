@@ -148,5 +148,13 @@ Initial release of Tourivo.
 
 == Credits ==
 
-* **Anek Bangla Font** by The Anek Project Authors / Ek Type (https://github.com/EkType/Anek), licensed under SIL Open Font License 1.1 (assets/fonts/OFL.txt).
+Tourivo is developed and maintained by itsmanzur (The Readscope).
 
+* Source code: https://github.com/itsmanzur/tourivo
+* Website: https://tourivo.thereadscope.com/
+
+Third-party resources bundled with the plugin:
+
+* **Anek Bangla Font** by The Anek Project Authors / Ek Type (https://github.com/EkType/Anek), licensed under SIL Open Font License 1.1 (assets/fonts/OFL.txt). Served from your own site; nothing is loaded from Google Fonts or any other CDN.
+
+No other third-party libraries are bundled: the booking panel, calendar and photo lightbox are written for Tourivo, and admin icons come from the Dashicons set that ships with WordPress.
