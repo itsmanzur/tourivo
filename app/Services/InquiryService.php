@@ -139,7 +139,7 @@ class InquiryService
         $itemPost = get_post($itemId);
         $itemTitle = $itemPost ? $itemPost->post_title : __('General Travel Inquiry', 'tourivo');
 
-        do_action('tourivo/inquiry_created', $inquiryId, [
+        do_action('tourivo/inquiry/created', $inquiryId, [
             'inquiry_id'  => $inquiryId,
             'item_id'     => $itemId,
             'item_type'   => ($itemType === 'hotel_room' || $itemType === 'room') ? 'room' : 'tour',

@@ -1267,6 +1267,41 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
             }
         }
     }
+    // In WordPress actions and filters share one registry; the mock keeps two, so has_* checks both.
+    if (!function_exists('has_filter')) {
+        function has_filter(string $hook_name, mixed $callback = false): bool {
+            global $tourivo_mock_filters, $tourivo_mock_action_callbacks;
+            return !empty($tourivo_mock_filters[$hook_name]) || !empty($tourivo_mock_action_callbacks[$hook_name]);
+        }
+    }
+    if (!function_exists('has_action')) {
+        function has_action(string $hook_name, mixed $callback = false): bool {
+            return has_filter($hook_name, $callback);
+        }
+    }
+    if (!function_exists('_deprecated_hook')) {
+        function _deprecated_hook(string $hook, string $version, string $replacement = '', string $message = ''): void {
+            $GLOBALS['tourivo_mock_deprecated_hooks'][] = ['hook' => $hook, 'version' => $version, 'replacement' => $replacement];
+        }
+    }
+    if (!function_exists('do_action_deprecated')) {
+        function do_action_deprecated(string $hook_name, array $args, string $version, string $replacement = '', string $message = ''): void {
+            if (!has_action($hook_name)) {
+                return;
+            }
+            _deprecated_hook($hook_name, $version, $replacement, $message);
+            do_action($hook_name, ...$args);
+        }
+    }
+    if (!function_exists('apply_filters_deprecated')) {
+        function apply_filters_deprecated(string $hook_name, array $args, string $version, string $replacement = '', string $message = ''): mixed {
+            if (!has_filter($hook_name)) {
+                return $args[0];
+            }
+            _deprecated_hook($hook_name, $version, $replacement, $message);
+            return apply_filters($hook_name, ...$args);
+        }
+    }
     if (!function_exists('get_option')) {
         function get_option(string $option, mixed $default = false): mixed {
             global $tourivo_mock_options;

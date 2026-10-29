@@ -101,6 +101,7 @@ $includedEntries = [
 $excludedPatterns = [
     '/^tests(\/|\\\\|$)/i',
     '/^bin(\/|\\\\|$)/i',
+    '/^scripts(\/|\\\\|$)/i',
     '/^dist(\/|\\\\|$)/i',
     '/\.git(\/|\\\\|$)/i',
     '/node_modules(\/|\\\\|$)/i',

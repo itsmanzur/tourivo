@@ -34,7 +34,7 @@ class EmailService
         add_action('tourivo/booking/created', [$this, 'onBookingCreated'], 20, 2);
         add_action('tourivo/booking/status_changed', [$this, 'onBookingStatusChanged'], 20, 4);
         add_action('tourivo/booking/email_verified', [$this, 'onBookingEmailVerified'], 20, 1);
-        add_action('tourivo/inquiry_created', [$this, 'onInquiryCreated'], 20, 2);
+        add_action('tourivo/inquiry/created', [$this, 'onInquiryCreated'], 20, 2);
         add_action('tourivo_process_email_delivery', [$this, 'dispatch'], 10, 4);
         add_action('tourivo_daily_reminders', [$this, 'processDailyReminders']);
 
@@ -216,6 +216,10 @@ class EmailService
      * WP-Cron store their arguments in plain tables (and cron arrays in wp_options), so no name, address,
      * phone or message may be queued. dispatch() loads the record again when the job runs.
      *
+     * The 'tourivo/send_email' filter is applied here and only here: once per email, with the data of the
+     * event that triggered it, before anything is queued. Retries and the queue worker do not ask again, and
+     * sendTestEmail() does not ask at all.
+     *
      * @param string               $emailType
      * @param string               $recipient
      * @param array<string, mixed> $data
@@ -234,7 +238,7 @@ class EmailService
             return;
         }
 
-        // Pro & Third-party filter to cancel or customize dispatch
+        // Pro & third-party filter to cancel an email. The only place it runs (see the docblock).
         $shouldSend = (bool) apply_filters('tourivo/send_email', true, $emailType, $data);
         if (!$shouldSend) {
             return;
@@ -302,10 +306,7 @@ class EmailService
             return false;
         }
 
-        $shouldSend = (bool) apply_filters('tourivo/send_email', true, $emailType, $data);
-        if (!$shouldSend) {
-            return false;
-        }
+        // 'tourivo/send_email' already approved this email in enqueue(); it is not asked again per attempt.
 
         [$sent, $lastError] = $this->deliver($emailType, $recipient, $data);
 
@@ -623,6 +624,10 @@ class EmailService
      *
      * Goes straight to wp_mail(): no queue, no deduplication transient and no booking log. The sample
      * booking has no ID, so nothing can be written against (or read from) a real booking.
+     *
+     * The 'tourivo/send_email' filter and the per-type "enabled" settings do not apply: an administrator
+     * asked for this email explicitly, and a filter that suppresses real customer mail must not make the
+     * test look broken.
      *
      * @param string $recipientEmail
      * @param string $emailType

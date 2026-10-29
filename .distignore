@@ -25,6 +25,7 @@ package-lock.json
 node_modules
 vendor
 bin
+scripts
 dist
 
 # Temporary and Documentation Files
