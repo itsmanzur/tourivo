@@ -323,6 +323,29 @@ if (file_exists($_tests_dir . '/includes/functions.php')) {
 
                 // 3. UPDATE wp_tourivo_bookings
                 if (stripos($trimmed, 'UPDATE') !== false && stripos($trimmed, 'tourivo_bookings') !== false) {
+                    // Atomic payment (Tourivo Pro PaymentRecorder): paid_amount = LEAST(total_amount, paid_amount + X), assigned last.
+                    if (preg_match('/paid_amount\s*=\s*LEAST\(total_amount,\s*paid_amount\s*\+\s*([0-9.]+)\)\s+WHERE\s+id\s*=\s*(\d+)/is', $trimmed, $m)) {
+                        $id = (int) $m[2];
+                        if (!isset($this->bookings[$id])) {
+                            $this->rows_affected = 0;
+                            return 0;
+                        }
+                        $b     = $this->bookings[$id];
+                        $total = (float) ($b['total_amount'] ?? 0);
+                        $paid  = min($total, (float) ($b['paid_amount'] ?? 0) + (float) $m[1]);
+                        $this->bookings[$id]['due_amount']     = max(0.0, $total - $paid);
+                        $this->bookings[$id]['payment_status'] = ($paid + 0.009 >= $total) ? 'paid' : 'partially_paid';
+                        if (preg_match("/payment_method\s*=\s*'((?:[^'\\\\]|\\\\.)*)'/s", $trimmed, $pm)) {
+                            $this->bookings[$id]['payment_method'] = stripslashes($pm[1]);
+                        }
+                        if (preg_match("/transaction_id\s*=\s*IF\(transaction_id IS NULL OR transaction_id = '',\s*('(?:[^'\\\\]|\\\\.)*'|[0-9.]+),/s", $trimmed, $tm) && (string) ($b['transaction_id'] ?? '') === '') {
+                            $this->bookings[$id]['transaction_id'] = stripslashes(trim($tm[1], "'"));
+                        }
+                        $this->bookings[$id]['paid_amount'] = $paid;
+                        $this->bookings[$id]['updated_at']  = gmdate('Y-m-d H:i:s');
+                        $this->rows_affected = 1;
+                        return 1;
+                    }
                     // Email verification stamp (conditional on still being NULL)
                     if (preg_match("/SET\s+email_verified_at\s*=\s*'([^']+)'.*WHERE\s+id\s*=\s*(\d+)\s+AND\s+email_verified_at\s+IS\s+NULL/is", $trimmed, $m)) {
                         $id = (int) $m[2];
