@@ -246,6 +246,12 @@ class InventoryRepository
         $priceSql = $priceOverride !== null ? '%f' : 'NULL';
         $fits     = '(VALUES(total_capacity) >= booked_count + reserved_count OR VALUES(total_capacity) >= total_capacity)';
 
+        // ON DUPLICATE KEY UPDATE: total_capacity MUST stay the last assignment. MySQL and MariaDB evaluate the
+        // assignments left to right, and a column read after it has been assigned already sees its new value.
+        // Kept last, every IF($fits, ...) reads the row's capacity as it was before this statement. (With
+        // today's $fits the outcome would happen to be the same in any order, since a refused IF leaves the
+        // capacity untouched, but any assignment added later that reads total_capacity, e.g. to derive
+        // status, would silently see the new value if it came after it.)
         $query = $this->db->prepare(
             "INSERT INTO {$this->table}
                 (item_id, item_type, event_date, time_slot, total_capacity, booked_count, reserved_count, price_override, status, created_at, updated_at)

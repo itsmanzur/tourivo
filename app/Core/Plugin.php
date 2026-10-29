@@ -17,6 +17,7 @@ use Tourivo\Providers\MetaBoxServiceProvider;
 use Tourivo\Providers\PostTypeServiceProvider;
 use Tourivo\Providers\RouteServiceProvider;
 use Tourivo\Providers\TemplateServiceProvider;
+use Tourivo\Support\LegacyHooks;
 
 if (!defined('ABSPATH')) {
     exit;
@@ -98,6 +99,9 @@ final class Plugin
 
         // Existing installs pick up capabilities added after the plugin was activated.
         Installer::addCapabilities();
+
+        // Listeners on the pre-1.5.0 hook names keep running (with a deprecation notice).
+        LegacyHooks::register();
 
         // 2. Allow third-parties / Pro add-on to register additional providers
         $providers = apply_filters('tourivo/service_providers', $this->defaultProviders);

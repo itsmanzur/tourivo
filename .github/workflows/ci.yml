@@ -94,20 +94,30 @@ jobs:
   # Real MySQL concurrency: many parallel processes hammer the same inventory row and
   # we assert that no seat is ever oversold, lost or duplicated. The mocked suite cannot
   # prove this (it cannot reproduce gap-lock deadlocks or duplicate-key races).
+  # The same job checks the capacity guard of InventoryRepository::upsert() against
+  # bookings made at the same time. Both run on MySQL 8.0 and MariaDB 10.11.
   # ---------------------------------------------------------------------------
   mysql:
-    name: Real MySQL inventory concurrency
+    name: Real DB inventory (${{ matrix.db }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - db: mysql:8.0
+            ping: mysqladmin
+          - db: mariadb:10.11
+            ping: mariadb-admin
     services:
       mysql:
-        image: mysql:8.0
+        image: ${{ matrix.db }}
         env:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: tourivo_test
         ports:
           - 3306:3306
         options: >-
-          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+          --health-cmd="${{ matrix.ping }} ping -h 127.0.0.1 -uroot -proot"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=10
@@ -137,6 +147,23 @@ jobs:
           php tests/RealDb/run_inventory_concurrency.php | tee concurrency-report.txt
           status=$?
           { echo '### Inventory concurrency'; echo '```'; head -c 50000 concurrency-report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+          exit $status
+
+      - name: Run inventory upsert guard test
+        if: ${{ !cancelled() }}
+        env:
+          DB_HOST: 127.0.0.1
+          DB_PORT: '3306'
+          DB_NAME: tourivo_test
+          DB_USER: root
+          DB_PASSWORD: root
+          RUNS: '5'
+        run: |
+          set +e
+          set -o pipefail
+          php tests/RealDb/run_inventory_upsert_guard.php | tee upsert-guard-report.txt
+          status=$?
+          { echo '### Inventory upsert guard'; echo '```'; head -c 50000 upsert-guard-report.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
           exit $status
 
   # ---------------------------------------------------------------------------

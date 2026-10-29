@@ -42,6 +42,7 @@ require_once __DIR__ . '/Integration/TravelHomepageOptInTest.php';
 require_once __DIR__ . '/Integration/PricingAdjustmentsTest.php';
 require_once __DIR__ . '/Integration/MultiItemBookingTest.php';
 require_once __DIR__ . '/Integration/ReviewFixesTest.php';
+require_once __DIR__ . '/Integration/HookCompatTest.php';
 
 echo "=====================================================\n";
 echo "           Tourivo Automated Test Suite\n";
@@ -76,6 +77,7 @@ $testClasses = [
     \Tourivo\Tests\Integration\PricingAdjustmentsTest::class,
     \Tourivo\Tests\Integration\MultiItemBookingTest::class,
     \Tourivo\Tests\Integration\ReviewFixesTest::class,
+    \Tourivo\Tests\Integration\HookCompatTest::class,
 ];
 
 $totalTests = 0;

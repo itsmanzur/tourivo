@@ -17,6 +17,7 @@
  *   RUNS=5                   repetitions of every scenario (default 5)
  *   WORKERS=12               parallel workers for the contention scenarios (default 12)
  *   TRV_PHP_FLAGS=           extra php CLI args for workers, "|"-separated (e.g. "-d|extension=mysqli")
+ *   TRV_TMP_DIR=             writable folder for the worker barrier files (default: sys_get_temp_dir())
  *
  * Exit code 0 = no overbooking / lost update observed in any run.
  */
@@ -75,7 +76,7 @@ function resetTable(wpdb $db, \Tourivo\Database\Migrations\CreateInventoriesTabl
  */
 function fire(array $workers, int $itemId, string $date, int $defaultCapacity, array $flags, string $dbName, string $prefix, string $host, int $port, string $user, string $pass, wpdb $db): array
 {
-    $runDir = sys_get_temp_dir() . '/trv_inv_' . bin2hex(random_bytes(6));
+    $runDir = (getenv('TRV_TMP_DIR') ?: sys_get_temp_dir()) . '/trv_inv_' . bin2hex(random_bytes(6));
     mkdir($runDir);
 
     $env = array_merge(getenv(), [
@@ -113,7 +114,9 @@ function fire(array $workers, int $itemId, string $date, int $defaultCapacity, a
         $err = stream_get_contents($p['pipes'][2]);
         proc_close($p['proc']);
 
-        $line = json_decode(trim((string) $out), true);
+        // Only the last line is the result: PHP may print startup warnings first.
+        $lines = preg_split('/\r?\n/', trim((string) $out));
+        $line  = json_decode((string) end($lines), true);
         if (!is_array($line)) {
             throw new RuntimeException("Worker {$i} produced no result. stderr: {$err} stdout: {$out}");
         }
